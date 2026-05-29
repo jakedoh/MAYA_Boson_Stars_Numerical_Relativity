@@ -581,6 +581,10 @@ TwoPuncturesMatter (CCTK_ARGUMENTS)
        VV = V0 + 0.25 * lamda0 * pow(ini_phia*ini_phia - phi00*phi00, 2 );
 //       CCTK_VInfo (CCTK_THORNSTRING, "Value of Pablo's potential  is %g",VV);
     }
+    else if (CCTK_Equals(potential_type,"linear")){
+       VV = V0 + lamda0 * ini_phia;
+//       CCTK_VInfo (CCTK_THORNSTRING, "Value of Pablo's potential  is %g",VV);
+    }
 
     rhoSc = 0.5 * pow(ini_pia,2) + VV;
     KK =-1. * Ksign * pow(24.*pi*rhoSc,0.5);

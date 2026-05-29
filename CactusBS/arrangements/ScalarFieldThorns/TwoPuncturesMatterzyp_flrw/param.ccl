@@ -296,6 +296,7 @@ KEYWORD potential_type "Type of potential to calculate the energy density Rho"
     "Quadratic" ::  "V = 0.5 m^2 psi^2"
     "Fourth"     :: "V = 0.5 m^2 psi^2 + 0.25*lambda*psi^4 "
     "Fourthshifted" :: "V = V0 + 0.25 lambda*(psi^2-psi_0^2)^2"
+    "linear" :: "V = V0 + lambda*psi"
 } "Quadratic"
 
 # Approximate Initial Data Toggles
@@ -310,7 +311,7 @@ STRING scalarPia "time derivative of scalar field variable to set"
 {
   ".+[:][:].+" :: "any valid variable name"
   "BransDickeScalarField[:][:]BDpi" :: "the Brans-Dicke field"
-} "BransDickeScalarField::BDpi"
+}"BransDickeScalarField::BDpi"
 
 STRING scalarPhib "scalar field variable to set"
 {
