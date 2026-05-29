@@ -526,6 +526,10 @@ ret_VV = lambdaphian/8.0 *(vv1+phivsign*tanh(rra))*(vv1+phivsign*tanh(rra))*ret_
       	{
 		ret_VV = (0.5 * phiamass*phiamass*ret_phia*ret_phia + 0.5 * phibmass *phibmass*ret_phib*ret_phib + lambdaphia/4.0 *ret_phia*ret_phia*ret_phia*ret_phia + lambdaphib/4.0 *ret_phib*ret_phib*ret_phib*ret_phib + gcouple/2.0 *ret_phia*ret_phia*ret_phib*ret_phib + newgcouple*newgcouple*ret_phia*ret_phib + lambdaphian/4.0 *(ret_phia*ret_phia - phiav*phiav)*(ret_phia*ret_phia - phiav*phiav) + lambdaphibn/4.0 *(ret_phib*ret_phib - phibv*phibv)*(ret_phib*ret_phib - phibv*phibv));
 	}
+      else if ( CCTK_EQUALS(potential_type,"linear") )
+        {
+                ret_VV = (lambdaphia*ret_phia + lambdaphib*ret_phib + lambdaphian*(ret_phia - phiav) + lambdaphibn*(ret_phib - phibv));
+        }
  
     }
 

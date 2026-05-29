@@ -29,6 +29,7 @@ KEYWORD potential_type "form of potential to use"
   "doublewell" :: "polynomial sixth order in phi"
   "curverscalarfieldspace" :: "polynomial sixth order in phi"
   "phiFourth" :: "polynomial forth order in phi"
+  "linear"::"polynomial linear order in phi"
   "none" :: "no potential"
 } "none"
 
