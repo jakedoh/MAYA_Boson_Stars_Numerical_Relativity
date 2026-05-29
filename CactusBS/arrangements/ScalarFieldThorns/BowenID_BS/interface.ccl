@@ -1,0 +1,31 @@
+# Interface definition for thorn BowenID
+# $Header:$
+
+implements: bowenid
+inherits: grid
+
+USES INCLUDE: VectorAlgebra.hh OutputTable.hh
+
+void FUNCTION getSourceInfo(CCTK_REAL IN xx, CCTK_REAL IN yy, CCTK_REAL IN zz, CCTK_REAL ARRAY OUT jhat, CCTK_REAL OUT psi, CCTK_REAL OUT psiguess, CCTK_REAL ARRAY OUT Aij)
+PROVIDES FUNCTION getSourceInfo WITH bowenid_getSourceInfo LANGUAGE C
+
+CCTK_REAL FUNCTION getGradPhisqr(CCTK_REAL IN x, CCTK_REAL IN y, CCTK_REAL IN z)
+PROVIDES FUNCTION getGradPhisqr with bowenid_getGradPhisqr LANGUAGE C
+
+void FUNCTION getInitialPhi(CCTK_REAL IN xx, CCTK_REAL IN yy, CCTK_REAL IN zz, CCTK_REAL ARRAY OUT Phi)
+PROVIDES FUNCTION getInitialPhi WITH bowenid_getInitialPhi LANGUAGE C
+
+void FUNCTION getInitialConformalPi(CCTK_REAL IN xx, CCTK_REAL IN yy, CCTK_REAL IN zz, CCTK_REAL ARRAY OUT confPi)
+PROVIDES FUNCTION getInitialConformalPi WITH bowenid_getInitialConformalPi LANGUAGE C
+
+CCTK_REAL FUNCTION getSourceMass(CCTK_INT IN index)
+PROVIDES FUNCTION getSourceMass with bowenid_getSourceMass LANGUAGE C
+
+void FUNCTION remakeSources(CCTK_INT IN resolve)
+PROVIDES FUNCTION remakeSources with bowenid_reconstructSources LANGUAGE C
+
+CCTK_REAL FUNCTION getExternalPsiGuess(CCTK_INT IN idx, CCTK_REAL IN x, CCTK_REAL IN y, CCTK_REAL IN z)
+PROVIDES FUNCTION getExternalPsiGuess with bowenid_getExternalPsiGuess LANGUAGE C
+
+CCTK_REAL FUNCTION getconfAlpha(CCTK_REAL IN x, CCTK_REAL IN y, CCTK_REAL IN z)
+PROVIDES FUNCTION getconfAlpha with bowenid_getAlpha LANGUAGE C
