@@ -15,7 +15,7 @@ use strict;
 
 #### Scalar field params
 
-  my $periodic_boundary = "yes";
+  my $periodic_boundary = "no";
 
   my $potentialId = "phiFourth";
   my $potentialEv = "inflation";
@@ -56,12 +56,12 @@ use strict;
 ## Grid Structure ##
 ####################
 
-my $h = $mass/840.;
-my $npts = 24; # Points per grid (40, 60, 80), changed as you get coarser
+my $h = $mass/80.;
+my $npts = 60; # Points per grid (40, 60, 80), changed as you get coarser
 my $rf = $npts*$h;
 
 
-my $num_rf_levels=12;
+my $num_rf_levels=7;
 my $unistep_last_num_grids = 4;
 
 	# Process above options
@@ -146,9 +146,9 @@ my $chiEps = 1e-4;
 #################
 ## Symmetries ##
 ################
-my $reflectx="no";
-my $reflecty="no";
-my $reflectz="no";
+my $reflectx="yes";
+my $reflecty="yes";
+my $reflectz="yes";
 my $rotate180="no";
 
         # Check symmetries with parameters
@@ -693,7 +693,8 @@ CarpetIOScalar::outScalar_vars       = "
                                         EvolveScalarFields::rhoE
                                         kranc2bssnchimatter::alpha
                                         kranc2bssnchimatter::chi
-#                                        kranc2bssnchimatter::K"
+                                        kranc2bssnchimatter::bssnham
+                                        kranc2bssnchimatter::K"
 
 
 Kranc2BSSNChiMatter::constraintsfdorder = 4
@@ -722,7 +723,8 @@ CarpetIOASCII::out1D_vars            = "
                                         kranc2bssnchimatter::chi
                                         kranc2bssnchimatter::K
                                         ADMBase::metric
-                                        kranc2bssnchimatter::A_group"
+                                        kranc2bssnchimatter::A_group
+                                        kranc2bssnchimatter::bssnham"
                                         #ADMBase::metric
                                         #ADMBase::alp
                                         #WeylScal4::Psi4r

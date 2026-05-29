@@ -56,8 +56,8 @@ use strict;
 ## Grid Structure ##
 ####################
 
-my $h = 1/2; 
-my $npts = 100; # Points per grid (40, 60, 80), changed as you get coarser
+my $h = 1/840; 
+my $npts = 200; # Points per grid (40, 60, 80), changed as you get coarser
 my $rf = $npts*$h;
 
 
@@ -141,7 +141,7 @@ my $unistep_last_num_grids = 3;
 	my $every_1M = sprintf("%.0f", 1./$every_coarse_t)*$every_coarse;
 	my $regrid_every = max( ( $m * 16, $every_coarse ) );
 
-my $chiEps = 1e-6;
+my $chiEps = 1e-5;
 
 #################
 ## Symmetries ##
@@ -242,7 +242,7 @@ my $min_extraction_radius = min( ( 30, (0.2*$rlvls[0]/7.) ) );
 ## Output ##
 ############
 #my $out1d = 8 * 2**3; # 8 = Out every on *that* ref lvl
-my $out1d = 8;
+my $out1d = 1;
 #my $out2d = 8 * 2**4; # 8 * 2**3
 my $out2d = 32;
 my $out3d = 0; # 8 * 2**3
@@ -690,10 +690,14 @@ CarpetIOScalar::outScalar_vars       = "
                                         kranc2bssnchimatter::beta1
                                         EvolveScalarFields::phia
                                         EvolveScalarFields::pia
-                                        EvolveScalarFields::rhoE
+                                        #EvolveScalarFields::rhoE
                                         kranc2bssnchimatter::alpha
                                         kranc2bssnchimatter::chi
-                                        kranc2bssnchimatter::K"
+                                        kranc2bssnchimatter::K
+                                        ADMBase::metric
+                                        kranc2bssnchimatter::bssnham
+                                        kranc2bssnchimatter::A_group
+                                        kranc2bssnchimatter::h_group"
 
 
 Kranc2BSSNChiMatter::constraintsfdorder = 4
@@ -703,8 +707,8 @@ CarpetIOBasic::outInfo_vars          = "
                                         kranc2bssnchimatter::chi
                                         kranc2bssnchimatter::alpha
                                         EvolveScalarFields::phia
-                                        kranc2bssnchimatter::bssnham
-        "
+                                        kranc2bssnchimatter::bssnham"
+
 IOASCII::out1D_every          = $out1d
 IOASCII::out1D_d                     = no
 CarpetIOASCII::out1D_x               = "yes"
@@ -725,7 +729,8 @@ CarpetIOASCII::out1D_vars            = "
                                         ADMBase::metric
                                         Kranc2BSSNChiMatter::bssnham
                                         Kranc2BSSNChiMatter::bssnmom_group
-                                        kranc2bssnchimatter::A_group"
+                                        kranc2bssnchimatter::A_group
+                                        kranc2bssnchimatter::h_group"
 carpetioascii::out3D_ghosts   = "yes"
 
 CarpetIOHDF5::compression_level      = 0

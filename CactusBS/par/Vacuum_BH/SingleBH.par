@@ -9,22 +9,21 @@
 ## Grid structure: 
 ##	rl	Extent		dx[M]		Resolution		Npts
 ##	===========================================================================
-##	0 	128     	6.4     	(M/0.15625   )	20 ^3
-##	1 	64      	3.2     	(M/0.3125    )	20 ^3
-##	2 	32      	1.6     	(M/0.625     )	20 ^3
-##	3 	16      	0.8     	(M/1.25      )	20 ^3
-##	4 	8       	0.4     	(M/2.5       )	20 ^3
-##	5 	4       	0.2     	(M/5         )	20 ^3
-##	6 	2       	0.1     	(M/10        )	20 ^3
-##	7 	1       	0.05    	(M/20        )	20 ^3
-##	8 	0.5     	0.025   	(M/40        )	20 ^3
+##	0 	170.667 	8.53333 	(M/0.117188  )	20 ^3
+##	1 	85.3333 	4.26667 	(M/0.234375  )	20 ^3
+##	2 	42.6667 	2.13333 	(M/0.46875   )	20 ^3
+##	3 	21.3333 	1.06667 	(M/0.9375    )	20 ^3
+##	4 	10.6667 	0.533333	(M/1.875     )	20 ^3
+##	5 	5.33333 	0.266667	(M/3.75      )	20 ^3
+##	6 	2.66667 	0.133333	(M/7.5       )	20 ^3
+##	7 	1.33333 	0.0666667	(M/15        )	20 ^3
+##	8 	0.666667	0.0333333	(M/30        )	20 ^3
 ##
 ###############################################################################
 
 
-ActiveThorns = "Kranc2BSSNChi TwoPunctures GenericFD CoordBase SymBase Boundary InitBase NanChecker CartGrid3d Time MoL TimerReport CarpetIOBasic CarpetIOScalar IOUtil Carpet CarpetLib Vectors CarpetReduce CarpetInterp CarpetSlab  CarpetIOASCII LoopControl GSL CarpetRegrid2 CarpetTracker ADMBase StaticConformal Dissipation SphericalSurface AEILocalInterp SpaceMask ReflectionSymmetry  Slab CarpetIOHDF5 RunStats SphereIntegrate Formaline AHFinderDirect IHSpin SphereRad ShiftTracker WeylScal4 Multipole ADM_EJP"
+ActiveThorns = "ExternalEtaBeta Kranc2BSSNChi TwoPunctures GenericFD CoordBase SymBase Boundary InitBase NanChecker CartGrid3d Time MoL TimerReport CarpetIOBasic CarpetIOScalar IOUtil Carpet CarpetLib Vectors CarpetReduce CarpetInterp CarpetSlab  CarpetIOASCII LoopControl GSL CarpetRegrid2 CarpetTracker ADMBase StaticConformal Dissipation SphericalSurface AEILocalInterp SpaceMask ReflectionSymmetry  Slab CarpetIOHDF5 RunStats SphereIntegrate Formaline AHFinderDirect IHSpin SphereRad ShiftTracker WeylScal4 Multipole ADM_EJP"
 
-ActiveThorns = "TwoPunctureszyp ScalarFieldPotentials"
 #############################################################
 # Grid
 #############################################################
@@ -34,8 +33,8 @@ CoordBase::domainsize                   = minmax
 CoordBase::boundary_size_x_lower        = 3
 CoordBase::boundary_size_y_lower        = 3
 CoordBase::boundary_size_z_lower        = 3
-CoordBase::boundary_shiftout_x_lower    = 0
-CoordBase::boundary_shiftout_y_lower    = 0
+CoordBase::boundary_shiftout_x_lower    = 1
+CoordBase::boundary_shiftout_y_lower    = 1
 CoordBase::boundary_shiftout_z_lower    = 1
 
 CoordBase::boundary_size_x_upper        = 3
@@ -45,22 +44,22 @@ CoordBase::boundary_shiftout_x_upper    = 0
 CoordBase::boundary_shiftout_y_upper    = 0
 CoordBase::boundary_shiftout_z_upper    = 0
 
-CoordBase::xmin                         = -128
-CoordBase::ymin                         = -128
+CoordBase::xmin                         = 0
+CoordBase::ymin                         = 0
 CoordBase::zmin                         = 0
-CoordBase::xmax                         = 128
-CoordBase::ymax                         = 128
-CoordBase::zmax                         = 128
-CoordBase::dx                           = 6.4000000000000003553
-CoordBase::dy                           = 6.4000000000000003553
-CoordBase::dz                           = 6.4000000000000003553
+CoordBase::xmax                         = 170.666666666667
+CoordBase::ymax                         = 170.666666666667
+CoordBase::zmax                         = 170.666666666667
+CoordBase::dx                           = 8.5333333333333332149
+CoordBase::dy                           = 8.5333333333333332149
+CoordBase::dz                           = 8.5333333333333332149
 
 CartGrid3D::type                        = "coordbase"
 CartGrid3D::domain                      = "full"
 CartGrid3D::avoid_origin                = "no"
 
-ReflectionSymmetry::reflection_x   = no
-ReflectionSymmetry::reflection_y   = no
+ReflectionSymmetry::reflection_x   = yes
+ReflectionSymmetry::reflection_y   = yes
 ReflectionSymmetry::reflection_z   = yes
 ReflectionSymmetry::avoid_origin_x = no
 ReflectionSymmetry::avoid_origin_y = no
@@ -91,15 +90,15 @@ CarpetRegrid2::position_z_1  =  0
 
 # 320, 160, 95, 70, 50, 6.875 (dx_max = 10)
 # For 1 processor, (6.875, 0.3125 for CoordBase) 
-CarpetRegrid2::radius_1[0] = 128
-CarpetRegrid2::radius_1[1] = 64
-CarpetRegrid2::radius_1[2] = 32
-CarpetRegrid2::radius_1[3] = 16
-CarpetRegrid2::radius_1[4] = 8
-CarpetRegrid2::radius_1[5] = 4
-CarpetRegrid2::radius_1[6] = 2
-CarpetRegrid2::radius_1[7] = 1
-CarpetRegrid2::radius_1[8] = 0.5
+CarpetRegrid2::radius_1[0] = 170.666666666667
+CarpetRegrid2::radius_1[1] = 85.3333333333333
+CarpetRegrid2::radius_1[2] = 42.6666666666667
+CarpetRegrid2::radius_1[3] = 21.3333333333333
+CarpetRegrid2::radius_1[4] = 10.6666666666667
+CarpetRegrid2::radius_1[5] = 5.33333333333333
+CarpetRegrid2::radius_1[6] = 2.66666666666667
+CarpetRegrid2::radius_1[7] = 1.33333333333333
+CarpetRegrid2::radius_1[8] = 0.666666666666667
 
 
 #############################################################
@@ -151,7 +150,8 @@ MethodOfLines::MoL_Num_Scratch_Levels = 1
 #############################################################
 
 ADMBase::initial_data = "twopunctures"
-ADMBase::initial_lapse = "utb"
+ADMBase::initial_lapse = "psi^n"
+TwoPunctures::initial_lapse_psi_exponent = -2
 ADMBase::initial_shift = "zero"
 ADMBase::evolution_method = "Kranc2BSSNChi"
 ADMBase::lapse_evolution_method = "Kranc2BSSNChi"
@@ -165,8 +165,8 @@ TwoPunctures::par_m_minus    =  0.0
 TwoPunctures::par_S_plus[0]  =  0
 TwoPunctures::par_S_plus[1]  =  0
 TwoPunctures::par_S_plus[2]  =  0
-TwoPunctures::move_origin_x  = 2.00 
-TwoPunctures::epsilon = 1e-3
+TwoPunctures::center_offset[0]  = 2.00 
+TwoPunctures::TP_epsilon = 1e-3
 
 TwoPunctures::npoints_A = 30
 TwoPunctures::npoints_B = 30
@@ -201,7 +201,7 @@ Dissipation::epsdis                = 0.0
 Dissipation::epsdis_for_level[0] = 0.5
 Dissipation::epsdis_for_level[1] = 0.5
 Dissipation::epsdis_for_level[2] = 0.5
-Dissipation::epsdis_for_level[3] = 0.1
+Dissipation::epsdis_for_level[3] = 0.5
 Dissipation::epsdis_for_level[4] = 0.1
 Dissipation::epsdis_for_level[5] = 0.1
 Dissipation::epsdis_for_level[6] = 0.1
@@ -268,7 +268,7 @@ SphericalSurface::nphi[1]      = 100
 #############################################################
 # AHFinder
 #############################################################
-AHFinderDirect::find_every = 768
+AHFinderDirect::find_every = 576
 AHFinderDirect::N_horizons = 1
 AHFinderDirect::output_h_every = 64
 AHFinderDirect::move_origins = "no"
@@ -292,12 +292,12 @@ AHFinderDirect::reset_horizon_after_not_finding[1] = "no"
 # IHSpin
 #############################################################
 
-IHSpin::compute_every          = 768
+IHSpin::compute_every          = 576
 IHSpin::num_horizons           = 2
 IHSpin::surface_index[0]       = 0
 IHSpin::surface_index[1]       = 1
-IHSpin::compute_every_individual[0] = 768
-IHSpin::compute_every_individual[1] = 768
+IHSpin::compute_every_individual[0] = 576
+IHSpin::compute_every_individual[1] = 576
 IHSpin::interpolator_name      = "Lagrange polynomial interpolation"
 IHSpin::interpolator_pars      = "order=4"
 IHSpin::verbose = 0
@@ -326,10 +326,10 @@ WeylScal4::verbose                   = 0
 Multipole::out_every                = 64
 Multipole::nradii                   = 5
 Multipole::radius[0]       = 30
-Multipole::radius[1]       = 45.2666666666667
-Multipole::radius[2]       = 60.5333333333333
-Multipole::radius[3]       = 75.8
-Multipole::radius[4]       = 91.0666666666667
+Multipole::radius[1]       = 52.0222222222222
+Multipole::radius[2]       = 74.0444444444445
+Multipole::radius[3]       = 96.0666666666667
+Multipole::radius[4]       = 118.088888888889
 
 Multipole::variables                = "WeylScal4::Psi4r{sw=-2 cmplx='WeylScal4::Psi4i'}"
 Multipole::verbose                  = 0
@@ -345,13 +345,13 @@ Multipole::nphi                     = 240
 ADM_EJP::number_of_detectors      = 5
 ADM_EJP::detector_radius [0] = 30
 ADM_EJP::out_every_det   [0] = 64
-ADM_EJP::detector_radius [1] = 45.2666666666667
+ADM_EJP::detector_radius [1] = 52.0222222222222
 ADM_EJP::out_every_det   [1] = 64
-ADM_EJP::detector_radius [2] = 60.5333333333333
+ADM_EJP::detector_radius [2] = 74.0444444444445
 ADM_EJP::out_every_det   [2] = 64
-ADM_EJP::detector_radius [3] = 75.8
+ADM_EJP::detector_radius [3] = 96.0666666666667
 ADM_EJP::out_every_det   [3] = 64
-ADM_EJP::detector_radius [4] = 91.0666666666667
+ADM_EJP::detector_radius [4] = 118.088888888889
 ADM_EJP::out_every_det   [4] = 64
 
 ADM_EJP::verbose                  = 0
@@ -395,11 +395,11 @@ CarpetIOHDF5::out2D_vars           = "Kranc2BSSNChi::bssnham Kranc2BSSNChi::bssn
 CarpetIOHDF5::out_every              = 0
 CarpetIOHDF5::out_vars               = "Kranc2BSSNChi::alpha Kranc2BSSNChi::bssnham Kranc2BSSNChi::bssnmom_group"
 
-io::checkpoint_every = 16000
+io::checkpoint_every = 12000
 io::checkpoint_id    = "yes"
 io::checkpoint_keep  = 1
 io::recover          = "no"
 iohdf5::checkpoint   = "no"
-io::checkpoint_dir   = SingleBH_Chkpt
-io::recover_dir   = SingleBH_Chkpt
+io::checkpoint_dir   = par/Vacuum_BH/SingleBH_Chkpt
+io::recover_dir   = par/Vacuum_BH/SingleBH_Chkpt
 

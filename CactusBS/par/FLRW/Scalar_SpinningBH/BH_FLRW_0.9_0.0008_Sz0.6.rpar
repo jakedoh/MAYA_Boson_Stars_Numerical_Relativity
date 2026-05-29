@@ -1,0 +1,785 @@
+#!/usr/bin/perl -W
+# Basic vacuum single black hole spacetime
+use List::Util qw(min max);
+use POSIX;
+use strict;
+
+
+##############################
+## Basic BH Characteristics ##
+##############################
+
+  # Default M=1, S=0 BH
+  my $mass = 1;
+  my @spin = ( (0) x 3 );
+
+#### Scalar field params
+
+  my $periodic_boundary = "yes";
+
+  my $potentialId = "phiFourth";
+  my $potentialEv = "inflation";
+  my $potentialTp = "Fourthshifted";
+
+  my $phi0a = 0.9;
+  my $phi00 = 0 ;
+  my $pi0a = 0.0;
+  my $phi0b = 0.0;
+  my $pi0b = 0.0;
+  my $m0 = 0.0;
+  my $lamda0 = 0.0008;
+  my $V0 = 0.0;
+
+
+
+# Change BH mass (get proper bare mass using Baum)
+  $mass = 0.828971795;
+
+# Change Spin
+  @spin = ( 0, 0, 0.6 );
+
+  my $Smag = sqrt( $spin[0]**2 + $spin[1]**2 + $spin[2]**2 );
+
+  ## Spectral solve resolution
+  my $tp_npts = 30;
+          
+  ## Physical quantities just used for comments
+  my $System_Description;
+  $System_Description  = "#########################################################################\n";
+  $System_Description .= "# Parameter file for running a single puncture spacetime \n";
+  $System_Description .= "#      Mass M_BH = $mass M_h\n";
+  $System_Description .= "#      Spin S^i = ($spin[0],$spin[1],$spin[2])\n";
+  $System_Description .= "#########################################################################\n";
+  print $System_Description;
+
+####################
+## Grid Structure ##
+####################
+
+my $h = $mass/(500*0.828971795);
+my $npts = 60; # Points per grid (40, 60, 80), changed as you get coarser
+my $rf = $npts*$h;
+
+
+my $num_rf_levels=11;
+my $unistep_last_num_grids = 4;
+
+	# Process above options
+        my $ghost_zones = 4;
+	my $h0 = sprintf "%.19f", $h * 2**($num_rf_levels-1);
+	my $fine_dtfac = 0.5;
+	my $base_dtfac = $fine_dtfac / 2**($unistep_last_num_grids-1);
+
+	my $joglvls_out_at=$num_rf_levels-1; 
+	my $finlvl=$num_rf_levels-1;
+	my @rlvls = (0 .. $finlvl);
+	my @spacing = (0 .. $finlvl);
+	my @spacingdM = (0 .. $finlvl);
+	my ($lvl, $Grid_Description);
+        my $CarpetRegrid2_radii = "";
+        my $Dissipation_per_level_lines = "";
+	$Grid_Description  = "###############################################################################\n##\n";
+        $Grid_Description .= "## Grid structure: \n";
+   	$Grid_Description .= "##\trl\tExtent\t\tdx[M]\t\tResolution\t\tNpts\n";
+   	$Grid_Description .= "##\t===========================================================================\n";
+	for ( $lvl=0; $lvl<$num_rf_levels; $lvl++ ){
+
+		$spacing[$lvl] = $h0 / (2**$lvl);
+		$spacingdM[$lvl] = 1./$spacing[$lvl];
+
+                ## Grid boundaries increase by factor of 2
+	 	my $lvlexponent = $num_rf_levels - $lvl -1;
+		$rlvls[$lvl]=$rf*2**$lvlexponent;
+
+                my $npts = $rlvls[$lvl]/$spacing[$lvl];
+                my $add_grid_info = sprintf("##\t%-2d\t%-8g\t%-8g\t(M/%-10.6g)\t%-3g^3\n",$lvl,$rlvls[$lvl],$spacing[$lvl],$spacingdM[$lvl],$npts);
+		$Grid_Description .= $add_grid_info;
+
+                $CarpetRegrid2_radii .= "CarpetRegrid2::radius_1[$lvl] = $rlvls[$lvl]\n";
+                
+                ## Choose dissipation
+                if ( $spacing[$lvl] > 1. ) {
+                   $Dissipation_per_level_lines .= "Dissipation::epsdis_for_level[$lvl] = 0.5\n";
+                } else {
+                   $Dissipation_per_level_lines .= "Dissipation::epsdis_for_level[$lvl] = 0.1\n";
+                }
+
+	}
+	$Grid_Description  .= "##\n###############################################################################\n";
+        print $Grid_Description;
+
+	my $n = int($rf / $h); # (For angular resolution)
+	my $m = int($n / 4);   # (For angular resolution and regridding)
+	my $ntheta = 16 * $m;
+	my $nphi = 2*$ntheta;
+	my $merge_margin = 2 * $ghost_zones + 2;
+
+        my $timerefs = "1";
+        my @reflvl_timefac = ( (1) x $num_rf_levels );
+        my $next=0;
+        for ( my $lvl=1; $lvl<$num_rf_levels; $lvl++) {
+          if ( $lvl < $unistep_last_num_grids ) {
+             $next = 1;
+          } else {
+             $next = 2**($lvl+1-$unistep_last_num_grids);
+          }
+          $timerefs = "$timerefs,$next";
+          $reflvl_timefac[$lvl] = $next;
+        }
+	my $every_coarse = $next;
+	my @reflvl_freq = ( (1) x $num_rf_levels );
+	
+	for ( $lvl=0; $lvl<$num_rf_levels; $lvl++)
+	{
+		$reflvl_freq[$lvl] = $every_coarse/($reflvl_timefac[$lvl]);
+	}
+
+	# Process times
+	my $dt = $spacing[$num_rf_levels-1]/2.; #dt/it
+	my $every_coarse_t = $every_coarse*$dt;
+	my $every_10M = sprintf("%.0f", 10./$every_coarse_t)*$every_coarse;
+	my $every_1M = sprintf("%.0f", 1./$every_coarse_t)*$every_coarse;
+	my $regrid_every = max( ( $m * 16, $every_coarse ) );
+
+my $chiEps = 0.0001;
+
+#################
+## Symmetries ##
+################
+my $reflectx="no";
+my $reflecty="no";
+my $reflectz="no";
+my $rotate180="no";
+
+        # Check symmetries with parameters
+        if ( $Smag > 0 && $reflectx eq "yes" ) {
+           print "Modifying symmetries: Turning off x-reflection due to spin\n";
+           $reflectx = "no";
+        }
+        if ( $Smag > 0 && $reflecty eq "yes" ) {
+           print "Modifying symmetries: Turning off y-reflection due to spin\n";
+           $reflecty = "no";
+        }
+        if ( ( $spin[0] != 0 || $spin[1] != 0 ) && $reflectz eq "yes" ) {
+           print "Modifying symmetries: Turning off z-reflection due to spin not parallel to z-axis\n";
+           $reflectz = "no";
+        }
+        if ( ( $spin[0] != 0 || $spin[1] != 0 ) && $rotate180 eq "yes" ) {
+           print "Modifying symmetries: Turning off rotation 180 due to spin not parallel to z-axis\n";
+           $rotate180 = "no";
+        }
+
+        # Process the above options, assuming full and modifying from there
+        my $xmin_shiftout = 0;
+        my $ymin_shiftout = 0;
+        my $zmin_shiftout = 0;
+        my $xmin = -$rlvls[0];
+        my $ymin = -$rlvls[0];
+        my $zmin = -$rlvls[0];
+        my $rotatethorn = "";
+        my $RS = "#";
+
+        if ($reflectx eq "yes") {
+            $xmin_shiftout = 1;
+            $xmin = 0;
+        }
+        if ($reflecty eq "yes") {
+            $ymin_shiftout = 1;
+            $ymin = 0;
+        }
+        if ($reflectz eq "yes") {
+            $zmin_shiftout = 1;
+            $zmin = 0;
+        }
+        if ($rotate180 eq "yes") {
+            $rotatethorn = "RotatingSymmetry180";
+            $RS = "";
+
+            # Impose semi-reflectx, un-reflecty
+            $reflectx = "no";
+            $xmin = 0;
+            $xmin_shiftout = 1;
+
+            $reflecty = "no";
+            $ymin = -$rlvls[0];
+            $ymin_shiftout = 0;
+        }
+
+###########
+## Times ##
+###########
+my $final_time = 2000;
+my $chkpt_dt = 200;
+my $last_it = 1000000;
+       my  $cits = int ($chkpt_dt/$dt);
+
+##############
+## Analysis ##
+##############
+
+my $AH_find_every = 4;  
+#$every_10M;
+
+my $num_extraction_spheres = 6;
+my $min_extraction_radius = min( ( 30, (0.2*$rlvls[0]/7.) ) );
+
+   my @extraction_sphere_radii = ( );
+   my $Multipole_radius_lines = "";
+   my $ADM_EJP_radius_lines = "";
+   my $scalar_Analysis_radius_lines = "";
+   my $dr_extraction = ( 0.95*$rlvls[0] - $min_extraction_radius )/( $num_extraction_spheres + 1. );
+   for ( my $sphnum=0; $sphnum<$num_extraction_spheres; $sphnum++ ) {
+      my $new_radius = $min_extraction_radius + $sphnum*$dr_extraction; 
+      my $scalar_radius = $min_extraction_radius/20. + $sphnum*$dr_extraction; 
+      $Multipole_radius_lines .= "Multipole::radius[$sphnum]       = $new_radius\n";
+      $ADM_EJP_radius_lines   .= "ADM_EJP::detector_radius [$sphnum] = $new_radius\n";
+      $ADM_EJP_radius_lines   .= "ADM_EJP::out_every_det   [$sphnum] = $every_coarse\n";
+      $scalar_Analysis_radius_lines   .= "scalarAnalysis::detector_radius [$sphnum] = $scalar_radius\n";
+      $scalar_Analysis_radius_lines   .= "scalarAnalysis::out_every_det   [$sphnum] = $every_coarse\n";
+   }
+
+############
+## Output ##
+############
+#my $out1d = 8 * 2**3; # 8 = Out every on *that* ref lvl
+my $out1d = 64;
+#my $out2d = 8 * 2**4; # 8 * 2**3
+my $out2d = 64;
+my $out3d = 0; # 8 * 2**3
+
+        my $chkpt_basenm = "$0";
+        $chkpt_basenm =~ s/\.rpar//g;
+        $chkpt_basenm =~ s/\.\///g;
+        my $chkptdir=$chkpt_basenm."_Chkpt";
+
+my $lines = <<EOF;
+$System_Description
+$Grid_Description
+
+ActiveThorns = "Kranc2BSSNChiMatter_flrw TwoPuncturesMatterzyp_flrw GenericFD CoordBase SymBase Boundary InitBase NanChecker CartGrid3d Time MoL CarpetIOBasic CarpetIOScalar IOUtil Carpet CarpetLib Vectors CarpetReduce CarpetInterp CarpetSlab  CarpetIOASCII LoopControl GSL CarpetRegrid2 CarpetTracker ADMBase StaticConformal Dissipation SphericalSurface AEILocalInterp SpaceMask ReflectionSymmetry $rotatethorn Slab CarpetIOHDF5 SphereIntegrate Formaline AHFinderDirect IHSpin SphereRad ShiftTracker WeylScal4 Multipole ADM_EJP"
+ActiveThorns = "EvolveScalarFields_flrw IDScalarFieldzyp_flrw AHMask ExternalEtaBeta tmunubase ADMCoupling"
+ActiveThorns = "MPI Timers HDF5 CycleClock hwloc zlib ADMMacros PeriodicCarpet ScalarFluxHorizon ScalarAnalysis"
+
+#############################################################
+# Grid
+#############################################################
+PeriodicCarpet::periodic = "$periodic_boundary"
+
+CoordBase::domainsize                   = minmax
+
+CoordBase::boundary_size_x_lower        = $ghost_zones
+CoordBase::boundary_size_y_lower        = $ghost_zones
+CoordBase::boundary_size_z_lower        = $ghost_zones
+CoordBase::boundary_shiftout_x_lower    = $xmin_shiftout
+CoordBase::boundary_shiftout_y_lower    = $ymin_shiftout
+CoordBase::boundary_shiftout_z_lower    = $zmin_shiftout
+
+CoordBase::boundary_size_x_upper        = $ghost_zones
+CoordBase::boundary_size_y_upper        = $ghost_zones
+CoordBase::boundary_size_z_upper        = $ghost_zones
+CoordBase::boundary_shiftout_x_upper    = 0
+CoordBase::boundary_shiftout_y_upper    = 0
+CoordBase::boundary_shiftout_z_upper    = 0
+
+CoordBase::xmin                         = $xmin
+CoordBase::ymin                         = $ymin
+CoordBase::zmin                         = $zmin
+CoordBase::xmax                         = $rlvls[0]
+CoordBase::ymax                         = $rlvls[0]
+CoordBase::zmax                         = $rlvls[0]
+CoordBase::dx                           = $h0
+CoordBase::dy                           = $h0
+CoordBase::dz                           = $h0
+
+CartGrid3D::type                        = "coordbase"
+CartGrid3D::domain                      = "full"
+CartGrid3D::avoid_origin                = "no"
+
+ReflectionSymmetry::reflection_x   = $reflectx
+ReflectionSymmetry::reflection_y   = $reflecty
+ReflectionSymmetry::reflection_z   = $reflectz
+ReflectionSymmetry::avoid_origin_x = no
+ReflectionSymmetry::avoid_origin_y = no
+ReflectionSymmetry::avoid_origin_z = no
+$RS RotatingSymmetry180::poison_boundaries  = "yes"
+
+#TimerReport::out_every = 128
+#RunStats::calc_every = 128
+
+#############################################################
+# Mesh refinement
+#############################################################
+
+CarpetRegrid2::num_centres          = 1
+CarpetRegrid2::regrid_every               = $regrid_every
+CarpetRegrid2::freeze_unaligned_levels = "yes" 
+CarpetRegrid2::freeze_unaligned_parent_levels = "yes" 
+Carpet::grid_coordinates_filename = "grid.asc" 
+CarpetRegrid2::min_distance = 0
+CarpetRegrid2::min_fraction = 0.4
+CarpetRegrid2::verbose                    = 0
+CarpetRegrid2::symmetry_rotating180        = "$rotate180"
+
+CarpetRegrid2::num_levels_1  =  $num_rf_levels
+CarpetRegrid2::position_x_1  =  0
+CarpetRegrid2::position_y_1  =  0
+CarpetRegrid2::position_z_1  =  0
+
+# 320, 160, 95, 70, 50, 6.875 (dx_max = 10)
+# For 1 processor, (6.875, 0.3125 for CoordBase) 
+$CarpetRegrid2_radii
+
+#############################################################
+# Carpet
+#############################################################
+
+Carpet::ghost_size                      = $ghost_zones
+Carpet::domain_from_coordbase           = "yes"
+Carpet::max_refinement_levels           = $num_rf_levels
+Carpet::refinement_factor               = 2
+Carpet::prolongation_order_space        = 5
+Carpet::prolongation_order_time         = 2
+Carpet::use_buffer_zones                = "yes"
+Carpet::verbose                         = "no"
+Carpet::time_refinement_factors         = "[$timerefs]"
+Carpet::output_timers_every             = $every_coarse
+Carpet::poison_new_timelevels           = "yes"
+Carpet::check_for_poison                = "no"
+Carpet::poison_value                    = 113
+Carpet::print_timestats_every           = 0
+Carpet::init_fill_timelevels            = "yes"
+Carpet::use_tapered_grids               = "no"
+
+#############################################################
+# CarpetLib
+#############################################################
+
+CarpetLib::print_memstats_every         = 0
+CarpetLib::poison_new_memory            = "yes"
+CarpetLib::poison_value                 = 114
+
+#############################################################
+# Time integration
+#############################################################
+
+Cactus::terminate = "any"
+Cactus::max_runtime = 2850
+Cactus::cctk_final_time = $final_time
+Cactus::cctk_itlast = $last_it
+
+# Use 0.5 for RK4 and 0.25 for ICN
+Time::dtfac                           = $base_dtfac
+MethodOfLines::ode_method             = "RK4"
+MethodOfLines::MoL_NaN_Check          = "no"
+MethodOfLines::MoL_Intermediate_Steps = 4
+MethodOfLines::MoL_Num_Scratch_Levels = 1
+
+#############################################################
+# Initial data
+#############################################################
+
+ADMBase::initial_data = "twopuncturesmatterzyp"
+ADMBase::initial_lapse = "utb"
+ADMBase::initial_shift = "zero"
+ADMBase::metric_timelevels = 3
+ADMBase::lapse_timelevels = 3
+ADMBase::shift_timelevels = 3
+
+
+ADMBase::evolution_method = "Kranc2BSSNChiMatter"
+ADMBase::lapse_evolution_method = "Kranc2BSSNChiMatter"
+ADMBase::shift_evolution_method = "Kranc2BSSNChiMatter"
+ADMBase::dtlapse_evolution_method = "Kranc2BSSNChiMatter"
+ADMBase::dtshift_evolution_method = "Kranc2BSSNChiMatter"
+
+TwoPuncturesMatterzyp::par_b          =  2.00
+TwoPuncturesMatterzyp::par_m_plus     =  $mass
+TwoPuncturesMatterzyp::par_m_minus    =  0.0
+TwoPuncturesMatterzyp::par_S_plus[0]  =  $spin[0]
+TwoPuncturesMatterzyp::par_S_plus[1]  =  $spin[1]
+TwoPuncturesMatterzyp::par_S_plus[2]  =  $spin[2]
+TwoPuncturesMatterzyp::move_origin_x  = 2.00 
+TwoPuncturesMatterzyp::epsilon = 1e-3
+
+TwoPuncturesMatterzyp::npoints_A = $tp_npts
+TwoPuncturesMatterzyp::npoints_B = $tp_npts
+
+TwopuncturesMatterzyp::scalar_field = "no"
+
+twopuncturesmatterzyp::a0     = 1
+twopuncturesmatterzyp::H0 = 1
+
+twopuncturesmatterzyp::cv_amp[0]     = 1
+twopuncturesmatterzyp::cv_sigma[0]     = 1
+twopuncturesmatterzyp::add_cvK     = "no"
+
+TwopuncturesMatterzyp::scalarPhia = "EvolveScalarFields::phia"
+TwopuncturesMatterzyp::scalarPia = "EvolveScalarFields::pia"
+TwopuncturesMatterzyp::scalarPhib = "EvolveScalarFields::phib"
+TwopuncturesMatterzyp::scalarPib = "EvolveScalarFields::pib"
+
+SpaceMask::use_mask       = "yes"
+
+#############################################################
+# Initial data of matter ( scalar field  )
+# Gaussian
+#############################################################
+
+IDScalarFieldzyp::field_type     = "Bubbles"
+IDScalarFieldzyp::scalar_profile = "constant"
+IDScalarFieldzyp::potential_type      = "$potentialId"   #"phiFourth"#" inflation"
+EvolveScalarFields::potential_type    = "$potentialEv"  # "inflation" #
+Twopuncturesmatterzyp::potential_type = "$potentialTp"  # "Quadratic"
+
+
+IDScalarFieldzyp::vanishinitialphi = "yes"
+IDScalarFieldzyp::vanishinitialpi = "yes"
+IDScalarFieldzyp::num_clouds = 1
+IDScalarFieldzyp::controlmasspositiveornegative   = 1
+EvolveScalarFields::controlmasspositiveornegative = 1
+
+
+IDScalarFieldzyp::phi0a[0] = $phi0a   # 2.5
+IDScalarFieldzyp::pi0a[0] =  $pi0a   #0.0
+
+twopuncturesmatterzyp::m0     = $m0 #1e-2
+twopuncturesmatterzyp::phi00     = $phi00 #1e-2
+twopuncturesmatterzyp::V0     = $V0 #1e-2
+
+twopuncturesmatterzyp::lamda0     = $lamda0 #0.0
+twopuncturesmatterzyp::Ksign     = 1.0  # 1: negative, 2: positive
+
+IDScalarFieldzyp::lambdaphia = $lamda0 # this is not entering in the initial data set to zero just in case
+##match the initial lambda
+EvolveScalarFields::lambdaphia = $lamda0
+EvolveScalarFields::phiamass = $m0
+EvolveScalarFields::phi00 = $phi00
+EvolveScalarFields::Vi0 = $V0
+
+
+#############################################################
+# a second Scalar field:
+#############################################################
+
+IDScalarFieldzyp::potential = "no"
+
+IDScalarFieldzyp::gcouple = 0
+IDScalarFieldzyp::STcouplea = 0
+IDScalarFieldzyp::STcoupleb = 0
+IDScalarFieldzyp::lambdaphib = 0
+IDScalarFieldzyp::lambdaphian =0
+IDScalarFieldzyp::lambdaphibn =0
+EvolveScalarFields::gcouple = 0
+EvolveScalarFields::lambdaphib = 0
+EvolveScalarFields::lambdaphian =0
+EvolveScalarFields::lambdaphibn =0
+IDScalarFieldzyp::phiav = 0.0
+IDScalarFieldzyp::phibv = 0
+EvolveScalarFields::phiav = 0.00
+EvolveScalarFields::phibv = 0
+TwopuncturesMatterzyp::STcouplea     = 0
+TwopuncturesMatterzyp::STcoupleb     = 0
+EvolveScalarFields::phibmass = 0
+IDScalarFieldzyp::phibmass = 0
+IDScalarFieldzyp::STplankmass     = 0.199471140200716338970
+TwopuncturesMatterzyp::STplankmass     = 0.199471140200716338970
+
+#############################################################
+# Spacetime Evolution
+#############################################################
+
+# The number of points needed in each direction to calculate using
+# derivatives.  
+GenericFD::stencil_width 	= 3
+
+
+kranc2bssnchimatter::m                        = 1
+kranc2bssnchimatter::lapseAdvection           = 1
+kranc2bssnchimatter::gammaDriverLambda        = 0
+kranc2bssnchimatter::betaDotAlphaFactor       = 0.75
+kranc2bssnchimatter::etaBeta                  = 2.0
+kranc2bssnchimatter::chiBeta                  = 1
+kranc2bssnchimatter::gammaDriverLapsePower    = 0
+kranc2bssnchimatter::nasaAdvection            = 1
+kranc2bssnchimatter::newNASAAdvection         = 1
+kranc2bssnchimatter::betatAdvection           = 1
+kranc2bssnchimatter::chiEps                   = $chiEps
+kranc2bssnchimatter::verbose                  = 0
+kranc2bssnchimatter::fd_order                 = "6th"
+kranc2bssnchimatter::lapse_condition          = "1 + log full6thFLRW"
+kranc2bssnchimatter::shift_condition          = "NASA6th"
+kranc2bssnchimatter::boundary_condition       = "radiative"
+kranc2bssnchimatter::recalculate_constraints  = "matter"
+kranc2bssnchimatter::flrwcf  = 1.0
+Kranc2BSSNChiMatter::couple_matter = "yes"
+kranc2bssnchimatter::harmonicf  = 2.0
+TmunuBase::timelevels           = 3
+TmunuBase::stress_energy_storage    = "yes"
+TmunuBase::stress_energy_at_RHS     = "yes" #order_time
+
+
+EvolveScalarFields::phiaBG               = 0
+EvolveScalarFields::fd_order            = "6th" # "full4th" #
+EvolveScalarFields::boundary_condition  = "none" # "none" #
+#EvolveScalarFields::calculate_rho       = "yes"
+EvolveScalarFields::phia_group_bound   = "none"
+EvolveScalarFields::pia_group_bound    = "none"
+EvolveScalarFields::phib_group_bound   = "none"
+EvolveScalarFields::pib_group_bound    = "none"
+
+# This lowers the order of accuracy, but some dissipation might be required
+Dissipation::order                 = 3
+Dissipation::epsdis                = 0.0
+$Dissipation_per_level_lines
+
+Dissipation::vars = "Kranc2BSSNChiMatter::A_group Kranc2BSSNChiMatter::alpha_group Kranc2BSSNChiMatter::beta_group Kranc2BSSNChiMatter::betat_group Kranc2BSSNChiMatter::Gam_group Kranc2BSSNChiMatter::h_group Kranc2BSSNChiMatter::K_group Kranc2BSSNChiMatter::chi_group EvolveScalarFields::phia_group EvolveScalarFields::pia_group EvolveScalarFields::phib_group EvolveScalarFields::pib_group"
+
+
+#############################################################
+# Boundary conditions
+#############################################################
+
+# These specify that no standard CACTUS boundary condition is to be
+# applied. These parameters must be present or the Cactus symmetry
+# boundary condition will not be applied. The outgoing radiative
+# boundary condition provided by Kranc2BSSN is always applied.
+Kranc2BSSNChiMatter::A_group_bound   = "none"
+Kranc2BSSNChiMatter::alpha_group_bound = "none"
+Kranc2BSSNChiMatter::beta_group_bound = "none"
+Kranc2BSSNChiMatter::betat_group_bound = "none"
+Kranc2BSSNChiMatter::Gam_group_bound = "none"
+Kranc2BSSNChiMatter::h_group_bound = "none"
+Kranc2BSSNChiMatter::K_group_bound = "none"
+Kranc2BSSNChiMatter::chi_group_bound = "none"
+
+#############################################################
+# Check for NaNs 
+#############################################################
+
+NaNChecker::check_every = 1
+NaNChecker::action_if_found = "terminate" #"terminate", "just warn", "abort"
+NaNChecker::check_vars = "Kranc2BSSNChiMatter::A_group Kranc2BSSNChiMatter::alpha_group Kranc2BSSNChiMatter::beta_group Kranc2BSSNChiMatter::betat_group Kranc2BSSNChiMatter::chi_group Kranc2BSSNChiMatter::Gam_group Kranc2BSSNChiMatter::h_group Kranc2BSSNChiMatter::K_group"
+NaNChecker::verbose = "all"
+
+#############################################################
+# ShiftTracker 
+#############################################################
+
+ShiftTracker::num_trackers = 0
+
+#############################################################
+# SphericalSurface
+#############################################################
+
+SphericalSurface::nsurfaces  = 2
+SphericalSurface::maxntheta  = 120
+SphericalSurface::maxnphi    = 100
+
+## Apparent Horizons ##
+SphericalSurface::ntheta[0]    = 120
+SphericalSurface::nphi[0]      = 100
+SphericalSurface::ntheta[1]    = 120
+SphericalSurface::nphi[1]      = 100
+
+#############################################################
+# AHFinder
+#############################################################
+AHFinderDirect::find_every = $AH_find_every
+AHFinderDirect::N_horizons = 1
+AHFinderDirect::output_h_every = 0
+AHFinderDirect::move_origins = "no"
+AHFinderDirect::verbose_level = "physics details"
+AHFinderDirect::run_at_CCTK_POSTSTEP = "yes"
+#AHFinderDirect::run_at_CCTK_POSTINITIAL = "yes"
+AHFinderDirect::run_at_CCTK_POSTPOSTINITIAL = "yes"
+AHFinderDirect::run_at_CCTK_POST_RECOVER_VARIABLES = "yes"
+
+AHFinderDirect::origin_x[1] = 0.
+AHFinderDirect::origin_y[1] = 0.
+AHFinderDirect::origin_z[1] = 0.
+AHFinderDirect::initial_guess__coord_sphere__x_center[1] = 0.
+AHFinderDirect::initial_guess__coord_sphere__y_center[1] = 0.
+AHFinderDirect::initial_guess__coord_sphere__z_center[1] = 0.
+AHFinderDirect::initial_guess__coord_sphere__radius[1] = 0.4
+AHFinderDirect::which_surface_to_store_info[1] = 0
+AHFinderDirect::reset_horizon_after_not_finding[1] = "no"
+
+#############################################################
+# IHSpin
+#############################################################
+
+IHSpin::compute_every          = $AH_find_every
+IHSpin::num_horizons           = 2
+IHSpin::surface_index[0]       = 0
+IHSpin::surface_index[1]       = 1
+IHSpin::compute_every_individual[0] = $AH_find_every
+IHSpin::compute_every_individual[1] = $AH_find_every
+IHSpin::interpolator_name      = "Lagrange polynomial interpolation"
+IHSpin::interpolator_pars      = "order=4"
+IHSpin::verbose = 0
+
+#############################################################
+# SphereRad
+#############################################################
+
+SphereRad::max_nsurface           = 1
+SphereRad::surface_index[0]       = 1
+SphereRad::force_position[0]      = "yes"
+SphereRad::mass[0]		  = $mass
+SphereRad::radius_surface[0]      = 0.6
+SphereRad::verbose                = 0
+
+#############################################################
+# Wave extraction
+#############################################################
+
+WeylScal4::offset                    = 1e-8
+WeylScal4::fd_order                  = "4th"
+WeylScal4::WeylScal4_psis_calc_4th_calc_every = 1
+WeylScal4::WeylScal4_psis_calc_4th_calc_offset = 0
+WeylScal4::verbose                   = 0
+
+Multipole::out_every                = $every_coarse
+Multipole::nradii                   = $num_extraction_spheres
+$Multipole_radius_lines
+Multipole::variables                = "EvolveScalarFields::phia{sw=0 name='phia'}
+                                       EvolveScalarFields::pia{sw=0 name='pia'}
+                                       kranc2bssnchimatter::K{sw=0 name='pia'}"
+#WeylScal4::Psi4r{sw=-2 cmplx='WeylScal4::Psi4i'}
+Multipole::verbose                  = 0
+Multipole::l_max                    = 4
+#Multipole::m_mode                   = 4
+Multipole::ntheta                   = 120
+Multipole::nphi                     = 240
+
+#############################################################
+## scalarAnalysis
+##############################################################
+ScalarAnalysis::out_offset            = 0
+ScalarAnalysis::number_of_detectors   = $num_extraction_spheres
+$scalar_Analysis_radius_lines
+
+ScalarAnalysis::interpolator_name     = "Lagrange polynomial interpolation"
+ScalarAnalysis::interpolator_pars     = "order=4"
+ScalarAnalysis::maxntheta             = 60
+ScalarAnalysis:: maxnphi              = 120
+
+#############################################################
+## ScalarFluxHorizon
+##############################################################
+
+ScalarFluxHorizon::out_offset            = 0
+ScalarFluxHorizon::number_of_detectors   = 1
+ScalarFluxHorizon::out_every_det   [0] = 128
+ScalarFluxHorizon::name_detector_by_radius = "no"
+
+ScalarFluxHorizon::interpolator_name     = "Lagrange polynomial interpolation"
+ScalarFluxHorizon::interpolator_pars     = "order=4"
+ScalarFluxHorizon::maxntheta             = 60
+ScalarFluxHorizon:: maxnphi              = 120
+
+#############################################################
+# ADM Energy
+#############################################################
+
+ADM_EJP::number_of_detectors      = $num_extraction_spheres
+$ADM_EJP_radius_lines
+ADM_EJP::verbose                  = 0
+ADM_EJP::interpolator_name        = "Lagrange polynomial interpolation"
+ADM_EJP::interpolator_pars        = "order=4"
+ADM_EJP::ntheta                   = 120
+ADM_EJP::nphi                     = 240
+
+#############################################################
+# Output
+#############################################################
+
+IO::out_dir                   = \$parfile
+IO::out_fileinfo              = "all"
+
+
+CarpetIOScalar::outScalar_every      = 1
+CarpetIOScalar::outScalar_reductions = " minimum maximum norm2" #
+CarpetIOScalar::outScalar_vars       = "
+                                        kranc2bssnchimatter::beta1
+                                        EvolveScalarFields::phia
+                                        EvolveScalarFields::pia
+                                        EvolveScalarFields::rhoE
+                                        kranc2bssnchimatter::alpha
+                                        kranc2bssnchimatter::chi
+                                        kranc2bssnchimatter::A_group
+                                        ADMBase::metric
+                                        kranc2bssnchimatter::K"
+
+
+Kranc2BSSNChiMatter::constraintsfdorder = 4
+
+CarpetIOBasic::outInfo_every         = 32
+CarpetIOBasic::outInfo_vars          = "
+                                        kranc2bssnchimatter::chi
+                                        kranc2bssnchimatter::alpha
+                                        EvolveScalarFields::phia
+                                        kranc2bssnchimatter::bssnham
+        "
+IOASCII::out1D_every          = $out1d
+IOASCII::out1D_d                     = "no"
+CarpetIOASCII::out1D_x               = "no"
+CarpetIOASCII::out1D_y               = "no"
+CarpetIOASCII::out1D_z               = "no"
+CarpetIOASCII::out1D_vars            = "
+                                        EvolveScalarFields::phia
+                                        EvolveScalarFields::pia
+                                        EvolveScalarFields::rhoE
+                                        TmunuBase::stress_energy_scalar
+                                        TmunuBase::stress_energy_tensor
+                                        TmunuBase::stress_energy_vector
+                                        kranc2bssnchimatter::alpha
+                                        kranc2bssnchimatter::beta1
+                                        kranc2bssnchimatter::chi
+                                        kranc2bssnchimatter::K
+                                        kranc2bssnchimatter::A_group
+                                        kranc2bssnchimatter::h_group
+                                        Kranc2BSSNChiMatter::bssnham
+                                        Kranc2BSSNChiMatter::bssnmom_group
+                                        ADMBase::metric"
+                                        #ADMBase::curv
+                                        #ADMBase::alp
+                                        #WeylScal4::Psi4r
+
+carpetioascii::out3D_ghosts   = "yes"
+
+CarpetIOHDF5::compression_level      = 0
+CarpetIOHDF5::out2D_every            = $out2d
+CarpetIOHDF5::out2D_xy               = "yes"
+CarpetIOHDF5::out2D_xz               = "no"
+CarpetIOHDF5::out2D_yz               = "no"
+CarpetIOHDF5::out2D_vars           = "Kranc2BSSNChiMatter::bssnham 
+                                      Kranc2BSSNChiMatter::bssnmom_group 
+                                      Kranc2BSSNChiMatter::alpha"
+
+CarpetIOHDF5::out_every              = $out3d
+CarpetIOHDF5::out_vars               = "Kranc2BSSNChiMatter::alpha Kranc2BSSNChiMatter::bssnham Kranc2BSSNChiMatter::bssnmom_group"
+
+#############################################################
+## Checkpoint and Recovery
+##############################################################
+
+CarpetIOHDF5::checkpoint            = "yes"
+IO::checkpoint_every_walltime_hours = 11
+IO::checkpoint_keep                 = 1
+IO::checkpoint_dir                  = \$parfile
+IO::checkpoint_on_terminate         = "yes"
+
+IO::recover                         = "autoprobe"
+IO::recover_dir                     = \$parfile
+IO::recover_and_remove              = "no"
+
+EOF
+
+my $filename = "$0";
+$filename =~ s/\.rpar/.par/g;
+
+open(OUT,">$filename");
+print OUT "$lines";
+close(OUT);
+

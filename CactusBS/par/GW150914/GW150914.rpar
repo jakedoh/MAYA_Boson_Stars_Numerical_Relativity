@@ -202,7 +202,7 @@ ActiveThorns = "
   CoordGauge
   Coordinates
   CoordinatesSymmetry
-  Formaline
+  
   GlobalDerivative
   hwloc
   IOUtil

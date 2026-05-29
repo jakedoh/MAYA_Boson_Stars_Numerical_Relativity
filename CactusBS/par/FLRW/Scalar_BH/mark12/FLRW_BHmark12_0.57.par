@@ -9,18 +9,20 @@
 ## Grid structure: 
 ##	rl	Extent		dx[M]		Resolution		Npts
 ##	===========================================================================
-##	0 	58.5143 	2.4381  	(M/0.410156  )	24 ^3
-##	1 	29.2571 	1.21905 	(M/0.820312  )	24 ^3
-##	2 	14.6286 	0.609524	(M/1.64062   )	24 ^3
-##	3 	7.31429 	0.304762	(M/3.28125   )	24 ^3
-##	4 	3.65714 	0.152381	(M/6.5625    )	24 ^3
-##	5 	1.82857 	0.0761905	(M/13.125    )	24 ^3
-##	6 	0.914286	0.0380952	(M/26.25     )	24 ^3
-##	7 	0.457143	0.0190476	(M/52.5      )	24 ^3
-##	8 	0.228571	0.00952381	(M/105       )	24 ^3
-##	9 	0.114286	0.0047619	(M/210       )	24 ^3
-##	10	0.0571429	0.00238095	(M/420       )	24 ^3
-##	11	0.0285714	0.00119048	(M/840       )	24 ^3
+##	0 	234.057 	9.75238 	(M/0.102539  )	24 ^3
+##	1 	117.029 	4.87619 	(M/0.205078  )	24 ^3
+##	2 	58.5143 	2.4381  	(M/0.410156  )	24 ^3
+##	3 	29.2571 	1.21905 	(M/0.820312  )	24 ^3
+##	4 	14.6286 	0.609524	(M/1.64062   )	24 ^3
+##	5 	7.31429 	0.304762	(M/3.28125   )	24 ^3
+##	6 	3.65714 	0.152381	(M/6.5625    )	24 ^3
+##	7 	1.82857 	0.0761905	(M/13.125    )	24 ^3
+##	8 	0.914286	0.0380952	(M/26.25     )	24 ^3
+##	9 	0.457143	0.0190476	(M/52.5      )	24 ^3
+##	10	0.228571	0.00952381	(M/105       )	24 ^3
+##	11	0.114286	0.0047619	(M/210       )	24 ^3
+##	12	0.0571429	0.00238095	(M/420       )	24 ^3
+##	13	0.0285714	0.00119048	(M/840       )	24 ^3
 ##
 ###############################################################################
 
@@ -50,15 +52,15 @@ CoordBase::boundary_shiftout_x_upper    = 0
 CoordBase::boundary_shiftout_y_upper    = 0
 CoordBase::boundary_shiftout_z_upper    = 0
 
-CoordBase::xmin                         = -58.5142857142857
-CoordBase::ymin                         = -58.5142857142857
-CoordBase::zmin                         = -58.5142857142857
-CoordBase::xmax                         = 58.5142857142857
-CoordBase::ymax                         = 58.5142857142857
-CoordBase::zmax                         = 58.5142857142857
-CoordBase::dx                           = 2.4380952380952383152
-CoordBase::dy                           = 2.4380952380952383152
-CoordBase::dz                           = 2.4380952380952383152
+CoordBase::xmin                         = -234.057142857143
+CoordBase::ymin                         = -234.057142857143
+CoordBase::zmin                         = -234.057142857143
+CoordBase::xmax                         = 234.057142857143
+CoordBase::ymax                         = 234.057142857143
+CoordBase::zmax                         = 234.057142857143
+CoordBase::dx                           = 9.7523809523809532607
+CoordBase::dy                           = 9.7523809523809532607
+CoordBase::dz                           = 9.7523809523809532607
 
 CartGrid3D::type                        = "coordbase"
 CartGrid3D::domain                      = "full"
@@ -80,7 +82,7 @@ ReflectionSymmetry::avoid_origin_z = no
 #############################################################
 
 CarpetRegrid2::num_centres          = 1
-CarpetRegrid2::regrid_every               = 256
+CarpetRegrid2::regrid_every               = 1024
 CarpetRegrid2::freeze_unaligned_levels = "yes" 
 CarpetRegrid2::freeze_unaligned_parent_levels = "yes" 
 Carpet::grid_coordinates_filename = "grid.asc" 
@@ -89,25 +91,27 @@ CarpetRegrid2::min_fraction = 0.4
 CarpetRegrid2::verbose                    = 0
 CarpetRegrid2::symmetry_rotating180        = "no"
 
-CarpetRegrid2::num_levels_1  =  12
+CarpetRegrid2::num_levels_1  =  14
 CarpetRegrid2::position_x_1  =  0
 CarpetRegrid2::position_y_1  =  0
 CarpetRegrid2::position_z_1  =  0
 
 # 320, 160, 95, 70, 50, 6.875 (dx_max = 10)
 # For 1 processor, (6.875, 0.3125 for CoordBase) 
-CarpetRegrid2::radius_1[0] = 58.5142857142857
-CarpetRegrid2::radius_1[1] = 29.2571428571429
-CarpetRegrid2::radius_1[2] = 14.6285714285714
-CarpetRegrid2::radius_1[3] = 7.31428571428571
-CarpetRegrid2::radius_1[4] = 3.65714285714286
-CarpetRegrid2::radius_1[5] = 1.82857142857143
-CarpetRegrid2::radius_1[6] = 0.914285714285714
-CarpetRegrid2::radius_1[7] = 0.457142857142857
-CarpetRegrid2::radius_1[8] = 0.228571428571429
-CarpetRegrid2::radius_1[9] = 0.114285714285714
-CarpetRegrid2::radius_1[10] = 0.0571428571428571
-CarpetRegrid2::radius_1[11] = 0.0285714285714286
+CarpetRegrid2::radius_1[0] = 234.057142857143
+CarpetRegrid2::radius_1[1] = 117.028571428571
+CarpetRegrid2::radius_1[2] = 58.5142857142857
+CarpetRegrid2::radius_1[3] = 29.2571428571429
+CarpetRegrid2::radius_1[4] = 14.6285714285714
+CarpetRegrid2::radius_1[5] = 7.31428571428571
+CarpetRegrid2::radius_1[6] = 3.65714285714286
+CarpetRegrid2::radius_1[7] = 1.82857142857143
+CarpetRegrid2::radius_1[8] = 0.914285714285714
+CarpetRegrid2::radius_1[9] = 0.457142857142857
+CarpetRegrid2::radius_1[10] = 0.228571428571429
+CarpetRegrid2::radius_1[11] = 0.114285714285714
+CarpetRegrid2::radius_1[12] = 0.0571428571428571
+CarpetRegrid2::radius_1[13] = 0.0285714285714286
 
 
 #############################################################
@@ -116,14 +120,14 @@ CarpetRegrid2::radius_1[11] = 0.0285714285714286
 
 Carpet::ghost_size                      = 4
 Carpet::domain_from_coordbase           = "yes"
-Carpet::max_refinement_levels           = 12
+Carpet::max_refinement_levels           = 14
 Carpet::refinement_factor               = 2
 Carpet::prolongation_order_space        = 5
 Carpet::prolongation_order_time         = 2
 Carpet::use_buffer_zones                = "yes"
 Carpet::verbose                         = "no"
-Carpet::time_refinement_factors         = "[1,1,1,1,2,4,8,16,32,64,128,256]"
-Carpet::output_timers_every             = 256
+Carpet::time_refinement_factors         = "[1,1,1,1,2,4,8,16,32,64,128,256,512,1024]"
+Carpet::output_timers_every             = 1024
 Carpet::poison_new_timelevels           = "yes"
 Carpet::check_for_poison                = "no"
 Carpet::poison_value                    = 113
@@ -313,8 +317,8 @@ Dissipation::order                 = 3
 Dissipation::epsdis                = 0.0
 Dissipation::epsdis_for_level[0] = 0.5
 Dissipation::epsdis_for_level[1] = 0.5
-Dissipation::epsdis_for_level[2] = 0.1
-Dissipation::epsdis_for_level[3] = 0.1
+Dissipation::epsdis_for_level[2] = 0.5
+Dissipation::epsdis_for_level[3] = 0.5
 Dissipation::epsdis_for_level[4] = 0.1
 Dissipation::epsdis_for_level[5] = 0.1
 Dissipation::epsdis_for_level[6] = 0.1
@@ -323,6 +327,8 @@ Dissipation::epsdis_for_level[8] = 0.1
 Dissipation::epsdis_for_level[9] = 0.1
 Dissipation::epsdis_for_level[10] = 0.1
 Dissipation::epsdis_for_level[11] = 0.1
+Dissipation::epsdis_for_level[12] = 0.1
+Dissipation::epsdis_for_level[13] = 0.1
 
 
 Dissipation::vars = "Kranc2BSSNChiMatter::A_group Kranc2BSSNChiMatter::alpha_group Kranc2BSSNChiMatter::beta_group Kranc2BSSNChiMatter::betat_group Kranc2BSSNChiMatter::Gam_group Kranc2BSSNChiMatter::h_group Kranc2BSSNChiMatter::K_group Kranc2BSSNChiMatter::chi_group EvolveScalarFields::phia_group EvolveScalarFields::pia_group EvolveScalarFields::phib_group EvolveScalarFields::pib_group"
@@ -432,14 +438,14 @@ WeylScal4::WeylScal4_psis_calc_4th_calc_every = 1
 WeylScal4::WeylScal4_psis_calc_4th_calc_offset = 0
 WeylScal4::verbose                   = 0
 
-Multipole::out_every                = 256
+Multipole::out_every                = 1024
 Multipole::nradii                   = 6
-Multipole::radius[0]       = 1.67183673469388
-Multipole::radius[1]       = 9.37422740524782
-Multipole::radius[2]       = 17.0766180758018
-Multipole::radius[3]       = 24.7790087463557
-Multipole::radius[4]       = 32.4813994169096
-Multipole::radius[5]       = 40.1837900874636
+Multipole::radius[0]       = 6.68734693877551
+Multipole::radius[1]       = 37.4969096209913
+Multipole::radius[2]       = 68.306472303207
+Multipole::radius[3]       = 99.1160349854227
+Multipole::radius[4]       = 129.925597667638
+Multipole::radius[5]       = 160.735160349854
 
 Multipole::variables                = "EvolveScalarFields::phia{sw=0 name='phia'}
                                        EvolveScalarFields::pia{sw=0 name='pia'}
@@ -456,18 +462,18 @@ Multipole::nphi                     = 240
 ##############################################################
 ScalarAnalysis::out_offset            = 0
 ScalarAnalysis::number_of_detectors   = 6
-scalarAnalysis::detector_radius [0] = 0.0835918367346939
-scalarAnalysis::out_every_det   [0] = 256
-scalarAnalysis::detector_radius [1] = 7.78598250728863
-scalarAnalysis::out_every_det   [1] = 256
-scalarAnalysis::detector_radius [2] = 15.4883731778426
-scalarAnalysis::out_every_det   [2] = 256
-scalarAnalysis::detector_radius [3] = 23.1907638483965
-scalarAnalysis::out_every_det   [3] = 256
-scalarAnalysis::detector_radius [4] = 30.8931545189504
-scalarAnalysis::out_every_det   [4] = 256
-scalarAnalysis::detector_radius [5] = 38.5955451895044
-scalarAnalysis::out_every_det   [5] = 256
+scalarAnalysis::detector_radius [0] = 0.334367346938776
+scalarAnalysis::out_every_det   [0] = 1024
+scalarAnalysis::detector_radius [1] = 31.1439300291545
+scalarAnalysis::out_every_det   [1] = 1024
+scalarAnalysis::detector_radius [2] = 61.9534927113703
+scalarAnalysis::out_every_det   [2] = 1024
+scalarAnalysis::detector_radius [3] = 92.763055393586
+scalarAnalysis::out_every_det   [3] = 1024
+scalarAnalysis::detector_radius [4] = 123.572618075802
+scalarAnalysis::out_every_det   [4] = 1024
+scalarAnalysis::detector_radius [5] = 154.382180758018
+scalarAnalysis::out_every_det   [5] = 1024
 
 
 ScalarAnalysis::interpolator_name     = "Lagrange polynomial interpolation"
@@ -494,18 +500,18 @@ ScalarFluxHorizon:: maxnphi              = 120
 #############################################################
 
 ADM_EJP::number_of_detectors      = 6
-ADM_EJP::detector_radius [0] = 1.67183673469388
-ADM_EJP::out_every_det   [0] = 256
-ADM_EJP::detector_radius [1] = 9.37422740524782
-ADM_EJP::out_every_det   [1] = 256
-ADM_EJP::detector_radius [2] = 17.0766180758018
-ADM_EJP::out_every_det   [2] = 256
-ADM_EJP::detector_radius [3] = 24.7790087463557
-ADM_EJP::out_every_det   [3] = 256
-ADM_EJP::detector_radius [4] = 32.4813994169096
-ADM_EJP::out_every_det   [4] = 256
-ADM_EJP::detector_radius [5] = 40.1837900874636
-ADM_EJP::out_every_det   [5] = 256
+ADM_EJP::detector_radius [0] = 6.68734693877551
+ADM_EJP::out_every_det   [0] = 1024
+ADM_EJP::detector_radius [1] = 37.4969096209913
+ADM_EJP::out_every_det   [1] = 1024
+ADM_EJP::detector_radius [2] = 68.306472303207
+ADM_EJP::out_every_det   [2] = 1024
+ADM_EJP::detector_radius [3] = 99.1160349854227
+ADM_EJP::out_every_det   [3] = 1024
+ADM_EJP::detector_radius [4] = 129.925597667638
+ADM_EJP::out_every_det   [4] = 1024
+ADM_EJP::detector_radius [5] = 160.735160349854
+ADM_EJP::out_every_det   [5] = 1024
 
 ADM_EJP::verbose                  = 0
 ADM_EJP::interpolator_name        = "Lagrange polynomial interpolation"

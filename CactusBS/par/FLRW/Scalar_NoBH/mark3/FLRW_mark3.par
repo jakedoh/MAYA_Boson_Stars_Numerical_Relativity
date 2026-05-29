@@ -9,7 +9,7 @@
 ## Grid structure: 
 ##	rl	Extent		dx[M]		Resolution		Npts
 ##	===========================================================================
-##	0 	50      	0.5     	(M/2         )	100^3
+##	0 	0.238095	0.00119048	(M/840       )	200^3
 ##
 ###############################################################################
 
@@ -39,15 +39,15 @@ CoordBase::boundary_shiftout_x_upper    = 0
 CoordBase::boundary_shiftout_y_upper    = 0
 CoordBase::boundary_shiftout_z_upper    = 0
 
-CoordBase::xmin                         = -50
-CoordBase::ymin                         = -50
-CoordBase::zmin                         = -50
-CoordBase::xmax                         = 50
-CoordBase::ymax                         = 50
-CoordBase::zmax                         = 50
-CoordBase::dx                           = 0.5000000000000000000
-CoordBase::dy                           = 0.5000000000000000000
-CoordBase::dz                           = 0.5000000000000000000
+CoordBase::xmin                         = -0.238095238095238
+CoordBase::ymin                         = -0.238095238095238
+CoordBase::zmin                         = -0.238095238095238
+CoordBase::xmax                         = 0.238095238095238
+CoordBase::ymax                         = 0.238095238095238
+CoordBase::zmax                         = 0.238095238095238
+CoordBase::dx                           = 0.0011904761904761906
+CoordBase::dy                           = 0.0011904761904761906
+CoordBase::dz                           = 0.0011904761904761906
 
 CartGrid3D::type                        = "coordbase"
 CartGrid3D::domain                      = "full"
@@ -69,7 +69,7 @@ ReflectionSymmetry::avoid_origin_z = no
 #############################################################
 
 CarpetRegrid2::num_centres          = 1
-CarpetRegrid2::regrid_every               = 400
+CarpetRegrid2::regrid_every               = 800
 CarpetRegrid2::freeze_unaligned_levels = "yes" 
 CarpetRegrid2::freeze_unaligned_parent_levels = "yes" 
 Carpet::grid_coordinates_filename = "grid.asc" 
@@ -85,7 +85,7 @@ CarpetRegrid2::position_z_1  =  0
 
 # 320, 160, 95, 70, 50, 6.875 (dx_max = 10)
 # For 1 processor, (6.875, 0.3125 for CoordBase) 
-CarpetRegrid2::radius_1[0] = 50
+CarpetRegrid2::radius_1[0] = 0.238095238095238
 
 
 #############################################################
@@ -262,12 +262,12 @@ kranc2bssnchimatter::gammaDriverLapsePower    = 0
 kranc2bssnchimatter::nasaAdvection            = 1
 kranc2bssnchimatter::newNASAAdvection         = 1
 kranc2bssnchimatter::betatAdvection           = 1
-kranc2bssnchimatter::chiEps                   = 1e-06
+kranc2bssnchimatter::chiEps                   = 1e-05
 kranc2bssnchimatter::verbose                  = 0
 kranc2bssnchimatter::fd_order                 = "6th"
 kranc2bssnchimatter::lapse_condition          = "1 + log full6thFLRW"
 kranc2bssnchimatter::shift_condition          = "NASA6th"
-kranc2bssnchimatter::boundary_condition       = "none"
+kranc2bssnchimatter::boundary_condition       = "radiative"
 kranc2bssnchimatter::recalculate_constraints  = "matter"
 kranc2bssnchimatter::flrwcf  = 1.0
 Kranc2BSSNChiMatter::couple_matter = "yes"
@@ -401,12 +401,12 @@ WeylScal4::verbose                   = 0
 
 Multipole::out_every                = 1
 Multipole::nradii                   = 6
-Multipole::radius[0]       = 1.42857142857143
-Multipole::radius[1]       = 8.01020408163265
-Multipole::radius[2]       = 14.5918367346939
-Multipole::radius[3]       = 21.1734693877551
-Multipole::radius[4]       = 27.7551020408163
-Multipole::radius[5]       = 34.3367346938776
+Multipole::radius[0]       = 0.00680272108843537
+Multipole::radius[1]       = 0.0381438289601555
+Multipole::radius[2]       = 0.0694849368318756
+Multipole::radius[3]       = 0.100826044703596
+Multipole::radius[4]       = 0.132167152575316
+Multipole::radius[5]       = 0.163508260447036
 
 Multipole::variables                = "EvolveScalarFields::phia{sw=0 name='phia'}
                                        EvolveScalarFields::pia{sw=0 name='pia'}
@@ -435,17 +435,17 @@ Multipole::nphi                     = 240
 #############################################################
 
 ADM_EJP::number_of_detectors      = 6
-ADM_EJP::detector_radius [0] = 1.42857142857143
+ADM_EJP::detector_radius [0] = 0.00680272108843537
 ADM_EJP::out_every_det   [0] = 1
-ADM_EJP::detector_radius [1] = 8.01020408163265
+ADM_EJP::detector_radius [1] = 0.0381438289601555
 ADM_EJP::out_every_det   [1] = 1
-ADM_EJP::detector_radius [2] = 14.5918367346939
+ADM_EJP::detector_radius [2] = 0.0694849368318756
 ADM_EJP::out_every_det   [2] = 1
-ADM_EJP::detector_radius [3] = 21.1734693877551
+ADM_EJP::detector_radius [3] = 0.100826044703596
 ADM_EJP::out_every_det   [3] = 1
-ADM_EJP::detector_radius [4] = 27.7551020408163
+ADM_EJP::detector_radius [4] = 0.132167152575316
 ADM_EJP::out_every_det   [4] = 1
-ADM_EJP::detector_radius [5] = 34.3367346938776
+ADM_EJP::detector_radius [5] = 0.163508260447036
 ADM_EJP::out_every_det   [5] = 1
 
 ADM_EJP::verbose                  = 0
@@ -468,10 +468,14 @@ CarpetIOScalar::outScalar_vars       = "
                                         kranc2bssnchimatter::beta1
                                         EvolveScalarFields::phia
                                         EvolveScalarFields::pia
-                                        EvolveScalarFields::rhoE
+                                        #EvolveScalarFields::rhoE
                                         kranc2bssnchimatter::alpha
                                         kranc2bssnchimatter::chi
-                                        kranc2bssnchimatter::K"
+                                        kranc2bssnchimatter::K
+                                        ADMBase::metric
+                                        kranc2bssnchimatter::bssnham
+                                        kranc2bssnchimatter::A_group
+                                        kranc2bssnchimatter::h_group"
 
 
 Kranc2BSSNChiMatter::constraintsfdorder = 4
@@ -481,9 +485,9 @@ CarpetIOBasic::outInfo_vars          = "
                                         kranc2bssnchimatter::chi
                                         kranc2bssnchimatter::alpha
                                         EvolveScalarFields::phia
-                                        kranc2bssnchimatter::bssnham
-        "
-IOASCII::out1D_every          = 8
+                                        kranc2bssnchimatter::bssnham"
+
+IOASCII::out1D_every          = 1
 IOASCII::out1D_d                     = no
 CarpetIOASCII::out1D_x               = "yes"
 CarpetIOASCII::out1D_y               = "no"
@@ -503,7 +507,8 @@ CarpetIOASCII::out1D_vars            = "
                                         ADMBase::metric
                                         Kranc2BSSNChiMatter::bssnham
                                         Kranc2BSSNChiMatter::bssnmom_group
-                                        kranc2bssnchimatter::A_group"
+                                        kranc2bssnchimatter::A_group
+                                        kranc2bssnchimatter::h_group"
 carpetioascii::out3D_ghosts   = "yes"
 
 CarpetIOHDF5::compression_level      = 0
