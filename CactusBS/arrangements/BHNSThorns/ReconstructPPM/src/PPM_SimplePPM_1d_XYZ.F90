@@ -934,6 +934,6 @@ end module PPM_SimplePPM_1d_XYZ
 #  undef SimplePPM_1d_y_dMHD_done
 #  undef SimplePPM_1d_z_dMHD_done
 #else
-#include "/home/miguel/Cactus/arrangements/Scotch/ReconstructPPM/src/PPM_SimplePPM_1d_XYZ.F90"
+#include "/work2/09364/jakedoh/frontera/CactusMG/Cactus/arrangements/BHNSThorns/ReconstructPPM/src/PPM_SimplePPM_1d_XYZ.F90"
 !! We are including ourselves again.
 #endif

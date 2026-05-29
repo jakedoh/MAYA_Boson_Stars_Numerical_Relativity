@@ -1,0 +1,10 @@
+# Schedule definitions for thorn BondiID
+# $Header:$
+
+#STORAGE: tov_mass_group
+
+SCHEDULE bondiid_constructSources IN ADMBase_InitialData
+{
+ OPTIONS: GLOBAL
+ LANG: C
+} "Construct the base sources for TwoPunctures"

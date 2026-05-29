@@ -11,7 +11,7 @@ $(UTIL_DIR)$(DIRSEP)%: $(BUILD_DIR)$(DIRSEP)Whisky$(DIRSEP)%.o
 	$(F90) $(CREATEEXE)$(OPTIONSEP)$@ $(DEBUG_LD) $(LDFLAGS) $(EXTRAFLAGS) $<
 
 
-$(BUILD_DIR)$(DIRSEP)Whisky$(DIRSEP)%.o: $(PACKAGE_DIR)$(DIRSEP)Scotch$(DIRSEP)Whisky$(DIRSEP)src$(DIRSEP)util$(DIRSEP)%.f90
+$(BUILD_DIR)$(DIRSEP)Whisky$(DIRSEP)%.o: $(PACKAGE_DIR)$(DIRSEP)BHNSThorns$(DIRSEP)Whisky$(DIRSEP)src$(DIRSEP)util$(DIRSEP)%.f90
 	@echo Compiling $<
 	if [ ! -d $(BUILD_DIR)$(DIRSEP)Whisky ]; then $(MKDIR) $(MKDIRFLAGS) $(BUILD_DIR)$(DIRSEP)Whisky ; fi
 	cd $(BUILD_DIR)$(DIRSEP)Whisky
