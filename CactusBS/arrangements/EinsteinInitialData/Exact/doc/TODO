@@ -1,0 +1,101 @@
+Things to do for this thorn
+===========================
+$Header$
+
+Jonathan Thornburg:
+* make the hard-wired 1.0e-6 finite differencing grid spacing in
+   Bona_Masso_data.F77  a parameter
+* Are we setting the initial data at the right time level
+  (there are comments in  gauge.F77  that we're half-a-time-step off)?
+  Is this still a problem now that we always use MoL?
+  Do we still need to support the non-MoL case?
+[Note by Erik Schnetter, 2005-05-15: This is not an issue any more.
+Jonathan, please remove this item.]
+* add options to set ALL time levels of initial data, not just the
+  current level
+
+----------------------------------------
+
+Ian Hawke:
+It would be nice to be able to output the difference between a
+numerical evolution and the exact solution.
+
+----------------------------------------
+
+Sascha Husa:
+It would be nice if Exact could set up variables other than the ADM ones
+(indeed it appears to not even grok BSSN right now).
+
+[Note by Erik Schnetter, 2005-05-15: This is a misunderstanding by
+Sascha.  Thorn Exact works just fine with the BSSN variables.
+Jonathan, please remove this item.]
+
+----------------------------------------
+
+Sascha Husa:
+The boundary setup needs to be generalized to handle ghost zones wider
+than 1 point.
+
+[Note by Erik Schnetter, 2005-05-15: This is a misunderstanding by
+Sascha.  Thorn Exact works just fine with more than one ghost zones or
+more than one boundary point.  Jonathan, please remove this item.]
+
+----------------------------------------
+
+Every model should have .ge. 1 test case!  Right now most of the
+models have no test cases at all, and this makes it way too easy for
+bugs to creep in and go undetected for a long time.
+
+For models satisfying the Einstein eqns, it would be nice to also have
+test cases which compute the Hamiltonian constraint (and maybe the
+momentum constraints too) and check that it (they) are suitably small.
+	(The down side of that is that is that those test
+	cases would then need at least ADMConstraints
+	to be compiled into your Cactus binary, and that
+	in turn requires ADMMacros.)
+This would help guard against typos, wrong formulas, and other
+"consistent, but wrong" cases.
+
+----------------------------------------
+It would be nice if Exact supported fisheye.
+Failing that, it could at least check if FishEye is active
+  and cleanly report an error.
+----------------------------------------
+From schnetter@aei.mpg.de Tue Jan 18 19:24:05 2005
+Date: Tue, 18 Jan 2005 19:23:06 +0100
+From: Erik Schnetter <schnetter@aei.mpg.de>
+To: numrel@aei.mpg.de
+Subject: [Numrel] Uninitialised variables AEIThorns/Exact
+
+I noticed that not all metric routines set the variable "psi", which is 
+probably some kind of conformal factors.  However, some do, and I 
+cannot see a rule for when this is the case.
+
+In Bona_Masso_data.F77, there are later some unconditional calculations 
+on this value of psi.
+
+How is this variable psi supposed to be handled?  Should it be 
+initialised to some default?  Is there some kind of per-metric flag 
+that determines whether it should be set?
+
+There is also a strange statement
+
+      if (psi .gt. 0.0d0) then
+        psi_on=1
+      else
+        psi_on=0
+      end if
+
+near the beginning of Bona_Masso_data.F77 which I do not understand.
+
+-erik
+
+-- 
+Erik Schnetter <schnetter@aei.mpg.de>   http://www.aei.mpg.de/~eschnett/
+
+My email is as private as my paper mail.  I therefore support encrypting
+and signing email messages.  Get my PGP key from www.keyserver.net.
+
+    [ Part 2, Application/PGP-SIGNATURE  196bytes. ]
+    [ Unable to print this part. ]
+----------------------------------------

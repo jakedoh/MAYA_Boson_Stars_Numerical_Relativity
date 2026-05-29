@@ -1,0 +1,51 @@
+# Schedule definitions for thorn FLRWBackground
+
+# INITIAL CONDITIONS
+
+if ( CCTK_EQUALS(initial_hydro,"FLRWBackground") ) {
+
+  SCHEDULE initialHydro_FLRW IN HydroBase_Initial
+  {
+    LANG: C
+  } "Populates the hydro and metric GFs"
+
+}
+
+if ( CCTK_EQUALS(initial_data,"FLRWBackground") ) {
+
+  SCHEDULE initialMetric_FLRW IN ADMBase_InitialData
+  {
+    LANG: C
+  } "Populates the hydro and metric GFs"
+
+}
+
+
+# HYDRO BOUNDARY CONDITIONS
+
+
+if ( CCTK_EQUALS(boundary_condition,"FLRW")) {
+  SCHEDULE FLRWBackground_HydroBoundary IN HydroBase_PostStep AS FLRWBackground_HydroBoundary
+  {
+    LANG:C
+  }"FLRW boundary conditions for the hydro GFs"
+
+  SCHEDULE FLRWBackground_HydroBoundary IN SetTmunu AFTER (TmunuBase_SetTmunu,TmunuBase_ZeroTmunu) BEFORE AddToTmunu
+  {
+    LANG:C
+  }"FLRW boundary conditions for the hydro GFs"
+}
+
+
+if (CCTK_EQUALS(boundary_condition,"ConformalFLRW")) {
+  SCHEDULE FLRWBackground_HydroBoundaryConformal IN HydroBase_PostStep AS FLRWBackground_HydroBoundary
+  {
+    LANG:C
+  }"FLRW boundary conditions for the hydro GFs"
+
+  SCHEDULE FLRWBackground_HydroBoundaryConformal IN SetTmunu AFTER (TmunuBase_SetTmunu,TmunuBase_ZeroTmunu) BEFORE AddToTmunu
+  {
+    LANG:C
+  }"FLRW boundary conditions for the hydro GFs"
+
+}

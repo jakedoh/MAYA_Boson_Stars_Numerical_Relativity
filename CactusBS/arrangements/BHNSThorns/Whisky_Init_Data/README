@@ -1,0 +1,8 @@
+Cactus Code Thorn Hydra_Init_Data
+Authors    : See ThornGuide and Whisky.
+CVS info   : $Header$
+--------------------------------------------------------------------------
+
+Purpose of the thorn:
+
+Provides simple initial data (shock tubes, TOV stars) for the Whisky code.

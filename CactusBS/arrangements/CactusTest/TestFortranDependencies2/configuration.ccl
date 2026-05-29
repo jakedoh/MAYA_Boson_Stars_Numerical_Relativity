@@ -1,0 +1,8 @@
+# Configuration definition for thorn TestFortranDependencies2
+# $Header$
+
+PROVIDES TestFortranDependencies
+{
+  SCRIPT
+  LANG
+}

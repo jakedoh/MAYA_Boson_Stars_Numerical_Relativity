@@ -1,0 +1,11 @@
+Cactus Code Thorn TestFortranDependencies1
+Author(s)    : Erik Schnetter
+Maintainer(s): Cactus team
+Licence      : LGPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+Test Fortran intra-thorn and inter-thorn make dependencies.  This
+thorn contains the intra-thorn dependencies, and depends on the thorn
+TestFortranDependencies2.

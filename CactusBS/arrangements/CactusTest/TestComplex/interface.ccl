@@ -1,0 +1,45 @@
+# Interface definition for thorn TestComplex
+# $Header$
+
+implements: testcomplex
+
+complex cvars3d dim=3 type=gf timelevels=2
+{
+  comp3d
+} "3D complex grid functions"
+
+#complex cvars2d dim=2 type=gf
+#{
+#  comp2d
+#} "2D complex grid functions"
+
+#complex cvars1d dim=1 type=gf
+#{
+#  comp1d
+#} "1D complex grid functions"
+
+complex carrays3d dim=3 size=10,10,10 type=array
+{
+  acomp3d
+} "3D complex grid arrays"
+
+complex carrays2d dim=2 size=10,10 type=array
+{
+  acomp2d
+} "2D complex grid arrays"
+
+complex carrays1d dim=1 size=10 type=array
+{
+  acomp1d
+} "1D complex grid arrays"
+
+complex cscalars type=scalar
+{
+  scomp
+} "complex grid scalars"
+
+real cmplx_output type=scalar
+{
+  real_part
+  imaginary_part
+}

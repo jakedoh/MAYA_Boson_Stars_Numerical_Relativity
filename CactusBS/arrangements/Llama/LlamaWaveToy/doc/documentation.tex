@@ -1,0 +1,460 @@
+\documentclass{article}
+
+% Use the Cactus ThornGuide style file
+% (Automatically used from Cactus distribution, if you have a
+%  thorn without the Cactus Flesh download this from the Cactus
+%  homepage at www.cactuscode.org)
+\usepackage{../../../../doc/latex/cactus}
+
+\begin{document}
+
+\author{Erik Schnetter \textless schnetter@aei.mpg.de\textgreater \\
+Luis Lehner \textless lehner@lsu.edu\textgreater \\
+Manuel Tiglio \textless tiglio@lsu.edu\textgreater}
+\title{A Multi-Patch Wave Toy}
+
+\date{\today}
+
+\maketitle
+
+% START CACTUS THORNGUIDE
+
+% \begin{abstract}
+%
+% \end{abstract}
+
+%\section{Introduction}
+
+\section{Physical System}
+
+The massless wave equation for a scalar field $\phi$ can be written as
+$$
+\partial_\mu(\gamma^{\mu \nu}d_\nu)=0
+$$
+where $\gamma^{\mu \nu}=\sqrt{-g}g^{\mu \nu}$, and $d_{\mu}\equiv\partial_{\mu }\phi$. Using the
+expressions $\sqrt{-g} = \alpha\sqrt{h}$ and
+\begin{displaymath}
+g^{\mu\nu} = \left( \begin{array}{cc} -1/\alpha^2 & \beta^i/\alpha^2
+\\ \beta^j/\alpha^2 & \gamma^{ij} - \beta^i \beta^j/\alpha^2 \end{array} \right),
+\end{displaymath}
+where $\gamma^{ij}$ is the inverse of the three metric, the equation can be rewritten as
+\begin{eqnarray}
+\dot{\phi } &=& \Pi, \\
+\dot{\Pi} &=& \beta^i\partial_i\Pi + 
+\frac{\alpha }{\sqrt{h}}\partial_i\left(\frac{\sqrt{h}}{\alpha} \beta^i\Pi + 
+\frac{\sqrt{h}}{\alpha}H^{ij}d_j \right) + \frac{\alpha }{\sqrt{h}}d_i\partial_t
+\left(\frac{\sqrt{h}\beta ^i}{\alpha } \right) - \frac{\Pi \alpha
+}{\sqrt{h}}\partial_t \left( \frac{\sqrt{h}}{\alpha }  \right), \\
+\dot{d_i} &=& \partial_i \Pi
+\end{eqnarray}
+with $H^{ij} \equiv \alpha^2 \gamma^{ij} - \beta^i \beta^j$.
+The non-shift speed modes with respect to a boundary with normal $n_i$ are 
+$$
+v^{\pm} = \lambda \Pi + H^{ij}n_id_j
+$$
+and the shift speed modes are $d_A$, with $A$ transversal directions. 
+
+The physical energy is
+$$
+E = \frac{1}{2}\int\frac{ 1}{\alpha }\left[ \Pi^2 + H^{ij}d_i d_j \right]\sqrt{h}dx^3
+$$
+and the way the equations above have been written this energy is not increasing in 
+the stationary background case if homogeneous boundary 
+conditions are given at outer boundaries, also at the discrete level (replacing above 
+$\partial_i$ by $D_i$). 
+
+The implementation of the field equations in the code differs slightly from the above. Assuming a
+stationary background and expanding out the derivative operator, we obtain the equations in the
+final form
+\begin{eqnarray}
+\dot{\phi } &=& \Pi, \\
+\dot{\Pi} &=& \beta^i\partial_i\Pi + 
+\frac{\alpha }{\sqrt{h}}\partial_i\left(\frac{\sqrt{h}}{\alpha} \beta^i\Pi \right)
++ \frac{\alpha }{\sqrt{h}}\partial_i\left(\frac{\sqrt{h}}{\alpha}H^{ij}\right) \partial_j \phi 
++ \frac{\alpha }{\sqrt{h}} \frac{\sqrt{h}}{\alpha} H^{ij} \partial_i\partial_j \phi.
+\end{eqnarray}
+
+\section{Non-linear addition to the multi-patch wave toy}
+
+Simple addition to the wave multi-patch toy to get started on this.
+
+\subsection{Physical System}
+This is just a non-linear wave equation obtained, a very minor modification
+to the wave equation thorn adding a different initial data and a slight modification
+to the right hand side. A reference to this is in a paper by Liebling to appear
+in Phys. Rev. D (2005).
+The non-linear wave equation is written as
+$$
+\partial_u(\gamma^{\mu \nu}d_\nu)= \phi^p
+$$
+where $\gamma^{\mu \nu}=\sqrt{-g}g^{\mu \nu}$, and $d_{\mu}=\partial_{\mu }\phi$ and
+$p$ must be an odd integer $\ge 3$.
+
+The initial data coded is given by
+\begin{eqnarray}
+\phi &=& A e^{-(r_1 - R)^2/\delta^2} \\
+\Pi &=& \mu \phi_{,r} + \Omega ( y \phi_{,x} - x \phi_{,y} ) \\
+d_i = \phi_{,i}
+\end{eqnarray}
+with $\tilde r^2 = \epsilon_x x^2 + \epsilon_y y^2 + z^2$.
+
+The parameters used for this initial data are given some distinct names to
+avoid conflicts with existing ones and are as follows:
+\begin{itemize}
+\item initial-data = GaussianNonLinear (choose the above mentioned initial data)
+\item nonlinearrhs = turn on/off the right hand side for testing. a boolean variable.
+\item powerrhs = power $p$ above.
+\item epsx = $\epsilon_x$ 
+\item epsy = $\epsilon_y$
+\item ANL = $A$
+\item deltaNL = $\delta$
+\item omeNL =  $\Omega$
+\item RNL = R
+\end{itemize}
+
+Note, as the solution is not known, one must set for now the incoming fields to $0$. CPBC might
+one day be put... though who knows :-)
+
+
+
+\section{Formulations}
+
+\begin{eqnarray}
+   U & = & \left[ \begin{array}{cccc} \rho & v_x & v_y & v_z
+   \end{array} \right]^T = \left[ \begin{array}{cc} \rho & v_i
+   \end{array} \right]^T
+\\
+   \partial_t U & = & A^i \partial_i U + \cdots
+\\
+   || n_i || & \ne & 1
+\end{eqnarray}
+
+
+
+\subsection{$dt$}
+
+   Setting $\rho = \partial_t u$.
+
+   RHS:
+
+\begin{eqnarray}
+   H^{ij} & = & \alpha^2 \gamma^{ij} - \beta^i \beta^j
+\\
+   \partial_t u & = & \rho
+\\
+   \partial_t \rho & = & \beta^i \partial_i \rho +
+   \frac{\alpha}{\epsilon} \partial_i \frac{\epsilon}{\alpha} \left(
+   \beta^i \rho + H^{ij} v_j \right)
+\\
+   \partial_t v_i & = & \partial_i \rho
+\end{eqnarray}
+
+   Propagation matrix:
+
+\begin{eqnarray}
+   A^x & = & \left( \begin{array}{cccc}
+%
+   2 \beta^x & - \beta^x \beta^x + \alpha^2 \gamma^{xx} & - \beta^x
+   \beta^y + \gamma^{xy} \alpha^2 & -\beta^x \beta^z + \alpha^2
+   \gamma^{xz}
+\\
+   1 & 0 & 0 & 0
+\\
+   0 & 0 & 0 & 0
+\\
+   0 & 0 & 0 & 0
+%
+   \end{array} \right)
+\end{eqnarray}
+
+\begin{eqnarray}
+   A^n & = & \left( \begin{array}{cc}
+%
+   2 \beta^i n_i & \left( - \beta^i \beta^j + \alpha^2 \gamma^{ij}
+   \right) n_i
+\\
+   n_i & 0
+%
+   \end{array} \right)
+\end{eqnarray}
+
+   Eigensystem:
+
+%% \begin{eqnarray}
+%%    \lambda_1 = 0 &, & w_1 = \left[ \begin{array}{cccc}
+%% %
+%%    0 & - \beta^x \beta^z + \alpha^2 \gamma^{xz} & 0 & \beta^x \beta^x
+%%    - \alpha^2 \gamma^{xx}
+%% %
+%%    \end{array} \right]^T
+%% \\
+%%    \lambda_2 = 0 &, & w_2 = \left[ \begin{array}{cccc}
+%% %
+%%    0 & - \beta^x \beta^y + \alpha^2 \gamma^{xy} & \beta^x \beta^x -
+%%    \alpha^2 \gamma^{xx} & 0
+%% %
+%%    \end{array} \right]^T
+%% \\
+%%    \lambda_3 = \beta^x - \alpha \sqrt{\gamma^{xx}} &, & w_3 = \left[
+%%    \begin{array}{cccc}
+%% %
+%%    \beta^x - \alpha \sqrt{\gamma^{xx}} & 1 & 0 & 0
+%% %
+%%    \end{array} \right]^T
+%% \\
+%%    \lambda_4 = \beta^x + \alpha \sqrt{\gamma^{xx}} &, & w_4 = \left[
+%%    \begin{array}{cccc}
+%% %
+%%    \beta^x + \alpha \sqrt{\gamma^{xx}} & 1 & 0 & 0
+%% %
+%%    \end{array} \right]^T
+%% \end{eqnarray}
+%% 
+%% \begin{eqnarray}
+%%    \lambda_t = 0 &, & w_t = \left[ \begin{array}{cc}
+%% %
+%%    0 & H^{ij} n_i \left( t_j n_k - n_j t_k \right)
+%% %
+%%    \end{array} \right]^T
+%% \\
+%%    \lambda_\pm = \beta^i n_i \pm \alpha \sqrt{\gamma^{ij} n_i n_j} &,
+%%    & w_\pm = \left[ \begin{array}{cccc}
+%% %
+%%    \beta^i n_i \pm \alpha \sqrt{\gamma^{ij} n_i n_j} & n_j
+%% %
+%%    \end{array} \right]^T
+%% \end{eqnarray}
+
+\begin{eqnarray}
+   \lambda_1 = 0 &, & w_1 = \left[ \begin{array}{cccc}
+%
+   0 & 0 & 0 & 1
+%
+   \end{array} \right]^T
+\\
+   \lambda_2 = 0 &, & w_2 = \left[ \begin{array}{cccc}
+%
+   0 & 0 & 1 & 0
+%
+   \end{array} \right]^T
+\\
+   \lambda_3 = \beta^x - \alpha \sqrt{\gamma^{xx}} &, & w_3 = \left[
+   \begin{array}{cccc}
+%
+   \beta^x - \alpha \sqrt{\gamma^{xx}} &
+   \beta^x \beta^x + \alpha^2 \gamma^{xx} &
+   \beta^x \beta^y + \alpha^2 \gamma^{xy} &
+   \beta^x \beta^z + \alpha^2 \gamma^{xz}
+%
+   \end{array} \right]^T
+\\
+   \lambda_4 = \beta^x + \alpha \sqrt{\gamma^{xx}} &, & w_4 = \left[
+   \begin{array}{cccc}
+%
+   \beta^x + \alpha \sqrt{\gamma^{xx}} &
+   \beta^x \beta^x + \alpha^2 \gamma^{xx} &
+   \beta^x \beta^y + \alpha^2 \gamma^{xy} &
+   \beta^x \beta^z + \alpha^2 \gamma^{xz}
+%
+   \end{array} \right]^T
+\end{eqnarray}
+
+\begin{eqnarray}
+   \lambda_t = 0 &, & w_t = \left[ \begin{array}{cc}
+%
+   0 & t_i
+%
+   \end{array} \right]^T
+\\
+   \lambda_\pm = \beta^i n_i \pm \alpha \sqrt{\gamma^{ij} n_i n_j} &,
+   & w_\pm = \left[ \begin{array}{cccc}
+%
+   \beta^i n_i \pm \alpha \sqrt{\gamma^{ij} n_i n_j} & H^{ij} n_j
+%
+   \end{array} \right]^T
+\end{eqnarray}
+
+
+
+\subsection{$d0$}
+
+   Setting $\rho = \mathcal{L}_n u$ with $n_a = D_a t$, leading to
+   $\rho = \partial_0 u = (1/\alpha) \partial_t u - (1/\alpha) \beta^i
+   \partial_i u$.
+
+   RHS:
+
+\begin{eqnarray}
+   H^{ij} & = & \gamma^{ij}
+\\
+   \partial_t u & = & \alpha \rho + \beta^i v_i
+\\
+   \partial_t \rho & = & \beta^i \partial_i \rho +
+   \frac{1}{\epsilon} \partial_i \epsilon \alpha H^{ij} v_j +
+   \frac{\rho}{\epsilon} \partial_i \epsilon \beta^i
+\\
+   \partial_t v_i & = & \beta^j \partial_j v_i + v_j \partial_i
+   \beta^j + \partial_i \alpha \rho
+\end{eqnarray}
+
+   Propagation matrix:
+
+\begin{eqnarray}
+   A^x & = & \left( \begin{array}{cccc}
+%
+   \beta^x & \alpha \gamma^{xx} & \alpha \gamma^{xy} & \alpha
+   \gamma^{xz}
+\\
+   \alpha & \beta^x & 0 & 0
+\\
+   0 & 0 & \beta^x & 0
+\\
+   0 & 0 & 0 & \beta^x
+%
+   \end{array} \right)
+\end{eqnarray}
+
+\begin{eqnarray}
+   A^n & = & \left( \begin{array}{cc}
+%
+   \beta^i n_i & \alpha \gamma^{ij} n_i
+\\
+   \alpha n_i & \beta^k n_k \delta_{ij}
+%
+   \end{array} \right)
+\end{eqnarray}
+
+   Eigensystem:
+
+%% \begin{eqnarray}
+%%    \lambda_1 = \beta^x &, & w_1 = \left[ \begin{array}{cccc}
+%% %
+%%    0 & - \gamma^{xz} & 0 & \gamma^{xx}
+%% %
+%%    \end{array} \right]^T
+%% \\
+%%    \lambda_2 = \beta^x &, & w_2 = \left[ \begin{array}{cccc}
+%% %
+%%    0 & - \gamma^{xy} & \gamma^{xx} & 0
+%% %
+%%    \end{array} \right]^T
+%% \\
+%%    \lambda_3 = \beta^x - \alpha \sqrt{ \gamma^{xx} + \gamma^{xy} +
+%%    \gamma^{xz} } &, & w_3 = \left[ \begin{array}{cccc}
+%% %
+%%    - \sqrt{ \gamma^{xx} + \gamma^{xy} + \gamma^{xz} } & 1 & 1 & 1
+%% %
+%%    \end{array} \right]^T
+%% \\
+%%    \lambda_4 = \beta^x + \alpha \sqrt{ \gamma^{xx} + \gamma^{xy} +
+%%    \gamma^{xz} } &, & w_4 = \left[ \begin{array}{cccc}
+%% %
+%%    \sqrt{ \gamma^{xx} + \gamma^{xy} + \gamma^{xz} } & 1 & 1 & 1
+%% %
+%%    \end{array} \right]^T
+%% \end{eqnarray}
+
+\begin{eqnarray}
+   \lambda_t = \beta^i n_i &, & w_t = \left[ \begin{array}{cccc}
+%
+   0 & - \gamma^{ij} n_j n_k t^k + \gamma^{jk} n_j n_k t^i
+%
+   \end{array} \right]^T
+\\
+   \lambda_\pm = \beta^i n_i \pm \alpha \sqrt{ \gamma^{ij} n_i n_j }
+   &, & w_\pm = \left[ \begin{array}{cccc}
+%
+   \pm \sqrt{ \gamma^{ij} n_i n_j } & \gamma^{ij} n_j
+%
+   \end{array} \right]^T
+\end{eqnarray}
+
+
+
+\subsection{$dk$}
+
+   (This section very probably contains errors, say Erik on
+   2005-04-13.)
+
+   Setting $\rho = \mathcal{L}_k u$ with a ``Killing'' vector $k^a =
+   \partial_t x^a$, leading to $\rho = (1/\alpha) \partial_t u$.
+
+   RHS:
+
+\begin{eqnarray}
+   H^{ij} & = & \gamma^{ij} - \frac{ \beta^i \beta^j }{ \alpha^2 }
+\\
+   \partial_t u & = & \alpha \rho
+\\
+   \partial_t \rho & = & \frac{\beta^i}{\alpha} \partial_i \alpha \rho
+   + \frac{1}{\epsilon} \partial_i \epsilon \left( \beta^i \rho +
+   \alpha H^{ij} v_j \right)
+\\
+   \partial_t v_i & = & \partial_i \alpha \rho
+\end{eqnarray}
+
+   Propagation matrix:
+
+\begin{eqnarray}
+   A^x & = & \left( \begin{array}{cccc}
+%
+   2 \beta^x & \alpha \left( - \frac{\beta^x \beta^x}{\alpha^2} +
+   \gamma^{xx} \right) & \alpha \left( - \frac{\beta^x
+   \beta^y}{\alpha^2} + \gamma^{xy} \right) & \alpha \left( -
+   \frac{\beta^x \beta^z}{\alpha^2} + \gamma^{xz} \right)
+\\
+   \alpha & 0 & 0 & 0
+\\
+   0 & 0 & 0 & 0
+\\
+   0 & 0 & 0 & 0
+%
+   \end{array} \right)
+\end{eqnarray}
+
+   Eigensystem:
+
+\begin{eqnarray}
+   \lambda_1 = 0 &, & w_1 = \left[ \begin{array}{cccc}
+%
+   0 & - \beta^x \beta^z + \alpha^2 \gamma^{xz} & 0 & \beta^x \beta^x
+   - \alpha^2 \gamma^{xx}
+%
+   \end{array} \right]^T
+\\
+   \lambda_2 = 0 &, & w_2 = \left[ \begin{array}{cccc}
+%
+   0 & - \beta^x \beta^y + \alpha^2 \gamma^{xy} & \beta^x \beta^x -
+   \alpha^2 \gamma^{xx} & 0
+%
+   \end{array} \right]^T
+\\
+   \lambda_3 = \beta^x - \alpha \sqrt{\gamma^{xx}} &, & w_3 = \left[
+   \begin{array}{cccc}
+%
+   \beta^x - \sqrt{\gamma^{xx}} & \alpha & 0 & 0
+%
+   \end{array} \right]^T
+\\
+   \lambda_4 = \beta^x + \alpha \sqrt{\gamma^{xx}} &, & w_4 = \left[
+   \begin{array}{cccc}
+%
+   \beta^x + \sqrt{\gamma^{xx}} & \alpha & 0 & 0
+%
+   \end{array} \right]^T
+\end{eqnarray}
+
+
+
+\begin{thebibliography}{9}
+\bibitem{Calabrese:2003}
+Gioel Calabrese, Luis Lehner, Dave Neilsen, Jorge Pullin, Oscar Reula,
+Olivier Sarbach, Manuel Tiglio, \textit{Novel finite-differencing
+techniques for numerical relativity: application to black-hole
+excision,} Class.\ Quantum Grav.\ \textbf{20}, L245 (2003),
+gr-qc/0302072.
+\end{thebibliography}
+
+% END CACTUS THORNGUIDE
+
+\end{document}

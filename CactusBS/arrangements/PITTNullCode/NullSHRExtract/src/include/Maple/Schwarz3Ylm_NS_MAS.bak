@@ -1,0 +1,2103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Worksheet>
+<Version major="11" minor="0"/>
+<Label-Scheme value="2" prefix=""/>
+<View-Properties presentation="false"><Zoom percentage="150"/></View-Properties>
+<MapleNet-Properties warnlevel="3" longdelim="true" plotoptions="" echo="1" errorcursor="false" elisiontermsthreshold="10000" elisiontermsbefore="100" errorbreak="1" prettyprint="3" prompt="&gt; " latexwidth="6.0" useclientjvm="true" ansi="false" screenheight="25" labelwidth="20" plotdevice="inline" typesetting="standard" displayprecision="-1" indentamount="4" elisiondigitsthreshold="10000" quiet="false" plotoutput="terminal" rtablesize="10" preplot="" showassumed="1" plotdriver="openviz" elisiontermsafter="100" labelling="true" postplot="" screenwidth="79" elisiondigitsbefore="100" elisiondigitsafter="100" verboseproc="1" imaginaryunit="I" ShowLabels="true"/>
+<Styles><Font name="Heading 4" background="[255,255,255]" bold="false" executable="false" family="Serif" foreground="[0,0,0]" italic="true" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Ordered List 5" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Ordered List 1" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Text Output" background="[255,255,255]" bold="false" executable="false" family="Monospaced" foreground="[0,0,255]" italic="false" opaque="false" readonly="true" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Bullet Item" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Equation Label" background="[255,255,255]" bold="true" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Author" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Text" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Diagnostic" background="[255,255,255]" bold="false" executable="false" family="Monospaced" foreground="[40,120,40]" italic="false" opaque="false" readonly="true" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Heading 2" background="[255,255,255]" bold="true" executable="false" family="Serif" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="16" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Page Number" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="10" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Ordered List 3" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Maple Plot" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Normal" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Maple Input" background="[255,255,255]" bold="true" executable="true" family="Monospaced" foreground="[255,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Annotation Title" background="[255,255,255]" bold="true" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="18" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="2D Output" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[0,0,255]" italic="false" opaque="false" readonly="true" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="2D Inert Output" background="[255,255,255]" bold="false" executable="true" family="Times New Roman" foreground="[144,144,144]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Dictionary Hyperlink" background="[255,255,255]" bold="false" executable="false" family="Serif" foreground="[147,0,15]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="true" placeholder="false"/>
+<Font name="Dash Item" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Heading 3" background="[255,255,255]" bold="true" executable="false" family="Serif" foreground="[0,0,0]" italic="true" opaque="false" readonly="false" size="14" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Ordered List 4" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Maple Output" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="List Item" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="2D Input" background="[255,255,255]" bold="false" executable="true" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Line Printed Output" background="[255,255,255]" bold="false" executable="false" family="Monospaced" foreground="[0,0,255]" italic="false" opaque="false" readonly="true" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Maple Input Placeholder" background="[255,255,255]" bold="true" executable="true" family="Monospaced" foreground="[200,0,200]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="true"/>
+<Font name="2D Math" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Error" background="[255,255,255]" bold="false" executable="false" family="Monospaced" foreground="[255,0,255]" italic="false" opaque="false" readonly="true" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Warning" background="[255,255,255]" bold="false" executable="false" family="Monospaced" foreground="[0,0,255]" italic="false" opaque="false" readonly="true" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Heading 1" background="[255,255,255]" bold="true" executable="false" family="Serif" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="18" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Annotation Text" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Title" background="[255,255,255]" bold="true" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="18" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Ordered List 2" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Hyperlink" background="[255,255,255]" bold="false" executable="false" family="Serif" foreground="[0,128,128]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="true" placeholder="false"/>
+<Layout name="Ordered List 5" alignment="left" bullet="ROMAN" firstindent="0" leftmargin="144" rightmargin="0" linespacing="0.0" spaceabove="3" spacebelow="3" linebreak="space" pagebreak-before="false" initial="-1" bulletsuffix=""/>
+<Layout name="Heading 4" alignment="left" bullet="none" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.0" spaceabove="0" spacebelow="0" linebreak="space" pagebreak-before="false" initial="0" bulletsuffix=""/>
+<Layout name="Text Output" alignment="left" bullet="none" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.0" spaceabove="0" spacebelow="0" linebreak="newline" pagebreak-before="false" initial="0" bulletsuffix=""/>
+<Layout name="Ordered List 1" alignment="left" bullet="numeric" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.0" spaceabove="3" spacebelow="3" linebreak="space" pagebreak-before="false" initial="-1" bulletsuffix=""/>
+<Layout name="Annotation Title" alignment="centred" bullet="none" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.0" spaceabove="12" spacebelow="12" linebreak="space" pagebreak-before="false" initial="0" bulletsuffix=""/>
+<Layout name="Bullet Item" alignment="left" bullet="dot" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.0" spaceabove="3" spacebelow="3" linebreak="space" pagebreak-before="false" initial="0" bulletsuffix=""/>
+<Layout name="Author" alignment="centred" bullet="none" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.0" spaceabove="8" spacebelow="8" linebreak="space" pagebreak-before="false" initial="0" bulletsuffix=""/>
+<Layout name="Dash Item" alignment="left" bullet="dash" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.0" spaceabove="3" spacebelow="3" linebreak="space" pagebreak-before="false" initial="0" bulletsuffix=""/>
+<Layout name="Heading 3" alignment="left" bullet="none" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.0" spaceabove="0" spacebelow="0" linebreak="space" pagebreak-before="false" initial="0" bulletsuffix=""/>
+<Layout name="Diagnostic" alignment="left" bullet="none" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.0" spaceabove="0" spacebelow="0" linebreak="any" pagebreak-before="false" initial="0" bulletsuffix=""/>
+<Layout name="Ordered List 4" alignment="left" bullet="ALPHABETIC" firstindent="0" leftmargin="108" rightmargin="0" linespacing="0.0" spaceabove="3" spacebelow="3" linebreak="space" pagebreak-before="false" initial="-1" bulletsuffix=""/>
+<Layout name="Maple Output" alignment="centred" bullet="none" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.3" spaceabove="0" spacebelow="0" linebreak="space" pagebreak-before="false" initial="0" bulletsuffix=""/>
+<Layout name="Line Printed Output" alignment="left" bullet="none" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.0" spaceabove="0" spacebelow="0" linebreak="any" pagebreak-before="false" initial="0" bulletsuffix=""/>
+<Layout name="List Item" alignment="left" bullet="indent" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.0" spaceabove="3" spacebelow="3" linebreak="space" pagebreak-before="false" initial="0" bulletsuffix=""/>
+<Layout name="Heading 2" alignment="left" bullet="none" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.0" spaceabove="8" spacebelow="2" linebreak="space" pagebreak-before="false" initial="0" bulletsuffix=""/>
+<Layout name="Ordered List 3" alignment="left" bullet="roman" firstindent="0" leftmargin="72" rightmargin="0" linespacing="0.0" spaceabove="3" spacebelow="3" linebreak="space" pagebreak-before="false" initial="-1" bulletsuffix=""/>
+<Layout name="Error" alignment="left" bullet="none" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.0" spaceabove="0" spacebelow="0" linebreak="space" pagebreak-before="false" initial="0" bulletsuffix=""/>
+<Layout name="Maple Plot" alignment="centred" bullet="none" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.0" spaceabove="0" spacebelow="0" linebreak="space" pagebreak-before="false" initial="0" bulletsuffix=""/>
+<Layout name="Warning" alignment="left" bullet="none" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.0" spaceabove="0" spacebelow="0" linebreak="space" pagebreak-before="false" initial="0" bulletsuffix=""/>
+<Layout name="Heading 1" alignment="left" bullet="none" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.0" spaceabove="8" spacebelow="4" linebreak="space" pagebreak-before="false" initial="0" bulletsuffix=""/>
+<Layout name="Title" alignment="centred" bullet="none" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.0" spaceabove="12" spacebelow="12" linebreak="space" pagebreak-before="false" initial="0" bulletsuffix=""/>
+<Layout name="Ordered List 2" alignment="left" bullet="alphabetic" firstindent="0" leftmargin="36" rightmargin="0" linespacing="0.0" spaceabove="3" spacebelow="3" linebreak="space" pagebreak-before="false" initial="-1" bulletsuffix=""/>
+<Layout name="Normal" alignment="left" bullet="none" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.0" spaceabove="0" spacebelow="0" linebreak="space" pagebreak-before="false" initial="0" bulletsuffix=""/>
+<Pencil-style name="Pencil 3" pen-color="[0,0,0]" pen-height="3.0" pen-width="3.0" pen-opacity="1.0"/>
+<Pencil-style name="Pencil 1" pen-color="[0,0,0]" pen-height="1.0" pen-width="1.0" pen-opacity="1.0"/>
+<Pencil-style name="Pencil 5" pen-color="[255,0,0]" pen-height="5.0" pen-width="5.0" pen-opacity="1.0"/>
+<Pencil-style name="Pencil 2" pen-color="[0,0,255]" pen-height="1.0" pen-width="1.0" pen-opacity="1.0"/>
+<Pencil-style name="Pencil 4" pen-color="[0,0,255]" pen-height="3.0" pen-width="3.0" pen-opacity="1.0"/>
+<Highlighter-style name="Highlighter 2" pen-color="[255,204,0]" pen-height="14.0" pen-width="14.0" pen-opacity="0.8"/>
+<Highlighter-style name="Highlighter 4" pen-color="[0,255,255]" pen-height="32.0" pen-width="32.0" pen-opacity="0.8"/>
+<Highlighter-style name="Highlighter 3" pen-color="[51,255,0]" pen-height="24.0" pen-width="24.0" pen-opacity="0.8"/>
+<Highlighter-style name="Highlighter 1" pen-color="[255,153,255]" pen-height="12.0" pen-width="8.0" pen-opacity="0.8"/>
+<Highlighter-style name="Highlighter 5" pen-color="[255,255,0]" pen-height="48.0" pen-width="48.0" pen-opacity="0.8"/>
+</Styles>
+<Task-table>
+    <Task-category name="&lt;default&gt;">
+    </Task-category>
+</Task-table>
+<Annotation-table>
+    <Annotation-category name="&lt;default&gt;">
+    </Annotation-category>
+</Annotation-table>
+<Task>
+</Task>
+<Group labelreference="L1" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">restart:</Text-field>
+</Input>
+</Group>
+<Group labelreference="L300" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(linalg):</Text-field>
+</Input>
+</Group>
+<Group labelreference="L2" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">eta:=array(1..4,1..4,symmetric):
+eta[1,1]:=1:
+eta[1,2]:=0:
+eta[1,3]:=0:
+eta[1,4]:=0:
+eta[2,2]:=1:
+eta[2,3]:=0:
+eta[2,4]:=0:
+eta[3,3]:=1:
+eta[3,4]:=0:
+eta[4,4]:=-1:
+print(eta);
+</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUknbWF0cml4RzYiNiM3JjcmIiIiIiIhRilGKTcmRilGKEYpRik3JkYpRilGKEYpNyZGKUYpRikhIiI=">SSRldGFHNiI=</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L440" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">r:=sqrt(x^2+y^2+z^2):
+na := array([x/r, y/r, z/r,-1]);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="PkkjbmFHNiItSSd2ZWN0b3JHRiQ2IzcmKiZJInhHRiQiIiIpLCgqJClGKiIiI0YrRisqJClJInlHRiRGMEYrRisqJClJInpHRiRGMEYrRisjRitGMCEiIiomRjNGK0YsRjgqJkY2RitGLEY4Rjg=">PTYiNiM7IiIiIiIlRVxbbCVGJiomSSJ4R0YjRiYsKCokRioiIiNGJiokSSJ5R0YjRi1GJiokSSJ6R0YjRi1GJiMhIiJGLUYtKiZGL0YmRitGMiIiJComRjFGJkYrRjJGJ0Yz</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L441" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">nn:=array(1..4,1..4,symmetric):
+for i from 1 to 4 do
+for j from i to 4 do
+nn[i,j]:=2*M/r*na[i]*na[j]
+end do: end do:
+print(nn);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUknbWF0cml4RzYiNiM3JjcmLCQqKiIiIyIiIkkiTUdGJEYrKSwoKiQpSSJ4R0YkRipGK0YrKiQpSSJ5R0YkRipGK0YrKiQpSSJ6R0YkRipGK0YrIyIiJEYqISIiRjBGK0YrLCQqLEYqRitGLEYrRi1GOkYxRitGNEYrRissJCosRipGK0YsRitGLUY6RjFGK0Y3RitGKywkKipGKkYrRixGK0YuRjpGMUYrRjo3JkY7LCQqKkYqRitGLEYrRi1GOkYzRitGKywkKixGKkYrRixGK0YtRjpGNEYrRjdGK0YrLCQqKkYqRitGLEYrRi5GOkY0RitGOjcmRj1GRCwkKipGKkYrRixGK0YtRjpGNkYrRissJCoqRipGK0YsRitGLkY6RjdGK0Y6NyZGP0ZGRkssJCooRipGK0YsRispRi4jRitGKkY6Ris=">SSNubkc2Ig==</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L279" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">Cg:=array(1..4,1..4):
+for i from 1 to 4 do
+    for j from 1 to 4 do
+        Cg[i,j]:=
+subs({R=sqrt(x^2+y^2+z^2)},
+simplify(subs({x^2+y^2+z^2=R^2},
+eta[i,j]+ nn[i,j]),symbolic));
+end do: end do:
+print(Cg);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUknbWF0cml4RzYiNiM3JjcmKiYsJiokKSwoKiQpSSJ4R0YkIiIjIiIiRjEqJClJInlHRiRGMEYxRjEqJClJInpHRiRGMEYxRjEjIiIkRjBGMUYxKihGMEYxSSJNR0YkRjFGLkYxRjFGMUYrISIiLCQqLEYwRjFGO0YxRitGPEYvRjFGNEYxRjEsJCosRjBGMUY7RjFGK0Y8Ri9GMUY3RjFGMSwkKipGMEYxRjtGMUYsRjxGL0YxRjw3JkY9KiYsJkYqRjEqKEYwRjFGO0YxRjNGMUYxRjFGK0Y8LCQqLEYwRjFGO0YxRitGPEY0RjFGN0YxRjEsJCoqRjBGMUY7RjFGLEY8RjRGMUY8NyZGP0ZHKiYsJkYqRjEqKEYwRjFGO0YxRjZGMUYxRjFGK0Y8LCQqKkYwRjFGO0YxRixGPEY3RjFGPDcmRkFGSUZPLCQqJiwmKiQpRiwjRjFGMEYxRjEqJkYwRjFGO0YxRjxGMUZWRjxGPA==">SSNDZ0c2Ig==</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L469" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">Cg3:=array(1..3,1..3):
+for i from 1 to 3 do
+    for j from 1 to 3 do
+        Cg3[i,j]:=Cg[i,j]
+end do: end do:
+print(Cg3);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUknbWF0cml4RzYiNiM3JTclKiYsJiokKSwoKiQpSSJ4R0YkIiIjIiIiRjEqJClJInlHRiRGMEYxRjEqJClJInpHRiRGMEYxRjEjIiIkRjBGMUYxKihGMEYxSSJNR0YkRjFGLkYxRjFGMUYrISIiLCQqLEYwRjFGO0YxRitGPEYvRjFGNEYxRjEsJCosRjBGMUY7RjFGK0Y8Ri9GMUY3RjFGMTclRj0qJiwmRipGMSooRjBGMUY7RjFGM0YxRjFGMUYrRjwsJCosRjBGMUY7RjFGK0Y8RjRGMUY3RjFGMTclRj9GRSomLCZGKkYxKihGMEYxRjtGMUY2RjFGMUYxRitGPA==">SSRDZzNHNiI=</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L439" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">my_simplify := (f) -&gt; 
+subs({R=sqrt(x^2+y^2+z^2)},(subs({z^2=R^2-x^2-y^2},
+collect(simplify(subs({x^2+y^2+z^2=R^2},
+collect(f,[M],factor)),symbolic),[M],factor))));
+
+</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="PkksbXlfc2ltcGxpZnlHNiJmKjYjSSJmR0YkRiQ2JEkpb3BlcmF0b3JHRiRJJmFycm93R0YkRiQtSSVzdWJzRyUqcHJvdGVjdGVkRzYkPCMvSSJSR0YkLUklc3FydEc2JEYtSShfc3lzbGliR0YkNiMsKCokKUkieEdGJCIiIyIiIkY8KiQpSSJ5R0YkRjtGPEY8KiQpSSJ6R0YkRjtGPEY8LUYsNiQ8Iy9GQCwoKiQpRjFGO0Y8RjxGOCEiIkY9RkotSShjb2xsZWN0R0YkNiUtSSlzaW1wbGlmeUdGNDYkLUYsNiQ8Iy9GN0ZILUZMNiVGJzcjSSJNR0YkSSdmYWN0b3JHRiRJKXN5bWJvbGljR0YkRldGWUYkRiRGJA==">Zio2I0kiZkc2IkYlNiRJKW9wZXJhdG9yR0YlSSZhcnJvd0dGJUYlLUklc3Vic0clKnByb3RlY3RlZEc2JDwjL0kiUkdGJS1JJXNxcnRHNiRGK0koX3N5c2xpYkdGJTYjLCgqJEkieEdGJSIiIyIiIiokSSJ5R0YlRjhGOSokSSJ6R0YlRjhGOS1GKjYkPCMvRjwsKCokRi9GOEY5RjYhIiJGOkZELUkoY29sbGVjdEdGJTYlLUkpc2ltcGxpZnlHRjI2JC1GKjYkPCMvRjVGQy1GRjYlOSQ3I0kiTUdGJUknZmFjdG9yR0YlSSlzeW1ib2xpY0dGJUZSRlRGJUYlRiU=</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L481" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">my_subs := (f) -&gt; 
+simplify(subs({x^2+y^2+z^2=R^2},
+f),symbolic);
+</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="PkkobXlfc3Vic0c2ImYqNiNJImZHRiRGJDYkSSlvcGVyYXRvckdGJEkmYXJyb3dHRiRGJC1JKXNpbXBsaWZ5RzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliR0YkNiQtSSVzdWJzR0YuNiQ8Iy8sKCokKUkieEdGJCIiIyIiIkY7KiQpSSJ5R0YkRjpGO0Y7KiQpSSJ6R0YkRjpGO0Y7KiQpSSJSR0YkRjpGO0YnSSlzeW1ib2xpY0dGJEYkRiRGJA==">Zio2I0kiZkc2IkYlNiRJKW9wZXJhdG9yR0YlSSZhcnJvd0dGJUYlLUkpc2ltcGxpZnlHNiQlKnByb3RlY3RlZEdJKF9zeXNsaWJHRiU2JC1JJXN1YnNHRiw2JDwjLywoKiRJInhHRiUiIiMiIiIqJEkieUdGJUY3RjgqJEkiekdGJUY3RjgqJEkiUkdGJUY3OSRJKXN5bWJvbGljR0YlRiVGJUYl</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L470" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">Cg3inv :=eval(inverse(evalm(Cg3))):
+Cg3inv := map(my_simplify,Cg3inv);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="PkknQ2czaW52RzYiLUknbWF0cml4R0YkNiM3JTclKiYsJiomLCYqJiIiIyIiIilJInpHRiRGL0YwRjAqJkYvRjApSSJ5R0YkRi9GMEYwRjBJIk1HRiRGMEYwKiQpLCgqJClJInhHRiRGL0YwRjAqJEY0RjBGMCokRjFGMEYwIyIiJEYvRjBGMEYwLCYqKEYvRjBGOUYwRjZGMEYwRjdGMCEiIiwkKixGL0YwRjZGMEY8RjBGNUYwRkFGQ0ZDLCQqLEYvRjBGNkYwRjxGMEYyRjBGQUZDRkM3JUZEKiYsJiomLCZGLkYwKiZGL0YwRjtGMEYwRjBGNkYwRjBGN0YwRjBGQUZDLCQqLEYvRjBGNkYwRjVGMEYyRjBGQUZDRkM3JUZGRk4qJiwmKiYsJkYzRjBGTUYwRjBGNkYwRjBGN0YwRjBGQUZD">PTYiNiQ7IiIiIiIkRiVFXFtsKjYkRidGJyomLCYqJiwmKiRJInlHRiMiIiNGMCokSSJ4R0YjRjBGMEYmSSJNR0YjRiZGJiokLChGMUYmRi5GJiokSSJ6R0YjRjBGJiNGJ0YwRiZGJiwmKiZGNUYmRjNGJkYwRjRGJiEiIjYkRidGMCwkKipGM0YmRi9GJkY3RiZGOUY7ISIjNiRGJ0YmLCQqKkYzRiZGMkYmRjdGJkY5RjtGPzYkRjBGJiwkKipGM0YmRjJGJkYvRiZGOUY7Rj82JEYwRjAqJiwmKiYsJkY2RjBGMUYwRiZGM0YmRiZGNEYmRiZGOUY7NiRGJkYwRkQ2JEYwRidGPTYkRiZGJiomLCYqJiwmRjZGMEYuRjBGJkYzRiZGJkY0RiZGJkY5Rjs2JEYmRidGQQ==</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L422" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">Cginv :=eval(inverse(evalm(Cg))):
+Cginv := map(my_simplify,Cginv);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="PkkmQ2dpbnZHNiItSSdtYXRyaXhHRiQ2IzcmNyYsJiIiIkYrKioiIiNGK0kiTUdGJEYrKSwoKiQpSSJ4R0YkRi1GK0YrKiQpSSJ5R0YkRi1GK0YrKiQpSSJ6R0YkRi1GK0YrIyIiJEYtISIiRjJGK0Y8LCQqLEYtRitGLkYrRi9GPEYzRitGNkYrRjwsJCosRi1GK0YuRitGL0Y8RjNGK0Y5RitGPCwkKipGLUYrRi5GK0YwRjxGM0YrRjw3JkY9LCZGK0YrKipGLUYrRi5GK0YvRjxGNUYrRjwsJCosRi1GK0YuRitGL0Y8RjZGK0Y5RitGPCwkKipGLUYrRi5GK0YwRjxGNkYrRjw3JkY/RkYsJkYrRisqKkYtRitGLkYrRi9GPEY4RitGPCwkKipGLUYrRi5GK0YwRjxGOUYrRjw3JkZBRkhGTSwmRitGPCooRi1GK0YuRispRjAjRitGLUY8Rjw=">PTYiNiQ7IiIiIiIlRiVFXFtsMTYkIiIkRiosJkYmRiYqKEkiTUdGI0YmLCgqJEkieEdGIyIiI0YmKiRJInlHRiNGMUYmKiRJInpHRiNGMUYmIyEiJEYxRjVGMSEiIzYkRipGMSwkKipGLUYmRi5GNkYzRiZGNUYmRjg2JEYqRicsJCooRi1GJkYuISIiRjVGJkY4NiRGKkYmLCQqKkYtRiZGLkY2RjBGJkY1RiZGODYkRiZGJywkKihGLUYmRi5GP0YwRiZGODYkRjFGJywkKihGLUYmRi5GP0YzRiZGODYkRidGMUZHNiRGJ0YnLCZGP0YmKiZGLUYmRi4jRj9GMUY4NiRGMUYmLCQqKkYtRiZGLkY2RjBGJkYzRiZGODYkRjFGMSwmRiZGJiooRi1GJkYuRjZGM0YxRjg2JEYnRiZGRDYkRidGKkY9NiRGJkYxRk82JEYxRipGOjYkRiZGJiwmRiZGJiooRi1GJkYuRjZGMEYxRjg2JEYmRipGQQ==</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L442" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">beta:=array(1..3):
+for k from 1 to 3 do:
+beta[k]:=sum(Cg[a,4]*Cg3inv[a,k],a=1..3):
+end do:
+beta:=map(my_simplify,beta);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="PkklYmV0YUc2Ii1JJ3ZlY3RvckdGJDYjNyUsJCosIiIjIiIiSSJNR0YkRixJInhHRiRGLCksKCokKUYuRitGLEYsKiQpSSJ5R0YkRitGLEYsKiQpSSJ6R0YkRitGLEYsI0YsRitGLCwmKihGK0YsRjBGLEYtRixGLCokKUYwIyIiJEYrRixGLCEiIkZALCQqLEYrRixGLUYsRjVGLEYvRixGOkZARkAsJCosRitGLEYtRixGOEYsRi9GLEY6RkBGQA==">PTYiNiM7IiIiIiIkRVxbbCRGJiwkKipJIk1HRiNGJkkieEdGI0YmLCgqJEYsIiIjRiYqJEkieUdGI0YvRiYqJEkiekdGI0YvRiYjRiZGLywmKiZGLUYmRitGJkYvKiRGLSNGJ0YvRiYhIiIhIiNGLywkKipGK0YmRjFGJkYtRjRGNUY5RjpGJywkKipGK0YmRjNGJkYtRjRGNUY5Rjo=</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L482" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">map(my_subs,beta);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkndmVjdG9yRzYiNiM3JSwkKiwiIiMiIiJJIk1HRiRGKkkieEdGJEYqSSJSR0YkISIiLCZGLUYqKiZGKUYqRitGKkYqRi5GLiwkKixGKUYqRitGKkkieUdGJEYqRi1GLkYvRi5GLiwkKixGKUYqRitGKkkiekdGJEYqRi1GLkYvRi5GLg==">PTYiNiM7IiIiIiIkRVxbbCRGJiwkKipJIk1HRiNGJkkieEdGI0YmSSJSR0YjISIiLCZGLUYmRisiIiNGLiEiI0YwLCQqKkYrRiZJInlHRiNGJkYtRi5GL0YuRjFGJywkKipGK0YmSSJ6R0YjRiZGLUYuRi9GLkYx</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L443" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">alpha:=simplify(sqrt(-1/Cginv[4,4]),symbolic);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="PkkmYWxwaGFHNiIqJiksJiokKSwoKiQpSSJ4R0YkIiIjIiIiRi8qJClJInlHRiRGLkYvRi8qJClJInpHRiRGLkYvRi8jRi9GLkYvRi8qJkYuRi9JIk1HRiRGL0YvRjYhIiIpRiojRi8iIiVGLw==">KiYsJiokLCgqJEkieEc2IiIiIyIiIiokSSJ5R0YoRilGKiokSSJ6R0YoRilGKiNGKkYpRipJIk1HRihGKSMhIiJGKUYlI0YqIiIl</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L483" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">map(my_subs,alpha);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkmbWZyYWNHNiMvSSttb2R1bGVuYW1lRzYiSSxUeXBlc2V0dGluZ0dJKF9zeXNsaWJHRic2KC1JJW1yb3dHRiQ2Ji1JJm1zcXJ0R0YkNiMtSSNtaUdGJDYlUSJSRicvJSdpdGFsaWNHUSV0cnVlRicvJSxtYXRodmFyaWFudEdRJ2l0YWxpY0YnLyUrZm9yZWdyb3VuZEdRKFswLDAsMF1GJy8lKXJlYWRvbmx5R1EmZmFsc2VGJy9GOVEnbm9ybWFsRictRiw2Ji1GLzYjLUYsNihGMS1JI21vR0YkNi1RIitGJ0ZBLyUmZmVuY2VHRkAvJSpzZXBhcmF0b3JHRkAvJSlzdHJldGNoeUdGQC8lKnN5bW1ldHJpY0dGQC8lKGxhcmdlb3BHRkAvJS5tb3ZhYmxlbGltaXRzR0ZALyUnYWNjZW50R0ZALyUnbHNwYWNlR1EsMC4yMjIyMjIyZW1GJy8lJ3JzcGFjZUdGZ24tRiw2KC1JI21uR0YkNiRRIjJGJ0ZBLUZKNi1RMSZJbnZpc2libGVUaW1lcztGJ0ZBRk1GT0ZRRlNGVUZXRlkvRmZuUSYwLjBlbUYnL0ZpbkZkby1GMjYlUSJNRidGNUY4RjtGPkZBRjtGPkZBRjtGPkZBLyUubGluZXRoaWNrbmVzc0dRIjFGJy8lK2Rlbm9tYWxpZ25HUSdjZW50ZXJGJy8lKW51bWFsaWduR0ZecC8lKWJldmVsbGVkR0ZA">KiYsJkkiUkc2IiIiIkkiTUdGJSIiIyMhIiJGKEYkI0YmRig=</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L484" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">map(my_subs,Cg3);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUknbWF0cml4RzYiNiM3JTclKiYsJiokKUkiUkdGJCIiJCIiIkYuKigiIiNGLkkiTUdGJEYuKUkieEdGJEYwRi5GLkYuRishIiIsJCosRjBGLkYxRi5GK0Y0RjNGLkkieUdGJEYuRi4sJCosRjBGLkYxRi5GK0Y0RjNGLkkiekdGJEYuRi43JUY1KiYsJkYqRi4qKEYwRi5GMUYuKUY3RjBGLkYuRi5GK0Y0LCQqLEYwRi5GMUYuRitGNEY3Ri5GOkYuRi43JUY4RkAqJiwmRipGLiooRjBGLkYxRi4pRjpGMEYuRi5GLkYrRjQ=">PTYiNiQ7IiIiIiIkRiVFXFtsKjYkRidGJyomLCYqJEkiUkdGI0YnRiYqJkkiTUdGI0YmSSJ6R0YjIiIjRjFGJkYtISIkNiRGJ0YxLCQqKkYvRiZGLUYySSJ5R0YjRiZGMEYmRjE2JEYnRiYsJCoqRi9GJkYtRjJJInhHRiNGJkYwRiZGMTYkRjFGJiwkKipGL0YmRi1GMkY6RiZGNkYmRjE2JEYxRjEqJiwmRixGJiomRi9GJkY2RjFGMUYmRi1GMjYkRiZGMUY8NiRGMUYnRjQ2JEYmRiYqJiwmRixGJiomRi9GJkY6RjFGMUYmRi1GMjYkRiZGJ0Y4</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L287" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">Cg3S:=array(1..3,1..3,symmetric):
+     Cg3S[1,1]:=collect(simplify(subs(
+{x=R*sin(theta)*cos(phi),
+y=R*sin(theta)*sin(phi),
+z=R*cos(theta)},
+Cg3[1,1]),symbolic),[R],factor):
+     Cg3S[1,2]:=collect(simplify(subs(
+{x=R*sin(theta)*cos(phi),
+y=R*sin(theta)*sin(phi),
+z=R*cos(theta)},
+Cg3[1,2]),symbolic),[R],factor):
+     Cg3S[1,3]:=collect(simplify(subs(
+{x=R*sin(theta)*cos(phi),
+y=R*sin(theta)*sin(phi),
+z=R*cos(theta)},
+Cg3[1,3]),symbolic),[R],factor):
+     Cg3S[2,2]:=collect(simplify(subs(
+{x=R*sin(theta)*cos(phi),
+y=R*sin(theta)*sin(phi),
+z=R*cos(theta)},
+Cg3[2,2]),symbolic),[R],factor):
+     Cg3S[2,3]:=collect(simplify(subs(
+{x=R*sin(theta)*cos(phi),
+y=R*sin(theta)*sin(phi),
+z=R*cos(theta)},
+Cg3[2,3]),symbolic),[R],factor):
+     Cg3S[3,3]:=collect(simplify(subs(
+{x=R*sin(theta)*cos(phi),
+y=R*sin(theta)*sin(phi),
+z=R*cos(theta)},
+Cg3[3,3]),symbolic),[R],factor):
+print(Cg3S);
+
+</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUknbWF0cml4RzYiNiM3JTclLCYiIiJGKSouIiIjRilJIk1HRiRGKSktSSRjb3NHNiQlKnByb3RlY3RlZEdJKF9zeXNsaWJHRiQ2I0kkcGhpR0YkRitGKSwmLUYvNiNJJnRoZXRhR0YkRilGKSEiIkYpLCZGNkYpRilGKUYpSSJSR0YkRjlGOSwkKi5GK0YpRixGKUY7RjkpLUkkc2luR0YwRjdGK0YpRi5GKS1GQEYzRilGKSwkKi5GK0YpRixGKUY7RjlGP0YpRi5GKUY2RilGKTclRjwsJkYpRikqMEYrRilGLEYpRjVGKUY6RiksJkYuRilGKUY5RiksJkYuRilGKUYpRilGO0Y5RiksJCouRitGKUYsRilGO0Y5Rj9GKUZBRilGNkYpRik3JUZCRkksJkYpRikqKkYrRilGLEYpKUY2RitGKUY7RjlGKQ==">SSVDZzNTRzYi</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L446" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">betaS:=array(1..3):
+     betaS[1]:=collect(simplify(subs(
+{x=R*sin(theta)*cos(phi),
+y=R*sin(theta)*sin(phi),
+z=R*cos(theta)},
+beta[1]),symbolic),[R],factor):
+     betaS[2]:=collect(simplify(subs(
+{x=R*sin(theta)*cos(phi),
+y=R*sin(theta)*sin(phi),
+z=R*cos(theta)},
+beta[2]),symbolic),[R],factor):
+     betaS[3]:=collect(simplify(subs(
+{x=R*sin(theta)*cos(phi),
+y=R*sin(theta)*sin(phi),
+z=R*cos(theta)},
+beta[3]),symbolic),[R],factor):
+print(betaS);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkndmVjdG9yRzYiNiM3JSwkKiwiIiMiIiJJIk1HRiRGKi1JJHNpbkc2JCUqcHJvdGVjdGVkR0koX3N5c2xpYkdGJDYjSSZ0aGV0YUdGJEYqLUkkY29zR0YuNiNJJHBoaUdGJEYqLCZJIlJHRiRGKiomRilGKkYrRipGKiEiIkY6LCQqLEYpRipGK0YqRixGKi1GLUY1RipGN0Y6RjosJCoqRilGKkYrRiotRjRGMUYqRjdGOkY6">SSZiZXRhU0c2Ig==</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L447" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">alphaS:=collect(simplify(subs(
+{x=R*sin(theta)*cos(phi),
+y=R*sin(theta)*sin(phi),
+z=R*cos(theta)},
+alpha),symbolic),[R],factor):
+print(alphaS);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkmbWZyYWNHNiMvSSttb2R1bGVuYW1lRzYiSSxUeXBlc2V0dGluZ0dJKF9zeXNsaWJHRic2KC1JJW1yb3dHRiQ2Ji1JJm1zcXJ0R0YkNiMtSSNtaUdGJDYlUSJSRicvJSdpdGFsaWNHUSV0cnVlRicvJSxtYXRodmFyaWFudEdRJ2l0YWxpY0YnLyUrZm9yZWdyb3VuZEdRKFswLDAsMF1GJy8lKXJlYWRvbmx5R1EmZmFsc2VGJy9GOVEnbm9ybWFsRictRiw2Ji1GLzYjLUYsNihGMS1JI21vR0YkNi1RIitGJ0ZBLyUmZmVuY2VHRkAvJSpzZXBhcmF0b3JHRkAvJSlzdHJldGNoeUdGQC8lKnN5bW1ldHJpY0dGQC8lKGxhcmdlb3BHRkAvJS5tb3ZhYmxlbGltaXRzR0ZALyUnYWNjZW50R0ZALyUnbHNwYWNlR1EsMC4yMjIyMjIyZW1GJy8lJ3JzcGFjZUdGZ24tRiw2KC1JI21uR0YkNiRRIjJGJ0ZBLUZKNi1RMSZJbnZpc2libGVUaW1lcztGJ0ZBRk1GT0ZRRlNGVUZXRlkvRmZuUSYwLjBlbUYnL0ZpbkZkby1GMjYlUSJNRidGNUY4RjtGPkZBRjtGPkZBRjtGPkZBLyUubGluZXRoaWNrbmVzc0dRIjFGJy8lK2Rlbm9tYWxpZ25HUSdjZW50ZXJGJy8lKW51bWFsaWduR0ZecC8lKWJldmVsbGVkR0ZA">KiYsJkkiUkc2IiIiIkkiTUdGJSIiIyMhIiJGKEYkI0YmRig=</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L106" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">assume(R,real);
+assume(theta,real);
+assume(phi,real);</Text-field>
+</Input>
+</Group>
+<Group labelreference="L558" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">LegP := (l,m,y) -&gt; 
+if (m&lt;0) then
+  (-1)^(-m)*(l+m)!/(l-m)! * LegP(l,-m,y);
+else
+if l+m&lt;&gt;0 
+then 
+  subs(x=y,simplify((-1)^m/2^l/l! * (1-x^2)^(m/2) * diff((x^2-1)^l,`$`(x,l+m)))); 
+else 
+  subs(x=y,simplify((-1)^m/2^l/l! * (1-x^2)^(m/2) )); 
+fi;
+fi;</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="PkklTGVnUEc2ImYqNiVJImxHRiRJIm1HRiRJInlHRiRGJDYkSSlvcGVyYXRvckdGJEkmYXJyb3dHRiRGJEAlMkYoIiIhKiopISIiLCRGKEYyIiIiLUkqZmFjdG9yaWFsRyUqcHJvdGVjdGVkRzYjLCZGJ0Y0RihGNEY0LUY2NiMsJkYnRjRGKEYyRjItRiM2JUYnRjNGKUY0QCUwRjlGLy1JJXN1YnNHRjc2JC9JInhHRiRGKS1JKXNpbXBsaWZ5RzYkRjdJKF9zeXNsaWJHRiQ2IyosKUYyRihGNCkiIiNGJ0YyLUY2NiNGJ0YyKSwmRjRGNCokKUZFRk5GNEYyLCQqJiNGNEZORjRGKEY0RjRGNC1JJWRpZmZHRjc2JCksJkZTRjRGNEYyRictSSIkR0Y3NiRGRUY5RjQtRkI2JEZELUZHNiMqKkZMRjRGTUYyRk9GMkZRRjRGJEYkRiQ=">Zio2JUkibEc2IkkibUdGJUkieUdGJUYlNiRJKW9wZXJhdG9yR0YlSSZhcnJvd0dGJUYlQCUyOSUiIiEqKikhIiIsJEYtRjEiIiItSSpmYWN0b3JpYWxHJSpwcm90ZWN0ZWRHNiMsJjkkRjNGLUYzRjMtRjU2IywmRjlGM0YtRjFGMS1JJUxlZ1BHRiU2JUY5RjI5JkYzQCUwRjhGLi1JJXN1YnNHRjY2JC9JInhHRiVGQC1JKXNpbXBsaWZ5RzYkRjZJKF9zeXNsaWJHRiU2IyosKUYxRi1GMykiIiNGOUYxLUY1NiNGOUYxKSwmRjNGMyokRkdGUEYxLCRGLSNGM0ZQRjMtSSVkaWZmR0Y2NiQpLCZGVUYzRjFGM0Y5LUkiJEdGNjYkRkdGOEYzLUZENiRGRi1GSTYjKipGTkYzRk9GMUZRRjFGU0YzRiVGJUYl</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L119" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal"></Text-field>
+</Input>
+</Group>
+<Group labelreference="L103" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">Ylm := (l,m) -&gt; simplify(simplify(simplify(sqrt((2*l+1)/4/Pi * (l-m)!/(l+m)!) * LegP(l,m,cos(theta)) * exp(I*m*phi)),{csgn(sin(theta))=1}),symbolic);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="PkkkWWxtRzYiZio2JEkibEdGJEkibUdGJEYkNiRJKW9wZXJhdG9yR0YkSSZhcnJvd0dGJEYkLUkpc2ltcGxpZnlHNiQlKnByb3RlY3RlZEdJKF9zeXNsaWJHRiQ2JC1GLTYkLUYtNiMqKC1JJXNxcnRHRi42IywkKiwjIiIiIiIlRj0sJiomIiIjRj1GJ0Y9Rj1GPUY9Rj1JI1BpR0YvISIiLUkqZmFjdG9yaWFsR0YvNiMsJkYnRj1GKEZDRj0tRkU2IywmRidGPUYoRj1GQ0Y9Rj0tSSVMZWdQR0YkNiVGJ0YoLUkkY29zR0YuNiNJJnRoZXRhR0YkRj0tSSRleHBHRi42IyooXiNGPUY9RihGPUkkcGhpR0YkRj1GPTwjLy1JJWNzZ25HRiQ2Iy1JJHNpbkdGLkZQRj1JKXN5bWJvbGljR0YkRiRGJEYk">Zio2JEkibEc2IkkibUdGJUYlNiRJKW9wZXJhdG9yR0YlSSZhcnJvd0dGJUYlLUkpc2ltcGxpZnlHNiQlKnByb3RlY3RlZEdJKF9zeXNsaWJHRiU2JC1GKzYkLUYrNiMqKC1JJXNxcnRHRiw2IywkKiosJjkkIiIjIiIiRj1GPUkjUGlHRi0hIiItSSpmYWN0b3JpYWxHRi02IywmRjtGPTklRj9GPS1GQTYjLCZGO0Y9RkRGPUY/I0Y9IiIlRj0tSSVMZWdQR0YlNiVGO0ZELUkkY29zR0YsNiNJJnRoZXRhR0YlRj0tSSRleHBHRiw2IyooXiNGPUY9RkRGPUkkcGhpR0YlRj1GPTwjLy1JJWNzZ25HRiU2Iy1JJHNpbkdGLEZPRj1JKXN5bWJvbGljR0YlRiVGJUYl</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L212" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">Cg3S_lm(0,0):=array(1..3,1..3,symmetric):
+for i from 1 to 3 do
+    for j from 1 to 3 do 
+       Cg3S_lm(0,0)[i,j]:=int(int(sin(theta)
+                       *Cg3S[i,j]*conjugate(Ylm(0,0)) 
+                       ,theta=0..Pi)
+                       ,phi=0..2*Pi)
+end do: end do:
+print(Cg3S_lm(0,0));</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUknbWF0cml4RzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiNiM3JTclLCQqKiMiIiMiIiQiIiIpSSNQaUdGJSNGMEYuRjAsJiomRi5GMEkiTUdGJ0YwRjAqJkYvRjBJI1J8aXJHRidGMEYwRjBGOCEiIkYwIiIhRjo3JUY6RitGOjclRjpGOkYr">PUkqc3ltbWV0cmljRzYiNiQ7IiIiIiIkRiZFXFtsJzYkRihGKCwkKihJI1BpRyUqcHJvdGVjdGVkRyNGJyIiIywmSSJNR0YkRjBJI1J8aXJHRiRGKEYnRjMhIiIjRjBGKDYkRjBGMEYrNiRGJ0YwIiIhNiRGMEYoRjg2JEYnRidGKzYkRidGKEY4</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L492" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">dRCg3S_lm(0,0):=array(1..3,1..3,symmetric):
+for i from 1 to 3 do
+    for j from 1 to 3 do 
+       dRCg3S_lm(0,0)[i,j]:=simplify(diff(Cg3S_lm(0,0)[i,j],R),symbolic):
+end do: end do:
+print(dRCg3S_lm(0,0));</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUknbWF0cml4RzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiNiM3JTclLCQqKiMiIiUiIiQiIiIpSSNQaUdGJSNGMCIiI0YwSSJNR0YnRjApSSNSfGlyR0YnRjQhIiJGOCIiIUY5NyVGOUYrRjk3JUY5RjlGKw==">PUkqc3ltbWV0cmljRzYiNiQ7IiIiIiIkRiZFXFtsJzYkRihGKCwkKihJI1BpRyUqcHJvdGVjdGVkRyNGJyIiI0kiTUdGJEYnSSNSfGlyR0YkISIjIyEiJUYoNiRGMEYwRis2JEYnRjAiIiE2JEYwRihGODYkRidGJ0YrNiRGJ0YoRjg=</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L409" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+writeto(`C00_3.f90`):
+for i from 1 to 3 do
+for j from i to 3 do
+fortran(subs({Pi=pi},Cg3S_lm(0,0)[i,j])):
+print(`C00(`||(i)||`,`||(j)||`)=t0`):
+od: od:
+writeto(terminal);
+</Text-field>
+</Input>
+</Group>
+<Group labelreference="L493" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+writeto(`dRC00_3.f90`):
+for i from 1 to 3 do
+for j from i to 3 do
+fortran(subs({Pi=pi},dRCg3S_lm(0,0)[i,j])):
+print(`dRC00(`||(i)||`,`||(j)||`)=t0`):
+od: od:
+writeto(terminal);</Text-field>
+</Input>
+</Group>
+<Group labelreference="L288" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">Cg3S_lm(1,1):=array(1..3,1..3,symmetric):
+for i from 1 to 3 do
+    for j from 1 to 3 do 
+       Cg3S_lm(1,1)[i,j]:=int(int(sin(theta)
+                       *Cg3S[i,j]*conjugate(Ylm(1,1)) 
+                       ,theta=0..Pi)
+                       ,phi=0..2*Pi)
+end do: end do:
+print(Cg3S_lm(1,1));</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUknbWF0cml4RzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiNiM3JTclIiIhRitGK0YqRio=">PUkqc3ltbWV0cmljRzYiNiQ7IiIiIiIkRiZFXFtsJzYkRihGKCIiITYkIiIjRi1GKzYkRidGLUYrNiRGLUYoRis2JEYnRidGKzYkRidGKEYr</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L292" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">Cg3S_lm(2,-2):=array(1..3,1..3,symmetric):
+for i from 1 to 3 do
+    for j from 1 to 3 do 
+       Cg3S_lm(2,-2)[i,j]:=int(int(sin(theta)
+                       *Cg3S[i,j]*conjugate(Ylm(2,-2)) 
+                       ,theta=0..Pi)
+                       ,phi=0..2*Pi)
+end do: end do:
+print(Cg3S_lm(2,-2));</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUknbWF0cml4RzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiNiM3JTclLCQqLCMiIiMiIzoiIiIpIiNJI0YwRi5GMEkjUnxpckdGJyEiIilJI1BpR0YlRjNGMEkiTUdGJ0YwRjAqLComRi1GMF4jRjBGMEYwRjFGMEY0RjVGNkYwRjhGMCIiITclRjksJEYsRjVGPDclRjxGPEY8">PUkqc3ltbWV0cmljRzYiNiQ7IiIiIiIkRiZFXFtsJzYkRihGKCIiITYkIiIjRi0sJCoqIiNJI0YnRi1JI1J8aXJHRiQhIiJJI1BpRyUqcHJvdGVjdGVkR0YxSSJNR0YkRicjISIjIiM6NiRGJ0YtKixeIyNGLUY5RidGMEYxRjJGM0Y0RjFGNkYnNiRGLUYoRis2JEYnRicsJEYvRj02JEYnRihGKw==</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L494" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">dRCg3S_lm(2,-2):=array(1..3,1..3,symmetric):
+for i from 1 to 3 do
+    for j from 1 to 3 do 
+       dRCg3S_lm(2,-2)[i,j]:=simplify(diff(Cg3S_lm(2,-2)[i,j],R),symbolic):
+end do: end do:
+print(dRCg3S_lm(2,-2));</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUknbWF0cml4RzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiNiM3JTclLCQqLCMiIiMiIzoiIiIpIiNJI0YwRi5GMClJI1J8aXJHRidGLiEiIilJI1BpR0YlRjNGMEkiTUdGJ0YwRjYsJCosLCQqJkYtRjBeI0YwRjBGMEYwRjFGMEY0RjZGN0YwRjlGMEY2IiIhNyVGOiwkRixGMEY/NyVGP0Y/Rj8=">PUkqc3ltbWV0cmljRzYiNiQ7IiIiIiIkRiZFXFtsJzYkRihGKCIiITYkIiIjRi0sJCoqIiNJI0YnRi1JI1J8aXJHRiQhIiNJI1BpRyUqcHJvdGVjdGVkR0YxSSJNR0YkRicjRi0iIzo2JEYnRi0qLF4jI0YzRjhGJ0YwRjFGMkYzRjRGMUY2Ric2JEYtRihGKzYkRidGJywkRi9GPDYkRidGKEYr</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L413" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+writeto(`C2m2_3.f90`):
+for i from 1 to 3 do
+for j from i to 3 do
+fortran(subs({Pi=pi},Cg3S_lm(2,-2)[i,j])):
+print(`C2m2(`||(i)||`,`||(j)||`)=t0`):
+od: od:
+writeto(terminal);</Text-field>
+</Input>
+</Group>
+<Group labelreference="L495" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+writeto(`dRC2m2_3.f90`):
+for i from 1 to 3 do
+for j from i to 3 do
+fortran(subs({Pi=pi},dRCg3S_lm(2,-2)[i,j])):
+print(`dRC2m2(`||(i)||`,`||(j)||`)=t0`):
+od: od:
+writeto(terminal);</Text-field>
+</Input>
+</Group>
+<Group labelreference="L293" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">Cg3S_lm(2,-1):=array(1..3,1..3,symmetric):
+for i from 1 to 3 do
+    for j from 1 to 3 do 
+       Cg3S_lm(2,-1)[i,j]:=int(int(sin(theta)
+                       *Cg3S[i,j]*conjugate(Ylm(2,-1)) 
+                       ,theta=0..Pi)
+                       ,phi=0..2*Pi)
+end do: end do:
+print(Cg3S_lm(2,-1));</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUknbWF0cml4RzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiNiM3JTclIiIhRissJCosIyIiIyIjOiIiIikiI0kjRjFGL0YxSSNSfGlyR0YnISIiKUkjUGlHRiVGNEYxSSJNR0YnRjFGMTclRitGKyosKiZGLkYxXiNGMUYxRjFGMkYxRjVGNkY3RjFGOUYxNyVGLEY7Ris=">PUkqc3ltbWV0cmljRzYiNiQ7IiIiIiIkRiZFXFtsJzYkRihGKCIiITYkIiIjRi1GKzYkRidGLUYrNiRGLUYoKixeIyNGLSIjOkYnIiNJI0YnRi1JI1J8aXJHRiQhIiJJI1BpRyUqcHJvdGVjdGVkR0Y1SSJNR0YkRic2JEYnRidGKzYkRidGKCwkKipGNEY1RjZGN0Y4RjVGOkYnRjI=</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L496" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">dRCg3S_lm(2,-1):=array(1..3,1..3,symmetric):
+for i from 1 to 3 do
+    for j from 1 to 3 do 
+       dRCg3S_lm(2,-1)[i,j]:=simplify(diff(Cg3S_lm(2,-1)[i,j],R),symbolic):
+end do: end do:
+print(dRCg3S_lm(2,-1));</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUknbWF0cml4RzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiNiM3JTclIiIhRissJCosIyIiIyIjOiIiIikiI0kjRjFGL0YxKUkjUnxpckdGJ0YvISIiKUkjUGlHRiVGNEYxSSJNR0YnRjFGNzclRitGKywkKiwsJComRi5GMV4jRjFGMUYxRjFGMkYxRjVGN0Y4RjFGOkYxRjc3JUYsRjxGKw==">PUkqc3ltbWV0cmljRzYiNiQ7IiIiIiIkRiZFXFtsJzYkRihGKCIiITYkIiIjRi1GKzYkRidGLUYrNiRGLUYoKixeIyMhIiMiIzpGJyIjSSNGJ0YtSSNSfGlyR0YkRjNJI1BpRyUqcHJvdGVjdGVkR0Y2SSJNR0YkRic2JEYnRidGKzYkRidGKCwkKipGNUY2RjdGM0Y4RjZGOkYnRjI=</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L414" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+writeto(`C2m1_3.f90`):
+for i from 1 to 3 do
+for j from i to 3 do
+fortran(subs({Pi=pi},Cg3S_lm(2,-1)[i,j])):
+print(`C2m1_3(`||(i)||`,`||(j)||`)=t0`):
+od: od:
+writeto(terminal);</Text-field>
+</Input>
+</Group>
+<Group labelreference="L497" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+writeto(`dRC2m1_3.f90`):
+for i from 1 to 3 do
+for j from i to 3 do
+fortran(subs({Pi=pi},dRCg3S_lm(2,-1)[i,j])):
+print(`dRC2m1_3(`||(i)||`,`||(j)||`)=t0`):
+od: od:
+writeto(terminal);</Text-field>
+</Input>
+</Group>
+<Group labelreference="L294" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">Cg3S_lm(2,0):=array(1..3,1..3,symmetric):
+for i from 1 to 3 do
+    for j from 1 to 3 do 
+       Cg3S_lm(2,0)[i,j]:=int(int(sin(theta)
+                       *Cg3S[i,j]*conjugate(Ylm(2,0)) 
+                       ,theta=0..Pi)
+                       ,phi=0..2*Pi)
+end do: end do:
+print(Cg3S_lm(2,0));</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUknbWF0cml4RzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiNiM3JTclLCQqLCMiIiUiIzoiIiIpSSNQaUdGJSNGMCIiI0YwSSJNR0YnRjApIiImRjNGMEkjUnxpckdGJyEiIkY5IiIhRjo3JUY6RitGOjclRjpGOiwkKiwjIiIpRi9GMEYxRjBGNUYwRjZGMEY4RjlGMA==">PUkqc3ltbWV0cmljRzYiNiQ7IiIiIiIkRiZFXFtsJzYkRihGKCwkKipJI1BpRyUqcHJvdGVjdGVkRyNGJyIiI0kiTUdGJEYnIiImRi9JI1J8aXJHRiQhIiIjIiIpIiM6NiRGMEYwLCRGLCMhIiVGNzYkRidGMCIiITYkRjBGKEY9NiRGJ0YnRjk2JEYnRihGPQ==</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L498" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">dRCg3S_lm(2,0):=array(1..3,1..3,symmetric):
+for i from 1 to 3 do
+    for j from 1 to 3 do 
+       dRCg3S_lm(2,0)[i,j]:=simplify(diff(Cg3S_lm(2,0)[i,j],R),symbolic):
+end do: end do:
+print(dRCg3S_lm(2,0));</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUknbWF0cml4RzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiNiM3JTclLCQqLCMiIiUiIzoiIiIpSSNQaUdGJSNGMCIiI0YwSSJNR0YnRjApIiImRjNGMClJI1J8aXJHRidGNCEiIkYwIiIhRjs3JUY7RitGOzclRjtGOywkKiwjIiIpRi9GMEYxRjBGNUYwRjZGMEY4RjpGOg==">PUkqc3ltbWV0cmljRzYiNiQ7IiIiIiIkRiZFXFtsJzYkRihGKCwkKipJI1BpRyUqcHJvdGVjdGVkRyNGJyIiI0kiTUdGJEYnIiImRi9JI1J8aXJHRiQhIiMjISIpIiM6NiRGMEYwLCRGLCMiIiVGNzYkRidGMCIiITYkRjBGKEY9NiRGJ0YnRjk2JEYnRihGPQ==</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L415" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+writeto(`C20_3.f90`):
+for i from 1 to 3 do
+for j from i to 3 do
+fortran(subs({Pi=pi},Cg3S_lm(2,0)[i,j])):
+print(`C20(`||(i)||`,`||(j)||`)=t0`):
+od: od:
+writeto(terminal);</Text-field>
+</Input>
+</Group>
+<Group labelreference="L499" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+writeto(`dRC20_3.f90`):
+for i from 1 to 3 do
+for j from i to 3 do
+fortran(subs({Pi=pi},dRCg3S_lm(2,0)[i,j])):
+print(`dRC20(`||(i)||`,`||(j)||`)=t0`):
+od: od:
+writeto(terminal);</Text-field>
+</Input>
+</Group>
+<Group labelreference="L295" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">Cg3S_lm(2,1):=array(1..3,1..3,symmetric):
+for i from 1 to 3 do
+    for j from 1 to 3 do 
+       Cg3S_lm(2,1)[i,j]:=int(int(sin(theta)
+                       *Cg3S[i,j]*conjugate(Ylm(2,1)) 
+                       ,theta=0..Pi)
+                       ,phi=0..2*Pi)
+end do: end do:
+print(Cg3S_lm(2,1));</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUknbWF0cml4RzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiNiM3JTclIiIhRissJCosIyIiIyIjOiIiIikiI0kjRjFGL0YxSSNSfGlyR0YnISIiKUkjUGlHRiVGNEYxSSJNR0YnRjFGNjclRitGKyosKiZGLkYxXiNGMUYxRjFGMkYxRjVGNkY3RjFGOUYxNyVGLEY7Ris=">PUkqc3ltbWV0cmljRzYiNiQ7IiIiIiIkRiZFXFtsJzYkRihGKCIiITYkIiIjRi1GKzYkRidGLUYrNiRGLUYoKixeIyNGLSIjOkYnIiNJI0YnRi1JI1J8aXJHRiQhIiJJI1BpRyUqcHJvdGVjdGVkR0Y1SSJNR0YkRic2JEYnRidGKzYkRidGKCwkKipGNEY1RjZGN0Y4RjVGOkYnIyEiI0Yz</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L500" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">dRCg3S_lm(2,1):=array(1..3,1..3,symmetric):
+for i from 1 to 3 do
+    for j from 1 to 3 do 
+       dRCg3S_lm(2,1)[i,j]:=simplify(diff(Cg3S_lm(2,1)[i,j],R),symbolic):
+end do: end do:
+print(dRCg3S_lm(2,1));</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUknbWF0cml4RzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiNiM3JTclIiIhRissJCosIyIiIyIjOiIiIikiI0kjRjFGL0YxKUkjUnxpckdGJ0YvISIiKUkjUGlHRiVGNEYxSSJNR0YnRjFGMTclRitGKywkKiwsJComRi5GMV4jRjFGMUYxRjFGMkYxRjVGN0Y4RjFGOkYxRjc3JUYsRjxGKw==">PUkqc3ltbWV0cmljRzYiNiQ7IiIiIiIkRiZFXFtsJzYkRihGKCIiITYkIiIjRi1GKzYkRidGLUYrNiRGLUYoKixeIyMhIiMiIzpGJyIjSSNGJ0YtSSNSfGlyR0YkRjNJI1BpRyUqcHJvdGVjdGVkR0Y2SSJNR0YkRic2JEYnRidGKzYkRidGKCwkKipGNUY2RjdGM0Y4RjZGOkYnI0YtRjQ=</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L535" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+writeto(`C21_3.f90`):
+for i from 1 to 3 do
+for j from i to 3 do
+fortran(subs({Pi=pi},Cg3S_lm(2,1)[i,j])):
+print(`C21(`||(i)||`,`||(j)||`)=t0`):
+od: od:
+writeto(terminal);</Text-field>
+</Input>
+</Group>
+<Group labelreference="L416" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+writeto(`dRC21_3.f90`):
+for i from 1 to 3 do
+for j from i to 3 do
+fortran(subs({Pi=pi},dRCg3S_lm(2,1)[i,j])):
+print(`dRC21(`||(i)||`,`||(j)||`)=t0`):
+od: od:
+writeto(terminal);</Text-field>
+</Input>
+</Group>
+<Group labelreference="L296" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">Cg3S_lm(2,2):=array(1..3,1..3,symmetric):
+for i from 1 to 3 do
+    for j from 1 to 3 do 
+       Cg3S_lm(2,2)[i,j]:=int(int(sin(theta)
+                       *Cg3S[i,j]*conjugate(Ylm(2,2)) 
+                       ,theta=0..Pi)
+                       ,phi=0..2*Pi)
+end do: end do:
+print(Cg3S_lm(2,2));</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUknbWF0cml4RzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiNiM3JTclLCQqLCMiIiMiIzoiIiIpIiNJI0YwRi5GMEkjUnxpckdGJyEiIilJI1BpR0YlRjNGMEkiTUdGJ0YwRjAsJCosLCQqJkYtRjBeI0YwRjBGMEYwRjFGMEY0RjVGNkYwRjhGMEY1IiIhNyVGOSwkRixGNUY+NyVGPkY+Rj4=">PUkqc3ltbWV0cmljRzYiNiQ7IiIiIiIkRiZFXFtsJzYkRihGKCIiITYkIiIjRi0sJCoqIiNJI0YnRi1JI1J8aXJHRiQhIiJJI1BpRyUqcHJvdGVjdGVkR0YxSSJNR0YkRicjISIjIiM6NiRGJ0YtKixeI0Y3RidGMEYxRjJGM0Y0RjFGNkYnNiRGLUYoRis2JEYnRicsJEYvI0YtRjk2JEYnRihGKw==</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L501" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">dRCg3S_lm(2,2):=array(1..3,1..3,symmetric):
+for i from 1 to 3 do
+    for j from 1 to 3 do 
+       dRCg3S_lm(2,2)[i,j]:=simplify(diff(Cg3S_lm(2,2)[i,j],R),symbolic):
+end do: end do:
+print(dRCg3S_lm(2,2));</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUknbWF0cml4RzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiNiM3JTclLCQqLCMiIiMiIzoiIiIpIiNJI0YwRi5GMClJI1J8aXJHRidGLiEiIilJI1BpR0YlRjNGMEkiTUdGJ0YwRjYqLComRi1GMF4jRjBGMEYwRjFGMEY0RjZGN0YwRjlGMCIiITclRjosJEYsRjBGPTclRj1GPUY9">PUkqc3ltbWV0cmljRzYiNiQ7IiIiIiIkRiZFXFtsJzYkRihGKCIiITYkIiIjRi0sJCoqIiNJI0YnRi1JI1J8aXJHRiQhIiNJI1BpRyUqcHJvdGVjdGVkR0YxSSJNR0YkRicjRi0iIzo2JEYnRi0qLF4jRjdGJ0YwRjFGMkYzRjRGMUY2Ric2JEYtRihGKzYkRidGJywkRi8jRjNGODYkRidGKEYr</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L417" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+writeto(`C22_3.f90`):
+for i from 1 to 3 do
+for j from i to 3 do
+fortran(subs({Pi=pi},Cg3S_lm(2,2)[i,j])):
+print(`C22(`||(i)||`,`||(j)||`)=t0`):
+od: od:
+writeto(terminal);</Text-field>
+</Input>
+</Group>
+<Group labelreference="L502" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+writeto(`dRC22_3.f90`):
+for i from 1 to 3 do
+for j from i to 3 do
+fortran(subs({Pi=pi},dRCg3S_lm(2,2)[i,j])):
+print(`dRC22(`||(i)||`,`||(j)||`)=t0`):
+od: od:
+writeto(terminal);</Text-field>
+</Input>
+</Group>
+<Group labelreference="L404" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">Cg3S_lm(3,0):=array(1..3,1..3,symmetric):
+for i from 1 to 3 do
+    for j from 1 to 3 do 
+       Cg3S_lm(3,0)[i,j]:=int(int(sin(theta)
+                       *Cg3S[i,j]*conjugate(Ylm(3,0)) 
+                       ,theta=0..Pi)
+                       ,phi=0..2*Pi)
+end do: end do:
+print(Cg3S_lm(3,0));</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUknbWF0cml4RzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiNiM3JTclIiIhRitGK0YqRio=">PUkqc3ltbWV0cmljRzYiNiQ7IiIiIiIkRiZFXFtsJzYkRihGKCIiITYkIiIjRi1GKzYkRidGLUYrNiRGLUYoRis2JEYnRidGKzYkRidGKEYr</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L297" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">Cg3S_back:=array(1..3,1..3,symmetric):
+for i from 1 to 3 do
+    for j from 1 to 3 do
+Cg3S_back[i,j]:=collect(simplify(
+ Cg3S_lm(0, 0)[i,j] *Ylm(0, 0)
++Cg3S_lm(2, -2)[i,j]*Ylm(2, -2)
++Cg3S_lm(2, -1)[i,j]*Ylm(2, -1)
++Cg3S_lm(2, 0)[i,j] *Ylm(2, 0)
++Cg3S_lm(2, 1)[i,j] *Ylm(2, 1)
++Cg3S_lm(2, 2)[i,j] *Ylm(2, 2)
+,symbolic),[R],factor):
+end do: end do:
+print(Cg3S_back):</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUknbWF0cml4RzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiNiM3JTclLCYiIiJGLCosSSJNR0YnRiwsJi1JJGNvc0dGJDYjSSd0aGV0YXxpckdGJ0YsRiwhIiJGLCwmRjBGLEYsRixGLCwmLUYxNiMsJComIiIjRixJJXBoaXxpckdGJ0YsRixGLEYsRixGLEkjUnxpckdGJ0Y0RjQqKkYuRiwpLUkkc2luR0YkRjJGO0YsLUZBRjhGLEY9RjQsJCouRjtGLEYuRixGMEYsLUkkYWJzR0YlNiNGQEYsLUYxNiNGPEYsRj1GNEYsNyVGPiwmRixGLCosRi5GLEYvRixGNUYsLCZGN0YsRixGNEYsRj1GNEYsLCQqLkY7RixGLkYsRjBGLEZFRiwtRkFGSUYsRj1GNEYsNyVGQ0ZOLCZGLEYsKipGO0YsRi5GLClGMEY7RixGPUY0Riw=">SSpDZzNTX2JhY2tHNiI=</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L491" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">dRCg3S_back:=array(1..3,1..3,symmetric):
+for i from 1 to 3 do
+    for j from 1 to 3 do
+dRCg3S_back[i,j]:=collect(simplify(
+ dRCg3S_lm(0, 0)[i,j] *Ylm(0, 0)
++dRCg3S_lm(2, -2)[i,j]*Ylm(2, -2)
++dRCg3S_lm(2, -1)[i,j]*Ylm(2, -1)
++dRCg3S_lm(2, 0)[i,j] *Ylm(2, 0)
++dRCg3S_lm(2, 1)[i,j] *Ylm(2, 1)
++dRCg3S_lm(2, 2)[i,j] *Ylm(2, 2)
+,symbolic),[R],factor):
+end do: end do:
+print(dRCg3S_back):</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUknbWF0cml4RzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiNiM3JTclKixJIk1HRiciIiIsJi1JJGNvc0dGJDYjSSd0aGV0YXxpckdGJ0YtRi0hIiJGLSwmRi9GLUYtRi1GLSwmLUYwNiMsJComIiIjRi1JJXBoaXxpckdGJ0YtRi1GLUYtRi1GLSlJI1J8aXJHRidGOkYzLCQqKkYsRi0pLUkkc2luR0YkRjFGOkYtLUZCRjdGLUY8RjNGMywkKi5GOkYtRixGLUYvRi0tSSRhYnNHRiU2I0ZBRi0tRjA2I0Y7Ri1GPEYzRjM3JUY+LCQqLEYsRi1GLkYtRjRGLSwmRjZGLUYtRjNGLUY8RjNGMywkKi5GOkYtRixGLUYvRi1GRkYtLUZCRkpGLUY8RjNGMzclRkRGTywkKipGOkYtRixGLSlGL0Y6Ri1GPEYzRjM=">SSxkUkNnM1NfYmFja0c2Ig==</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L534" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">dRCg3S:=array(1..3,1..3,symmetric):
+dRCg3S[1,1]:=-2*M*sin(theta)^2*cos(phi)^2/R^2:
+dRCg3S[1,2]:=-2*M*sin(theta)^2*sin(phi)*cos(phi)/R^2:
+dRCg3S[1,3]:=-2*M*cos(theta)*sin(theta)*cos(phi)/R^2:
+dRCg3S[2,2]:=-2*M*sin(theta)^2*sin(phi)^2/R^2:
+dRCg3S[2,3]:=-2*M*sin(theta)*sin(phi)*cos(theta)/R^2:
+dRCg3S[3,3]:=-2*M*cos(theta)^2/R^2:
+print(dRCg3S):</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUknbWF0cml4RzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiNiM3JTclLCQqLCIiIyIiIkkiTUdGJ0YuKS1JJHNpbkdGJDYjSSd0aGV0YXxpckdGJ0YtRi4pLUkkY29zR0YkNiNJJXBoaXxpckdGJ0YtRi4pSSNSfGlyR0YnRi0hIiJGPCwkKi5GLUYuRi9GLkYwRi4tRjJGOEYuRjZGLkY6RjxGPCwkKi5GLUYuRi9GLi1GN0YzRi5GMUYuRjZGLkY6RjxGPDclRj0sJCosRi1GLkYvRi5GMEYuKUY/Ri1GLkY6RjxGPCwkKi5GLUYuRi9GLkYxRi5GP0YuRkJGLkY6RjxGPDclRkBGRywkKipGLUYuRi9GLilGQkYtRi5GOkY8Rjw=">SSdkUkNnM1NHNiI=</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L503" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">dRCg3S_check:=array(1..3,1..3,symmetric):
+for i from 1 to 3 do
+    for j from 1 to 3 do
+    dRCg3S_check[i,j]:=
+expand(simplify(
+(subs({abs(sin(theta))=sin(theta)},dRCg3S_back[i,j])-dRCg3S[i,j])),
+trig)
+end do: end do:
+print(dRCg3S_check):</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUknbWF0cml4RzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiNiM3JTclIiIhRitGK0YqRio=">SS1kUkNnM1NfY2hlY2tHNiI=</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L406" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">print(Cg3S);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUknbWF0cml4RzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiNiM3JTclLCYiIiJGLCouIiIjRixJIk1HRidGLCktSSRjb3NHRiQ2I0kkcGhpR0YnRi5GLCwmLUYyNiNJJnRoZXRhR0YnRixGLCEiIkYsLCZGNkYsRixGLEYsSSJSR0YnRjlGOSwkKi5GLkYsRi9GLEY7RjkpLUkkc2luR0YkRjdGLkYsRjFGLC1GQEYzRixGLCwkKi5GLkYsRi9GLEY7RjlGP0YsRjFGLEY2RixGLDclRjwsJkYsRiwqMEYuRixGL0YsRjVGLEY6RiwsJkYxRixGLEY5RiwsJkYxRixGLEYsRixGO0Y5RiwsJCouRi5GLEYvRixGO0Y5Rj9GLEZBRixGNkYsRiw3JUZCRkksJkYsRiwqKkYuRixGL0YsKUY2Ri5GLEY7RjlGLA==">SSVDZzNTRzYi</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L448" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">Cg3S_check:=array(1..3,1..3,symmetric):
+for i from 1 to 3 do
+    for j from 1 to 3 do
+    Cg3S_check[i,j]:=
+expand(simplify(
+(subs({abs(sin(theta))=sin(theta)},Cg3S_back[i,j])-Cg3S[i,j])),
+trig)
+end do: end do:
+print(Cg3S_check):</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUknbWF0cml4RzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiNiM3JTclIiIhRitGK0YqRio=">SStDZzNTX2NoZWNrRzYi</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L449" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">betaS_lm(0,0):=array(1..3):
+for i from 1 to 3 do
+    betaS_lm(0,0)[i]:=int(int(sin(theta)
+                     *betaS[i]*conjugate(Ylm(0,0)) 
+                     ,theta=0..Pi)
+                     ,phi=0..2*Pi)
+end do: 
+print(betaS_lm(0,0));</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkndmVjdG9yRzYiNiM3JSIiIUYnRic=">PTYiNiM7IiIiIiIkRVxbbCRGJiIiISIiI0YpRidGKQ==</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L452" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">betaS_lm(1,-1):=array(1..3):
+for i from 1 to 3 do
+    betaS_lm(1,-1)[i]:=int(int(sin(theta)
+                     *betaS[i]*conjugate(Ylm(1,-1)) 
+                     ,theta=0..Pi)
+                     ,phi=0..2*Pi)
+end do: 
+print(betaS_lm(1,-1));</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkndmVjdG9yRzYiNiM3JSwkKiwjIiIjIiIkIiIiSSJNR0YkRiwsJkkjUnxpckdGJEYsKiZGKkYsRi1GLEYsISIiKSIiJyNGLEYqRiwpSSNQaUclKnByb3RlY3RlZEdGNEYsRjEsJCosLCQqJkYpRixeI0YsRixGLEYsRi1GLEYuRjFGMkYsRjVGLEYxIiIh">PTYiNiM7IiIiIiIkRVxbbCRGJiwkKipJIk1HRiNGJiwmSSNSfGlyR0YjRiZGKyIiIyEiIiIiJyNGJkYuSSNQaUclKnByb3RlY3RlZEdGMSMhIiNGJ0YuKixeI0Y0RiZGK0YmRixGL0YwRjFGMkYxRiciIiE=</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L536" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">dRbetaS_lm(1,-1):=array(1..3):
+for i from 1 to 3 do
+    dRbetaS_lm(1,-1)[i]:=diff(betaS_lm(1,-1)[i],R):
+end do: 
+print(dRbetaS_lm(1,-1));</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkndmVjdG9yRzYiNiM3JSwkKiwjIiIjIiIkIiIiSSJNR0YkRiwpLCZJI1J8aXJHRiRGLComRipGLEYtRixGLEYqISIiKSIiJyNGLEYqRiwpSSNQaUclKnByb3RlY3RlZEdGNUYsRiwqLComRilGLF4jRixGLEYsRi1GLEYuRjJGM0YsRjZGLCIiIQ==">PTYiNiM7IiIiIiIkRVxbbCRGJiwkKipJIk1HRiNGJiwmSSNSfGlyR0YjRiZGKyIiIyEiIyIiJyNGJkYuSSNQaUclKnByb3RlY3RlZEdGMSNGLkYnRi4qLF4jRjRGJkYrRiZGLEYvRjBGMUYyRjFGJyIiIQ==</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L476" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+writeto(`B1m1_3.f90`):
+for i from 1 to 3 do
+fortran(subs({Pi=pi},betaS_lm(1,-1)[i])):
+print(`B1m1(`||(i)||`)=t0`):
+od:
+writeto(terminal);</Text-field>
+</Input>
+</Group>
+<Group labelreference="L537" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+writeto(`dRB1m1_3.f90`):
+for i from 1 to 3 do
+fortran(subs({Pi=pi},dRbetaS_lm(1,-1)[i])):
+print(`dRB1m1(`||(i)||`)=t0`):
+od:
+writeto(terminal);</Text-field>
+</Input>
+</Group>
+<Group labelreference="L453" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">betaS_lm(1,0):=array(1..3):
+for i from 1 to 3 do
+    betaS_lm(1,0)[i]:=int(int(sin(theta)
+                     *betaS[i]*conjugate(Ylm(1,0)) 
+                     ,theta=0..Pi)
+                     ,phi=0..2*Pi)
+end do: 
+print(betaS_lm(1,0));</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkndmVjdG9yRzYiNiM3JSIiIUYnLCQqLCMiIiUiIiQiIiJJIk1HRiRGLSwmSSNSfGlyR0YkRi0qJiIiI0YtRi5GLUYtISIiKUYsI0YtRjJGLSlJI1BpRyUqcHJvdGVjdGVkR0Y1Ri1GMw==">PTYiNiM7IiIiIiIkRVxbbCRGJiIiISIiI0YpRicsJCoqSSJNR0YjRiYsJkkjUnxpckdGI0YmRi1GKiEiIkYnI0YmRipJI1BpRyUqcHJvdGVjdGVkR0YxIyEiJUYn</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L538" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">dRbetaS_lm(1,0):=array(1..3):
+for i from 1 to 3 do
+    dRbetaS_lm(1,0)[i]:=diff(betaS_lm(1,0)[i],R):
+end do: 
+print(dRbetaS_lm(1,0));</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkndmVjdG9yRzYiNiM3JSIiIUYnLCQqLCMiIiUiIiQiIiJJIk1HRiRGLSksJkkjUnxpckdGJEYtKiYiIiNGLUYuRi1GLUYzISIiKUYsI0YtRjNGLSlJI1BpRyUqcHJvdGVjdGVkR0Y2Ri1GLQ==">PTYiNiM7IiIiIiIkRVxbbCRGJiIiISIiI0YpRicsJCoqSSJNR0YjRiYsJkkjUnxpckdGI0YmRi1GKiEiI0YnI0YmRipJI1BpRyUqcHJvdGVjdGVkR0YxIyIiJUYn</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L477" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+writeto(`B10_3.f90`):
+for i from 1 to 3 do
+fortran(subs({Pi=pi},betaS_lm(1,0)[i])):
+print(`B10(`||(i)||`)=t0`):
+od:
+writeto(terminal);</Text-field>
+</Input>
+</Group>
+<Group labelreference="L539" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+writeto(`dRB10_3.f90`):
+for i from 1 to 3 do
+fortran(subs({Pi=pi},dRbetaS_lm(1,0)[i])):
+print(`dRB10(`||(i)||`)=t0`):
+od:
+writeto(terminal);</Text-field>
+</Input>
+</Group>
+<Group labelreference="L454" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">betaS_lm(1,1):=array(1..3):
+for i from 1 to 3 do
+    betaS_lm(1,1)[i]:=int(int(sin(theta)
+                     *betaS[i]*conjugate(Ylm(1,1)) 
+                     ,theta=0..Pi)
+                     ,phi=0..2*Pi)
+end do: 
+print(betaS_lm(1,1));</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkndmVjdG9yRzYiNiM3JSwkKiwjIiIjIiIkIiIiSSJNR0YkRiwsJkkjUnxpckdGJEYsKiZGKkYsRi1GLEYsISIiKSIiJyNGLEYqRiwpSSNQaUclKnByb3RlY3RlZEdGNEYsRiwsJCosLCQqJkYpRixeI0YsRixGLEYsRi1GLEYuRjFGMkYsRjVGLEYxIiIh">PTYiNiM7IiIiIiIkRVxbbCRGJiwkKipJIk1HRiNGJiwmSSNSfGlyR0YjRiZGKyIiIyEiIiIiJyNGJkYuSSNQaUclKnByb3RlY3RlZEdGMSNGLkYnRi4qLF4jIyEiI0YnRiZGK0YmRixGL0YwRjFGMkYxRiciIiE=</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L540" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">dRbetaS_lm(1,1):=array(1..3):
+for i from 1 to 3 do
+    dRbetaS_lm(1,1)[i]:=diff(betaS_lm(1,1)[i],R):
+end do: 
+print(dRbetaS_lm(1,1));</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkndmVjdG9yRzYiNiM3JSwkKiwjIiIjIiIkIiIiSSJNR0YkRiwpLCZJI1J8aXJHRiRGLComRipGLEYtRixGLEYqISIiKSIiJyNGLEYqRiwpSSNQaUclKnByb3RlY3RlZEdGNUYsRjIqLComRilGLF4jRixGLEYsRi1GLEYuRjJGM0YsRjZGLCIiIQ==">PTYiNiM7IiIiIiIkRVxbbCRGJiwkKipJIk1HRiNGJiwmSSNSfGlyR0YjRiZGKyIiIyEiIyIiJyNGJkYuSSNQaUclKnByb3RlY3RlZEdGMSNGL0YnRi4qLF4jI0YuRidGJkYrRiZGLEYvRjBGMUYyRjFGJyIiIQ==</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L478" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+writeto(`B11_3.f90`):
+for i from 1 to 3 do
+fortran(subs({Pi=pi},betaS_lm(1,1)[i])):
+print(`B11(`||(i)||`)=t0`):
+od:
+writeto(terminal);</Text-field>
+</Input>
+</Group>
+<Group labelreference="L541" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+writeto(`dRB11_3.f90`):
+for i from 1 to 3 do
+fortran(subs({Pi=pi},dRbetaS_lm(1,1)[i])):
+print(`dRB11(`||(i)||`)=t0`):
+od:
+writeto(terminal);</Text-field>
+</Input>
+</Group>
+<Group labelreference="L455" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">betaS_lm(2,2):=array(1..3):
+for i from 1 to 3 do
+    betaS_lm(2,2)[i]:=int(int(sin(theta)
+                     *betaS[i]*conjugate(Ylm(2,2)) 
+                     ,theta=0..Pi)
+                     ,phi=0..2*Pi)
+end do: 
+print(betaS_lm(2,2));</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkndmVjdG9yRzYiNiM3JSIiIUYnRic=">PTYiNiM7IiIiIiIkRVxbbCRGJiIiISIiI0YpRidGKQ==</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L463" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">betaS_back:=array(1..3):
+for i from 1 to 3 do
+betaS_back[i]:=collect(simplify(
++betaS_lm(1, -1)[i]*Ylm(1, -1)
++betaS_lm(1, 0)[i] *Ylm(1, 0)
++betaS_lm(1, 1)[i] *Ylm(1, 1)
+,symbolic),[R],factor):
+end do:
+print(betaS_back):</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkndmVjdG9yRzYiNiM3JSwkKiwiIiMiIiJJIk1HRiRGKi1JJGFic0clKnByb3RlY3RlZEc2Iy1JJHNpbkc2JEYuSShfc3lzbGliR0YkNiNJJ3RoZXRhfGlyR0YkRiotSSRjb3NHRjI2I0klcGhpfGlyR0YkRiosJkkjUnxpckdGJEYqKiZGKUYqRitGKkYqISIiRj0sJCosRilGKkYrRipGLEYqLUYxRjhGKkY6Rj1GPSwkKipGKUYqRitGKi1GN0Y0RipGOkY9Rj0=">SStiZXRhU19iYWNrRzYi</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L464" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">print(betaS);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkndmVjdG9yRzYiNiM3JSwkKiwiIiMiIiJJIk1HRiRGKi1JJHNpbkc2JCUqcHJvdGVjdGVkR0koX3N5c2xpYkdGJDYjSSZ0aGV0YUdGJEYqLUkkY29zR0YuNiNJJHBoaUdGJEYqLCZJIlJHRiRGKiomRilGKkYrRipGKiEiIkY6LCQqLEYpRipGK0YqRixGKi1GLUY1RipGN0Y6RjosJCoqRilGKkYrRiotRjRGMUYqRjdGOkY6">SSZiZXRhU0c2Ig==</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L485" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">betaS_check:=array(1..3):
+for i from 1 to 3 do
+   betaS_check[i]:=
+expand(simplify(
+(subs({abs(sin(theta))=sin(theta)},betaS_back[i])-betaS[i])),
+trig)
+end do:
+print(betaS_check):</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkndmVjdG9yRzYiNiM3JSIiIUYnRic=">SSxiZXRhU19jaGVja0c2Ig==</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L542" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">dRbetaS_back:=array(1..3):
+for i from 1 to 3 do
+dRbetaS_back[i]:=collect(simplify(
++dRbetaS_lm(1, -1)[i]*Ylm(1, -1)
++dRbetaS_lm(1, 0)[i] *Ylm(1, 0)
++dRbetaS_lm(1, 1)[i] *Ylm(1, 1)
+,symbolic),[R],factor):
+end do:
+print(dRbetaS_back):</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkndmVjdG9yRzYiNiM3JSwkKiwiIiMiIiJJIk1HRiRGKi1JJGFic0clKnByb3RlY3RlZEc2Iy1JJHNpbkc2JEYuSShfc3lzbGliR0YkNiNJJ3RoZXRhfGlyR0YkRiotSSRjb3NHRjI2I0klcGhpfGlyR0YkRiopLCZJI1J8aXJHRiRGKiomRilGKkYrRipGKkYpISIiRiosJCosRilGKkYrRipGLEYqLUYxRjhGKkY6Rj5GKiwkKipGKUYqRitGKkY6Rj4tRjdGNEYqRio=">SS1kUmJldGFTX2JhY2tHNiI=</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L543" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">dRbetaS:=array(1..3,symmetric):
+dRbetaS[1]:=2*sin(theta)*cos(phi)*M/(R+2*M)^2:
+dRbetaS[2]:=2*M*sin(phi)*sin(theta)/(2*M+R)^2:
+dRbetaS[3]:=2*cos(theta)*M/(2*M+R)^2:
+print(dRbetaS):</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkndmVjdG9yRzYiNiM3JSwkKiwiIiMiIiItSSRzaW5HNiQlKnByb3RlY3RlZEdJKF9zeXNsaWJHRiQ2I0kndGhldGF8aXJHRiRGKi1JJGNvc0dGLTYjSSVwaGl8aXJHRiRGKkkiTUdGJEYqKSwmSSNSfGlyR0YkRioqJkYpRipGNkYqRipGKSEiIkYqLCQqLEYpRipGNkYqLUYsRjRGKkYrRipGN0Y7RiosJCoqRilGKkY2RipGN0Y7LUYzRjBGKkYq">SShkUmJldGFTRzYi</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L548" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">dRbetaS_check:=array(1..3):
+for i from 1 to 3 do
+   dRbetaS_check[i]:=
+expand(simplify(
+(subs({abs(sin(theta))=sin(theta)},dRbetaS_back[i])-dRbetaS[i])),
+trig)
+end do:
+print(dRbetaS_check):;</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkndmVjdG9yRzYiNiM3JSIiIUYnRic=">SS5kUmJldGFTX2NoZWNrRzYi</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L543" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal"></Text-field>
+</Input>
+</Group>
+<Group labelreference="L465" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">alphaS_lm(0,0):=int(int(sin(theta)
+               *alphaS*conjugate(Ylm(0,0)) 
+               ,theta=0..Pi)
+               ,phi=0..2*Pi);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="Pi1JKmFscGhhU19sbUc2IjYkIiIhRicsJCoqIiIjIiIiKSwmSSNSfGlyR0YlRisqJkYqRitJIk1HRiVGK0YrI0YrRiohIiIpRi5GMUYrKUkjUGlHJSpwcm90ZWN0ZWRHRjFGK0Yr">LCQqKCwmSSNSfGlyRzYiIiIiSSJNR0YmIiIjIyEiIkYpRiUjRidGKUkjUGlHJSpwcm90ZWN0ZWRHRixGKQ==</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L549" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">dRalphaS_lm(0,0):=simplify(diff(alphaS_lm(0,0),R),symbolic);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="Pi1JLGRSYWxwaGFTX2xtRzYiNiQiIiFGJywkKiwiIiMiIiIpSSNQaUclKnByb3RlY3RlZEcjRitGKkYrSSJNR0YlRispLCZJI1J8aXJHRiVGKyomRipGK0YwRitGKyMiIiRGKiEiIilGM0YvRjdGKw==">LCQqKkkjUGlHJSpwcm90ZWN0ZWRHIyIiIiIiI0kiTUc2IkYnLCZJI1J8aXJHRipGJ0YpRigjISIkRihGLCMhIiJGKEYo</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L486" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+fortran(subs({Pi=pi},alphaS_lm(0,0)));
+</Text-field>
+</Input>
+<Output>
+<Text-field style="Line Printed Output" layout="Line Printed Output">      t0 = 2/sqrt(R+2*M)*sqrt(R)*sqrt(pi)</Text-field>
+</Output>
+</Group>
+<Group labelreference="L550" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+fortran(subs({Pi=pi},dRalphaS_lm(0,0)));</Text-field>
+</Input>
+<Output>
+<Text-field style="Line Printed Output" layout="Line Printed Output">      t0 = 2*sqrt(pi)*M/sqrt(R+2*M)**3/sqrt(R)</Text-field>
+</Output>
+</Group>
+<Group labelreference="L466" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">alphaS_lm(1,1):=int(int(sin(theta)
+               *alphaS*conjugate(Ylm(1,1)) 
+               ,theta=0..Pi)
+               ,phi=0..2*Pi);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="Pi1JKmFscGhhU19sbUc2IjYkIiIiRiciIiE=">IiIh</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L479" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">alphaS_lm(2,2):=int(int(sin(theta)
+               *alphaS*conjugate(Ylm(2,2)) 
+               ,theta=0..Pi)
+               ,phi=0..2*Pi);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="Pi1JKmFscGhhU19sbUc2IjYkIiIjRiciIiE=">IiIh</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L467" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">alphaS_back:=collect(simplify(
+alphaS_lm(0, 0)*Ylm(0, 0),symbolic),[R],factor);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="PkksYWxwaGFTX2JhY2tHNiIqJiksJkkjUnxpckdGJCIiIiomIiIjRilJIk1HRiRGKUYpI0YpRishIiIpRihGLUYp">KiYsJkkjUnxpckc2IiIiIkkiTUdGJSIiIyMhIiJGKEYkI0YmRig=</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L468" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">alphaS;</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkmbWZyYWNHNiMvSSttb2R1bGVuYW1lRzYiSSxUeXBlc2V0dGluZ0dJKF9zeXNsaWJHRic2KC1JJW1yb3dHRiQ2Ji1JJm1zcXJ0R0YkNiMtSSNtaUdGJDYlUSNSfGlyRicvJSdpdGFsaWNHUSV0cnVlRicvJSxtYXRodmFyaWFudEdRJ2l0YWxpY0YnLyUrZm9yZWdyb3VuZEdRKFswLDAsMF1GJy8lKXJlYWRvbmx5R1EmZmFsc2VGJy9GOVEnbm9ybWFsRictRiw2Ji1GLzYjLUYsNihGMS1JI21vR0YkNi1RIitGJ0ZBLyUmZmVuY2VHRkAvJSpzZXBhcmF0b3JHRkAvJSlzdHJldGNoeUdGQC8lKnN5bW1ldHJpY0dGQC8lKGxhcmdlb3BHRkAvJS5tb3ZhYmxlbGltaXRzR0ZALyUnYWNjZW50R0ZALyUnbHNwYWNlR1EsMC4yMjIyMjIyZW1GJy8lJ3JzcGFjZUdGZ24tRiw2KC1JI21uR0YkNiRRIjJGJ0ZBLUZKNi1RMSZJbnZpc2libGVUaW1lcztGJ0ZBRk1GT0ZRRlNGVUZXRlkvRmZuUSYwLjBlbUYnL0ZpbkZkby1GMjYlUSJNRidGNUY4RjtGPkZBRjtGPkZBRjtGPkZBLyUubGluZXRoaWNrbmVzc0dRIjFGJy8lK2Rlbm9tYWxpZ25HUSdjZW50ZXJGJy8lKW51bWFsaWduR0ZecC8lKWJldmVsbGVkR0ZA">KiYsJkkjUnxpckc2IiIiIkkiTUdGJSIiIyMhIiJGKEYkI0YmRig=</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L551" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">dRalphaS_back:=collect(simplify(
+dRalphaS_lm(0, 0)*Ylm(0, 0),symbolic),[R],factor);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="PkkuZFJhbHBoYVNfYmFja0c2IiooSSJNR0YkIiIiKSwmSSNSfGlyR0YkRicqJiIiI0YnRiZGJ0YnIyIiJEYsISIiKUYqI0YnRixGLw==">KihJIk1HNiIiIiIsJkkjUnxpckdGJEYlRiMiIiMjISIkRihGJyMhIiJGKA==</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L552" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">dRalphaS:=M/(sqrt(R)*(2*M+R)^(3/2));</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="PkkpZFJhbHBoYVNHNiIqKEkiTUdGJCIiIiksJkkjUnxpckdGJEYnKiYiIiNGJ0YmRidGJyMiIiRGLCEiIilGKiNGJ0YsRi8=">KihJIk1HNiIiIiIsJkkjUnxpckdGJEYlRiMiIiMjISIkRihGJyMhIiJGKA==</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L165" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">Yst_N := (l,m) -&gt; factor(simplify(simplify(sqrt((2*l+1)/4/Pi * (l-m)!/(l+m)!) * LegP(l,m,(1-q^2-p^2)/(1+q^2+p^2)) * ((q+I*p)/sqrt(q^2+p^2))^m),radical,symbolic)); 
+Yst_S := (l,m) -&gt; factor(simplify(simplify(sqrt((2*l+1)/4/Pi * (l-m)!/(l+m)!) * LegP(l,m,(-1+q^2+p^2)/(1+q^2+p^2)) * ((q+I*p)/sqrt(q^2+p^2))^(-m)),radical,symbolic)); </Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="PkkmWXN0X05HNiJmKjYkSSJsR0YkSSJtR0YkRiQ2JEkpb3BlcmF0b3JHRiRJJmFycm93R0YkRiQtSSdmYWN0b3JHNiQlKnByb3RlY3RlZEdJKF9zeXNsaWJHRiQ2Iy1JKXNpbXBsaWZ5R0YuNiUtRjM2IyooLUklc3FydEdGLjYjLCQqLCMiIiIiIiVGPiwmKiYiIiNGPkYnRj5GPkY+Rj5GPkkjUGlHRi8hIiItSSpmYWN0b3JpYWxHRi82IywmRidGPkYoRkRGPi1GRjYjLCZGJ0Y+RihGPkZERj5GPi1JJUxlZ1BHRiQ2JUYnRigqJiwoRj5GPiokKUkicUdGJEZCRj5GRCokKUkicEdGJEZCRj5GREY+LChGPkY+RlFGPkZURj5GREY+KSomLCZGU0Y+KiZeI0Y+Rj5GVkY+Rj5GPi1GOTYjLCZGUUY+RlRGPkZERihGPkkocmFkaWNhbEdGL0kpc3ltYm9saWNHRiRGJEYkRiQ=">Zio2JEkibEc2IkkibUdGJUYlNiRJKW9wZXJhdG9yR0YlSSZhcnJvd0dGJUYlLUknZmFjdG9yRzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliR0YlNiMtSSlzaW1wbGlmeUdGLDYlLUYxNiMqKC1JJXNxcnRHRiw2IywkKiosJjkkIiIjIiIiRj5GPkkjUGlHRi0hIiItSSpmYWN0b3JpYWxHRi02IywmRjxGPjklRkBGPi1GQjYjLCZGPEY+RkVGPkZAI0Y+IiIlRj4tSSVMZWdQR0YlNiVGPEZFKiYsKEY+Rj4qJEkicUdGJUY9RkAqJEkicEdGJUY9RkBGPiwoRj5GPkZQRj5GUkY+RkBGPikqJiwmRlFGPiomXiNGPkY+RlNGPkY+Rj4tRjc2IywmRlBGPkZSRj5GQEZFRj5JKHJhZGljYWxHRi1JKXN5bWJvbGljR0YlRiVGJUYl</Equation></Text-field>
+</Output>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="PkkmWXN0X1NHNiJmKjYkSSJsR0YkSSJtR0YkRiQ2JEkpb3BlcmF0b3JHRiRJJmFycm93R0YkRiQtSSdmYWN0b3JHNiQlKnByb3RlY3RlZEdJKF9zeXNsaWJHRiQ2Iy1JKXNpbXBsaWZ5R0YuNiUtRjM2IyooLUklc3FydEdGLjYjLCQqLCMiIiIiIiVGPiwmKiYiIiNGPkYnRj5GPkY+Rj5GPkkjUGlHRi8hIiItSSpmYWN0b3JpYWxHRi82IywmRidGPkYoRkRGPi1GRjYjLCZGJ0Y+RihGPkZERj5GPi1JJUxlZ1BHRiQ2JUYnRigqJiwoRj5GRCokKUkicUdGJEZCRj5GPiokKUkicEdGJEZCRj5GPkY+LChGPkY+RlFGPkZURj5GREY+KSomLCZGU0Y+KiZeI0Y+Rj5GVkY+Rj5GPi1GOTYjLCZGUUY+RlRGPkZELCRGKEZERj5JKHJhZGljYWxHRi9JKXN5bWJvbGljR0YkRiRGJEYk">Zio2JEkibEc2IkkibUdGJUYlNiRJKW9wZXJhdG9yR0YlSSZhcnJvd0dGJUYlLUknZmFjdG9yRzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliR0YlNiMtSSlzaW1wbGlmeUdGLDYlLUYxNiMqKC1JJXNxcnRHRiw2IywkKiosJjkkIiIjIiIiRj5GPkkjUGlHRi0hIiItSSpmYWN0b3JpYWxHRi02IywmRjxGPjklRkBGPi1GQjYjLCZGPEY+RkVGPkZAI0Y+IiIlRj4tSSVMZWdQR0YlNiVGPEZFKiYsKEZARj4qJEkicUdGJUY9Rj4qJEkicEdGJUY9Rj5GPiwoRj5GPkZQRj5GUkY+RkBGPikqJiwmRlFGPiomXiNGPkY+RlNGPkY+Rj4tRjc2IywmRlBGPkZSRj5GQCwkRkVGQEY+SShyYWRpY2FsR0YtSSlzeW1ib2xpY0dGJUYlRiVGJQ==</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L429" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+fortran(simplify(subs({Pi=pi,1+q^2+p^2=pp, I=ii},Yst_N(3,1)),symbolic));</Text-field>
+</Input>
+<Output>
+<Text-field style="Line Printed Output" layout="Line Printed Output">      t0 = -sqrt(21.D0)/sqrt(pi)/pp**3*(1-3*q**2-3*p**2+q**4+2*q**2*p**2
+     #+p**4)*(q+ii*p)</Text-field>
+</Output>
+</Group>
+<Group labelreference="L490" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+fortran(simplify(subs({Pi=pi,1+q^2+p^2=pp, I=ii},Yst_S(3,1)),symbolic));<Equation executable="true" style="2D Input" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYoLUkjbWlHRiQ2I1EhRictSSdtc3BhY2VHRiQ2Ji8lJ2hlaWdodEdRJjAuMGV4RicvJSZ3aWR0aEdRJjAuMGVtRicvJSZkZXB0aEdGNC8lKmxpbmVicmVha0dRKG5ld2xpbmVGJy1GMDYmRjJGNUY4L0Y7USVhdXRvRidGKy8lK2V4ZWN1dGFibGVHUSZmYWxzZUYnLyUsbWF0aHZhcmlhbnRHUSdub3JtYWxGJw==">NiI=</Equation></Text-field>
+</Input>
+<Output>
+<Text-field style="Line Printed Output" layout="Line Printed Output">      t0 = (-q+ii*p)*(1-3*q**2-3*p**2+q**4+2*q**2*p**2+p**4)*sqrt(21.D0)
+     #/sqrt(pi)/pp**3</Text-field>
+</Output>
+</Group>
+<Group labelreference="L169">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">assume(q, real);</Text-field>
+</Input>
+</Group>
+<Group labelreference="L168">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">assume(p, real);</Text-field>
+</Input>
+</Group>
+<Group labelreference="L167">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="_pstyle26" spaceabove="0" rightmargin="0" pagebreak-before="false" leftmargin="0" alignment="left" spacebelow="0" linebreak="space" bullet="none" firstindent="0" bulletsuffix="" linespacing="0.0" layout_style_name="_pstyle26" initial="0">simplify(Yst_N(0,0));</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkmbWZyYWNHNiMvSSttb2R1bGVuYW1lRzYiSSxUeXBlc2V0dGluZ0dJKF9zeXNsaWJHRic2KC1JJW1yb3dHRiQ2Ji1JI21uR0YkNiRRIjFGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRicvJStmb3JlZ3JvdW5kR1EoWzAsMCwwXUYnLyUpcmVhZG9ubHlHUSZmYWxzZUYnRjItRiw2KC1GLzYkUSIyRidGMi1JI21vR0YkNi1RMSZJbnZpc2libGVUaW1lcztGJ0YyLyUmZmVuY2VHRjovJSpzZXBhcmF0b3JHRjovJSlzdHJldGNoeUdGOi8lKnN5bW1ldHJpY0dGOi8lKGxhcmdlb3BHRjovJS5tb3ZhYmxlbGltaXRzR0Y6LyUnYWNjZW50R0Y6LyUnbHNwYWNlR1EmMC4wZW1GJy8lJ3JzcGFjZUdGVC1JJm1zcXJ0R0YkNiMtSSNtaUdGJDYlUScmIzk2MDtGJy8lJ2l0YWxpY0dGOkYyRjVGOEYyLyUubGluZXRoaWNrbmVzc0dRIjFGJy8lK2Rlbm9tYWxpZ25HUSdjZW50ZXJGJy8lKW51bWFsaWduR0Zfby8lKWJldmVsbGVkR0Y6">LCQqJEkjUGlHJSpwcm90ZWN0ZWRHIyEiIiIiIyMiIiJGKA==</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L298" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">pqCg3S_back[1,1]:=subs({1+q^2+p^2=pp},
+collect(simplify(
+ Cg3S_lm(0, 0)[1,1] *Yst_N(0, 0)
++Cg3S_lm(2, -2)[1,1]*Yst_N(2, -2)
++Cg3S_lm(2, -1)[1,1]*Yst_N(2, -1)
++Cg3S_lm(2, 0)[1,1] *Yst_N(2, 0)
++Cg3S_lm(2, 1)[1,1] *Yst_N(2, 1)
++Cg3S_lm(2, 2)[1,1] *Yst_N(2, 2)
+,symbolic),[R],factor));
+
+
+</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="PiZJLHBxQ2czU19iYWNrRzYiNiQiIiJGJywmRidGJyosIiIpRidJIk1HRiVGJylJI3F8aXJHRiUiIiNGJylJI3BwR0YlRi4hIiJJI1J8aXJHRiVGMUYn">LCYiIiJGIyoqSSJNRzYiRiNJI3F8aXJHRiYiIiNJI3BwR0YmISIjSSNSfGlyR0YmISIiIiIp</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L171" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">pqCg3S_back_N:=array(1..3,1..3,symmetric):
+for i from 1 to 3 do
+    for j from 1 to 3 do
+pqCg3S_back_N[i,j]:=subs({1+q^2+p^2=pp},
+collect(simplify(
+ Cg3S_lm(0, 0)[i,j] *Yst_N(0, 0)
++Cg3S_lm(2, -2)[i,j]*Yst_N(2, -2)
++Cg3S_lm(2, -1)[i,j]*Yst_N(2, -1)
++Cg3S_lm(2, 0)[i,j] *Yst_N(2, 0)
++Cg3S_lm(2, 1)[i,j] *Yst_N(2, 1)
++Cg3S_lm(2, 2)[i,j] *Yst_N(2, 2)
+,symbolic),[R],factor)):
+end do: end do:
+print(pqCg3S_back_N);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUknbWF0cml4RzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiNiM3JTclLCYiIiJGLCosIiIpRixJIk1HRidGLClJI3F8aXJHRiciIiNGLClJI3BwR0YnRjIhIiJJI1J8aXJHRidGNUYsLCQqLkYuRixGL0YsRjFGLEkjcHxpckdGJ0YsRjZGNUYzRjVGLCwkKi4iIiVGLEYvRiwsKEYsRjUqJEYwRixGLCokKUY5RjJGLEYsRixGMUYsRjZGNUYzRjVGNTclRjcsJkYsRiwqLEYuRixGL0YsRkBGLEYzRjVGNkY1RiwsJCouRjxGLEYvRixGPUYsRjlGLEY2RjVGM0Y1RjU3JUY6RkQsJkYsRiwqLEYyRixGL0YsKUY9RjJGLEYzRjVGNkY1Riw=">SS5wcUNnM1NfYmFja19ORzYi</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L419" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+writeto(`WT_g3N.f90`):
+for i from 1 to 3 do
+for j from i to 3 do
+fortran(pqCg3S_back_N[i,j]):
+print(`WT_g3N(`||(i)||`,`||(j)||`)=t0`):
+od: od:
+writeto(terminal);</Text-field>
+</Input>
+</Group>
+<Group labelreference="L418" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">pqCg3S_back_S:=array(1..3,1..3,symmetric):
+for i from 1 to 3 do
+    for j from 1 to 3 do
+pqCg3S_back_S[i,j]:=subs({1+q^2+p^2=pp},
+collect(simplify(
+ Cg3S_lm(0, 0)[i,j] *Yst_S(0, 0)
++Cg3S_lm(2, -2)[i,j]*Yst_S(2, -2)
++Cg3S_lm(2, -1)[i,j]*Yst_S(2, -1)
++Cg3S_lm(2, 0)[i,j] *Yst_S(2, 0)
++Cg3S_lm(2, 1)[i,j] *Yst_S(2, 1)
++Cg3S_lm(2, 2)[i,j] *Yst_S(2, 2)
+,symbolic),[R],factor)):
+end do: end do:
+print(pqCg3S_back_S);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUknbWF0cml4RzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiNiM3JTclLCYiIiJGLCosIiIpRixJIk1HRidGLClJI3F8aXJHRiciIiNGLClJI3BwR0YnRjIhIiJJI1J8aXJHRidGNUYsLCQqLkYuRixGL0YsRjFGLEkjcHxpckdGJ0YsRjZGNUYzRjVGNSwkKi4iIiVGLEYvRiwsKEYsRjUqJEYwRixGLCokKUY5RjJGLEYsRixGMUYsRjZGNUYzRjVGLDclRjcsJkYsRiwqLEYuRixGL0YsRkBGLEYzRjVGNkY1RiwsJCouRjxGLEYvRixGPUYsRjlGLEY2RjVGM0Y1RjU3JUY6RkQsJkYsRiwqLEYyRixGL0YsKUY9RjJGLEYzRjVGNkY1Riw=">SS5wcUNnM1NfYmFja19TRzYi</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L420" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+writeto(`WT_g3S.f90`):
+for i from 1 to 3 do
+for j from i to 3 do
+fortran(pqCg3S_back_S[i,j]):
+print(`WT_g3S(`||(i)||`,`||(j)||`)=t0`):
+od: od:
+writeto(terminal);</Text-field>
+</Input>
+</Group>
+<Group labelreference="L553" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">pqdRCg3S_back_N:=array(1..3,1..3,symmetric):
+for i from 1 to 3 do
+    for j from 1 to 3 do
+pqdRCg3S_back_N[i,j]:=subs({1+q^2+p^2=pp},
+collect(simplify(
+ dRCg3S_lm(0, 0)[i,j] *Yst_N(0, 0)
++dRCg3S_lm(2, -2)[i,j]*Yst_N(2, -2)
++dRCg3S_lm(2, -1)[i,j]*Yst_N(2, -1)
++dRCg3S_lm(2, 0)[i,j] *Yst_N(2, 0)
++dRCg3S_lm(2, 1)[i,j] *Yst_N(2, 1)
++dRCg3S_lm(2, 2)[i,j] *Yst_N(2, 2)
+,symbolic),[R],factor)):
+end do: end do:
+print(pqdRCg3S_back_N);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUknbWF0cml4RzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiNiM3JTclLCQqLCIiKSIiIkkiTUdGJ0YuKUkjcXxpckdGJyIiI0YuKUkjUnxpckdGJ0YyISIiKUkjcHBHRidGMkY1RjUsJCouRi1GLkYvRi5GMUYuSSNwfGlyR0YnRi5GM0Y1RjZGNUY1LCQqLiIiJUYuRi9GLiwoRi5GNSokRjBGLkYuKiQpRjpGMkYuRi5GLkYxRi5GM0Y1RjZGNUYuNyVGOCwkKixGLUYuRi9GLkZBRi5GM0Y1RjZGNUY1LCQqLkY9Ri5GL0YuRj5GLkY6Ri5GM0Y1RjZGNUYuNyVGO0ZFLCQqLEYyRi5GL0YuKUY+RjJGLkY2RjVGM0Y1RjU=">STBwcWRSQ2czU19iYWNrX05HNiI=</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L554" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+writeto(`WT_dRg3N.f90`):
+for i from 1 to 3 do
+for j from i to 3 do
+fortran(pqdRCg3S_back_N[i,j]):
+print(`WT_dRg3N(`||(i)||`,`||(j)||`)=t0`):
+od: od:
+writeto(terminal);</Text-field>
+</Input>
+</Group>
+<Group labelreference="L555" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">pqdRCg3S_back_S:=array(1..3,1..3,symmetric):
+for i from 1 to 3 do
+    for j from 1 to 3 do
+pqdRCg3S_back_S[i,j]:=subs({1+q^2+p^2=pp},
+collect(simplify(
+ dRCg3S_lm(0, 0)[i,j] *Yst_S(0, 0)
++dRCg3S_lm(2, -2)[i,j]*Yst_S(2, -2)
++dRCg3S_lm(2, -1)[i,j]*Yst_S(2, -1)
++dRCg3S_lm(2, 0)[i,j] *Yst_S(2, 0)
++dRCg3S_lm(2, 1)[i,j] *Yst_S(2, 1)
++dRCg3S_lm(2, 2)[i,j] *Yst_S(2, 2)
+,symbolic),[R],factor)):
+end do: end do:
+print(pqdRCg3S_back_S);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUknbWF0cml4RzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiNiM3JTclLCQqLCIiKSIiIkkiTUdGJ0YuKUkjcXxpckdGJyIiI0YuKUkjUnxpckdGJ0YyISIiKUkjcHBHRidGMkY1RjUsJCouRi1GLkYvRi5GMUYuSSNwfGlyR0YnRi5GM0Y1RjZGNUYuLCQqLiIiJUYuRi9GLiwoRi5GNSokRjBGLkYuKiQpRjpGMkYuRi5GLkYxRi5GM0Y1RjZGNUY1NyVGOCwkKixGLUYuRi9GLkZBRi5GM0Y1RjZGNUY1LCQqLkY9Ri5GL0YuRj5GLkY6Ri5GM0Y1RjZGNUYuNyVGO0ZFLCQqLEYyRi5GL0YuKUY+RjJGLkY2RjVGM0Y1RjU=">STBwcWRSQ2czU19iYWNrX1NHNiI=</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L556" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+writeto(`WT_dRg3S.f90`):
+for i from 1 to 3 do
+for j from i to 3 do
+fortran(pqdRCg3S_back_S[i,j]):
+print(`WT_dRg3S(`||(i)||`,`||(j)||`)=t0`):
+od: od:
+writeto(terminal);</Text-field>
+</Input>
+</Group>
+<Group labelreference="L302" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">epsilon:=(q+I*p);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="PkkoZXBzaWxvbkc2IiwmSSNxfGlyR0YkIiIiKiZeI0YnRidJI3B8aXJHRiRGJ0Yn">LCZJI3F8aXJHNiIiIiIqJl4jRiVGJUkjcHxpckdGJEYlRiU=</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L301" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">Re(epsilon);
+simplify(x=2*R*Re(epsilon)/(1+epsilon*conjugate(epsilon)),symbolic);
+simplify(y=2*R*Im(epsilon)/(1+epsilon*conjugate(epsilon)),symbolic);
+simplify(z=R*(1-epsilon*conjugate(epsilon))/(1+epsilon*conjugate(epsilon)),symbolic);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output">SSNxfGlyRzYi</Equation></Text-field>
+</Output>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYoLUkjbWlHRiQ2JVEieEYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1JI21vR0YkNi1RIj1GJy9GM1Enbm9ybWFsRicvJSZmZW5jZUdRJmZhbHNlRicvJSpzZXBhcmF0b3JHRj0vJSlzdHJldGNoeUdGPS8lKnN5bW1ldHJpY0dGPS8lKGxhcmdlb3BHRj0vJS5tb3ZhYmxlbGltaXRzR0Y9LyUnYWNjZW50R0Y9LyUnbHNwYWNlR1EsMC4yNzc3Nzc4ZW1GJy8lJ3JzcGFjZUdGTC1JJm1mcmFjR0YkNigtRiM2Ki1JI21uR0YkNiRRIjJGJ0Y5LUY2Ni1RMSZJbnZpc2libGVUaW1lcztGJ0Y5RjtGPkZARkJGREZGRkgvRktRJjAuMGVtRicvRk5GZm4tRiw2JVEjUnxpckYnRi9GMkZYLUYsNiVRI3F8aXJGJ0YvRjIvJStmb3JlZ3JvdW5kR1EoWzAsMCwwXUYnLyUpcmVhZG9ubHlHRj1GOS1GIzYmLUYjNiotRlU2JFEiMUYnRjktRjY2LVEiK0YnRjlGO0Y+RkBGQkZERkZGSC9GS1EsMC4yMjIyMjIyZW1GJy9GTkZecC1GIzYmLUklbXN1cEdGJDYlRltvRlQvJTFzdXBlcnNjcmlwdHNoaWZ0R1EiMEYnRl5vRmFvRjlGam8tRiM2Ji1GY3A2JS1GLDYlUSNwfGlyRidGL0YyRlRGZXBGXm9GYW9GOUZeb0Zhb0Y5Rl5vRmFvRjkvJS5saW5ldGhpY2tuZXNzR1EiMUYnLyUrZGVub21hbGlnbkdRJ2NlbnRlckYnLyUpbnVtYWxpZ25HRmRxLyUpYmV2ZWxsZWRHRj1GXm9GYW9GOQ==">L0kieEc2IiwkKihJI1J8aXJHRiQiIiJJI3F8aXJHRiRGKCwoRihGKCokRikiIiNGKCokSSNwfGlyR0YkRixGKCEiIkYs</Equation></Text-field>
+</Output>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYoLUkjbWlHRiQ2JVEieUYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1JI21vR0YkNi1RIj1GJy9GM1Enbm9ybWFsRicvJSZmZW5jZUdRJmZhbHNlRicvJSpzZXBhcmF0b3JHRj0vJSlzdHJldGNoeUdGPS8lKnN5bW1ldHJpY0dGPS8lKGxhcmdlb3BHRj0vJS5tb3ZhYmxlbGltaXRzR0Y9LyUnYWNjZW50R0Y9LyUnbHNwYWNlR1EsMC4yNzc3Nzc4ZW1GJy8lJ3JzcGFjZUdGTC1JJm1mcmFjR0YkNigtRiM2Ki1JI21uR0YkNiRRIjJGJ0Y5LUY2Ni1RMSZJbnZpc2libGVUaW1lcztGJ0Y5RjtGPkZARkJGREZGRkgvRktRJjAuMGVtRicvRk5GZm4tRiw2JVEjUnxpckYnRi9GMkZYLUYsNiVRI3B8aXJGJ0YvRjIvJStmb3JlZ3JvdW5kR1EoWzAsMCwwXUYnLyUpcmVhZG9ubHlHRj1GOS1GIzYmLUYjNiotRlU2JFEiMUYnRjktRjY2LVEiK0YnRjlGO0Y+RkBGQkZERkZGSC9GS1EsMC4yMjIyMjIyZW1GJy9GTkZecC1GIzYmLUklbXN1cEdGJDYlLUYsNiVRI3F8aXJGJ0YvRjJGVC8lMXN1cGVyc2NyaXB0c2hpZnRHUSIwRidGXm9GYW9GOUZqby1GIzYmLUZjcDYlRltvRlRGaHBGXm9GYW9GOUZeb0Zhb0Y5Rl5vRmFvRjkvJS5saW5ldGhpY2tuZXNzR1EiMUYnLyUrZGVub21hbGlnbkdRJ2NlbnRlckYnLyUpbnVtYWxpZ25HRmRxLyUpYmV2ZWxsZWRHRj1GXm9GYW9GOQ==">L0kieUc2IiwkKihJI1J8aXJHRiQiIiJJI3B8aXJHRiRGKCwoRihGKCokSSNxfGlyR0YkIiIjRigqJEYpRi1GKCEiIkYt</Equation></Text-field>
+</Output>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYoLUkjbWlHRiQ2JVEiekYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1JI21vR0YkNi1RIj1GJy9GM1Enbm9ybWFsRicvJSZmZW5jZUdRJmZhbHNlRicvJSpzZXBhcmF0b3JHRj0vJSlzdHJldGNoeUdGPS8lKnN5bW1ldHJpY0dGPS8lKGxhcmdlb3BHRj0vJS5tb3ZhYmxlbGltaXRzR0Y9LyUnYWNjZW50R0Y9LyUnbHNwYWNlR1EsMC4yNzc3Nzc4ZW1GJy8lJ3JzcGFjZUdGTC1GIzYnLUY2Ni1RKiZ1bWludXMwO0YnRjlGO0Y+RkBGQkZERkZGSC9GS1EsMC4yMjIyMjIyZW1GJy9GTkZVLUkmbWZyYWNHRiQ2KC1GIzYoLUYsNiVRI1J8aXJGJ0YvRjItRjY2LVExJkludmlzaWJsZVRpbWVzO0YnRjlGO0Y+RkBGQkZERkZGSC9GS1EmMC4wZW1GJy9GTkZdby1JKG1mZW5jZWRHRiQ2JC1GIzYrRlEtSSNtbkdGJDYkUSIxRidGOS1GNjYtUSIrRidGOUY7Rj5GQEZCRkRGRkZIRlRGVi1GIzYmLUklbXN1cEdGJDYlLUYsNiVRI3F8aXJGJ0YvRjItRmVvNiRRIjJGJ0Y5LyUxc3VwZXJzY3JpcHRzaGlmdEdRIjBGJy8lK2ZvcmVncm91bmRHUShbMCwwLDBdRicvJSlyZWFkb25seUdGPUY5RmhvLUYjNiYtRl5wNiUtRiw2JVEjcHxpckYnRi9GMkZjcEZmcEZpcEZccUY5RmlwRlxxRjlGOUZpcEZccUY5LUYjNiYtRiM2KkZkb0Zob0ZbcEZob0ZecUZpcEZccUY5RmlwRlxxRjkvJS5saW5ldGhpY2tuZXNzR1EiMUYnLyUrZGVub21hbGlnbkdRJ2NlbnRlckYnLyUpbnVtYWxpZ25HRl5yLyUpYmV2ZWxsZWRHRj1GaXBGXHFGOUZpcEZccUY5">L0kiekc2IiwkKihJI1J8aXJHRiQiIiIsKCEiIkYoKiRJI3F8aXJHRiQiIiNGKCokSSNwfGlyR0YkRi1GKEYoLChGKEYoRitGKEYuRihGKkYq</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L561" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">Re(epsilon);
+simplify(x=2*R*Re(epsilon)/(1+epsilon*conjugate(epsilon)),symbolic);
+simplify(y=-2*R*Im(epsilon)/(1+epsilon*conjugate(epsilon)),symbolic);
+simplify(z=-R*(1-epsilon*conjugate(epsilon))/(1+epsilon*conjugate(epsilon)),symbolic);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output">SSNxfGlyRzYi</Equation></Text-field>
+</Output>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYoLUkjbWlHRiQ2JVEieEYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1JI21vR0YkNi1RIj1GJy9GM1Enbm9ybWFsRicvJSZmZW5jZUdRJmZhbHNlRicvJSpzZXBhcmF0b3JHRj0vJSlzdHJldGNoeUdGPS8lKnN5bW1ldHJpY0dGPS8lKGxhcmdlb3BHRj0vJS5tb3ZhYmxlbGltaXRzR0Y9LyUnYWNjZW50R0Y9LyUnbHNwYWNlR1EsMC4yNzc3Nzc4ZW1GJy8lJ3JzcGFjZUdGTC1JJm1mcmFjR0YkNigtRiM2Ki1JI21uR0YkNiRRIjJGJ0Y5LUY2Ni1RMSZJbnZpc2libGVUaW1lcztGJ0Y5RjtGPkZARkJGREZGRkgvRktRJjAuMGVtRicvRk5GZm4tRiw2JVEjUnxpckYnRi9GMkZYLUYsNiVRI3F8aXJGJ0YvRjIvJStmb3JlZ3JvdW5kR1EoWzAsMCwwXUYnLyUpcmVhZG9ubHlHRj1GOS1GIzYmLUYjNiotRlU2JFEiMUYnRjktRjY2LVEiK0YnRjlGO0Y+RkBGQkZERkZGSC9GS1EsMC4yMjIyMjIyZW1GJy9GTkZecC1GIzYmLUklbXN1cEdGJDYlRltvRlQvJTFzdXBlcnNjcmlwdHNoaWZ0R1EiMEYnRl5vRmFvRjlGam8tRiM2Ji1GY3A2JS1GLDYlUSNwfGlyRidGL0YyRlRGZXBGXm9GYW9GOUZeb0Zhb0Y5Rl5vRmFvRjkvJS5saW5ldGhpY2tuZXNzR1EiMUYnLyUrZGVub21hbGlnbkdRJ2NlbnRlckYnLyUpbnVtYWxpZ25HRmRxLyUpYmV2ZWxsZWRHRj1GXm9GYW9GOQ==">L0kieEc2IiwkKihJI1J8aXJHRiQiIiJJI3F8aXJHRiRGKCwoRihGKCokRikiIiNGKCokSSNwfGlyR0YkRixGKCEiIkYs</Equation></Text-field>
+</Output>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYoLUkjbWlHRiQ2JVEieUYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1JI21vR0YkNi1RIj1GJy9GM1Enbm9ybWFsRicvJSZmZW5jZUdRJmZhbHNlRicvJSpzZXBhcmF0b3JHRj0vJSlzdHJldGNoeUdGPS8lKnN5bW1ldHJpY0dGPS8lKGxhcmdlb3BHRj0vJS5tb3ZhYmxlbGltaXRzR0Y9LyUnYWNjZW50R0Y9LyUnbHNwYWNlR1EsMC4yNzc3Nzc4ZW1GJy8lJ3JzcGFjZUdGTC1GIzYnLUY2Ni1RKiZ1bWludXMwO0YnRjlGO0Y+RkBGQkZERkZGSC9GS1EsMC4yMjIyMjIyZW1GJy9GTkZVLUkmbWZyYWNHRiQ2KC1GIzYqLUkjbW5HRiQ2JFEiMkYnRjktRjY2LVExJkludmlzaWJsZVRpbWVzO0YnRjlGO0Y+RkBGQkZERkZGSC9GS1EmMC4wZW1GJy9GTkZeby1GLDYlUSNSfGlyRidGL0YyRmpuLUYsNiVRI3B8aXJGJ0YvRjIvJStmb3JlZ3JvdW5kR1EoWzAsMCwwXUYnLyUpcmVhZG9ubHlHRj1GOS1GIzYmLUYjNiotRmduNiRRIjFGJ0Y5LUY2Ni1RIitGJ0Y5RjtGPkZARkJGREZGRkhGVEZWLUYjNiYtSSVtc3VwR0YkNiUtRiw2JVEjcXxpckYnRi9GMkZmbi8lMXN1cGVyc2NyaXB0c2hpZnRHUSIwRidGZm9GaW9GOUZicC1GIzYmLUZocDYlRmNvRmZuRl1xRmZvRmlvRjlGZm9GaW9GOUZmb0Zpb0Y5LyUubGluZXRoaWNrbmVzc0dRIjFGJy8lK2Rlbm9tYWxpZ25HUSdjZW50ZXJGJy8lKW51bWFsaWduR0ZpcS8lKWJldmVsbGVkR0Y9RmZvRmlvRjlGZm9GaW9GOQ==">L0kieUc2IiwkKihJI1J8aXJHRiQiIiJJI3B8aXJHRiRGKCwoRihGKCokSSNxfGlyR0YkIiIjRigqJEYpRi1GKCEiIiEiIw==</Equation></Text-field>
+</Output>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYoLUkjbWlHRiQ2JVEiekYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1JI21vR0YkNi1RIj1GJy9GM1Enbm9ybWFsRicvJSZmZW5jZUdRJmZhbHNlRicvJSpzZXBhcmF0b3JHRj0vJSlzdHJldGNoeUdGPS8lKnN5bW1ldHJpY0dGPS8lKGxhcmdlb3BHRj0vJS5tb3ZhYmxlbGltaXRzR0Y9LyUnYWNjZW50R0Y9LyUnbHNwYWNlR1EsMC4yNzc3Nzc4ZW1GJy8lJ3JzcGFjZUdGTC1JJm1mcmFjR0YkNigtRiM2KC1GLDYlUSNSfGlyRidGL0YyLUY2Ni1RMSZJbnZpc2libGVUaW1lcztGJ0Y5RjtGPkZARkJGREZGRkgvRktRJjAuMGVtRicvRk5GZW4tSShtZmVuY2VkR0YkNiQtRiM2Ky1GNjYtUSomdW1pbnVzMDtGJ0Y5RjtGPkZARkJGREZGRkgvRktRLDAuMjIyMjIyMmVtRicvRk5GYG8tSSNtbkdGJDYkUSIxRidGOS1GNjYtUSIrRidGOUY7Rj5GQEZCRkRGRkZIRl9vRmFvLUYjNiYtSSVtc3VwR0YkNiUtRiw2JVEjcXxpckYnRi9GMi1GY282JFEiMkYnRjkvJTFzdXBlcnNjcmlwdHNoaWZ0R1EiMEYnLyUrZm9yZWdyb3VuZEdRKFswLDAsMF1GJy8lKXJlYWRvbmx5R0Y9RjlGZm8tRiM2Ji1GXHA2JS1GLDYlUSNwfGlyRidGL0YyRmFwRmRwRmdwRmpwRjlGZ3BGanBGOUY5RmdwRmpwRjktRiM2Ji1GIzYqRmJvRmZvRmlvRmZvRlxxRmdwRmpwRjlGZ3BGanBGOS8lLmxpbmV0aGlja25lc3NHUSIxRicvJStkZW5vbWFsaWduR1EnY2VudGVyRicvJSludW1hbGlnbkdGXHIvJSliZXZlbGxlZEdGPUZncEZqcEY5">L0kiekc2IiooSSNSfGlyR0YkIiIiLCghIiJGJyokSSNxfGlyR0YkIiIjRicqJEkjcHxpckdGJEYsRidGJywoRidGJ0YqRidGLUYnRik=</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L299" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">Cg3pq_N:=array(1..3,1..3,symmetric):
+     Cg3pq_N[1,1]:=subs({1+q^2+p^2=pp},
+collect(simplify(subs(
+{x = 2*R*q/(1+q^2+p^2),
+y = 2*R*p/(1+q^2+p^2),
+z = -R*(-1+q^2+p^2)/(1+q^2+p^2)},
+Cg3[1,1]),symbolic),[R],factor)):
+     Cg3pq_N[1,2]:=subs({1+q^2+p^2=pp},
+collect(simplify(subs(
+{x = 2*R*q/(1+q^2+p^2),
+y = 2*R*p/(1+q^2+p^2),
+z = -R*(-1+q^2+p^2)/(1+q^2+p^2)},
+Cg3[1,2]),symbolic),[R],factor)):
+     Cg3pq_N[1,3]:=subs({1+q^2+p^2=pp},
+collect(simplify(subs(
+{x = 2*R*q/(1+q^2+p^2),
+y = 2*R*p/(1+q^2+p^2),
+z = -R*(-1+q^2+p^2)/(1+q^2+p^2)},
+Cg3[1,3]),symbolic),[R],factor)):
+     Cg3pq_N[2,2]:=subs({1+q^2+p^2=pp},
+collect(simplify(subs(
+{x = 2*R*q/(1+q^2+p^2),
+y = 2*R*p/(1+q^2+p^2),
+z = -R*(-1+q^2+p^2)/(1+q^2+p^2)},
+Cg3[2,2]),symbolic),[R],factor)):
+     Cg3pq_N[2,3]:=subs({1+q^2+p^2=pp},
+collect(simplify(subs(
+{x = 2*R*q/(1+q^2+p^2),
+y = 2*R*p/(1+q^2+p^2),
+z = -R*(-1+q^2+p^2)/(1+q^2+p^2)},
+Cg3[2,3]),symbolic),[R],factor)):
+     Cg3pq_N[3,3]:=subs({1+q^2+p^2=pp},
+collect(simplify(subs(
+{x = 2*R*q/(1+q^2+p^2),
+y = 2*R*p/(1+q^2+p^2),
+z = -R*(-1+q^2+p^2)/(1+q^2+p^2)},
+Cg3[3,3]),symbolic),[R],factor)):
+print(Cg3pq_N);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUknbWF0cml4RzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiNiM3JTclLCYiIiJGLCosIiIpRixJIk1HRidGLClJI3F8aXJHRiciIiNGLClJI3BwR0YnRjIhIiJJI1J8aXJHRidGNUYsLCQqLkYuRixGL0YsRjFGLEkjcHxpckdGJ0YsRjZGNUYzRjVGLCwkKi4iIiVGLEYvRiwsKEYsRjUqJEYwRixGLCokKUY5RjJGLEYsRixGMUYsRjZGNUYzRjVGNTclRjcsJkYsRiwqLEYuRixGL0YsRkBGLEYzRjVGNkY1RiwsJCouRjxGLEYvRixGPUYsRjlGLEY2RjVGM0Y1RjU3JUY6RkQsJkYsRiwqLEYyRixGL0YsKUY9RjJGLEYzRjVGNkY1Riw=">SShDZzNwcV9ORzYi</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L564" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">x = 2*R*q/(1+q^2+p^2);y = -2*R*p/(1+q^2+p^2);z = R*(-1+q^2+p^2)/(1+q^2+p^2);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYoLUkjbWlHRiQ2JVEieEYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1JI21vR0YkNi1RIj1GJy9GM1Enbm9ybWFsRicvJSZmZW5jZUdRJmZhbHNlRicvJSpzZXBhcmF0b3JHRj0vJSlzdHJldGNoeUdGPS8lKnN5bW1ldHJpY0dGPS8lKGxhcmdlb3BHRj0vJS5tb3ZhYmxlbGltaXRzR0Y9LyUnYWNjZW50R0Y9LyUnbHNwYWNlR1EsMC4yNzc3Nzc4ZW1GJy8lJ3JzcGFjZUdGTC1JJm1mcmFjR0YkNigtRiM2Ki1JI21uR0YkNiRRIjJGJ0Y5LUY2Ni1RMSZJbnZpc2libGVUaW1lcztGJ0Y5RjtGPkZARkJGREZGRkgvRktRJjAuMGVtRicvRk5GZm4tRiw2JVEjUnxpckYnRi9GMkZYLUYsNiVRI3F8aXJGJ0YvRjIvJStmb3JlZ3JvdW5kR1EoWzAsMCwwXUYnLyUpcmVhZG9ubHlHRj1GOS1GIzYmLUYjNiotRlU2JFEiMUYnRjktRjY2LVEiK0YnRjlGO0Y+RkBGQkZERkZGSC9GS1EsMC4yMjIyMjIyZW1GJy9GTkZecC1GIzYmLUklbXN1cEdGJDYlRltvRlQvJTFzdXBlcnNjcmlwdHNoaWZ0R1EiMEYnRl5vRmFvRjlGam8tRiM2Ji1GY3A2JS1GLDYlUSNwfGlyRidGL0YyRlRGZXBGXm9GYW9GOUZeb0Zhb0Y5Rl5vRmFvRjkvJS5saW5ldGhpY2tuZXNzR1EiMUYnLyUrZGVub21hbGlnbkdRJ2NlbnRlckYnLyUpbnVtYWxpZ25HRmRxLyUpYmV2ZWxsZWRHRj1GXm9GYW9GOQ==">L0kieEc2IiwkKihJI1J8aXJHRiQiIiJJI3F8aXJHRiRGKCwoRihGKCokRikiIiNGKCokSSNwfGlyR0YkRixGKCEiIkYs</Equation></Text-field>
+</Output>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYoLUkjbWlHRiQ2JVEieUYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1JI21vR0YkNi1RIj1GJy9GM1Enbm9ybWFsRicvJSZmZW5jZUdRJmZhbHNlRicvJSpzZXBhcmF0b3JHRj0vJSlzdHJldGNoeUdGPS8lKnN5bW1ldHJpY0dGPS8lKGxhcmdlb3BHRj0vJS5tb3ZhYmxlbGltaXRzR0Y9LyUnYWNjZW50R0Y9LyUnbHNwYWNlR1EsMC4yNzc3Nzc4ZW1GJy8lJ3JzcGFjZUdGTC1GIzYnLUY2Ni1RKiZ1bWludXMwO0YnRjlGO0Y+RkBGQkZERkZGSC9GS1EsMC4yMjIyMjIyZW1GJy9GTkZVLUkmbWZyYWNHRiQ2KC1GIzYqLUkjbW5HRiQ2JFEiMkYnRjktRjY2LVExJkludmlzaWJsZVRpbWVzO0YnRjlGO0Y+RkBGQkZERkZGSC9GS1EmMC4wZW1GJy9GTkZeby1GLDYlUSNSfGlyRidGL0YyRmpuLUYsNiVRI3B8aXJGJ0YvRjIvJStmb3JlZ3JvdW5kR1EoWzAsMCwwXUYnLyUpcmVhZG9ubHlHRj1GOS1GIzYmLUYjNiotRmduNiRRIjFGJ0Y5LUY2Ni1RIitGJ0Y5RjtGPkZARkJGREZGRkhGVEZWLUYjNiYtSSVtc3VwR0YkNiUtRiw2JVEjcXxpckYnRi9GMkZmbi8lMXN1cGVyc2NyaXB0c2hpZnRHUSIwRidGZm9GaW9GOUZicC1GIzYmLUZocDYlRmNvRmZuRl1xRmZvRmlvRjlGZm9GaW9GOUZmb0Zpb0Y5LyUubGluZXRoaWNrbmVzc0dRIjFGJy8lK2Rlbm9tYWxpZ25HUSdjZW50ZXJGJy8lKW51bWFsaWduR0ZpcS8lKWJldmVsbGVkR0Y9RmZvRmlvRjlGZm9GaW9GOQ==">L0kieUc2IiwkKihJI1J8aXJHRiQiIiJJI3B8aXJHRiRGKCwoRihGKCokSSNxfGlyR0YkIiIjRigqJEYpRi1GKCEiIiEiIw==</Equation></Text-field>
+</Output>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYoLUkjbWlHRiQ2JVEiekYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1JI21vR0YkNi1RIj1GJy9GM1Enbm9ybWFsRicvJSZmZW5jZUdRJmZhbHNlRicvJSpzZXBhcmF0b3JHRj0vJSlzdHJldGNoeUdGPS8lKnN5bW1ldHJpY0dGPS8lKGxhcmdlb3BHRj0vJS5tb3ZhYmxlbGltaXRzR0Y9LyUnYWNjZW50R0Y9LyUnbHNwYWNlR1EsMC4yNzc3Nzc4ZW1GJy8lJ3JzcGFjZUdGTC1JJm1mcmFjR0YkNigtRiM2KC1GLDYlUSNSfGlyRidGL0YyLUY2Ni1RMSZJbnZpc2libGVUaW1lcztGJ0Y5RjtGPkZARkJGREZGRkgvRktRJjAuMGVtRicvRk5GZW4tSShtZmVuY2VkR0YkNiQtRiM2Ky1GNjYtUSomdW1pbnVzMDtGJ0Y5RjtGPkZARkJGREZGRkgvRktRLDAuMjIyMjIyMmVtRicvRk5GYG8tSSNtbkdGJDYkUSIxRidGOS1GNjYtUSIrRidGOUY7Rj5GQEZCRkRGRkZIRl9vRmFvLUYjNiYtSSVtc3VwR0YkNiUtRiw2JVEjcXxpckYnRi9GMi1GY282JFEiMkYnRjkvJTFzdXBlcnNjcmlwdHNoaWZ0R1EiMEYnLyUrZm9yZWdyb3VuZEdRKFswLDAsMF1GJy8lKXJlYWRvbmx5R0Y9RjlGZm8tRiM2Ji1GXHA2JS1GLDYlUSNwfGlyRidGL0YyRmFwRmRwRmdwRmpwRjlGZ3BGanBGOUY5RmdwRmpwRjktRiM2Ji1GIzYqRmJvRmZvRmlvRmZvRlxxRmdwRmpwRjlGZ3BGanBGOS8lLmxpbmV0aGlja25lc3NHUSIxRicvJStkZW5vbWFsaWduR1EnY2VudGVyRicvJSludW1hbGlnbkdGXHIvJSliZXZlbGxlZEdGPUZncEZqcEY5">L0kiekc2IiooSSNSfGlyR0YkIiIiLCghIiJGJyokSSNxfGlyR0YkIiIjRicqJEkjcHxpckdGJEYsRidGJywoRidGJ0YqRidGLUYnRik=</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L424" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">Cg3pq_S:=array(1..3,1..3,symmetric):
+     Cg3pq_S[1,1]:=subs({1+q^2+p^2=pp},
+collect(simplify(subs(
+{x = 2*R*q/(1+q^2+p^2),
+y = -2*R*p/(1+q^2+p^2),
+z = R*(-1+q^2+p^2)/(1+q^2+p^2)},
+Cg3[1,1]),symbolic),[R],factor)):
+     Cg3pq_S[1,2]:=subs({1+q^2+p^2=pp},
+collect(simplify(subs(
+{x = 2*R*q/(1+q^2+p^2),
+y = -2*R*p/(1+q^2+p^2),
+z = R*(-1+q^2+p^2)/(1+q^2+p^2)},
+Cg3[1,2]),symbolic),[R],factor)):
+     Cg3pq_S[1,3]:=subs({1+q^2+p^2=pp},
+collect(simplify(subs(
+{x = 2*R*q/(1+q^2+p^2),
+y = -2*R*p/(1+q^2+p^2),
+z = R*(-1+q^2+p^2)/(1+q^2+p^2)},
+Cg3[1,3]),symbolic),[R],factor)):
+     Cg3pq_S[2,2]:=subs({1+q^2+p^2=pp},
+collect(simplify(subs(
+{x = 2*R*q/(1+q^2+p^2),
+y = -2*R*p/(1+q^2+p^2),
+z = R*(-1+q^2+p^2)/(1+q^2+p^2)},
+Cg3[2,2]),symbolic),[R],factor)):
+     Cg3pq_S[2,3]:=subs({1+q^2+p^2=pp},
+collect(simplify(subs(
+{x = 2*R*q/(1+q^2+p^2),
+y = -2*R*p/(1+q^2+p^2),
+z = R*(-1+q^2+p^2)/(1+q^2+p^2)},
+Cg3[2,3]),symbolic),[R],factor)):
+     Cg3pq_S[3,3]:=subs({1+q^2+p^2=pp},
+collect(simplify(subs(
+{x = 2*R*q/(1+q^2+p^2),
+y = -2*R*p/(1+q^2+p^2),
+z = R*(-1+q^2+p^2)/(1+q^2+p^2)},
+Cg3[3,3]),symbolic),[R],factor)):
+print(Cg3pq_S);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUknbWF0cml4RzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiNiM3JTclLCYiIiJGLCosIiIpRixJIk1HRidGLClJI3F8aXJHRiciIiNGLClJI3BwR0YnRjIhIiJJI1J8aXJHRidGNUYsLCQqLkYuRixGL0YsRjFGLEkjcHxpckdGJ0YsRjZGNUYzRjVGNSwkKi4iIiVGLEYvRiwsKEYsRjUqJEYwRixGLCokKUY5RjJGLEYsRixGMUYsRjZGNUYzRjVGLDclRjcsJkYsRiwqLEYuRixGL0YsRkBGLEYzRjVGNkY1RiwsJCouRjxGLEYvRixGPUYsRjlGLEY2RjVGM0Y1RjU3JUY6RkQsJkYsRiwqLEYyRixGL0YsKUY9RjJGLEYzRjVGNkY1Riw=">SShDZzNwcV9TRzYi</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L407" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">Cg3pqN_check:=array(1..3,1..3,symmetric):
+for i from 1 to 3 do
+    for j from 1 to 3 do
+    Cg3pqN_check[i,j]:=(Cg3pq_N[i,j] - pqCg3S_back_N[i,j]);
+end do: end do:
+print(Cg3pqN_check):</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUknbWF0cml4RzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiNiM3JTclIiIhRitGK0YqRio=">SS1DZzNwcU5fY2hlY2tHNiI=</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L480" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">Cg3pqS_check:=array(1..3,1..3,symmetric):
+for i from 1 to 3 do
+    for j from 1 to 3 do
+    Cg3pqS_check[i,j]:=(Cg3pq_S[i,j] - pqCg3S_back_S[i,j]);
+end do: end do:
+print(Cg3pqS_check):</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUknbWF0cml4RzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiNiM3JTclIiIhRitGK0YqRio=">SS1DZzNwcVNfY2hlY2tHNiI=</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L557" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">dRCg3pq_N:=array(1..3,1..3,symmetric):
+     dRCg3pq_N[1,1]:=subs({1+q^2+p^2=pp},
+collect(simplify(subs(
+{x = 2*R*q/(1+q^2+p^2),
+y = 2*R*p/(1+q^2+p^2),
+z = -R*(-1+q^2+p^2)/(1+q^2+p^2)},
+dRCg3[1,1]),symbolic),[R],factor)):
+     dRCg3pq_N[1,2]:=subs({1+q^2+p^2=pp},
+collect(simplify(subs(
+{x = 2*R*q/(1+q^2+p^2),
+y = 2*R*p/(1+q^2+p^2),
+z = -R*(-1+q^2+p^2)/(1+q^2+p^2)},
+dRCg3[1,2]),symbolic),[R],factor)):
+     dRCg3pq_N[1,3]:=subs({1+q^2+p^2=pp},
+collect(simplify(subs(
+{x = 2*R*q/(1+q^2+p^2),
+y = 2*R*p/(1+q^2+p^2),
+z = -R*(-1+q^2+p^2)/(1+q^2+p^2)},
+dRCg3[1,3]),symbolic),[R],factor)):
+     dRCg3pq_N[2,2]:=subs({1+q^2+p^2=pp},
+collect(simplify(subs(
+{x = 2*R*q/(1+q^2+p^2),
+y = 2*R*p/(1+q^2+p^2),
+z = -R*(-1+q^2+p^2)/(1+q^2+p^2)},
+dRCg3[2,2]),symbolic),[R],factor)):
+     dRCg3pq_N[2,3]:=subs({1+q^2+p^2=pp},
+collect(simplify(subs(
+{x = 2*R*q/(1+q^2+p^2),
+y = 2*R*p/(1+q^2+p^2),
+z = -R*(-1+q^2+p^2)/(1+q^2+p^2)},
+dRCg3[2,3]),symbolic),[R],factor)):
+     dRCg3pq_N[3,3]:=subs({1+q^2+p^2=pp},
+collect(simplify(subs(
+{x = 2*R*q/(1+q^2+p^2),
+y = 2*R*p/(1+q^2+p^2),
+z = -R*(-1+q^2+p^2)/(1+q^2+p^2)},
+dRCg3[3,3]),symbolic),[R],factor)):
+print(dRCg3pq_N);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUknbWF0cml4RzYkJSpwcm90ZWN0ZWRHSShfc3lzbGliRzYiNiM3JTclJkkmZFJDZzNHRic2JCIiIkYuJkYsNiRGLiIiIyZGLDYkRi4iIiQ3JUYvJkYsNiRGMUYxJkYsNiRGMUY0NyVGMkY4JkYsNiRGNEY0">SSpkUkNnM3BxX05HNiI=</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L408" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">pqbetaN_back:=array(1..3):
+for i from 1 to 3 do
+pqbetaN_back[i]:=subs({1+q^2+p^2=pp},
+collect(simplify(
+ betaS_lm(0, 0)[i] *Yst_N(0, 0)
++betaS_lm(1, -1)[i]*Yst_N(1, -1)
++betaS_lm(1, 0)[i] *Yst_N(1, 0)
++betaS_lm(1, 1)[i] *Yst_N(1, 1)
+,symbolic),[R],factor)):
+end do:
+print(pqbetaN_back):</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkndmVjdG9yRzYiNiM3JSwkKiwiIiUiIiJJIk1HRiRGKkkjcXxpckdGJEYqLCZJI1J8aXJHRiRGKiomIiIjRipGK0YqRiohIiJJI3BwR0YkRjFGMSwkKixGKUYqRitGKkkjcHxpckdGJEYqRi1GMUYyRjFGMSwkKixGMEYqRitGKkYtRjEsKEYqRjEqJClGLEYwRipGKiokKUY1RjBGKkYqRipGMkYxRio=">SS1wcWJldGFOX2JhY2tHNiI=</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L592" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">pqbetaS_back:=array(1..3):
+for i from 1 to 3 do
+pqbetaS_back[i]:=subs({1+q^2+p^2=pp},
+collect(simplify(
+ betaS_lm(0, 0)[i] *Yst_S(0, 0)
++betaS_lm(1, -1)[i]*Yst_S(1, -1)
++betaS_lm(1, 0)[i] *Yst_S(1, 0)
++betaS_lm(1, 1)[i] *Yst_S(1, 1)
+,symbolic),[R],factor)):
+end do:
+print(pqbetaS_back):</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkndmVjdG9yRzYiNiM3JSwkKiwiIiUiIiJJIk1HRiRGKkkjcXxpckdGJEYqLCZJI1J8aXJHRiRGKiomIiIjRipGK0YqRiohIiJJI3BwR0YkRjFGMSwkKixGKUYqRitGKkkjcHxpckdGJEYqRi1GMUYyRjFGKiwkKixGMEYqRitGKkYtRjEsKEYqRjEqJClGLEYwRipGKiokKUY1RjBGKkYqRipGMkYxRjE=">SS1wcWJldGFTX2JhY2tHNiI=</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L591" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">pqdRbetaN_back:=array(1..3):
+for i from 1 to 3 do
+ pqdRbetaN_back[i]:=subs({1+q^2+p^2=pp} ,collect(simplify(
++dRbetaS_lm(1, -1)[i]*Yst_N(1, -1)
++dRbetaS_lm(1, 0)[i] *Yst_N(1, 0)
++dRbetaS_lm(1, 1)[i] *Yst_N(1, 1)
+,symbolic),[R],factor)):
+end do:
+print(pqdRbetaN_back):</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkndmVjdG9yRzYiNiM3JSwkKiwiIiUiIiJJIk1HRiRGKkkjcXxpckdGJEYqKSwmSSNSfGlyR0YkRioqJiIiI0YqRitGKkYqRjEhIiJJI3BwR0YkRjJGKiwkKixGKUYqRitGKkkjcHxpckdGJEYqRi1GMkYzRjJGKiwkKixGMUYqRitGKkYtRjIsKEYqRjIqJClGLEYxRipGKiokKUY2RjFGKkYqRipGM0YyRjI=">SS9wcWRSYmV0YU5fYmFja0c2Ig==</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L593" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">pqdRbetaS_back:=array(1..3):
+for i from 1 to 3 do
+ pqdRbetaS_back[i]:=subs({1+q^2+p^2=pp}
+ ,collect(simplify(
++dRbetaS_lm(1, -1)[i]*Yst_S(1, -1)
++dRbetaS_lm(1, 0)[i] *Yst_S(1, 0)
++dRbetaS_lm(1, 1)[i] *Yst_S(1, 1)
+,symbolic),[R],factor)):
+end do:
+print(pqdRbetaS_back):</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkndmVjdG9yRzYiNiM3JSwkKiwiIiUiIiJJIk1HRiRGKkkjcXxpckdGJEYqKSwmSSNSfGlyR0YkRioqJiIiI0YqRitGKkYqRjEhIiJJI3BwR0YkRjJGKiwkKixGKUYqRitGKkkjcHxpckdGJEYqRi1GMkYzRjJGMiwkKixGMUYqRitGKkYtRjIsKEYqRjIqJClGLEYxRipGKiokKUY2RjFGKkYqRipGM0YyRio=">SS9wcWRSYmV0YVNfYmFja0c2Ig==</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L472" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">betapq_N:=array(1..3):
+     betapq_N[1]:=subs({1+q^2+p^2=pp},
+collect(simplify(subs(
+{x = 2*R*q/(1+q^2+p^2),
+y = 2*R*p/(1+q^2+p^2),
+z = -R*(-1+q^2+p^2)/(1+q^2+p^2)},
+beta[1]),symbolic),[R],factor)):
+     betapq_N[2]:=subs({1+q^2+p^2=pp},
+collect(simplify(subs(
+{x = 2*R*q/(1+q^2+p^2),
+y = 2*R*p/(1+q^2+p^2),
+z = -R*(-1+q^2+p^2)/(1+q^2+p^2)},
+beta[2]),symbolic),[R],factor)):
+     betapq_N[3]:=subs({1+q^2+p^2=pp},
+collect(simplify(subs(
+{x = 2*R*q/(1+q^2+p^2),
+y = 2*R*p/(1+q^2+p^2),
+z = -R*(-1+q^2+p^2)/(1+q^2+p^2)},
+beta[3]),symbolic),[R],factor)):
+print(betapq_N):</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkndmVjdG9yRzYiNiM3JSwkKiwiIiUiIiJJIk1HRiRGKkkjcXxpckdGJEYqLCZJI1J8aXJHRiRGKiomIiIjRipGK0YqRiohIiJJI3BwR0YkRjFGMSwkKixGKUYqRitGKkkjcHxpckdGJEYqRi1GMUYyRjFGMSwkKixGMEYqRitGKkYtRjEsKEYqRjEqJClGLEYwRipGKiokKUY1RjBGKkYqRipGMkYxRio=">SSliZXRhcHFfTkc2Ig==</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L573" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">betapq_S:=array(1..3):
+     betapq_S[1]:=subs({1+q^2+p^2=pp},
+collect(simplify(subs(
+{x = 2*R*q/(1+q^2+p^2),
+y = -2*R*p/(1+q^2+p^2),
+z = R*(-1+q^2+p^2)/(1+q^2+p^2)},
+beta[1]),symbolic),[R],factor)):
+     betapq_S[2]:=subs({1+q^2+p^2=pp},
+collect(simplify(subs(
+{x = 2*R*q/(1+q^2+p^2),
+y = -2*R*p/(1+q^2+p^2),
+z = R*(-1+q^2+p^2)/(1+q^2+p^2)},
+beta[2]),symbolic),[R],factor)):
+     betapq_S[3]:=subs({1+q^2+p^2=pp},
+collect(simplify(subs(
+{x = 2*R*q/(1+q^2+p^2),
+y = -2*R*p/(1+q^2+p^2),
+z = R*(-1+q^2+p^2)/(1+q^2+p^2)},
+beta[3]),symbolic),[R],factor)):
+print(betapq_S):</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkndmVjdG9yRzYiNiM3JSwkKiwiIiUiIiJJIk1HRiRGKkkjcXxpckdGJEYqLCZJI1J8aXJHRiRGKiomIiIjRipGK0YqRiohIiJJI3BwR0YkRjFGMSwkKixGKUYqRitGKkkjcHxpckdGJEYqRi1GMUYyRjFGKiwkKixGMEYqRitGKkYtRjEsKEYqRjEqJClGLEYwRipGKiokKUY1RjBGKkYqRipGMkYxRjE=">SSliZXRhcHFfU0c2Ig==</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L473" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">pqalphaN_back:=collect(simplify(
+alphaS_lm(0, 0)*Yst_N(0, 0),symbolic),[R],factor);pqalphaS_back:=collect(simplify(
+alphaS_lm(0, 0)*Yst_S(0, 0),symbolic),[R],factor);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="PkkucHFhbHBoYU5fYmFja0c2IiomKSwmSSNSfGlyR0YkIiIiKiYiIiNGKUkiTUdGJEYpRikjRilGKyEiIilGKEYtRik=">KiYsJkkjUnxpckc2IiIiIkkiTUdGJSIiIyMhIiJGKEYkI0YmRig=</Equation></Text-field>
+</Output>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="PkkucHFhbHBoYVNfYmFja0c2IiomKSwmSSNSfGlyR0YkIiIiKiYiIiNGKUkiTUdGJEYpRikjRilGKyEiIilGKEYtRik=">KiYsJkkjUnxpckc2IiIiIkkiTUdGJSIiIyMhIiJGKEYkI0YmRig=</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L474" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">alphapq_N:=subs({1+q^2+p^2=pp},
+collect(simplify(subs(
+{x = 2*R*q/(1+q^2+p^2),
+y = 2*R*p/(1+q^2+p^2),
+z = -R*(-1+q^2+p^2)/(1+q^2+p^2)},
+alpha),symbolic),[R],factor));</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="PkkqYWxwaGFwcV9ORzYiKiYpLCZJI1J8aXJHRiQiIiIqJiIiI0YpSSJNR0YkRilGKSNGKUYrISIiKUYoRi1GKQ==">KiYsJkkjUnxpckc2IiIiIkkiTUdGJSIiIyMhIiJGKEYkI0YmRig=</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L575" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">alphapq_S:=subs({1+q^2+p^2=pp},
+collect(simplify(subs(
+{x = 2*R*q/(1+q^2+p^2),
+y = -2*R*p/(1+q^2+p^2),
+z = R*(-1+q^2+p^2)/(1+q^2+p^2)},
+alpha),symbolic),[R],factor));</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="PkkqYWxwaGFwcV9TRzYiKiYpLCZJI1J8aXJHRiQiIiIqJiIiI0YpSSJNR0YkRilGKSNGKUYrISIiKUYoRi1GKQ==">KiYsJkkjUnxpckc2IiIiIkkiTUdGJSIiIyMhIiJGKEYkI0YmRig=</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L590" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">pqdRalphaN_back:=collect(simplify(
+dRalphaS_lm(0, 0)*Yst_N(0, 0),symbolic),[R],factor);pqdRalphaS_back:=collect(simplify(
+dRalphaS_lm(0, 0)*Yst_S(0, 0),symbolic),[R],factor);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="PkkwcHFkUmFscGhhTl9iYWNrRzYiKihJIk1HRiQiIiIpLCZJI1J8aXJHRiRGJyomIiIjRidGJkYnRicjIiIkRiwhIiIpRiojRidGLEYv">KihJIk1HNiIiIiIsJkkjUnxpckdGJEYlRiMiIiMjISIkRihGJyMhIiJGKA==</Equation></Text-field>
+</Output>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="PkkwcHFkUmFscGhhU19iYWNrRzYiKihJIk1HRiQiIiIpLCZJI1J8aXJHRiRGJyomIiIjRidGJkYnRicjIiIkRiwhIiIpRiojRidGLEYv">KihJIk1HNiIiIiIsJkkjUnxpckdGJEYlRiMiIiMjISIkRihGJyMhIiJGKA==</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L594" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">pqdRalphaS_back:=collect(simplify(
+dRalphaS_lm(0, 0)*Yst_N(0, 0),symbolic),[R],factor);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="PkkwcHFkUmFscGhhU19iYWNrRzYiKihJIk1HRiQiIiIpLCZJI1J8aXJHRiRGJyomIiIjRidGJkYnRicjIiIkRiwhIiIpRiojRidGLEYv">KihJIk1HNiIiIiIsJkkjUnxpckdGJEYlRiMiIiMjISIkRihGJyMhIiJGKA==</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L475" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">for a from 1 to 4 do
+    for b from a to 4 do
+    gn[a,b]:=v2sym(1);
+    gs[a,b]:=v2sym(2);
+end do: end do:</Text-field>
+</Input>
+</Group>
+<Group labelreference="L487" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">print(gn);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkmVEFCTEVHJSpwcm90ZWN0ZWRHNiM3LC82JCIiJEYpLUkmdjJzeW1HNiI2IyIiIi82JEYpIiIlRiovNiRGLkYxRiovNiQiIiNGMUYqLzYkRjFGMUYqLzYkRjZGNkYqLzYkRi5GNkYqLzYkRjZGKUYqLzYkRi5GLkYqLzYkRi5GKUYq">SSNnbkc2Ig==</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L488" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):fortran(Cg3pq_N[3,3]);</Text-field>
+</Input>
+<Output>
+<Text-field style="Line Printed Output" layout="Line Printed Output">      t0 = 1+2*M*(-1+q**2+p**2)**2/pp**2/R</Text-field>
+</Output>
+</Group>
+<Group labelreference="L566" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal"></Text-field>
+</Input>
+</Group>
+<Group labelreference="L568" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">alpha_sign:=subs({1+q^2+p^2=pp},subs({sign^2=1},
+collect(simplify(subs({S^2=1},subs(
+{x = 2*R*q/(1+q^2+p^2),
+y = S*2*R*p/(1+q^2+p^2),
+z = -S*R*(-1+q^2+p^2)/(1+q^2+p^2)},
+alpha)),symbolic),[R],factor)));</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="PkkrYWxwaGFfc2lnbkc2IiomKSwmSSNSfGlyR0YkIiIiKiYiIiNGKUkiTUdGJEYpRikjRilGKyEiIilGKEYtRik=">KiYsJkkjUnxpckc2IiIiIkkiTUdGJSIiIyMhIiJGKEYkI0YmRig=</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L569" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+fortran(subs({S=(3-2*ip)},alpha_sign));</Text-field>
+</Input>
+<Output>
+<Text-field style="Line Printed Output" layout="Line Printed Output">      t0 = 1/sqrt(R+2*M)*sqrt(R)</Text-field>
+</Output>
+</Group>
+<Group labelreference="L570" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):fortran(subs({q=qs, p=ps, R=cr, M=mass},betapq_N[3]));</Text-field>
+</Input>
+<Output>
+<Text-field style="Line Printed Output" layout="Line Printed Output">      t0 = 2*mass/(cr+2*mass)*(-1+qs**2+ps**2)/pp</Text-field>
+</Output>
+</Group>
+<Group labelreference="L571" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+fortran(subs({q=qs, p=ps, R=cr, M=mass},betapq_S[3]));</Text-field>
+</Input>
+<Output>
+<Text-field style="Line Printed Output" layout="Line Printed Output">      t0 = -2*mass/(cr+2*mass)*(-1+qs**2+ps**2)/pp</Text-field>
+</Output>
+</Group>
+<Group labelreference="L572" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+fortran(subs({q=qs, p=ps, R=cr, M=mass},alphapq_N));</Text-field>
+</Input>
+<Output>
+<Text-field style="Line Printed Output" layout="Line Printed Output">      t0 = 1/sqrt(cr+2*mass)*sqrt(cr)</Text-field>
+</Output>
+</Group>
+<Group labelreference="L574" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">dRCg3S[1,1];</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYnLUkjbW9HRiQ2LVEqJnVtaW51czA7RicvJSxtYXRodmFyaWFudEdRJ25vcm1hbEYnLyUmZmVuY2VHUSZmYWxzZUYnLyUqc2VwYXJhdG9yR0Y0LyUpc3RyZXRjaHlHRjQvJSpzeW1tZXRyaWNHRjQvJShsYXJnZW9wR0Y0LyUubW92YWJsZWxpbWl0c0dGNC8lJ2FjY2VudEdGNC8lJ2xzcGFjZUdRLDAuMjIyMjIyMmVtRicvJSdyc3BhY2VHRkMtSSZtZnJhY0dGJDYoLUYjNiwtSSNtbkdGJDYkUSIyRidGLy1GLDYtUTEmSW52aXNpYmxlVGltZXM7RidGL0YyRjVGN0Y5RjtGPUY/L0ZCUSYwLjBlbUYnL0ZFRlMtSSNtaUdGJDYlUSJNRicvJSdpdGFsaWNHUSV0cnVlRicvRjBRJ2l0YWxpY0YnRk8tSSVtc3VwR0YkNiUtRiM2KC1GVjYlUSRzaW5GJy9GWkY0Ri8tRiw2LVEwJkFwcGx5RnVuY3Rpb247RidGL0YyRjVGN0Y5RjtGPUY/RlJGVC1JKG1mZW5jZWRHRiQ2JC1GIzYmLUZWNiVRKCYjOTUyO3xpckYnRllGZm4vJStmb3JlZ3JvdW5kR1EoWzAsMCwwXUYnLyUpcmVhZG9ubHlHRjRGL0YvRlxwRl9wRi9GSy8lMXN1cGVyc2NyaXB0c2hpZnRHUSIwRidGTy1GaW42JS1GIzYoLUZWNiVRJGNvc0YnRmBvRi9GYW8tRmVvNiQtRiM2Ji1GVjYlUSgmIzk2Njt8aXJGJ0ZZRmZuRlxwRl9wRi9GL0ZccEZfcEYvRktGYXBGXHBGX3BGLy1GIzYmLUZpbjYlLUZWNiVRI1J8aXJGJ0ZZRmZuRktGYXBGXHBGX3BGLy8lLmxpbmV0aGlja25lc3NHUSIxRicvJStkZW5vbWFsaWduR1EnY2VudGVyRicvJSludW1hbGlnbkdGXnIvJSliZXZlbGxlZEdGNEZccEZfcEYv">LCQqKkkiTUc2IiIiIi1JJHNpbkc2JCUqcHJvdGVjdGVkR0koX3N5c2xpYkdGJTYjSSd0aGV0YXxpckdGJSIiIy1JJGNvc0dGKTYjSSVwaGl8aXJHRiVGLkkjUnxpckdGJSEiI0Y0</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L576" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">diff(Cg3S[1,1],R);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkmbWZyYWNHNiMvSSttb2R1bGVuYW1lRzYiSSxUeXBlc2V0dGluZ0dJKF9zeXNsaWJHRic2KC1JJW1yb3dHRiQ2Li1JI21uR0YkNiRRIjJGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRictSSNtb0dGJDYtUTEmSW52aXNpYmxlVGltZXM7RidGMi8lJmZlbmNlR1EmZmFsc2VGJy8lKnNlcGFyYXRvckdGOy8lKXN0cmV0Y2h5R0Y7LyUqc3ltbWV0cmljR0Y7LyUobGFyZ2VvcEdGOy8lLm1vdmFibGVsaW1pdHNHRjsvJSdhY2NlbnRHRjsvJSdsc3BhY2VHUSYwLjBlbUYnLyUncnNwYWNlR0ZKLUkjbWlHRiQ2JVEiTUYnLyUnaXRhbGljR1EldHJ1ZUYnL0YzUSdpdGFsaWNGJ0Y1LUklbXN1cEdGJDYlLUYsNigtRk42JVEkY29zRicvRlJGO0YyLUY2Ni1RMCZBcHBseUZ1bmN0aW9uO0YnRjJGOUY8Rj5GQEZCRkRGRkZIRkstSShtZmVuY2VkR0YkNiQtRiw2Ji1GTjYlUSgmIzk2Njt8aXJGJ0ZRRlQvJStmb3JlZ3JvdW5kR1EoWzAsMCwwXUYnLyUpcmVhZG9ubHlHRjtGMkYyRmRvRmdvRjJGLi8lMXN1cGVyc2NyaXB0c2hpZnRHUSIwRidGNS1GXW82JC1GLDYoLUYsNihGZW5GaW4tRl1vNiQtRiw2Ji1GTjYlUSgmIzk1Mjt8aXJGJ0ZRRlRGZG9GZ29GMkYyRmRvRmdvRjItRjY2LVEoJm1pbnVzO0YnRjJGOUY8Rj5GQEZCRkRGRi9GSVEsMC4yMjIyMjIyZW1GJy9GTEZdcS1GLzYkUSIxRidGMkZkb0Znb0YyRjJGNS1GXW82JC1GLDYoRmBwLUY2Ni1RIitGJ0YyRjlGPEY+RkBGQkZERkZGXHFGXnFGX3FGZG9GZ29GMkYyRmRvRmdvRjItRiw2Ji1GVzYlLUZONiVRI1J8aXJGJ0ZRRlRGLkZpb0Zkb0Znb0YyLyUubGluZXRoaWNrbmVzc0dRIjFGJy8lK2Rlbm9tYWxpZ25HUSdjZW50ZXJGJy8lKW51bWFsaWduR0Zlci8lKWJldmVsbGVkR0Y7">LCQqLEkiTUc2IiIiIi1JJGNvc0c2JCUqcHJvdGVjdGVkR0koX3N5c2xpYkdGJTYjSSVwaGl8aXJHRiUiIiMsJi1GKDYjSSd0aGV0YXxpckdGJUYmISIiRiZGJiwmRjBGJkYmRiZGJkkjUnxpckdGJSEiI0Yu</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L577" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">simplify(dRCg3S[1,1]-diff(Cg3S[1,1],R));</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output">IiIh</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L580" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">pqdRCg3S_back_N[3,3];pqdRCg3S_back_S[3,3];</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYnLUkjbW9HRiQ2LVEqJnVtaW51czA7RicvJSxtYXRodmFyaWFudEdRJ25vcm1hbEYnLyUmZmVuY2VHUSZmYWxzZUYnLyUqc2VwYXJhdG9yR0Y0LyUpc3RyZXRjaHlHRjQvJSpzeW1tZXRyaWNHRjQvJShsYXJnZW9wR0Y0LyUubW92YWJsZWxpbWl0c0dGNC8lJ2FjY2VudEdGNC8lJ2xzcGFjZUdRLDAuMjIyMjIyMmVtRicvJSdyc3BhY2VHRkMtSSZtZnJhY0dGJDYoLUYjNiotSSNtbkdGJDYkUSIyRidGLy1GLDYtUTEmSW52aXNpYmxlVGltZXM7RidGL0YyRjVGN0Y5RjtGPUY/L0ZCUSYwLjBlbUYnL0ZFRlMtSSNtaUdGJDYlUSJNRicvJSdpdGFsaWNHUSV0cnVlRicvRjBRJ2l0YWxpY0YnRk8tSSVtc3VwR0YkNiUtSShtZmVuY2VkR0YkNiQtRiM2K0YrLUZMNiRRIjFGJ0YvLUYsNi1RIitGJ0YvRjJGNUY3RjlGO0Y9Rj9GQUZELUYjNiYtRmluNiUtRlY2JVEjcXxpckYnRllGZm5GSy8lMXN1cGVyc2NyaXB0c2hpZnRHUSIwRicvJStmb3JlZ3JvdW5kR1EoWzAsMCwwXUYnLyUpcmVhZG9ubHlHRjRGL0Zjby1GIzYmLUZpbjYlLUZWNiVRI3B8aXJGJ0ZZRmZuRktGXXBGYHBGY3BGL0ZgcEZjcEYvRi9GS0ZdcEZgcEZjcEYvLUYjNigtRmluNiUtRlY2JVEjcHBGJ0ZZRmZuRktGXXBGTy1GaW42JS1GVjYlUSNSfGlyRidGWUZmbkZLRl1wRmBwRmNwRi8vJS5saW5ldGhpY2tuZXNzR1EiMUYnLyUrZGVub21hbGlnbkdRJ2NlbnRlckYnLyUpbnVtYWxpZ25HRl1yLyUpYmV2ZWxsZWRHRjRGYHBGY3BGLw==">LCQqKkkiTUc2IiIiIiwoISIiRiYqJEkjcXxpckdGJSIiI0YmKiRJI3B8aXJHRiVGK0YmRitJI3BwR0YlISIjSSNSfGlyR0YlRi9GLw==</Equation></Text-field>
+</Output>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYnLUkjbW9HRiQ2LVEqJnVtaW51czA7RicvJSxtYXRodmFyaWFudEdRJ25vcm1hbEYnLyUmZmVuY2VHUSZmYWxzZUYnLyUqc2VwYXJhdG9yR0Y0LyUpc3RyZXRjaHlHRjQvJSpzeW1tZXRyaWNHRjQvJShsYXJnZW9wR0Y0LyUubW92YWJsZWxpbWl0c0dGNC8lJ2FjY2VudEdGNC8lJ2xzcGFjZUdRLDAuMjIyMjIyMmVtRicvJSdyc3BhY2VHRkMtSSZtZnJhY0dGJDYoLUYjNiotSSNtbkdGJDYkUSIyRidGLy1GLDYtUTEmSW52aXNpYmxlVGltZXM7RidGL0YyRjVGN0Y5RjtGPUY/L0ZCUSYwLjBlbUYnL0ZFRlMtSSNtaUdGJDYlUSJNRicvJSdpdGFsaWNHUSV0cnVlRicvRjBRJ2l0YWxpY0YnRk8tSSVtc3VwR0YkNiUtSShtZmVuY2VkR0YkNiQtRiM2K0YrLUZMNiRRIjFGJ0YvLUYsNi1RIitGJ0YvRjJGNUY3RjlGO0Y9Rj9GQUZELUYjNiYtRmluNiUtRlY2JVEjcXxpckYnRllGZm5GSy8lMXN1cGVyc2NyaXB0c2hpZnRHUSIwRicvJStmb3JlZ3JvdW5kR1EoWzAsMCwwXUYnLyUpcmVhZG9ubHlHRjRGL0Zjby1GIzYmLUZpbjYlLUZWNiVRI3B8aXJGJ0ZZRmZuRktGXXBGYHBGY3BGL0ZgcEZjcEYvRi9GS0ZdcEZgcEZjcEYvLUYjNigtRmluNiUtRlY2JVEjcHBGJ0ZZRmZuRktGXXBGTy1GaW42JS1GVjYlUSNSfGlyRidGWUZmbkZLRl1wRmBwRmNwRi8vJS5saW5ldGhpY2tuZXNzR1EiMUYnLyUrZGVub21hbGlnbkdRJ2NlbnRlckYnLyUpbnVtYWxpZ25HRl1yLyUpYmV2ZWxsZWRHRjRGYHBGY3BGLw==">LCQqKkkiTUc2IiIiIiwoISIiRiYqJEkjcXxpckdGJSIiI0YmKiRJI3B8aXJHRiVGK0YmRitJI3BwR0YlISIjSSNSfGlyR0YlRi9GLw==</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L583" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+fortran(subs({q=qs, p=ps, R=cr, M=mass},pqdRCg3S_back_N[3,3]));</Text-field>
+</Input>
+<Output>
+<Text-field style="Line Printed Output" layout="Line Printed Output">      t0 = -2*mass*(-1+qs**2+ps**2)**2/pp**2/cr**2</Text-field>
+</Output>
+</Group>
+<Group labelreference="L605" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+fortran(subs({q=qs, p=ps, R=cr, M=mass},pqdRCg3S_back_S[3,3]));</Text-field>
+</Input>
+<Output>
+<Text-field style="Line Printed Output" layout="Line Printed Output">      t0 = -2*mass*(-1+qs**2+ps**2)**2/pp**2/cr**2</Text-field>
+</Output>
+</Group>
+<Group labelreference="L578" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">dqC3g_N:=subs({1+q^2+p^2=pp},simplify(diff(subs({pp=1+q^2+p^2},Cg3pq_N[3,3]),q),symbolic));</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="PkkoZHFDM2dfTkc2IiwkKi4iIzsiIiJJIk1HRiRGKCwoRighIiIqJClJI3F8aXJHRiQiIiNGKEYoKiQpSSNwfGlyR0YkRi9GKEYoRihGLkYoKUkjcHBHRiQiIiRGK0kjUnxpckdGJEYrRig=">LCQqLEkiTUc2IiIiIiwoISIiRiYqJEkjcXxpckdGJSIiI0YmKiRJI3B8aXJHRiVGK0YmRiZGKkYmSSNwcEdGJSEiJEkjUnxpckdGJUYoIiM7</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L586" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">dqC3g_S:=subs({1+q^2+p^2=pp},simplify(
+diff(subs({pp=1+q^2+p^2},Cg3pq_S[3,3]),q),symbolic));</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="PkkoZHFDM2dfU0c2IiwkKi4iIzsiIiJJIk1HRiRGKCwoRighIiIqJClJI3F8aXJHRiQiIiNGKEYoKiQpSSNwfGlyR0YkRi9GKEYoRihGLkYoKUkjcHBHRiQiIiRGK0kjUnxpckdGJEYrRig=">LCQqLEkiTUc2IiIiIiwoISIiRiYqJEkjcXxpckdGJSIiI0YmKiRJI3B8aXJHRiVGK0YmRiZGKkYmSSNwcEdGJSEiJEkjUnxpckdGJUYoIiM7</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L584" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+fortran(subs({q=qs, p=ps, R=cr, M=mass},dqC3g_N));</Text-field>
+</Input>
+<Output>
+<Text-field style="Line Printed Output" layout="Line Printed Output">      t0 = 16*mass*(-1+qs**2+ps**2)*qs/pp**3/cr</Text-field>
+</Output>
+</Group>
+<Group labelreference="L606" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+fortran(subs({q=qs, p=ps, R=cr, M=mass},dqC3g_S));</Text-field>
+</Input>
+<Output>
+<Text-field style="Line Printed Output" layout="Line Printed Output">      t0 = 16*mass*(-1+qs**2+ps**2)*qs/pp**3/cr</Text-field>
+</Output>
+</Group>
+<Group labelreference="L585" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">dpC3g_N:=subs({1+q^2+p^2=pp},simplify(
+diff(subs({pp=1+q^2+p^2},Cg3pq_N[3,3]),p),symbolic));</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="PkkoZHBDM2dfTkc2IiwkKi4iIzsiIiJJIk1HRiRGKCwoRighIiIqJClJI3F8aXJHRiQiIiNGKEYoKiQpSSNwfGlyR0YkRi9GKEYoRihGMkYoKUkjcHBHRiQiIiRGK0kjUnxpckdGJEYrRig=">LCQqLEkiTUc2IiIiIiwoISIiRiYqJEkjcXxpckdGJSIiI0YmKiRJI3B8aXJHRiVGK0YmRiZGLUYmSSNwcEdGJSEiJEkjUnxpckdGJUYoIiM7</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L587" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">dpC3g_S:=subs({1+q^2+p^2=pp},simplify(
+diff(subs({pp=1+q^2+p^2},Cg3pq_S[3,3]),p),symbolic));</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="PkkoZHBDM2dfU0c2IiwkKi4iIzsiIiJJIk1HRiRGKCwoRighIiIqJClJI3F8aXJHRiQiIiNGKEYoKiQpSSNwfGlyR0YkRi9GKEYoRihGMkYoKUkjcHBHRiQiIiRGK0kjUnxpckdGJEYrRig=">LCQqLEkiTUc2IiIiIiwoISIiRiYqJEkjcXxpckdGJSIiI0YmKiRJI3B8aXJHRiVGK0YmRiZGLUYmSSNwcEdGJSEiJEkjUnxpckdGJUYoIiM7</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L588" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+fortran(subs({q=qs, p=ps, R=cr, M=mass},dpC3g_N));</Text-field>
+</Input>
+<Output>
+<Text-field style="Line Printed Output" layout="Line Printed Output">      t0 = 16*mass*(-1+qs**2+ps**2)*ps/pp**3/cr</Text-field>
+</Output>
+</Group>
+<Group labelreference="L607" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+fortran(subs({q=qs, p=ps, R=cr, M=mass},dpC3g_S));</Text-field>
+</Input>
+<Output>
+<Text-field style="Line Printed Output" layout="Line Printed Output">      t0 = 16*mass*(-1+qs**2+ps**2)*ps/pp**3/cr</Text-field>
+</Output>
+</Group>
+<Group labelreference="L589" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">drbetaN:=pqdRbetaN_back[3];drbetaS:=pqdRbetaS_back[3];</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="PkkoZHJiZXRhTkc2IiwkKiwiIiMiIiJJIk1HRiRGKCksJkkjUnxpckdGJEYoKiZGJ0YoRilGKEYoRichIiIsKEYoRi4qJClJI3F8aXJHRiRGJ0YoRigqJClJI3B8aXJHRiRGJ0YoRihGKEkjcHBHRiRGLkYu">LCQqKkkiTUc2IiIiIiwmSSNSfGlyR0YlRiZGJCIiIyEiIywoISIiRiYqJEkjcXxpckdGJUYpRiYqJEkjcHxpckdGJUYpRiZGJkkjcHBHRiVGLEYq</Equation></Text-field>
+</Output>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="PkkoZHJiZXRhU0c2IiwkKiwiIiMiIiJJIk1HRiRGKCksJkkjUnxpckdGJEYoKiZGJ0YoRilGKEYoRichIiIsKEYoRi4qJClJI3F8aXJHRiRGJ0YoRigqJClJI3B8aXJHRiRGJ0YoRihGKEkjcHBHRiRGLkYo">LCQqKkkiTUc2IiIiIiwmSSNSfGlyR0YlRiZGJCIiIyEiIywoISIiRiYqJEkjcXxpckdGJUYpRiYqJEkjcHxpckdGJUYpRiZGJkkjcHBHRiVGLEYp</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L595" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+fortran(subs({q=qs, p=ps, R=cr, M=mass},drbetaN));</Text-field>
+</Input>
+<Output>
+<Text-field style="Line Printed Output" layout="Line Printed Output">      t0 = -2*mass/(cr+2*mass)**2*(-1+qs**2+ps**2)/pp</Text-field>
+</Output>
+</Group>
+<Group labelreference="L608" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+fortran(subs({q=qs, p=ps, R=cr, M=mass},drbetaS));</Text-field>
+</Input>
+<Output>
+<Text-field style="Line Printed Output" layout="Line Printed Output">      t0 = 2*mass/(cr+2*mass)**2*(-1+qs**2+ps**2)/pp</Text-field>
+</Output>
+</Group>
+<Group labelreference="L596" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">pqdRalphaN_back;</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkmbWZyYWNHNiMvSSttb2R1bGVuYW1lRzYiSSxUeXBlc2V0dGluZ0dJKF9zeXNsaWJHRic2KC1JJW1yb3dHRiQ2Ji1JI21pR0YkNiVRIk1GJy8lJ2l0YWxpY0dRJXRydWVGJy8lLG1hdGh2YXJpYW50R1EnaXRhbGljRicvJStmb3JlZ3JvdW5kR1EoWzAsMCwwXUYnLyUpcmVhZG9ubHlHUSZmYWxzZUYnL0Y2USdub3JtYWxGJy1GLDYoLUklbXN1cEdGJDYlLUkobWZlbmNlZEdGJDYkLUYsNigtRi82JVEjUnxpckYnRjJGNS1JI21vR0YkNi1RIitGJ0Y+LyUmZmVuY2VHRj0vJSpzZXBhcmF0b3JHRj0vJSlzdHJldGNoeUdGPS8lKnN5bW1ldHJpY0dGPS8lKGxhcmdlb3BHRj0vJS5tb3ZhYmxlbGltaXRzR0Y9LyUnYWNjZW50R0Y9LyUnbHNwYWNlR1EsMC4yMjIyMjIyZW1GJy8lJ3JzcGFjZUdGW28tRiw2KC1JI21uR0YkNiRRIjJGJ0Y+LUZONi1RMSZJbnZpc2libGVUaW1lcztGJ0Y+RlFGU0ZVRldGWUZlbkZnbi9Gam5RJjAuMGVtRicvRl1vRmhvRi5GOEY7Rj5GOEY7Rj5GPi1GLDYoLUZhbzYkUSIzRidGPi1GTjYtUSIvRidGPkZRRlMvRlZGNEZXRllGZW5GZ24vRmpuUSwwLjE2NjY2NjdlbUYnL0Zdb0ZkcEZgb0Y4RjtGPi8lMXN1cGVyc2NyaXB0c2hpZnRHUSIwRidGZG8tSSZtc3FydEdGJDYjRkpGOEY7Rj4vJS5saW5ldGhpY2tuZXNzR1EiMUYnLyUrZGVub21hbGlnbkdRJ2NlbnRlckYnLyUpbnVtYWxpZ25HRmFxLyUpYmV2ZWxsZWRHRj0=">KihJIk1HNiIiIiIsJkkjUnxpckdGJEYlRiMiIiMjISIkRihGJyMhIiJGKA==</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L597" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+fortran(subs({q=qs, p=ps, R=cr, M=mass},pqdRalphaN_back));</Text-field>
+</Input>
+<Output>
+<Text-field style="Line Printed Output" layout="Line Printed Output">      t0 = mass/sqrt(cr+2*mass)**3/sqrt(cr)</Text-field>
+</Output>
+</Group>
+<Group labelreference="L598" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">simplify(diff(pqalphaN_back,q));</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output">IiIh</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L599" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">dpbetaN:=subs({1+q^2+p^2=pp},simplify(diff(subs({pp=1+q^2+p^2},pqbetaN_back[3]),p),symbolic));</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="PkkoZHBiZXRhTkc2IiwkKiwiIikiIiJJIk1HRiRGKEkjcHxpckdGJEYoLCZJI1J8aXJHRiRGKComIiIjRihGKUYoRighIiIpSSNwcEdGJEYuRi9GKA==">LCQqKkkiTUc2IiIiIkkjcHxpckdGJUYmLCZJI1J8aXJHRiVGJkYkIiIjISIiSSNwcEdGJSEiIyIiKQ==</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L609" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">dpbetaS:=subs({1+q^2+p^2=pp},simplify      (diff(subs({pp=1+q^2+p^2},pqbetaS_back[3]),p),symbolic));</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="PkkoZHBiZXRhU0c2IiwkKiwiIikiIiJJIk1HRiRGKEkjcHxpckdGJEYoLCZJI1J8aXJHRiRGKComIiIjRihGKUYoRighIiIpSSNwcEdGJEYuRi9GLw==">LCQqKkkiTUc2IiIiIkkjcHxpckdGJUYmLCZJI1J8aXJHRiVGJkYkIiIjISIiSSNwcEdGJSEiIyEiKQ==</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L600" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+fortran(subs({q=qs, p=ps, R=cr, M=mass},dpbetaN));</Text-field>
+</Input>
+<Output>
+<Text-field style="Line Printed Output" layout="Line Printed Output">      t0 = 8*mass*ps/(cr+2*mass)/pp**2</Text-field>
+</Output>
+</Group>
+<Group labelreference="L601" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(codegen,fortran):
+fortran(subs({q=qs, p=ps, R=cr, M=mass},dpbetaS));</Text-field>
+</Input>
+<Output>
+<Text-field style="Line Printed Output" layout="Line Printed Output">      t0 = -8*mass*ps/(cr+2*mass)/pp**2</Text-field>
+</Output>
+</Group>
+<Group labelreference="L610" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">-1+2*M/R</Text-field>
+</Input>
+</Group>
+<Group labelreference="L602" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">pq_dg44:=array(1..4):
+ pq_dg44[1]:=subs({1+q^2+p^2=pp},simplify(
+diff(subs({pp=1+q^2+p^2},-1+2*M/R),R),symbolic)): pq_dg44[2]:=subs({1+q^2+p^2=pp},simplify(
+diff(subs({pp=1+q^2+p^2},-1+2*M/R),q),symbolic)):
+ pq_dg44[3]:=subs({1+q^2+p^2=pp},simplify(
+diff(subs({pp=1+q^2+p^2},-1+2*M/R),p),symbolic)): pq_dg44[4]:=subs({1+q^2+p^2=pp},simplify(
+diff(subs({pp=1+q^2+p^2},-1+2*M/R),t),symbolic)):print(pq_dg44):</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkndmVjdG9yRzYiNiM3JiwkKigiIiMiIiJJIk1HRiRGKilJI1J8aXJHRiRGKSEiIkYuIiIhRi9GLw==">SShwcV9kZzQ0RzYi</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L604" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal">subs({M=1,R=1},pq_dg44[1]);</Text-field>
+</Input>
+<Output>
+<Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output">ISIj</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L611" drawlabel="true">
+<Input>
+<Text-field prompt="&gt; " style="Maple Input" layout="Normal"><Equation executable="true" style="2D Input" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">JSFH</Equation></Text-field>
+</Input>
+</Group>
+</Worksheet>

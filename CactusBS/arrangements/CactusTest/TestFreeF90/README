@@ -1,0 +1,12 @@
+Cactus Code Thorn TestFreeF90
+Author(s)    : Erik Schnetter
+Maintainer(s): Cactus team
+Licence      : LGPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+Test automatic line breaks in free-form Fortran 90 code.
+
+This thorn contains no test parameter files, the test is whether or
+not it compiles.

@@ -1,0 +1,16 @@
+# Main make.code.defn file for thorn NullExact
+# $Header$
+
+# Source files in this directory
+SRCS = NullExact_Analytic.F90 \
+	NullExact_Initial.F90 \
+	NullExact_Boundary.F90 \
+	NullExact_PreCalcYlm.F90 \
+	NullExact_Error.F90 \
+	NullExact_InitMoL.F90 \
+	NullExact_dotNewsMoL.F90 \
+	NullExact_MoLRegister.c \
+	NullExact_AnaFields.F90 
+
+# Subdirectories containing source files
+SUBDIRS = 

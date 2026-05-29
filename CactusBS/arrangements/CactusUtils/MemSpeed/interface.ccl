@@ -1,0 +1,33 @@
+# Interface definition for thorn MemSpeed
+
+IMPLEMENTS: MemSpeed
+
+USES INCLUDE HEADER: vectors.h
+
+
+
+CCTK_INT FUNCTION GetNumSMTThreads()
+REQUIRES FUNCTION GetNumSMTThreads
+CCTK_INT FUNCTION GetMaxSMTThreads()
+REQUIRES FUNCTION GetMaxSMTThreads
+
+# Obtain information about caches and memory sizes from thorn hwloc
+CCTK_INT FUNCTION GetCacheInfo1                            \
+    (CCTK_POINTER_TO_CONST ARRAY OUT names,                \
+     CCTK_INT              ARRAY OUT types,                \
+     CCTK_POINTER_TO_CONST ARRAY OUT sizes,                \
+     CCTK_INT              ARRAY OUT linesizes,            \
+     CCTK_INT              ARRAY OUT strides,              \
+     CCTK_INT              ARRAY OUT num_puss,             \
+     CCTK_INT                    IN  max_num_cache_levels)
+REQUIRES FUNCTION GetCacheInfo1
+
+# Obtain information about MPI processes and hosts from thorn hwloc
+CCTK_INT FUNCTION GetMPIProcessInfo      \
+    (CCTK_INT OUT mpi_num_procs,         \
+     CCTK_INT OUT mpi_proc_num,          \
+     CCTK_INT OUT mpi_num_hosts,         \
+     CCTK_INT OUT mpi_host_num,          \
+     CCTK_INT OUT mpi_num_procs_on_host, \
+     CCTK_INT OUT mpi_proc_num_on_host)
+REQUIRES FUNCTION GetMPIProcessInfo

@@ -1,0 +1,85 @@
+\documentclass{article}
+
+% Use the Cactus ThornGuide style file
+% (Automatically used from Cactus distribution, if you have a 
+%  thorn without the Cactus Flesh download this from the Cactus
+%  homepage at www.cactuscode.org)
+\usepackage{../../../../doc/latex/cactus}
+
+\begin{document}
+
+\title{IDLinearWaves}
+\author{Gabrielle Allen, Tom Goodale, Gerd Lanfermann, Joan Masso, \\ Mark Miller, Malcolm Tobias, Paul Walker}
+\date{$ $Date$ $}
+
+\maketitle
+
+% Do not delete next line
+% START CACTUS THORNGUIDE
+
+\begin{abstract}
+Provides gravitational wave solutions to the linearized Einstein equations
+\end{abstract}
+
+\section{Purpose}
+
+There are two different linearized initial data sets provided, plane waves 
+and Teukolsky waves.
+
+\section{Plane Waves}
+
+A full description of plane waves can be found in the PhD Thesis of 
+Malcolm Tobias, {\it The Numerical Evolution of Gravitational Waves}, 
+which can be found at {\tt http://wugrav.wustl.edu/Papers/Thesis97/Thesis97.html}.
+
+Plane waves travelling in arbitrary directions can be specified.  For
+these plane waves the TT gauge is assumed (the metric perturbations
+are transverse to the direction of propagation, and the metric is
+traceless). In the case of waves travelling along the $z-$direction
+this would give the {\it plus} solution
+$$
+h_{xx}=-h_{yy}=f(t\pm z), h_{xy}=h_{xz}=h_{yz}=h_{zz} = 0
+$$
+and the {\it cross} solution
+$$
+h_{xy}=h_{yx}=f(t\pm z), h_{yz}=h_{xx}=h_{yy}=h_{zz}=0
+$$
+This thorn implements the {\tt plus} solution, with the waveform
+$f(t\pm z)$ having the form of a Gaussian modulated sine function. 
+Now working with a general direction of propagation $k$ we have the
+plane wave solution:
+$$
+f(t,x,y,z) = A_{in} e^{-(k_i^p x^i + \omega_p(t-r_a) )^2} \cos(k_ix^i+\omega t)
+     + A_{out} e^{-(k_i^p x^i -\omega_p(t-r_a))^2} \cos(k_i x^i - \omega t)
+$$
+and
+\begin{eqnarray*}
+g_{xx}&=& 1 + f[\cos^2\phi - \cos^\theta\sin^2\phi]
+\\
+g_{xy}&=& - f \sin^2 \theta \sin \phi \cos \phi
+\\
+g_{xz} &=& f \sin\theta \cos\theta \sin\phi
+\\
+g_{yy} &=& 1+f [\sin^2\phi - cos^2\theta \cos^2\phi]
+\\
+g_{yz} &=& f \sin\theta \cos\theta \cos\phi
+\\
+g_{zz} &=& 1-f\sin^2\theta
+\end{eqnarray*}
+The extrinsic curvature is then calculated from 
+\begin{equation}
+K_{ij} = - \frac{1}{2\alpha} \dot{g}_{ij}
+\end{equation}
+
+\section{Teukolsky waves}
+Teukolsky waves are quadrupole wave solutions to the linearized
+Einstein equations.  For a full description, see: PRD 26:745 (1982).
+
+
+\section{Comments}
+The extrinsic curvature is initialized assuming the initial lapse is one.
+
+% Do not delete next line
+% END CACTUS THORNGUIDE
+
+\end{document}

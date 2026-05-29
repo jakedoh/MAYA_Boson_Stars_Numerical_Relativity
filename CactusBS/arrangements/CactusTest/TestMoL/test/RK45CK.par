@@ -1,0 +1,51 @@
+# !DESC verify convergence order of ODE steppers inside of MoL
+# Do not modify this file by hand, instead modify ODEs.pl and regenerate this
+# file.
+ActiveThorns = "
+        IOASCII
+        IOBasic
+        IOUtil
+        LocalReduce
+        MoL
+        PUGH
+        PUGHReduce
+        PUGHSlab
+        TestMoL
+"
+
+Cactus::terminate = "iteration"
+Cactus::cctk_itlast = 3
+PUGH::global_nx = 1
+PUGH::global_ny = 1
+PUGH::global_nz = 10
+
+MoL::ode_method = "rk45ck"
+MoL::MoL_Intermediate_Steps = 6
+MoL::MoL_Num_Scratch_Levels = 6
+MoL::init_RHS_zero = 1
+
+TestMoL::RHSexpression = "t**4"
+TestMoL::RHSSlowexpression = "1"
+TestMoL::evolve_grid_function = 1
+TestMoL::evolve_grid_array = 0
+
+IO::out_dir			= $parfile
+IO::out_fileinfo                = "none"
+IO::parfile_write               = "no"
+
+IOASCII::out1D_every = 1
+IOASCII::out1D_d = "no"
+IOASCII::out1D_x = "yes"
+IOASCII::out1D_y = "no"
+IOASCII::out1D_z = "no"
+IOASCII::out1D_vars  = "
+        TestMoL::analytic_gf
+        TestMoL::diff_gf
+        TestMoL::evolved_gf
+        TestMoL::constrained_gf
+        TestMoL::sandr_gf"
+
+IOBasic::outScalar_every = 1
+IOBasic::outScalar_reductions = "norm_inf"
+IOBasic::outScalar_vars  = "
+        TestMoL::diff_gf"

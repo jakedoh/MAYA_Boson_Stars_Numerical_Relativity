@@ -1,0 +1,39 @@
+# Schedule definitions for thorn AHMask
+# $Header:$
+
+STORAGE: ah_mask[1]
+if ( create_buffered_mask ) {
+    STORAGE: ah_mask_buffered[1]
+}
+
+# NOTE: AHFinderDirect can run in different bins depending on its run_at_XXX
+# paramters for now I only support running in POSTSTEP
+schedule AHMask_Set_Weight in CCTK_POSTSTEP AFTER SphericalSurface_HasBeenSet AFTER AHFinderDirect_maybe_do_masks
+{
+    LANG: C
+} "Set up zero weight inside the AH"
+
+schedule AHMask_Set_Weight_Initial AT Basegrid  AFTER SphericalSurface_HasBeenSet AFTER MaskBase_SetupMask AFTER AHFinderDirect_maybe_do_masks
+{
+  LANG: C
+} "Set up zero weight inside the AH"
+
+schedule AHMask_Set_Weight_Initial AT PostRegridInitial AFTER MaskBase_SetupMask AFTER AHFinderDirect_maybe_do_masks
+{
+  LANG: C
+} "Set up zero weight inside the AH"
+
+schedule AHMask_Set_Weight AT PostRegrid AFTER MaskBase_SetupMask AFTER AHFinderDirect_maybe_do_masks
+{
+  LANG: C
+} "Set up zero weight inside the AH"
+
+schedule AHMask_Set_Weight AT Post_Recover_Variables AFTER MaskBase_SetupMask AFTER AHFinderDirect_maybe_do_masks
+{
+  LANG: C
+} "Set up zero weight inside the AH"
+
+schedule AHMask_RegisterMask in CCTK_STARTUP
+{
+    LANG: C
+} "Register excision bit mask with SpaceMask"

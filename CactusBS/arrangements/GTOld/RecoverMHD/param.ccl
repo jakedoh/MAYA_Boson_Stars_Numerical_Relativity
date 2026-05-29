@@ -1,0 +1,261 @@
+# Parameter definitions for thorn RecoverMHD
+# $Header:$
+
+## HydroBase ##
+SHARES: HydroBase
+USES KEYWORD evolution_method
+EXTENDS KEYWORD initial_Bvec ""
+{
+  "Bvec_from_Avec" :: "Calculate B^i for an otherwise initialized A_i"
+}
+
+private:
+
+## Solver type ##
+keyword solver_type "GSL Solver Type for recovery (currently solvers in GSL 1.14)" STEERABLE=RECOVER
+{
+   "Newton"   :: "Standard Newton solver (Derivative method)."
+   "gNewton"  :: "Modified Newton solver (Derivative method)."
+   "HybridSJ" :: "Modified Powell's Hybrid method (Derivative method)."
+   "HybridJ"  :: "Unscaled version of hybridsj (Derivative method)."
+   "HybridS"  :: "Scaled Hybrid."
+   "Hybrid"   :: "Hybrid, No internal scaling."
+   "dNewton"  :: "Discrete Newton algorithm."
+   "Broyden"  :: "Broyden algorithm"
+} "Newton"
+
+keyword system_type "solve using which variables as independent?" STEERABLE=ALWAYS
+{
+  "u_i eps" :: "4D: treat u_i and eps as independent variables"
+  "W press" :: "2D: treat press and W as independent variables"
+  "h v^2"   :: "2D: treat rho*enthalpy*W^2 and v^2 as independent variables. This assumes a Gamma-law EOS."
+  "h*W^2"   :: "1D_W: treat h*W^2 as the independent variable. This assumes a Gamma-law EOS."
+} "h v^2"
+
+real solver_tolerance "Residual below which we deem recovery a success" STEERABLE=ALWAYS
+{
+  (0:* :: "Positive"
+} 1e-10
+
+real solver_epsrel "Tolerance for primitive variable solve (relative)" STEERABLE=ALWAYS
+{
+  (0:* :: "Positive"
+} 1.e-8
+
+real solver_epsabs  "Tolerance for primitive variable solve (absolute)" STEERABLE=ALWAYS
+{
+  (0:* :: "Positive"
+} 1.e-18
+
+int extra_solver_iterations "Extra iterations once tolerance reached (only h v2 method at the moment)" STEERABLE=ALWAYS
+{
+  0:* :: "Default of 2 from Noble et al."
+} 2
+
+# Whisky uses delta ie. test_residual = "no"
+boolean test_residual "use residual (ie sx-sx(u_i,eps)) instead of delta-change as convergence parameter" STEERABLE=ALWAYS
+{
+} "yes"
+
+int warn_from_reflevel "Start warning on given refinement level and on higher levels" STEERABLE=ALWAYS
+{
+  0:           :: "Greater or equal to 0"
+} 0
+
+restricted:
+REAL atmo_tolerance "A point is set to atmosphere in the Con2Prim's if its rho < whisky_rho_min *(1+whisky_atmo_tolerance). This avoids occasional spurious oscillations in carpet buffer zones lying in the atmosphere (because prolongation happens on conserved variables)" STEERABLE=ALWAYS
+{
+   0.0: :: "Zero or larger. A useful value could be 0.0001"
+}  0.0
+
+private:
+int countmax "Maximum number of iterations for Con2Prim solve" STEERABLE=ALWAYS
+{ 
+  1:*           :: "Must be positive"
+} 30
+
+REAL press_tolerance "Start iteration for press (in general recovery) slightly above pmin if the current guess is too low" STEERABLE=ALWAYS
+{
+   0.0: :: "Zero or larger. A useful value might be atmo_tolerance"
+}  0.0
+
+boolean reset_pressure "If the pressure guess is unphysical should we recompute it? (HD only)" STEERABLE=ALWAYS
+{
+} "no"
+
+
+#############################################
+## Puncture Trick.  Needs updating to MHD. ##
+#############################################
+
+# NB this trick differs slightly from both the one described in 0708.2436 and
+# the one implemented in Whisky_Puncture in that it like Whisky_Puncture checks
+# for S^2 < flimit*tau*(tau+2*D) but also it rescales to flimit^2*tau*(tau+2*D)
+boolean impose_s2_limit "Use Faber's limiting trick |S|^2 < tau*(tau+2*D) everywhere during recovery" STEERABLE=ALWAYS
+{                                                               
+} "no"                                                          
+
+real recovery_flimit "Limit S^2 to be no more than this fraction of tau*(tau+2*D)" STEERABLE=ALWAYS
+{
+  0:1           :: "a percent value"
+} 0.98
+
+CCTK_REAL deep_BH_psi "Threshold psi high enough to safely be deep within a BH" STEERABLE=ALWAYS
+{
+  10:*           :: "10-30 makes sense"
+} 10.
+
+boolean impose_b2_limit "Impose a cap on how much the magnetic field can amplify within a BH" STEERABLE=ALWAYS
+{
+} "no"
+
+CCTK_REAL maxB "Impose an absolute magnitude for magnetic field, say 2 orders of magnitude x initial" STEERABLE=ALWAYS
+{
+  0:*           :: "An order of magnitude or so times the initial magnetic field?"
+} 0.0
+                                                                
+real warn_if_speed_above "Output level 1 warning if during recovery the speed is large than this" STEERABLE=ALWAYS
+{
+  0:1           :: "Physical values range from [0:1] and are guarenteed by the expressions used provided |S|^2 < tau(tau+2*D) holds"
+} 1
+
+# perform impose_s2_limit but only in the region around punctures
+BOOLEAN puncture_trick "Impose limits around puncture" STEERABLE=always
+{
+} "no"
+
+CCTK_INT number_of_punctures "How many punctures" STEERABLE=always
+{
+  1:3 :: "Currently only 3 allowed"
+} 1
+
+KEYWORD puncture_center_from[3] "How to find the puncture location" STEERABLE=always
+{
+  "parameter"  ::  "use parameter puncture_center[3]"
+  "spherical surface" :: "use spherical surfaces"
+} "parameter"
+
+# WARNING: radius of trick application first attempts puncture_radius_surface.  If not valid or not set,
+# it falls back to puncture_surface.  If neither are set or valid, the radius comes from puncture_radius[i].
+# If puncture_radius_factor is set and no valid surface is found, then puncture_radius is scaled by this same
+# factor.  Therefore, if you want a fallback radius you have to take this factor into account when setting 
+# puncture_radius.  Both the radius and location are not changed from the last iteration if the location surface
+# is not found, but the radius is set to puncture_radius*puncture_radius_factor if the radius surface is not
+# available/active.  (BTW: The default radius for SphericalSurfaces is zero.)
+KEYWORD puncture_radius_from[3] "Where to find radius to use" STEERABLE=always
+{
+  "parameter"  ::  "use parameter puncture_radius[3], hard-coded if center is also from parameter"
+  "spherical surface" :: "use spherical surfaces if we also find the horizon"
+} "parameter"
+
+CCTK_REAL puncture_radius_factor[3] "shrink/grow trick radius by this" STEERABLE=always
+{
+  0:*          :: "any positive number"
+} 1.0
+
+CCTK_REAL puncture_center_x[3] "Coordinate location of puncture" STEERABLE=always
+{
+  *:* :: "Anything"
+} 0d0
+
+CCTK_REAL puncture_center_y[3] "Coordinate location of puncture" STEERABLE=always
+{
+  *:* :: "Anything"
+} 0d0
+
+CCTK_REAL puncture_center_z[3] "Coordinate location of puncture" STEERABLE=always
+{
+  *:* :: "Anything"
+} 0d0
+
+CCTK_INT puncture_surface[3] "Surface index to find location" STEERABLE=always 
+{
+  *:* :: "Anything"
+} -1
+
+CCTK_INT puncture_radius_surface[3] "Surface index to get radius (defaults to same surface as location)" STEERABLE=always
+{
+  *:* :: "Anything"
+} -1
+
+CCTK_REAL puncture_radius[3] "Radius of puncture if using parameter" STEERABLE=always 
+{
+  (0:*	::  "Positive"
+} 0.25
+
+CCTK_REAL puncture_tau_min "Minimum value of tau enforced during recovery" STEERABLE=always
+{
+  -2     ::  "do not impose a limit on tau"
+  -1     ::  "obtain tau_min from whisky_rho_min"
+  0:*    ::  "anything non negative"
+} 0
+
+REAL tau_min_initial "Initial min tau needed from the initial Con2Prim, before tau_rel_min can be calculated"
+{
+  0: :: ""
+} 0
+
+## Symmetry Checking ##
+
+BOOLEAN check_zsymmetry "Schedule check of z symmetry" STEERABLE=recover
+{
+} "no"
+
+CCTK_REAL zsymmetry_rel_err "relative error tolerance" STEERABLE=ALWAYS
+{
+  0:* :: "any non-negative number"
+} 0.
+
+CCTK_REAL zsymmetry_abs_err "absolute error tolerance" STEERABLE=ALWAYS
+{
+  0:* :: "any non-negative value"
+} 0.
+
+## Debugging ##
+# Verbosity settings:
+# 	3+ Output simple statements to see single statement when generalEOS triggers polytropeEOS
+#          & when conservatives are changed
+# 	4+ More local variable output when generalEOS triggers polytropeEOS
+#	5+ Output status of generalEOS or polytropeEOS before exiting
+#	6+ Output per iteration status of solvers
+#	7+ Output all arguments when entering generalEOS or polytropeEOS
+# 	9+ Output all arguments when entering Con2Prim_pointwise
+
+CCTK_INT verbose "More Info" STEERABLE=ALWAYS
+{
+  0:* :: "any non-negative value"
+} 0 
+
+BOOLEAN store_recovery_fails "note locations where recovery fails" STEERABLE=RECOVER
+{
+} "no"
+
+BOOLEAN abort_on_fails "Check entire GF and abort on recovery failure." STEERABLE=RECOVER
+{
+} "no"
+
+CCTK_BOOLEAN test_recovery "run a test in CCTK_INITIAL then exit"
+{
+} "no"
+
+## Whisky ##
+SHARES: Whisky
+
+USES int whisky_stencil
+USES real whisky_perc_ptol
+USES real whisky_del_ptol
+USES int whisky_polish
+USES boolean clean_divergence
+
+USES keyword whisky_eos_type
+USES keyword recon_vars
+
+USES boolean evolve_tracer
+USES boolean use_min_tracer
+USES real min_tracer
+USES int number_of_tracers
+
+shares: ADMMacros
+
+USES INT spatial_order
+

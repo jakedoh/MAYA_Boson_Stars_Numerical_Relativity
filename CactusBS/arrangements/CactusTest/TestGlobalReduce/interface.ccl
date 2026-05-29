@@ -1,0 +1,56 @@
+# Interface definition for thorn TestGlobalReduce
+# $Header$
+
+implements:testglobalreduce
+inherits: grid
+
+public:
+cctk_real real_3d dim=3 type=ARRAY size=array_nx,array_ny,array_nz
+{
+  grid_real
+} "grid array to be reduced of type real"
+
+cctk_int int_3d dim=3 type=ARRAY size=array_nx,array_ny,array_nz
+{
+  grid_int
+} "grid array to be reduced of type int"
+
+cctk_real real_gf type=GF Timelevels=1
+{
+  real_test_gf, real_sum_gf
+} "a real gf to test for gaussian initial data"
+
+cctk_real weight_group type=ARRAY size=array_nx,array_ny,array_nz
+{
+  weight
+} "a weight variable to be used in reduction"
+
+cctk_int int_vals type=scalar
+{
+  int_max_3D, int_sum_3D, int_avg_3D, int_min_3D
+} "results from weighted int reduction"
+
+cctk_real real_vals type=scalar
+{
+  real_max_3D, real_sum_3D, real_avg_3D, real_min_3D
+} "results from real reduction"
+
+cctk_int weighted_int_vals type=scalar
+{
+  weighted_int_max, weighted_int_sum, weighted_int_avg, weighted_int_min
+} "results from int reduction"
+
+cctk_real weighted_real_vals type=scalar
+{
+  weighted_real_max, weighted_real_sum, weighted_real_avg, weighted_real_min
+} "results from weighted real reduction"
+
+cctk_real gf_vals type=scalar
+{
+  gf_max, gf_sum, gf_norm1, gf_norm2, gf_norm3, gf_norm4
+} "results from gf reduction"
+
+cctk_real scalar_reduction type=scalar
+{
+  num_to_reduce, sum_value, max_value  
+} "scalar reduction variables"

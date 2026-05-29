@@ -1,0 +1,66 @@
+# Parameter definitions for thorn PETSc_Elliptic
+
+shares: grid
+
+USES KEYWORD domain 
+
+shares: ellbase
+
+USES KEYWORD elliptic_verbose 
+
+private:
+
+KEYWORD petsc_verbose "PETSc verbose output"
+{
+"no"   :: "No output"
+"yes"  :: "Some output"
+"debug":: "Tons of output"
+} "yes"
+
+BOOLEAN petsc_reuse "Reuse parts of the PETSc structure"
+{
+} "no"
+
+BOOLEAN petsc_coeff_to_one "Divide each line of the matrix by the central value?"
+{
+} "no"
+
+STRING petsc_KSP_type "Which Krylov subspace method to use"
+{
+ "KSPCR"         :: "pcr"
+ "KSPCG"         :: "cg"
+ "KSPCGS"        :: "cgs"
+ "KSPBCGS"       :: "bcgs"
+ "KSPLSQR"       :: "lsqr"
+ "KSPGMRES"      :: "gmres"
+ "KSPTCQMR"      :: "tcqmr"
+ "KSPTFQMR"      :: "tfqmr"
+ "KSPCHEBYCHEV"  :: "chebyshev"
+ "KSPCHEBYSHEV"  :: "chebyshev"
+ "KSPRICHARDSON" :: "richardson"
+}"KSPBCGS" 
+
+KEYWORD petsc_PC_type "Which preconditioner method to use"
+{
+ "PCNONE"    :: "none"
+ "PCJACOBI"  :: "jacobi"
+ "PCBJACOBI" :: "bjacobi"
+ "PCICC"     :: "icc"
+ "PCILU"     :: "ilu"
+ "PCASM"     :: "asm"
+ "PCLU"      :: "lu"
+} "PCJACOBI"
+
+KEYWORD petsc_nablaform "PETSC nabla form"
+{
+  "up"      :: ""
+  "down"    :: ""
+} "down"
+
+
+
+#FIXME At the moment we pass toltype explicitly from LinearEllitpic
+#CCTK_INT PetscTolStyle "PETSc Tolerance flavors FIXME"
+#{
+# 0: :: ""
+#} 0

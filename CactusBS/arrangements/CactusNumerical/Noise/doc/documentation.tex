@@ -1,0 +1,71 @@
+% /*@@
+%   @file      documentation.tex
+%   @date      16 May 2002
+%   @author    Denis Pollney
+%   @desc 
+%              Thorn Noise user's guide.
+%   @enddesc 
+%   @version $Header$
+% @@*/
+
+\documentclass{article}
+
+\usepackage{../../../../doc/latex/cactus}
+
+\begin{document}
+\title{Using the \texttt{Noise} thorn}
+\author{Denis Pollney}
+\date{April 2002}
+
+\maketitle
+
+% Do not delete next line
+% START CACTUS THORNGUIDE
+
+\begin{abstract}
+The \texttt{Noise} thorn can be used to place random values on
+Cactus grid functions at initial data and at the boundaries during
+evolution. This can be used to carry out ``robust stability'' tests,
+such as those proposed by Jeff Winicour.\\
+\end{abstract}
+
+\section{Initial data}
+
+To apply a random perturbation to initial data, set
+\texttt{noise::apply\_id\_noise="yes"}. Then each grid function
+listed in the parameter \texttt{noise::id\_vars} will be adjusted
+by a random factor. The maximum size of the random perturbation is
+controlled by the parameter \texttt{noise::amplitude}. The
+perturbations are applied during the \texttt{CCTK\_POSTINITIAL}
+time bin.
+
+\section{Boundary conditions}
+
+A random number will be added to each point on the boundary of grid
+functions listed in the \texttt{noise::bc\_vars} parameter if the
+flag \texttt{noise::apply\_bc\_noise="yes"} is set. As with the
+initial data, the maximum size of the perturbation is given by the
+\texttt{noise::amplitude} parameter. The adjustments are applied at
+each \texttt{CCTK\_POSTSTEP}.
+
+\section{Example}
+
+The following parameters can be used to apply a random adjustment 
+of size $A=\pm0.0005$ to the initial data and boundaries of the metric
+variables.
+\begin{verbatim}
+  ActiveThorns = "... Noise ..."
+
+  noise::apply_id_noise = "yes"
+  noise::id_vars        = "admbase::metric"
+
+  noise::apply_bc_noise = "yes"
+  noise::bc_vars        = "admbase::metric"
+
+  noise::amplitude      = 0.001
+\end{verbatim}
+
+% Do not delete next line
+% END CACTUS THORNGUIDE
+
+\end{document}

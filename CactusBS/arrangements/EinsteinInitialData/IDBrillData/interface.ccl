@@ -1,0 +1,20 @@
+# Interface definition for thorn IDBrillData
+# $Header$
+
+implements: IDBrillData
+inherits: grid ADMBase StaticConformal ellbase
+
+# Grid functions for linear elliptic equation.
+
+private: 
+
+CCTK_REAL brillelliptic TYPE=GF
+{
+  brillMlinear,
+  brillNsource
+} "Coefficients for linear elliptic equation"
+
+CCTK_REAL brillconf TYPE=GF
+{
+  brillpsi
+} "Conformal factor for Brill data"

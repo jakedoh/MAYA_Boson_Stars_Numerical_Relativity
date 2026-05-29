@@ -1,0 +1,7 @@
+# Main make.code.defn file for thorn MyTov
+
+# Source files in this directory
+SRCS = initial.F90 arrays.F90 ode.F90 global_numbers.F90  
+
+# Subdirectories containing source files
+SUBDIRS = 

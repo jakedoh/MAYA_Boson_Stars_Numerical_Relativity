@@ -1,0 +1,8 @@
+# Main make.code.defn file for thorn Baum
+# $Header: /numrelcvs/HerrmannCVS/Baum/src/make.code.defn,v 1.1 2004/08/04 15:19:18 herrmann Exp $
+
+# Source files in this directory
+SRCS = Baum.c
+
+# Subdirectories containing source files
+SUBDIRS = 

@@ -1,0 +1,9 @@
+# Main make.code.defn file for thorn GlobalDerivative
+# $Header$
+
+# Source files in this directory
+SRCS = deriv.c deriv2.c dissip.c paramcheck.c 
+#       stencil.c                                                                                               
+
+# Subdirectories containing source files
+SUBDIRS = 

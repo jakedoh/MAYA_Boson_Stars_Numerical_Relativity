@@ -1,0 +1,916 @@
+NOTATIONAL ISSUES
+
+Maple		Latex
+r		\ell
+sigr		$\hat \Sigma_{\ell A} q^A$
+sigrr		$\hat \Sigma_{\ell \ell}$
+sigru		$\hat \Sigma_{\ell u}$
+sigu		$\hat \Sigma_{u A} q^A$
+siguu		$\hat \Sigma_{uu}$
+sigJ		$\hat \Sigma_{AB} q^A q^B /2$
+sigK		$\hat \Sigma_{AB} q^A \bar{q}^B /2$
+
+General
+1. `b` at the end of a Maple variable indicates complex conjugate
+2. A Maple variable name with a `1` towards the end means the same
+   as without the `1`.
+
+CASE A - LINEARIZED
+The following quantities ending with eps1 are the linearized
+simplifications of the corresponding nonlinear quantity.
+
+> psi4eps1;
+                 /d       \       / d    \       / d        \
+                 |-- sigJ1| - 1/4 |---- U| - 1/2 |---- sigu1|
+                 \du      /       \deth  /       \deth      /
+
+> sigueps1;
+                       /  2     \       /     2      \
+                       | d      |       |    d       |
+                   1/4 |----- Ub| + 1/4 |---------- U| + U/2
+                       |    2   |       \dethb deth  /
+                       \deth    /
+
+> sigJeps1;
+                                   /  2    \   /  2    \
+                                   | d     |   | d     |
+                       - J/2 + 1/2 |----- J| + |----- B|
+                                   \du dr  /   |    2  |
+                                               \deth   /
+
+CASE B - NONLINEAR
+N.B. In the expression for psi4, the common factor $\omega^{-3} e^{-2i\delta}$
+has been omitted. 
+> sigr;
+        /                                   / 2   \     / 2    \\
+        |/d   \ /d   \   /d   \ /d    \     |d    |     |d     ||
+    1/2 ||-- K| |-- U| + |-- J| |-- Ub| + K |--- U| + J |--- Ub|| exp(-2 B)
+        |\dr  / \dr  /   \dr  / \dr   /     |  2  |     |  2   ||
+        \                                   \dr   /     \dr    //
+
+> sigru;
+      /                                                   /     2      \
+      |             /  d    \   /  d    \                 |    d       |
+-1/16 |2 exp(2 B) K |----- B| J |----- J| Jb + 4 exp(2 B) |---------- K| K
+      |             \dethb  /   \dethb  /                 \dethb deth  /
+      \
+
+                  /   2    \                /  2     \
+                  |  d     |                | d      |
+     - 2 exp(2 B) |------ J| K - 2 exp(2 B) |----- Jb| K
+                  |     2  |                |    2   |
+                  \dethb   /                \deth    /
+
+                     /     2      \
+                   2 |    d       |               2
+     - 8 exp(2 B) K  |---------- B| - 8 exp(2 B) K  + 8 U sigr1b K
+                     \dethb deth  /
+
+                               /  d     \ / d    \
+     + 8 Ub sigr1 K - exp(2 B) |----- Jb| |---- J|
+                               \dethb   / \deth  /
+
+                /  d    \ / d     \                / d    \2
+     + exp(2 B) |----- J| |---- Jb| + 8 exp(2 B) K |---- B|  Jb
+                \dethb  / \deth   /                \deth  /
+
+                    /  d    \ /  d    \                / d    \ / d     \
+     + 4 exp(2 B) K |----- B| |----- J| + 4 exp(2 B) K |---- B| |---- Jb|
+                    \dethb  / \dethb  /                \deth  / \deth   /
+
+                    2 /  d    \ / d    \                /  d    \2
+     - 16 exp(2 B) K  |----- B| |---- B| + 8 exp(2 B) K |----- B|  J
+                      \dethb  / \deth  /                \dethb  /
+
+                    /  2    \                   /   2    \
+                    | d     |                   |  d     |
+     + 4 exp(2 B) K |----- B| Jb + 4 exp(2 B) K |------ B| J
+                    |    2  |                   |     2  |
+                    \deth   /                   \dethb   /
+
+                   2 /  d    \ / d    \
+     - 2 exp(2 B) K  |----- B| |---- J| Jb
+                     \dethb  / \deth  /
+
+                   2 /  d    \ / d     \
+     - 2 exp(2 B) K  |----- B| |---- Jb| J
+                     \dethb  / \deth   /
+
+                   2 / d    \ /  d     \
+     - 2 exp(2 B) K  |---- B| |----- Jb| J
+                     \deth  / \dethb   /
+
+                   2 / d    \ / d    \
+     - 4 exp(2 B) K  |---- B| |---- K| Jb
+                     \deth  / \deth  /
+
+                   2 /  d    \ /  d    \
+     - 4 exp(2 B) K  |----- B| |----- K| J
+                     \dethb  / \dethb  /
+
+                   2 / d    \ /  d    \
+     - 2 exp(2 B) K  |---- B| |----- J| Jb
+                     \deth  / \dethb  /
+
+                    /  d    \  2 /  d     \
+     + 2 exp(2 B) K |----- B| J  |----- Jb|
+                    \dethb  /    \dethb   /
+
+                    / d    \    /  d    \
+     + 4 exp(2 B) K |---- B| Jb |----- K| J
+                    \deth  /    \dethb  /
+
+                    / d    \   2 / d    \
+     + 2 exp(2 B) K |---- B| Jb  |---- J|
+                    \deth  /     \deth  /
+
+                    /  d    \   / d    \
+     + 4 exp(2 B) K |----- B| J |---- K| Jb
+                    \dethb  /   \deth  /
+
+                                           \
+                    / d    \    / d     \  |
+     + 2 exp(2 B) K |---- B| Jb |---- Jb| J|/K
+                    \deth  /    \deth   /  |
+                                           /
+
+> sigJ;
+     /
+     |   / d    \    /  d    \  2        /  d    \  2 / d    \
+1/16 |12 |---- B| Jb |----- K| J  K + 12 |----- B| J  |---- K| Jb K
+     |   \deth  /    \dethb  /           \dethb  /    \deth  /
+     \
+
+         / d    \    / d     \  2       /  d    \  2 /  d    \
+     + 6 |---- B| Jb |---- Jb| J  K + 6 |----- B| J  |----- J| Jb K
+         \deth  /    \deth   /          \dethb  /    \dethb  /
+
+                                  /   2    \             /  2    \
+         /  d    \ / d     \      |  d     |  2          | d     |
+     + J |----- J| |---- Jb| + 12 |------ B| J  K + 16 K |----- B|
+         \dethb  / \deth   /      |     2  |             |    2  |
+                                  \dethb   /             \deth   /
+
+           / d    \   2 / d    \          2 /  d    \ / d    \
+     + 6 J |---- B| Jb  |---- J| K - 6 J K  |----- B| |---- J| Jb
+           \deth  /     \deth  /            \dethb  / \deth  /
+
+             2 / d    \ / d    \           2 / d    \    /  d    \
+     - 12 J K  |---- B| |---- K| Jb - 6 J K  |---- B| Jb |----- J|
+               \deth  / \deth  /             \deth  /    \dethb  /
+
+                     /d   \ / d    \       2 / d    \ / d    \
+     + 8 exp(-2 B) K |-- K| |---- U| - 16 K  |---- B| |---- K|
+                     \dr  / \deth  /         \deth  / \deth  /
+
+                       /    2     \
+                       |   d      |                 /d   \ / d     \
+     + 4 exp(-2 B) K U |-------- J| + 8 exp(-2 B) K |-- J| |---- Ub|
+                       \dr dethb  /                 \dr  / \deth   /
+
+           / d    \    / d    \      2 /  d    \ / d    \      /  d    \2  2
+     + 8 K |---- B| Jb |---- J| - 8 K  |----- B| |---- J| + 24 |----- B|  J  K
+           \deth  /    \deth  /        \dethb  / \deth  /      \dethb  /
+
+         /  d     \ / d    \        / d    \2        2
+     - J |----- Jb| |---- J| + 32 K |---- B|  - 8 J K
+         \dethb   / \deth  /        \deth  /
+
+            /  d    \   / d    \       /  d    \   /  d    \
+     + 16 K |----- B| J |---- K| + 4 K |----- B| J |----- J|
+            \dethb  /   \deth  /       \dethb  /   \dethb  /
+
+            /  2    \                         /   2     \       /   2    \
+            | d     |                         |  d      |       |  d     |
+     + 12 J |----- B| Jb K + 4 exp(-2 B) K Ub |------- J| - 2 J |------ J| K
+            |    2  |                         \dr deth  /       |     2  |
+            \deth   /                                           \dethb   /
+
+           /     2      \                   /  2    \           /     2      \
+           |    d       |                   | d     |         2 |    d       |
+     + 4 J |---------- K| K + 8 exp(-2 B) K |----- J| - 24 J K  |---------- B|
+           \dethb deth  /                   \du dr  /           \dethb deth  /
+
+         /  d    \  3 /  d     \        2 /  d    \  2 / d     \
+     + 6 |----- B| J  |----- Jb| K - 6 K  |----- B| J  |---- Jb|
+         \dethb  /    \dethb   /          \dethb  /    \deth   /
+
+          2 / d    \ /  d     \  2       2 /  d    \ /  d    \  2
+     - 6 K  |---- B| |----- Jb| J  - 12 K  |----- B| |----- K| J
+            \deth  / \dethb   /            \dethb  / \dethb  /
+
+            / d    \2              2 /  d    \ / d    \
+     + 24 J |---- B|  Jb K - 48 J K  |----- B| |---- B|
+            \deth  /                 \dethb  / \deth  /
+
+                                       /  2     \                            \
+              / d    \ / d     \       | d      |        2 / d    \ /  d    \|
+     + 12 J K |---- B| |---- Jb| - 2 J |----- Jb| K + 8 K  |---- B| |----- J||
+              \deth  / \deth   /       |    2   |          \deth  / \dethb  /|
+                                       \deth    /                            /
+
+    /K
+
+> sigK;
+/     2      \
+|    d       |        /  d     \ / d    \        /  d    \ / d     \
+|---------- B| - 1/16 |----- Jb| |---- J| + 1/16 |----- J| |---- Jb|
+\dethb deth  /        \dethb   / \deth  /        \dethb  / \deth   /
+
+                                  /   2    \
+         /  d    \ / d    \       |  d     |
+     + 2 |----- B| |---- B| + 3/4 |------ B| J K
+         \dethb  / \deth  /       |     2  |
+                                  \dethb   /
+
+                       /    2     \                    /   2     \
+                       |   d      |                    |  d      |
+     + 1/4 exp(-2 B) U |-------- K| + 1/4 exp(-2 B) Ub |------- K|
+                       \dr dethb  /                    \dr deth  /
+
+           /  2    \
+           | d     |                      /d   \ / d     \
+     + 3/4 |----- B| Jb K + 1/4 exp(-2 B) |-- K| |---- Ub|
+           |    2  |                      \dr  / \deth   /
+           \deth   /
+
+                     /d   \ /  d     \                 /d    \ / d    \
+     + 1/4 exp(-2 B) |-- J| |----- Ub| + 1/4 exp(-2 B) |-- Jb| |---- U|
+                     \dr  / \dethb   /                 \dr   / \deth  /
+
+          2 /  d    \ / d    \       /  d    \   /  d    \
+     - 3 K  |----- B| |---- B| + 1/4 |----- B| K |----- J|
+            \dethb  / \deth  /       \dethb  /   \dethb  /
+
+           / d    \   2 / d    \          2 /  d    \ / d    \
+     + 3/8 |---- B| Jb  |---- J| K - 3/8 K  |----- B| |---- J| Jb
+           \deth  /     \deth  /            \dethb  / \deth  /
+
+            2 /  d    \   / d     \        2 / d    \ /  d     \
+     - 3/8 K  |----- B| J |---- Jb| - 3/8 K  |---- B| |----- Jb| J
+              \dethb  /   \deth   /          \deth  / \dethb   /
+
+            2 / d    \ / d    \          / d    \    /  d    \
+     - 3/4 K  |---- B| |---- K| Jb + 1/2 |---- B| Jb |----- J|
+              \deth  / \deth  /          \deth  /    \dethb  /
+
+                                          /     2      \     2
+           /  d    \   / d     \        2 |    d       |    K
+     + 1/2 |----- B| J |---- Jb| - 3/2 K  |---------- B| - ----
+           \dethb  /   \deth   /          \dethb deth  /    2
+
+                     /  2    \
+                     | d     |       /  d    \  2 /  d     \
+     + 1/2 exp(-2 B) |----- K| + 3/8 |----- B| J  |----- Jb| K
+                     \du dr  /       \dethb  /    \dethb   /
+
+           / d    \   / d     \       / d    \2
+     + 1/4 |---- B| K |---- Jb| + 3/2 |---- B|  Jb K
+           \deth  /   \deth   /       \deth  /
+
+                                                                 /  2     \
+                     /d   \ /  d    \       /  d    \2           | d      |
+     + 1/4 exp(-2 B) |-- K| |----- U| + 3/2 |----- B|  J K - 1/8 |----- Jb| K
+                     \dr  / \dethb  /       \dethb  /            |    2   |
+                                                                 \deth    /
+
+           / d    \    /  d    \           /  d    \   / d    \
+     + 3/4 |---- B| Jb |----- K| J K + 3/4 |----- B| J |---- K| Jb K
+           \deth  /    \dethb  /           \dethb  /   \deth  /
+
+           / d    \    / d     \           /  d    \   /  d    \
+     + 3/8 |---- B| Jb |---- Jb| J K + 3/8 |----- B| J |----- J| Jb K
+           \deth  /    \deth   /           \dethb  /   \dethb  /
+
+            2 /  d    \ /  d    \          2 / d    \    /  d    \
+     - 3/4 K  |----- B| |----- K| J - 3/8 K  |---- B| Jb |----- J|
+              \dethb  / \dethb  /            \deth  /    \dethb  /
+
+           /     2      \         /   2    \
+           |    d       |         |  d     |
+     + 1/4 |---------- K| K - 1/8 |------ J| K
+           \dethb deth  /         |     2  |
+                                  \dethb   /
+
+> sigu;
+    /  2     \       /     2      \
+    | d      |       |    d       |       / d    \ /  d    \
+1/4 |----- Ub| + 1/4 |---------- U| - 1/2 |---- B| |----- U|
+    |    2   |       \dethb deth  /       \deth  / \dethb  /
+    \deth    /
+
+           / d    \ / d     \
+     - 1/2 |---- B| |---- Ub| - Ub sigJ1 - U sigK1
+           \deth  / \deth   /
+
+> siguu;
+        /     2      \                           /   2    \
+        |    d       |         / d     \         |  d     |
+-1/8 Ub |---------- U| + 1/4 U |---- Ub| - 1/8 U |------ U|
+        \dethb deth  /         \deth   /         |     2  |
+                                                 \dethb   /
+
+             /     2       \                                 /  2     \
+             |    d        |       /d   \ / d     \          | d      |
+     - 1/8 U |---------- Ub| - 1/2 |-- B| |---- Ub| - 1/8 Ub |----- Ub|
+             \dethb deth   /       \du  / \deth   /          |    2   |
+                                                             \deth    /
+
+                                2          2              /    2     \
+           /d   \ /  d    \   Ub  sigJ1   U  sigJ1b       |   d      |
+     - 1/2 |-- B| |----- U| + --------- + --------- + 1/4 |-------- U|
+           \du  / \dethb  /       2           2           \du dethb  /
+
+           /   2      \
+           |  d       |          / d    \ / d     \
+     + 1/4 |------- Ub| + 1/4 Ub |---- B| |---- Ub|
+           \du deth   /          \deth  / \deth   /
+
+              / d    \ /  d    \         /  d    \ / d     \
+     + 1/4 Ub |---- B| |----- U| + 1/4 U |----- B| |---- Ub|
+              \deth  / \dethb  /         \dethb  / \deth   /
+
+             /  d    \ /  d    \
+     + 1/4 U |----- B| |----- U| + U Ub sigK1
+             \dethb  / \dethb  /
+
+> psi4;
+                /       /  d    \        2                    /d   \
+-1/16 exp(-2 B) |4 J Ub |----- K| sigJ1 K  - 2 J exp(-2 B) Ub |-- U| sigK1
+                \       \dethb  /                             \dr  /
+
+                       /d   \             2 /  d    \           /d       \
+     - 2 J exp(-2 B) U |-- U| sigJ1b + 4 K  |----- U| sigJ1 - 8 |-- sigJ1|
+                       \dr  /               \dethb  /           \du      /
+
+           / d        \         / d        \         /  d    \
+     + 4 U |---- sigK1| + 8 U K |---- sigK1| - 4 U J |----- K| sigK1
+           \deth      /         \deth      /         \dethb  /
+
+          2   /  d     \               /d   \                / d     \
+     - 2 J  K |----- Jb| sigu1 - 4 J K |-- J| sigJ1b + 4 J K |---- Jb| sigu1
+              \dethb   /               \du  /                \deth   /
+
+             /  d    \             / d     \             /  d    \
+     + 6 U K |----- J| sigK1 - 2 K |---- Ub| sigJ1 + 2 U |----- J| sigK1
+             \dethb  /             \deth   /             \dethb  /
+
+             /  d        \         2 /  d        \        2 / d        \
+     + 4 U J |----- sigK1| + 4 Ub J  |----- sigK1| + 4 U K  |---- sigK1|
+             \dethb      /           \dethb      /          \deth      /
+
+         /  d    \              /d   \             /d   \
+     + 4 |----- J| sigu1 - 8 Jb |-- J| sigJ1 K - 4 |-- J| sigK1
+         \dethb  /              \du  /             \du  /
+
+         / d    \                            / d    \
+     - 4 |---- U| sigK1 - 2 exp(-2 B) U J Ub |---- K| sigr1b
+         \deth  /                            \deth  /
+
+                      / d    \              / d    \
+     + 2 exp(-2 B) Ub |---- U| sigr1 - 2 Ub |---- J| sigK1 K
+                      \deth  /              \deth  /
+
+          2   / d     \                 /  d    \
+     - 2 J  K |---- Ub| sigJ1b - 4 J Ub |----- K| sigJ1
+              \deth   /                 \dethb  /
+
+                     /d   \              / d    \         2
+     - 2 J exp(-2 B) |-- U| sigu1b - 2 J |---- U| sigJ1b K
+                     \dr  /              \deth  /
+
+                          / d    \       /  d    \           / d    \        3
+     + 4 exp(-2 B) sigru1 |---- U| + 2 K |----- U| sigJ1 + 4 |---- U| sigK1 K
+                          \deth  /       \dethb  /           \deth  /
+
+           / d         \      2   /  d    \               2 / d     \
+     - 4 J |---- sigu1b| + 2 J  U |----- K| sigJ1b + 2 J K  |---- Jb| sigu1
+           \deth       /          \dethb  /                 \deth   /
+
+                      / d    \                /  d    \
+     + exp(-2 B) U Ub |---- J| sigr1b - 2 U J |----- J| sigJ1b
+                      \deth  /                \dethb  /
+
+             / d         \          /  d    \                  / d        \
+     - 4 J K |---- sigu1b| - 2 Ub J |----- J| sigK1 + 4 Ub J K |---- sigK1|
+             \deth       /          \dethb  /                  \deth      /
+
+            2 /  d    \            2 /  d         \           /  d     \
+     - 4 J K  |----- U| sigK1 + 4 J  |----- sigu1b| - 2 U J K |----- Jb| sigJ1
+              \dethb  /              \dethb       /           \dethb   /
+
+            /d       \     /d       \  2      /d       \
+     + 16 J |-- sigK1| - 8 |-- sigJ1| K  - 16 |-- sigJ1| K
+            \du      /     \du      /         \du      /
+
+           / d    \                            / d     \
+     + 8 J |---- K| sigu1b K + 2 exp(-2 B) U J |---- Ub| sigr1b
+           \deth  /                            \deth   /
+
+          2 /  d     \             /  d    \             /  d     \
+     - 4 J  |----- Ub| sigK1 - 4 J |----- B| sigu1 + 2 J |----- Ub| sigJ1
+            \dethb   /             \dethb  /             \dethb   /
+
+          2   / d     \             3 /d   \               /  d    \
+     - 2 J  K |---- Jb| sigu1b + 8 K  |-- J| sigK1 - 4 U J |----- B| sigK1
+              \deth   /               \du  /               \dethb  /
+
+           / d    \         2      2   /d   \               2 /  d     \
+     + 4 J |---- K| sigu1b K  + 8 J  K |-- K| sigJ1b + 2 J K  |----- Ub| sigJ1
+           \deth  /                    \du  /                 \dethb   /
+
+             /  d    \              / d    \        2
+     - 4 J K |----- U| sigK1 + 4 Ub |---- B| sigJ1 K
+             \dethb  /              \deth  /
+
+              /  d    \        2          /  d    \
+     - 2 U Jb |----- J| sigJ1 K  - 2 U Jb |----- J| sigJ1
+              \dethb  /                   \dethb  /
+
+           /  d    \              2 /  d        \       /  d    \
+     + 6 K |----- J| sigu1 - 4 U K  |----- sigJ1| - 4 J |----- K| sigu1
+           \dethb  /                \dethb      /       \dethb  /
+
+           / d     \             / d    \              / d    \
+     + 2 J |---- Jb| sigu1 + 2 J |---- U| sigJ1b - 2 K |---- J| sigu1b
+           \deth   /             \deth  /              \deth  /
+
+           /  d        \       / d        \      2 / d        \
+     - 4 J |----- sigu1| + 8 K |---- sigu1| + 4 K  |---- sigu1|
+           \dethb      /       \deth      /        \deth      /
+
+            3 / d    \                / d     \
+     - 2 U K  |---- J| sigJ1b + 4 J K |---- Ub| sigK1
+              \deth  /                \deth   /
+
+                      /d   \              / d    \        2
+     + 2 exp(-2 B) Ub |-- U| sigJ1 + 2 Ub |---- J| sigK1 K
+                      \dr  /              \deth  /
+
+            3 / d    \            2 / d     \             2 /d   \
+     - 4 U K  |---- K| sigK1 - 4 J  |---- Jb| sigu1b + 4 J  |-- K| sigJ1b
+              \deth  /              \deth   /               \du  /
+
+          2   /  d    \               /d   \        2
+     + 4 J  U |----- B| sigJ1b - 16 J |-- K| sigK1 K
+              \dethb  /               \du  /
+
+                    2   /d    \                       2    /d    \
+     + 4 exp(-2 B) J  U |-- Jb| sigu1b - 2 exp(-2 B) J  Ub |-- Ub| sigK1
+                        \dr   /                            \dr   /
+
+         / d    \        2        / d    \               /  d        \
+     + 4 |---- U| sigK1 K  - 2 Ub |---- J| sigK1 - 4 J K |----- sigu1|
+         \deth  /                 \deth  /               \dethb      /
+
+             /  d    \               /  d        \     / d        \
+     - 8 U J |----- K| sigK1 K - 4 U |----- sigJ1| + 4 |---- sigu1|
+             \dethb  /               \dethb      /     \deth      /
+
+             2 / d         \         / d         \        / d    \
+     - 4 Ub J  |---- sigJ1b| - 4 U J |---- sigJ1b| - 2 Ub |---- K| sigJ1
+               \deth       /         \deth       /        \deth  /
+
+         / d    \                       /d   \              /  d    \
+     - 4 |---- U| sigK1 K + 2 exp(-2 B) |-- U| sigu1 + 4 Ub |----- J| sigJ1
+         \deth  /                       \dr  /              \dethb  /
+
+           /  d    \           /d   \                 / d         \
+     - 2 U |----- K| sigJ1 - 4 |-- K| sigJ1 - 4 U J K |---- sigJ1b|
+           \dethb  /           \du  /                 \deth       /
+
+                          /  d    \              / d    \        3
+     - 2 exp(-2 B) Ub J U |----- K| sigr1 + 2 Ub |---- J| sigK1 K
+                          \dethb  /              \deth  /
+
+                     / d    \                        /d   \
+     + 2 exp(-2 B) U |---- U| sigr1b + 2 exp(-2 B) U |-- U| sigK1
+                     \deth  /                        \dr  /
+
+           /  d    \        2            / d     \
+     + 4 J |----- K| sigu1 K  + 2 Ub J K |---- Jb| sigJ1
+           \dethb  /                     \deth   /
+
+              /  d    \            2 /d        \          /  d    \
+     - 4 Ub J |----- B| sigJ1 - 8 J  |-- sigJ1b| - 4 U Jb |----- J| sigJ1 K
+              \dethb  /              \du       /          \dethb  /
+
+           / d    \             3 / d    \             2 / d    \
+     + 4 J |---- K| sigu1b - 2 K  |---- J| sigu1b - 4 K  |---- J| sigu1b
+           \deth  /               \deth  /               \deth  /
+
+           / d    \               / d    \
+     - 4 J |---- B| sigu1b - 2 Jb |---- U| sigJ1
+           \deth  /               \deth  /
+
+                         /d    \                       2   /d   \
+     + 2 exp(-2 B) J U K |-- Ub| sigK1 - 4 exp(-2 B) Ub  J |-- K| sigJ1
+                         \dr   /                           \dr  /
+
+            /d       \              /  d        \
+     + 16 J |-- sigK1| K - 4 Ub J K |----- sigJ1|
+            \du      /              \dethb      /
+
+                            /  d    \          / d     \
+     - 4 J exp(-2 B) sigru1 |----- U| + 2 J Ub |---- Jb| sigJ1
+                            \dethb  /          \deth   /
+
+             / d     \             2 /d   \             /  d    \
+     + 2 J U |---- Jb| sigK1 + 12 K  |-- K| sigJ1 - 2 J |----- J| sigu1b
+             \deth   /               \du  /             \dethb  /
+
+            /d   \               / d    \               2 / d    \
+     - 4 Jb |-- J| sigJ1 + 8 U J |---- K| sigJ1b K - 8 K  |---- K| sigu1
+            \du  /               \deth  /                 \deth  /
+
+         / d    \        2        / d    \            3 /  d     \
+     + 4 |---- B| sigu1 K  + 4 Ub |---- B| sigJ1 + 2 J  |----- Jb| sigu1b
+         \deth  /                 \deth  /              \dethb   /
+
+          2 / d     \            3 /  d    \           / d    \
+     - 4 K  |---- Ub| sigJ1 + 2 K  |----- U| sigJ1 + 8 |---- B| sigu1 K
+            \deth   /              \dethb  /           \deth  /
+
+           / d    \           / d    \                /  d    \        2
+     + 4 U |---- B| sigK1 + 4 |---- B| sigu1 + 2 Ub J |----- J| sigK1 K
+           \deth  /           \deth  /                \dethb  /
+
+              /  d        \         /  d        \           2 / d    \
+     - 4 Ub J |----- sigJ1| - 8 U K |----- sigJ1| - 4 Ub J K  |---- K| sigK1
+              \dethb      /         \dethb      /             \deth  /
+
+                        /  d    \                         /  d    \
+     - 2 J exp(-2 B) Ub |----- U| sigr1 - 2 J exp(-2 B) U |----- U| sigr1b
+                        \dethb  /                         \dethb  /
+
+             / d    \             2    / d    \
+     - 4 U J |---- B| sigJ1b - 2 K  Ub |---- K| sigJ1
+             \deth  /                  \deth  /
+
+             2   /  d     \                / d    \
+     - 2 Ub J  K |----- Jb| sigJ1 + 4 Ub J |---- K| sigK1
+                 \dethb   /                \deth  /
+
+              / d    \               / d    \               / d    \
+     + 2 U Jb |---- J| sigK1 - 4 U K |---- K| sigK1 - 2 U K |---- J| sigJ1b
+              \deth  /               \deth  /               \deth  /
+
+              / d    \        2          /  d    \
+     + 2 U Jb |---- J| sigK1 K  - 4 Ub J |----- B| sigJ1 K
+              \deth  /                   \dethb  /
+
+           2 /d   \                 /  d        \          / d        \
+     + 12 K  |-- J| sigK1 + 4 U J K |----- sigK1| + 4 Ub J |---- sigK1|
+             \du  /                 \dethb      /          \deth      /
+
+             3 / d     \             2 /  d     \
+     - 2 Ub J  |---- Jb| sigJ1b - 4 J  |----- Ub| sigK1 K
+               \deth   /               \dethb   /
+
+             /  d     \                / d    \              2 /d   \
+     + 4 J K |----- Ub| sigJ1 - 4 Ub K |---- K| sigJ1 - 4 J K  |-- J| sigJ1b
+             \dethb   /                \deth  /                \du  /
+
+               / d     \               2   /  d    \
+     + 4 U J K |---- Jb| sigK1 - 4 Ub J  K |----- K| sigK1
+               \deth   /                   \dethb  /
+
+            /d   \               / d    \              2 /d    \
+     - 16 J |-- K| sigK1 K + 8 U |---- B| sigK1 K + 4 J  |-- Jb| sigK1
+            \du  /               \deth  /                \du   /
+
+           / d    \        2         2 / d     \               / d    \
+     + 4 U |---- B| sigK1 K  - 2 Ub J  |---- Jb| sigK1 + 4 U J |---- K| sigJ1b
+           \deth  /                    \deth   /               \deth  /
+
+            2 /  d    \             /  d    \         2       / d    \
+     + 6 U K  |----- J| sigK1 + 2 J |----- J| sigu1b K  - 4 K |---- K| sigu1
+              \dethb  /             \dethb  /                 \deth  /
+
+             / d    \         2      2     / d     \
+     + 4 U J |---- K| sigJ1b K  - 2 J  U K |---- Jb| sigJ1b
+             \deth  /                      \deth   /
+
+           /  d    \              2   /d    \               /d    \
+     - 4 J |----- B| sigu1 K + 8 J  K |-- Jb| sigK1 - 4 J K |-- Jb| sigJ1
+           \dethb  /                  \du   /               \du   /
+
+            3 /  d    \                /  d    \
+     + 2 U K  |----- J| sigK1 + 6 Ub K |----- J| sigJ1
+              \dethb  /                \dethb  /
+
+             2 /  d    \              2 /d    \
+     + 4 Ub J  |----- B| sigK1 - 4 J K  |-- Jb| sigJ1
+               \dethb  /                \du   /
+
+              2 /  d     \            2 /  d    \             3 / d    \
+     - 2 U J K  |----- Jb| sigJ1 + 4 J  |----- B| sigu1b - 4 K  |---- K| sigu1
+                \dethb   /              \dethb  /               \deth  /
+
+            2 / d    \               3 /  d    \
+     - 4 U K  |---- J| sigJ1b + 4 U K  |----- K| sigJ1
+              \deth  /                 \dethb  /
+
+          2   /  d    \                3 /  d     \
+     - 4 J  K |----- K| sigu1b + 2 Ub J  |----- Jb| sigK1
+              \dethb  /                  \dethb   /
+
+           / d    \                  2   / d     \
+     - 4 J |---- B| sigu1b K + 2 Ub J  K |---- Jb| sigK1
+           \deth  /                      \deth   /
+
+          3 / d     \              / d    \                / d    \
+     - 2 K  |---- Ub| sigJ1 + 2 Jb |---- J| sigu1 - 4 Ub J |---- B| sigK1
+            \deth   /              \deth  /                \deth  /
+
+             2 / d    \              2 /  d    \              / d    \
+     - 2 Jb K  |---- U| sigJ1 + 6 U K  |----- K| sigJ1 + 8 Ub |---- B| sigJ1 K
+               \deth  /                \dethb  /              \deth  /
+
+             2 / d    \                 / d    \
+     + 2 Ub J  |---- K| sigJ1b - 4 Ub J |---- B| sigK1 K
+               \deth  /                 \deth  /
+
+          3 /  d    \               2   / d    \
+     - 2 K  |----- J| sigu1 + 4 Ub J  K |---- K| sigJ1b
+            \dethb  /                   \deth  /
+
+             /  d    \                 /  d    \
+     - 4 U J |----- B| sigK1 K - 2 U J |----- J| sigJ1b K
+             \dethb  /                 \dethb  /
+
+             / d    \               2   /  d     \
+     - 4 U J |---- B| sigJ1b K + 2 J  U |----- Jb| sigK1
+             \deth  /                   \dethb   /
+
+          2   / d     \               /d   \        2
+     - 4 J  U |---- Jb| sigJ1b - 4 Jb |-- J| sigJ1 K
+              \deth   /               \du  /
+
+             3 /  d    \                / d    \
+     - 2 Ub K  |----- J| sigJ1 - 4 Jb K |---- U| sigJ1
+               \dethb  /                \deth  /
+
+            / d    \        2        / d    \                2 / d    \
+     + 2 Jb |---- J| sigu1 K  + 4 Jb |---- J| sigu1 K - 8 U K  |---- K| sigK1
+            \deth  /                 \deth  /                  \deth  /
+
+          2   /  d     \              3 /d    \
+     + 2 J  U |----- Jb| sigK1 K - 4 J  |-- Jb| sigJ1b
+              \dethb   /                \du   /
+
+               2 / d    \             3 /  d     \             3 /d   \
+     - 2 Ub J K  |---- J| sigJ1b + 2 J  |----- Ub| sigJ1b + 8 K  |-- K| sigJ1
+                 \deth  /               \dethb   /               \du  /
+
+                / d    \               2 / d     \
+     - 2 Ub J K |---- J| sigJ1b + 4 J K  |---- Ub| sigK1
+                \deth  /                 \deth   /
+
+          2   /  d    \                /  d    \        2
+     + 2 J  K |----- U| sigJ1b - 4 U J |----- K| sigK1 K
+              \dethb  /                \dethb  /
+
+              / d    \                  2 / d     \
+     + 4 U Jb |---- J| sigK1 K + 2 U J K  |---- Jb| sigK1
+              \deth  /                    \deth   /
+
+                          /d   \                        /d   \
+     + 4 exp(-2 B) siguu1 |-- J| - 8 exp(-2 B) J sigru1 |-- K| K
+                          \dr  /                        \du  /
+
+                   2 / d    \        2                      /d    \
+     + exp(-2 B) Ub  |---- J| sigr1 K  + 2 exp(-2 B) J Ub K |-- Ub| sigJ1
+                     \deth  /                               \dr   /
+
+                              /  d    \                 2   / d    \
+     - 4 exp(-2 B) J sigru1 U |----- K| - 2 exp(-2 B) Ub  J |---- K| sigr1
+                              \dethb  /                     \deth  /
+
+                       /d    \                        /d   \        2
+     + 2 exp(-2 B) J K |-- Ub| sigu1 + 2 exp(-2 B) Ub |-- J| sigr1 K
+                       \dr   /                        \du  /
+
+                    2   /d    \                           / d    \
+     + 2 exp(-2 B) J  U |-- Jb| sigr1b + 4 exp(-2 B) Ub K |---- U| sigr1
+                        \du   /                           \deth  /
+
+                        /d   \                              /  d    \
+     + 4 exp(-2 B) K Ub |-- U| sigJ1 + 4 exp(-2 B) sigru1 U |----- J| K
+                        \dr  /                              \dethb  /
+
+                      /  d    \        2                   /d   \
+     + exp(-2 B) U Ub |----- J| sigr1 K  + 4 exp(-2 B) U K |-- U| sigK1
+                      \dethb  /                            \dr  /
+
+                       /d   \                       2   /d    \
+     - 8 exp(-2 B) U J |-- K| sigu1b - 2 exp(-2 B) J  U |-- Ub| sigJ1b
+                       \dr  /                           \dr   /
+
+                     2  2 /d    \                         2   /d    \
+     + 2 exp(-2 B) Ub  J  |-- Jb| sigJ1 + 4 exp(-2 B) Ub J  U |-- Jb| sigK1
+                          \dr   /                             \dr   /
+
+                     /d   \                                  2 / d    \
+     + 8 exp(-2 B) U |-- J| Ub sigK1 K + 4 exp(-2 B) sigru1 K  |---- U|
+                     \dr  /                                    \deth  /
+
+                            /d   \               /d   \   2
+     - 8 exp(-2 B) J sigru1 |-- K| + 2 exp(-2 B) |-- J| Ub  sigJ1
+                            \du  /               \dr  /
+
+                    2        /d    \                 /d   \
+     + 4 exp(-2 B) J  sigru1 |-- Jb| + 4 exp(-2 B) K |-- U| sigu1
+                             \du   /                 \dr  /
+
+                      /d   \                              /d   \
+     + 4 exp(-2 B) Ub |-- J| sigu1 - 8 exp(-2 B) J siguu1 |-- K|
+                      \dr  /                              \dr  /
+
+                          /d   \  2                2 /d    \
+     + 4 exp(-2 B) siguu1 |-- J| K  - 2 exp(-2 B) J  |-- Ub| sigu1b
+                          \dr  /                     \dr   /
+
+                    2        /d    \                        / d    \
+     + 4 exp(-2 B) J  siguu1 |-- Jb| + 8 exp(-2 B) sigru1 K |---- U|
+                             \dr   /                        \deth  /
+
+                     /d   \                                / d    \
+     + 2 exp(-2 B) U |-- J| sigr1b + 2 exp(-2 B) sigru1 Ub |---- J|
+                     \du  /                                \deth  /
+
+                    2 /d   \                            /d   \  2
+     + 2 exp(-2 B) K  |-- U| sigu1 + 4 exp(-2 B) sigru1 |-- J| K
+                      \dr  /                            \du  /
+
+                     /d   \                        /d    \
+     + 4 exp(-2 B) U |-- J| sigu1b + 2 exp(-2 B) J |-- Ub| sigu1
+                     \dr  /                        \dr   /
+
+                    2        /  d     \                      /d   \
+     - 4 exp(-2 B) J  sigru1 |----- Ub| + 8 exp(-2 B) siguu1 |-- J| K
+                             \dethb   /                      \dr  /
+
+                  2 /  d    \                         /d   \
+     + exp(-2 B) U  |----- J| sigr1b + 2 exp(-2 B) Ub |-- J| sigr1
+                    \dethb  /                         \du  /
+
+                    2 /d   \                      2 / d    \
+     + 2 exp(-2 B) U  |-- J| sigJ1b + exp(-2 B) Ub  |---- J| sigr1
+                      \dr  /                        \deth  /
+
+                            / d     \                        /  d    \
+     + 4 exp(-2 B) sigru1 J |---- Ub| + 2 exp(-2 B) sigru1 U |----- J|
+                            \deth   /                        \dethb  /
+
+                          /d   \                     2 /d    \
+     + 8 exp(-2 B) sigru1 |-- J| K + 2 exp(-2 B) Ub J  |-- Jb| sigr1
+                          \du  /                       \du   /
+
+                    2 /d   \         2                     / d     \
+     + 2 exp(-2 B) U  |-- J| sigJ1b K  + 2 exp(-2 B) U J K |---- Ub| sigr1b
+                      \dr  /                               \deth   /
+
+                               / d    \                   2 / d    \
+     - 4 exp(-2 B) J sigru1 Ub |---- K| K + 2 exp(-2 B) Ub  |---- J| sigr1 K
+                               \deth  /                     \deth  /
+
+                      / d    \         2                  /d   \
+     + exp(-2 B) U Ub |---- J| sigr1b K  + 4 exp(-2 B) Ub |-- J| sigr1 K
+                      \deth  /                            \du  /
+
+                          /d   \                 /d   \         2
+     + 4 exp(-2 B) sigru1 |-- J| + 2 exp(-2 B) U |-- J| sigr1b K
+                          \du  /                 \du  /
+
+                    2   /d   \                            /  d    \
+     - 4 exp(-2 B) U  J |-- K| sigJ1b - 2 exp(-2 B) U J K |----- U| sigr1b
+                        \dr  /                            \dethb  /
+
+                      /d   \                           2 /  d     \
+     + 8 exp(-2 B) Ub |-- J| sigu1 K - 2 exp(-2 B) Ub J  |----- Ub| sigr1
+                      \dr  /                             \dethb   /
+
+                      /d   \        2                2 /d    \  2
+     + 4 exp(-2 B) Ub |-- J| sigu1 K  + 2 exp(-2 B) J  |-- Jb| U  sigJ1b
+                      \dr  /                           \dr   /
+
+                               / d    \                   /d    \
+     - 4 exp(-2 B) J sigru1 Ub |---- K| + 2 exp(-2 B) U J |-- Ub| sigK1
+                               \deth  /                   \dr   /
+
+                             / d    \  2                    / d    \
+     + 2 exp(-2 B) sigru1 Ub |---- J| K  + 2 exp(-2 B) U Ub |---- J| sigr1b K
+                             \deth  /                       \deth  /
+
+                              /  d    \                     /d   \
+     - 4 exp(-2 B) J sigru1 K |----- U| - 2 exp(-2 B) J U K |-- U| sigJ1b
+                              \dethb  /                     \dr  /
+
+                        / d     \                                / d     \
+     + 2 exp(-2 B) Ub J |---- Ub| sigr1 + 4 exp(-2 B) J sigru1 K |---- Ub|
+                        \deth   /                                \deth   /
+
+                     /d   \           2              2      / d     \
+     + 4 exp(-2 B) U |-- J| Ub sigK1 K  + exp(-2 B) J  U Ub |---- Jb| sigr1b
+                     \dr  /                                 \deth   /
+
+                            /  d    \  2                         / d    \
+     + 2 exp(-2 B) sigru1 U |----- J| K  + 4 exp(-2 B) sigru1 Ub |---- J| K
+                            \dethb  /                            \deth  /
+
+                        /d   \                          2 / d    \
+     - 8 exp(-2 B) Ub J |-- K| sigu1 K + 2 exp(-2 B) U K  |---- U| sigr1b
+                        \dr  /                            \deth  /
+
+                    2 /d   \                            2 /d    \
+     + 4 exp(-2 B) U  |-- J| sigJ1b K + 4 exp(-2 B) Ub J  |-- Jb| sigu1
+                      \dr  /                              \dr   /
+
+                        /d   \                            /d   \
+     - 4 exp(-2 B) Ub J |-- K| sigr1 K - 4 exp(-2 B) Ub J |-- K| sigr1
+                        \du  /                            \du  /
+
+                     /d   \                               / d     \
+     + 4 exp(-2 B) U |-- J| Ub sigK1 + 2 exp(-2 B) Ub J K |---- Ub| sigr1
+                     \dr  /                               \deth   /
+
+                    2          /  d     \                    /d   \
+     + 2 exp(-2 B) J  sigru1 U |----- Jb| - 8 exp(-2 B) Ub J |-- K| sigu1
+                               \dethb   /                    \dr  /
+
+                   /d   \   2                       /d   \   2        2
+     + 4 exp(-2 B) |-- J| Ub  sigJ1 K + 2 exp(-2 B) |-- J| Ub  sigJ1 K
+                   \dr  /                           \dr  /
+
+                       /d   \                       2    /d   \
+     - 4 exp(-2 B) U J |-- K| sigr1b + 2 exp(-2 B) K  Ub |-- U| sigJ1
+                       \du  /                            \dr  /
+
+                          / d    \                        2  2 / d     \
+     - 2 exp(-2 B) U J Ub |---- K| sigr1b K + exp(-2 B) Ub  J  |---- Jb| sigr1
+                          \deth  /                             \deth   /
+
+                    2   /  d    \                         2   /  d    \
+     - 2 exp(-2 B) U  J |----- K| sigr1b K - 2 exp(-2 B) U  J |----- K| sigr1b
+                        \dethb  /                             \dethb  /
+
+                      2 /  d     \                        2   /d   \
+     - 2 exp(-2 B) U J  |----- Ub| sigr1b - 4 exp(-2 B) Ub  J |-- K| sigJ1 K
+                        \dethb   /                            \dr  /
+
+                        /  d    \                           /d   \
+     + 2 exp(-2 B) U Ub |----- J| sigr1 K - 2 exp(-2 B) J K |-- U| sigu1b
+                        \dethb  /                           \dr  /
+
+                       /d   \                                 /d   \
+     - 4 exp(-2 B) U J |-- K| sigr1b K - 8 exp(-2 B) J siguu1 |-- K| K
+                       \du  /                                 \dr  /
+
+                    2 /  d    \                               /  d    \
+     + 2 exp(-2 B) U  |----- J| sigr1b K - 2 exp(-2 B) Ub J K |----- U| sigr1
+                      \dethb  /                               \dethb  /
+
+                  2 /  d    \         2                 /d   \
+     + exp(-2 B) U  |----- J| sigr1b K  + 8 exp(-2 B) U |-- J| sigu1b K
+                    \dethb  /                           \dr  /
+
+                              /  d    \                   /d   \         2
+     - 4 exp(-2 B) J sigru1 U |----- K| K + 4 exp(-2 B) U |-- J| sigu1b K
+                              \dethb  /                   \dr  /
+
+                          /d   \                    2  2 /  d     \
+     - 2 exp(-2 B) J K Ub |-- U| sigK1 + exp(-2 B) J  U  |----- Jb| sigr1b
+                          \dr  /                         \dethb   /
+
+                    2   /d   \                           /  d    \
+     - 4 exp(-2 B) U  J |-- K| sigJ1b K + exp(-2 B) U Ub |----- J| sigr1
+                        \dr  /                           \dethb  /
+
+                       /d   \                               /  d    \
+     - 8 exp(-2 B) U J |-- K| sigu1b K - 2 exp(-2 B) Ub J U |----- K| sigr1 K
+                       \dr  /                               \dethb  /
+
+                          /d   \                              /d   \
+     - 8 exp(-2 B) U J Ub |-- K| sigK1 K - 8 exp(-2 B) U J Ub |-- K| sigK1
+                          \dr  /                              \dr  /
+
+                    2           / d     \                  2 /d   \
+     + 2 exp(-2 B) J  sigru1 Ub |---- Jb| + 2 exp(-2 B) U K  |-- U| sigK1
+                                \deth   /                    \dr  /
+
+                        /d    \                       /d   \
+     + 2 exp(-2 B) J Ub |-- Ub| sigJ1 + 4 exp(-2 B) U |-- J| sigr1b K
+                        \dr   /                       \du  /
+
+                     2   /  d     \                       2   / d    \
+     + exp(-2 B) Ub J  U |----- Jb| sigr1 - 2 exp(-2 B) Ub  J |---- K| sigr1 K
+                         \dethb   /                           \deth  /
+
+                       / d    \                          2 / d    \      \
+     + 4 exp(-2 B) U K |---- U| sigr1b + 2 exp(-2 B) Ub K  |---- U| sigr1|/(
+                       \deth  /                            \deth  /      /
+
+    K + 1)
+
+> writeto(`terminal`);

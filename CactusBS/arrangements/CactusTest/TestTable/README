@@ -1,0 +1,10 @@
+Cactus Code Thorn TestTable
+Author(s)    : Jonathan Thornburg
+Maintainer(s): Cactus team
+Licence      : LGPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+This thorn contains a test driver for the Cactus key/value tables
+API, Util_Table*().

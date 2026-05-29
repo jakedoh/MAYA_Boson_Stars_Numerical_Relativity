@@ -1,0 +1,10 @@
+CVS info   : $Header$
+
+Cactus Code Thorn Periodic
+Thorn Author(s)     : Erik Schnetter <schnetter@uni-tuebingen.de>
+Thorn Maintainer(s) : Erik Schnetter <schnetter@uni-tuebingen.de>
+--------------------------------------------------------------------------
+
+Purpose of the thorn:
+
+Periodic boundary conditions that do not depend on PUGH.

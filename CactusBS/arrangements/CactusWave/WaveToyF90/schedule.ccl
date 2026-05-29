@@ -1,0 +1,63 @@
+# Schedule definitions for thorn WaveToyF90
+# $Header$
+
+STORAGE: scalarevolve[3]
+
+schedule WaveToyF90_Startup at STARTUP
+{
+  LANG: Fortran
+} "Register banner"
+
+schedule WaveToyF90_InitSymBound at BASEGRID
+{
+  LANG: Fortran
+} "Schedule symmetries"
+
+schedule WaveToyF90_Evolution as WaveToy_Evolution at EVOL
+{
+  LANG: Fortran
+} "Evolution of 3D wave equation"
+
+schedule WaveToyF90_Boundaries as WaveToy_Boundaries at EVOL AFTER WaveToy_Evolution
+{
+  LANG: Fortran
+  OPTIONS: level
+  SYNC: scalarevolve
+} "Boundaries of 3D wave equation"
+
+schedule GROUP ApplyBCs as WaveToyF90_ApplyBCs at EVOL after WaveToy_Boundaries
+{
+} "Apply boundary conditions"
+
+schedule WaveToyF90_Boundaries as WaveToy_Boundaries at POSTRESTRICT
+{
+  LANG: Fortran
+  OPTIONS: level
+  SYNC: scalarevolve
+} "Boundaries of 3D wave equation"
+
+schedule GROUP ApplyBCs as WaveToyF90_ApplyBCs at POSTRESTRICT after WaveToy_Boundaries
+{
+} "Apply boundary conditions"
+
+schedule WaveToyF90_Boundaries as WaveToy_Boundaries at POSTRESTRICTINITIAL
+{
+  LANG: Fortran
+  OPTIONS: level
+  SYNC: scalarevolve
+} "Boundaries of 3D wave equation"
+
+schedule GROUP ApplyBCs as WaveToyF90_ApplyBCs at POSTRESTRICTINITIAL after WaveToy_Boundaries
+{
+} "Apply boundary conditions"
+
+schedule WaveToyF90_Boundaries as WaveToy_Boundaries at POST_RECOVER_VARIABLES
+{
+  LANG: Fortran
+  OPTIONS: level
+  SYNC: scalarevolve
+} "Boundaries of 3D wave equation"
+
+schedule GROUP ApplyBCs as WaveToyF90_ApplyBCs at POST_RECOVER_VARIABLES after WaveToy_Boundaries
+{
+} "Apply boundary conditions"

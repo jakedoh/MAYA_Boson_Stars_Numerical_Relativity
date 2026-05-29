@@ -1,0 +1,12 @@
+# Interface definition for thorn MyTov
+
+implements: MyTov
+
+inherits: ADMBase, HydroBase, Constants, Grid
+USES INCLUDE: constants.h
+
+
+
+
+private:
+

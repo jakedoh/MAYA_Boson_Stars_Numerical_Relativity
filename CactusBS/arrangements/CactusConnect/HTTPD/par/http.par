@@ -1,0 +1,6 @@
+ActiveThorns = "httpd socket"
+
+httpd::port = 5555
+httpd::pause = 1
+
+httpd::provide_pages = 1

@@ -1,0 +1,56 @@
+\documentclass{article}
+
+\begin{document}
+
+\title{EOS\_Polytrope}
+\author{Ian Hawke}
+\date{22/4/2002}
+\maketitle
+
+% Do not delete next line
+% START CACTUS THORNGUIDE
+
+\abstract{EOS\_Polytrope} 
+
+\section{The equations}
+\label{sec:eqn}
+
+This equation provides a polytropic equation of state to thorns using
+the CactusEOS interface found in EOS\_Base. As such it's a fake, as
+EOS\_Base assumes that, e.g., the pressure is a function of both
+density and specific internal energy. Here the pressure is just a
+function of the density, and is set appropriately (the specific
+internal energy is always ignored).
+
+The two fluid constants are $K$ ({\tt eos\_k}) and $\Gamma$ ({\tt
+  eos\_gamma}), which default to 100 and 2 respectively. The formulas
+that are applied under the appropriate EOS\_Base function calls are
+
+\begin{eqnarray}
+  \label{eq:eosformulas}
+  P & = & K \rho^{\Gamma} \\
+  \epsilon & = & \frac{K \rho^{\Gamma-1}}{\Gamma - 1} \\
+  \rho & = & \frac{P}{(\Gamma - 1) \epsilon} \\
+  \frac{\partial P}{\partial \rho} & = & K \Gamma \rho^{\Gamma-1} \\
+  \frac{\partial P}{\partial \epsilon} & = & 0.
+\end{eqnarray}
+
+To calculate the units of the Cactus quantities and back, remember that
+$G=c=M_{\odot}=1$ in Cactus.\\
+Here is one example how to calculate densities:
+\begin{equation}
+ \rho_{\mbox{\tiny Cactus}}=\frac{G^3M_{\odot}^2}{c^6}\cdot \rho
+ \approx1.6167\cdot10^{-21}\frac{\mbox{m}^3}{\mbox{kg}}\cdot\rho=
+        1.6167\cdot10^{-18}\frac{\mbox{cm}^3}{\mbox{g}}\cdot\rho
+\end{equation}
+and one example for calculating $K$ (for $\Gamma=2$):
+\begin{equation}
+ K_{\mbox{\tiny Cactus}}=\frac{c^4}{G^3M_{\odot}^2}\cdot K
+ \approx6.8824\cdot10^{-11}\frac{\mbox{m}^5}{\mbox{kg}\cdot\mbox{s}^2}\cdot K=
+        6.8824\cdot10^{-4}\frac{\mbox{cm}^5}{\mbox{g}\cdot\mbox{s}^2}\cdot K
+\end{equation}
+
+% Do not delete next line
+% END CACTUS THORNGUIDE
+
+\end{document}

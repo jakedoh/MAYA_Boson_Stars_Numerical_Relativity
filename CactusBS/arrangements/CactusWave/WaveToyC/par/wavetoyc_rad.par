@@ -1,0 +1,45 @@
+# wavetoyc_rad.par - wavetoy evolution with radiation boundaries
+# $Id$
+#
+# /*@@
+#   @file      wavetoyc_rad.par
+#   @date      Sunday 24th July
+#   @author    Gabrielle Allen
+#   @desc
+#   Wavetoy parameter file demonstrating radiation boundaries in Octant
+#   @enddesc
+# @@*/          
+
+ActiveThorns = "idscalarwavec localreduce time boundary wavetoyc pugh pughreduce pughslab CartGrid3D CoordBase SymBase ioutil ioascii iobasic"
+ 
+time::dtfac = 0.5
+
+idscalarwave::initial_data = "gaussian"
+idscalarwave::sigma = 2.8
+idscalarwave::radius = 0
+
+wavetoyc::bound = "radiation"
+
+grid::type = "BySpacing"
+grid::domain = "octant"
+grid::dxyz = 0.3
+
+driver::global_nx = 30
+driver::global_ny = 30
+driver::global_nz = 30
+
+cactus::cctk_itlast = 120
+
+IOBasic::outScalar_every = 2
+IOBasic::outScalar_vars = "wavetoy::phi"
+
+IOASCII::out1D_every = 2
+IOASCII::out1D_z = "no"
+IOASCII::out1D_y = "no"
+IOASCII::out1D_vars = "wavetoy::phi "
+
+IOBasic::outInfo_every = 10
+IOBasic::outInfo_vars = "wavetoy::phi"
+ 
+IO::out_dir = "wavetoyc_rad"
+

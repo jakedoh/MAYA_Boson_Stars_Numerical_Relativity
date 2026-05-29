@@ -1,0 +1,19 @@
+# Dependencies file for thorn EHFinder.
+# $Header$
+
+EHFinder_mod.F90.o:			EHFinder_Constants.F90.o
+EHFinder_IsoSurface_mod.F90.o:		EHFinder_Constants.F90.o
+EHFinder_fuzzy.F90.o:			EHFinder_Constants.F90.o
+EHFinder_Init.F90.o:			EHFinder_mod.F90.o
+EHFinder_Sources.F90.o:			EHFinder_mod.F90.o
+EHFinder_Generator_Sources.F90.o:	EHFinder_mod.F90.o
+EHFinder_Generator_Sources2.F90.o:	EHFinder_mod.F90.o
+EHFinder_ReInitialize.F90.o:		EHFinder_mod.F90.o
+EHFinder_Check.F90.o:			EHFinder_mod.F90.o
+EHFinder_SetMask.F90.o:			EHFinder_mod.F90.o
+EHFinder_SetSym.F90.o:			EHFinder_mod.F90.o
+EHFinder_ReadData.F90.o:		EHFinder_mod.F90.o
+EHFinder_Check.F90.o:			EHFinder_mod.F90.o
+EHFinder_Integrate.F90.o:		EHFinder_mod.F90.o
+EHFinder_FindSurface.F90.o:		EHFinder_mod.F90.o EHFinder_fuzzy.F90.o
+EHFinder_IsoSurface.F90.o:		EHFinder_mod.F90.o IsoSurface_mod.F90.o

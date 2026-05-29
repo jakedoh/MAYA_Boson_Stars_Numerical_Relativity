@@ -1,0 +1,7 @@
+# Interface definition for thorn EOS_Base
+# $Header$
+
+implements: EOS_Base
+
+INCLUDES: EOS_Base.h in EOS_Base.h
+INCLUDES: EOS_Base.inc in EOS_Base.inc

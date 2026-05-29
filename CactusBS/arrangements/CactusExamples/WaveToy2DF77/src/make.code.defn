@@ -1,0 +1,13 @@
+# Main make.code.defn file for thorn WaveToy2DF77
+# $Header$
+
+# Source files in this directory
+SRCS = Evolve.F77\
+       Startup.F77\
+       Initial.F77\
+       Coord.F77\
+       Boundary.F77
+
+# Subdirectories containing source files
+SUBDIRS = 
+

@@ -1,0 +1,160 @@
+\documentclass{article}
+
+% Use the Cactus ThornGuide style file
+% (Automatically used from Cactus distribution, if you have a 
+%  thorn without the Cactus Flesh download this from the Cactus
+%  homepage at www.cactuscode.org)
+\usepackage{../../../../doc/latex/cactus}
+
+\begin{document}
+
+\title{ADMAnalysis}
+\author{Tom Goodale et al}
+\date{$ $Date$ $}
+
+\maketitle
+
+% Do not delete next line
+% START CACTUS THORNGUIDE
+
+\begin{abstract}
+Basic analysis of the metric and extrinsic curvature tensors
+\end{abstract}
+
+\section{Purpose}
+
+This thorn provides analysis routines to calculate the following quantities:
+
+\begin{itemize}
+\item
+The trace of the extrinsic curvature ($trK$).
+\item
+The determinant of the 3-metric ($detg$).
+\item
+The components of the 3-metric in spherical coordinates \\
+($g_{rr},g_{r\theta},g_{r\phi},g_{\theta\theta},g_{\phi\theta},g_{\phi\phi}$).
+\item
+The components of the extrinsic curvature in spherical coordinates \\
+($K_{rr},K_{r\theta},K_{r\phi},K_{\theta\theta},K_{\theta\phi},K_{\phi\phi}$).
+\item The components of the 3-Ricci tensor in cartesian coordinates \\
+(${\cal R}_{ij}$) for $i,j \in \{1,2,3\}$.
+\item The Ricci scalar (${\cal R}$).
+\end{itemize}
+
+\section{Trace of Extrinsic Curvature}
+
+The trace of the extrinsic curvature at each point on the grid is placed in
+the grid function {\tt trK}. The algorithm for calculating the trace 
+uses the physical metric, that is it includes any conformal factor.
+
+\begin{equation}
+{\tt trK} \equiv tr K = \frac{1}{\psi^4} g^{ij} K_{ij}
+\end{equation}
+
+\section{Determinant of 3-Metric}
+
+The determinant of the 3-metric at each point on the grid is placed in
+the grid function {\tt detg}. This is always the determinant of the 
+conformal metric, that is it does not include any conformal factor.
+
+\begin{equation}
+{\tt detg} \equiv det g =
+-g_{13}^2*g_{22}+2*g_{12}*g_{13}*g_{23}-g_{11}*g_{23}^2-
+g_{12}^2*g_{33}+g_{11}*g_{22}*g_{33}
+\end{equation}
+
+
+\section{Transformation to Spherical Cooordinates}
+
+The values of the metric and/or extrinsic curvature in a spherical
+polar coordinate system $(r,\theta,\phi)$ evaluated at each point on
+the computational grid are placed in the grid functions ({\tt grr},
+{\tt grt}, {\tt grp}, {\tt gtt}, {\tt gtp}, {\tt gpp}) and ({\tt krr},
+{\tt krt}, {\tt krp}, {\tt ktt}, {\tt ktp}, {\tt kpp}).
+In the spherical transformation, the $\theta$ coordinate is referred to
+as {\bf q} and the $\phi$ as {\bf p}.
+
+The general transformation from Cartesian to Spherical for such tensors 
+is
+
+\begin{eqnarray*}
+A_{rr}&=&
+\sin^2\theta\cos^2\phi A_{xx}
++\sin^2\theta\sin^2\phi A_{yy}
++\cos^2\theta A_{zz}
++2\sin^2\theta\cos\phi\sin\phi A_{xy}
+\\
+&&
++2\sin\theta\cos\theta\cos\phi A_{xz}
++2\sin\theta\cos\theta\sin\phi A_{yz}
+\\
+A_{r\theta}&=&
+r(\sin\theta\cos\theta\cos^2\phi A_{xx}
++2*\sin\theta\cos\theta\sin\phi\cos\phi A_{xy}
++(\cos^2\theta-\sin^2\theta)\cos\phi A_{xz}
+\\
+&&
++\sin\theta\cos\theta\sin^2\phi A_{yy}
++(\cos^2\theta-\sin^2\theta)\sin\phi A_{yz}
+-\sin\theta\cos\theta A_{zz})
+\\
+A_{r\phi}&=&
+r\sin\theta(-\sin\theta\sin\phi\cos\phi A_{xx}
+-\sin\theta(\sin^2\phi-\cos^2\phi)A_{xy}
+-\cos\theta\sin\phi A_{xz}
+\\
+&&
++\sin\theta\sin\phi\cos\phi A_{yy}
++\cos\theta\cos\phi A_{yz})
+\\
+A_{\theta\theta}&=&
+r^2(\cos^2\theta\cos^2\phi A_{xx}
++2\cos^2\theta\sin\phi\cos\phi A_{xy}
+-2\sin\theta\cos\theta\cos\phi A_{xz}
++\cos^2\theta\sin^2\phi A_{yy}
+\\
+&&
+-2\sin\theta\cos\theta\sin\phi A_{yz}
++\sin^2\theta A_{zz})
+\\
+A_{\theta\phi}&=&
+r^2\sin\theta(-\cos\theta\sin\phi\cos\phi A_{xx}
+-\cos\theta(\sin^2\phi-\cos^2\phi)A_{xy}
++\sin\theta \sin\phi A_{xz}
+\\
+&&
++\cos\theta\sin\phi\cos\phi A_{yy}
+-\sin\theta\cos\phi A_{yz})
+\\
+A_{\phi\phi}&=&
+r^2\sin^2\theta(\sin^2\phi A_{xx}
+-2\sin\phi\cos\phi A_{xy}
++\cos^2\phi A_{yy})
+\end{eqnarray*}
+
+If the parameter {\tt normalize\_dtheta\_dphi} is set to {\tt yes}, 
+the angular components are projected onto the vectors $(r d\theta, r \sin\theta d \phi)$ instead of the default vector $(d \theta, d\phi)$. That is,
+
+\begin{eqnarray*}
+A_{\theta\theta} & \rightarrow & A_{\theta\theta}/r^2
+\\
+A_{\phi\phi}& \rightarrow & A_{\phi\phi}/(r^2\sin^2\theta)
+\\
+A_{r\theta} & \rightarrow & A_{r\theta}/r
+\\
+A_{r\phi} & \rightarrow & A_{r\phi}/(r\sin\theta)
+\\
+A_{\theta\phi} & \rightarrow & A_{\theta\phi}/r^2\sin\theta)
+\end{eqnarray*}
+
+\section{Computing the Ricci tensor and scalar}
+\label{sec:ricci}
+
+The computation of the Ricci tensor uses the ADMMacros thorn. The
+calculation of the Ricci scalar uses the generic trace routine in this
+thorn.
+
+% Do not delete next line
+% END CACTUS THORNGUIDE
+
+\end{document}

@@ -1,0 +1,39 @@
+# Interface definition for thorn SlabTest
+# $Header$
+
+IMPLEMENTS: SlabTest
+
+INHERITS: Slab
+
+USES INCLUDE HEADER: Slab.h
+
+
+
+CCTK_REAL gfs TYPE=gf
+{
+  gfx gfy gfz
+} "grid functions"
+
+CCTK_INT igfs TYPE=gf
+{
+  igfx igfy igfz
+} "integer grid functions"
+
+CCTK_REAL a1s TYPE=array DIM=1 SIZE=10
+{
+  a1x a1y a1z
+} "1D grid arrays"
+
+CCTK_REAL a2s TYPE=array DIM=2 SIZE=10,10
+{
+  a2x a2y a2z
+} "2D grid arrays"
+
+CCTK_REAL a3s TYPE=array DIM=3 SIZE=10,10,10
+{
+  a3x a3y a3z
+} "3D grid arrays"
+
+
+
+CCTK_INT success "Indicate a successful test"

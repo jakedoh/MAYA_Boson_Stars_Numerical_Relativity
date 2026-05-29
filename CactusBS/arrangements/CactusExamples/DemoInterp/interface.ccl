@@ -1,0 +1,70 @@
+# Interface definition for thorn DemoInterp
+# $Header$
+
+implements: DemoInterp
+
+private:
+
+real coordarrays type=array dim=1 size=arrsize DISTRIB=CONSTANT
+{
+  xcoord,
+  ycoord,
+  zcoord
+} "Coordinates for interpolating"
+
+real realinterps type=array dim=1 size=arrsize DISTRIB=CONSTANT
+{
+  realinterp1,
+  realinterp2,
+  realinterp3
+} "Array of real interpolated points"
+
+complex compinterps type=array dim=1 size=arrsize DISTRIB=CONSTANT
+{
+  compinterp1,
+  compinterp2,
+  compinterp3
+} "Array of complex interpolated points"
+
+
+# 3D Stuff
+# --------
+
+real real3dvars type=GF dim=3
+{
+  realgf3
+} "Real 3D grid function"
+
+complex comp3dvars type=GF dim=3
+{
+  compgf3
+} "Complex 3D grid function"
+
+
+# 2D Stuff
+# --------
+
+real real2dvars type=GF dim=2
+{
+  realgf2
+} "Real 2D grid function"
+
+complex comp2dvars type=GF dim=2
+{
+  compgf2
+} "Complex 2D grid function"
+
+
+# 1D Stuff
+# --------
+
+real real1dvars type=GF dim=1
+{
+  realgf1
+} "Real 1D grid function"
+
+complex comp1dvars type=GF dim=1
+{
+  compgf1
+} "Complex 1D grid function"
+

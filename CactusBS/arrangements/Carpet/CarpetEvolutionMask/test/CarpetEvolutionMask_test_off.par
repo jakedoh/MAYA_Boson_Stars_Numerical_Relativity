@@ -1,0 +1,136 @@
+
+!DESC "1+log sliced black hole, ML_BSSN, Iterative CN, Carpet with 3 levels"
+
+# Required thorns
+
+ActiveThorns = "CoordBase SymBase InitBase time carpet carpetlib carpetregrid GSL LoopControl carpetreduce carpetslab boundary cartgrid3d ml_bssn ml_bssn_helper genericfd NewRad TmunuBase mol nanchecker idanalyticbh carpetioascii ioutil carpetiobasic carpetioscalar admbase admmacros coordgauge spacemask staticconformal carpetevolutionmask ReflectionSymmetry"
+
+# CarpetEvolutionMask 
+
+carpetevolutionmask::verbose = "yes"
+carpetevolutionmask::enforce_vars = "ml_bssn::gt11 ml_bssn::At11 ml_bssn::phi"
+carpetevolutionmask::enforce_mask = "no"
+carpetevolutionmask::writeNaNs = "no"
+ADMBase::initial_dtlapse = "zero"
+ADMBase::initial_dtshift = "zero"
+
+# Grid
+
+driver::ghost_size_x = 2
+driver::ghost_size_y = 2
+driver::ghost_size_z = 2
+
+
+Carpet::max_refinement_levels = 2
+Carpet::prolongation_order_space = 3
+Carpet::prolongation_order_time = 2
+
+Carpet::init_each_timelevel = yes
+InitBase::initial_data_setup_method="init_single_level"
+Carpet::use_buffer_zones = yes
+
+
+coordbase::xmin					= 0.0
+coordbase::xmax					= 6.4
+coordbase::ymin					= 0.0
+coordbase::ymax					= 6.4
+coordbase::zmin					= 0.0
+coordbase::zmax					= 6.4
+coordbase::dx					= 0.2
+coordbase::dy					= 0.2
+coordbase::dz					= 0.2
+
+CarpetRegrid::refinement_levels = 2
+CarpetRegrid::regrid_every = 0
+
+cartgrid3d::type                        	= "coordbase"
+cartgrid3d::domain                      	= "full"
+cartgrid3d::avoid_origin			= "no"
+
+ReflectionSymmetry::reflection_x                = "yes"
+ReflectionSymmetry::reflection_y                = "yes"
+ReflectionSymmetry::reflection_z                = "yes"
+ReflectionSymmetry::avoid_origin_x              = "no"
+ReflectionSymmetry::avoid_origin_y              = "no"
+ReflectionSymmetry::avoid_origin_z              = "no"
+
+Carpet::domain_from_coordbase 			= "yes"
+CoordBase::boundary_size_z_lower     		= 2
+CoordBase::boundary_size_z_upper     		= 2
+CoordBase::boundary_shiftout_z_lower 		= 1
+CoordBase::boundary_size_y_lower     		= 2
+CoordBase::boundary_size_y_upper     		= 2
+CoordBase::boundary_shiftout_y_lower 		= 1
+CoordBase::boundary_size_x_lower     		= 2
+CoordBase::boundary_size_x_upper     		= 2
+CoordBase::boundary_shiftout_x_lower 		= 1
+
+
+carpetregrid::refined_regions = "manual-coordinate-list"
+carpetregrid::coordinates = "
+	[ [ ([0,0,0]:[3.2,3.2,3.4]:[0.1,0.1,0.1]) ] ]
+"
+
+
+carpetregrid::smart_outer_boundaries 		= "yes"
+
+cactus::cctk_initial_time = 0.0
+cactus::cctk_itlast       = 20
+ 
+time::dtfac = 0.25
+
+# Initial data 
+
+admbase::metric_type = "physical"
+admbase::initial_data = "schwarzschild"
+
+# Evolution
+
+admbase::evolution_method = "ML_BSSN" 
+
+MoL::ODE_Method = "ICN"
+MoL::MoL_Intermediate_Steps = 3
+
+ML_BSSN::my_initial_boundary_condition = "extrapolate-gammas"
+ML_BSSN::ML_log_confac_bound = "flat"
+ML_BSSN::ML_metric_bound     = "flat"
+ML_BSSN::ML_Gamma_bound      = "flat"
+ML_BSSN::ML_trace_curv_bound = "flat"
+ML_BSSN::ML_curv_bound       = "flat"
+ML_BSSN::ML_lapse_bound      = "flat"
+ML_BSSN::ML_dtlapse_bound    = "flat"
+ML_BSSN::ML_shift_bound      = "flat"
+ML_BSSN::ML_dtshift_bound    = "flat"
+ML_BSSN::fdOrder             = 2
+
+# Gauge
+
+ADMBase::lapse_evolution_method   = "ML_BSSN"
+ADMBase::dtlapse_evolution_method = "ML_BSSN"
+ML_BSSN::harmonicN = 1   # 1+log
+
+# Output
+
+IO::out_fileinfo="axis labels"
+IO::parfile_write = "no"
+IO::out_dir = $parfile
+
+IOBasic::outInfo_every = 1
+IOBasic::outInfo_vars  = "admbase::gxx"
+
+carpetioascii::out1D_every = 1
+carpetioascii::out2D_every = 1
+carpetioascii::out3D_every = -1
+
+carpetioascii::out1D_vars = "ml_bssn::gt11 carpetevolutionmask::evolution_mask"
+carpetioascii::out2D_vars = "ml_bssn::gt11 carpetevolutionmask::evolution_mask"
+carpetioascii::out3D_vars = "ml_bssn::gt11 carpetevolutionmask::evolution_mask"
+
+
+IOScalar::outScalar_every      =  4
+IOScalar::outScalar_vars       = "ml_bssn::gt11 ml_bssn::At11 ml_bssn::phi ml_bssn::trK ml_bssn::Xt1 admbase::gxx admbase::kxx admbase::alp"
+IOScalar::outScalar_reductions = "count minimum maximum average norm1 norm2 norm_inf"
+
+
+##################################################################
+

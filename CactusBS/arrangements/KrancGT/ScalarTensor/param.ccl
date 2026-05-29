@@ -1,0 +1,783 @@
+# File produced by Kranc
+
+
+shares: GenericFD
+
+USES CCTK_INT assume_stress_energy_state
+
+
+shares: MethodOfLines
+
+USES CCTK_INT MoL_Num_Evolved_Vars
+USES CCTK_INT MoL_Num_ArrayEvolved_Vars
+
+restricted:
+CCTK_INT verbose "verbose" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT other_timelevels "Number of active timelevels for non-evolved grid functions" STEERABLE=RECOVER
+{
+  0:3 :: ""
+} 1
+
+restricted:
+CCTK_REAL STomega "STomega"
+{
+  *:* :: ""
+} 10
+
+restricted:
+CCTK_REAL STBeta "STBeta"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL STalpha0 "STalpha0"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL STamplitude "STamplitude"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL r0 "r0"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL STsigma "STsigma"
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_REAL kx "kx"
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_REAL ky "ky"
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_REAL kz "kz"
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_REAL x00 "x00"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL y00 "y00"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL z00 "z00"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL fieldMass "fieldMass"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL phiBG "phiBG"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL piBG "piBG"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL Vlambda "Vlambda"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL Veps "Veps"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL Veta "Veta"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL V0 "V0"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT tile_size "Loop tile size"
+{
+  *:* :: ""
+} -1
+
+private:
+CCTK_KEYWORD fd_order "fd_order"
+{
+  "2nd" :: ""
+  "full4th" :: ""
+  "4thcentred" :: ""
+  "6thcentred" :: ""
+  "6th" :: ""
+} "full4th"
+
+private:
+CCTK_KEYWORD boundary_condition "boundary_condition"
+{
+  "none" :: ""
+  "radiative" :: ""
+  "phi_of_t" :: ""
+} "radiative"
+
+private:
+CCTK_KEYWORD potential_type "potential_type"
+{
+  "phiFourth" :: ""
+  "phiSixth" :: ""
+  "phiEighth" :: ""
+  "phiBubble" :: ""
+  "phiExpand" :: ""
+  "none" :: ""
+} "none"
+
+private:
+CCTK_KEYWORD couple_scalar_field_to_matter "couple_scalar_field_to_matter"
+{
+  "yes" :: ""
+  "no" :: ""
+} "yes"
+
+private:
+CCTK_KEYWORD couple_scalar_field_to_gravity "couple_scalar_field_to_gravity"
+{
+  "yes" :: ""
+  "no" :: ""
+} "yes"
+
+private:
+CCTK_KEYWORD calculate_rho "calculate_rho"
+{
+  "yes" :: ""
+  "no" :: ""
+} "no"
+
+restricted:
+CCTK_INT ScalarTensor_MaxNumEvolvedVars "Number of evolved variables used by this thorn" ACCUMULATOR-BASE=MethodofLines::MoL_Num_Evolved_Vars STEERABLE=RECOVER
+{
+  2:2 :: "Number of evolved variables used by this thorn"
+} 2
+
+restricted:
+CCTK_INT ScalarTensor_MaxNumArrayEvolvedVars "Number of Array evolved variables used by this thorn" ACCUMULATOR-BASE=MethodofLines::MoL_Num_ArrayEvolved_Vars STEERABLE=RECOVER
+{
+  0:0 :: "Number of Array evolved variables used by this thorn"
+} 0
+
+restricted:
+CCTK_INT timelevels "Number of active timelevels" STEERABLE=RECOVER
+{
+  0:3 :: ""
+} 3
+
+restricted:
+CCTK_INT rhs_timelevels "Number of active RHS timelevels" STEERABLE=RECOVER
+{
+  0:3 :: ""
+} 1
+
+restricted:
+CCTK_INT ScalarTensor_init_gfs_calc_every "ScalarTensor_init_gfs_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT ScalarTensor_ADMToLocal_calc_every "ScalarTensor_ADMToLocal_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT ScalarTensor_EvolveScalarField_full4th_calc_every "ScalarTensor_EvolveScalarField_full4th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT ScalarTensor_EvolveScalarField_6th_calc_every "ScalarTensor_EvolveScalarField_6th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT ScalarTensor_AddPotentialToRHS_phiFourth_calc_every "ScalarTensor_AddPotentialToRHS_phiFourth_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT ScalarTensor_AddPotentialToRHS_phiSixth_calc_every "ScalarTensor_AddPotentialToRHS_phiSixth_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT ScalarTensor_AddPotentialToRHS_phiEighth_calc_every "ScalarTensor_AddPotentialToRHS_phiEighth_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT ScalarTensor_AddPotentialToRHS_phiBubble_calc_every "ScalarTensor_AddPotentialToRHS_phiBubble_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT ScalarTensor_AddPotentialToRHS_phiExpand_calc_every "ScalarTensor_AddPotentialToRHS_phiExpand_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT ScalarTensor_ZeroTmunuTrace_calc_every "ScalarTensor_ZeroTmunuTrace_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT ScalarTensor_ScalarFieldTmunu_none_full4th_calc_every "ScalarTensor_ScalarFieldTmunu_none_full4th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT ScalarTensor_ScalarFieldTmunu_none_6th_calc_every "ScalarTensor_ScalarFieldTmunu_none_6th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT ScalarTensor_ScalarFieldTmunu_phiFourth_full4th_calc_every "ScalarTensor_ScalarFieldTmunu_phiFourth_full4th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT ScalarTensor_ScalarFieldTmunu_phiFourth_6th_calc_every "ScalarTensor_ScalarFieldTmunu_phiFourth_6th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT ScalarTensor_ScalarFieldTmunu_phiSixth_full4th_calc_every "ScalarTensor_ScalarFieldTmunu_phiSixth_full4th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT ScalarTensor_ScalarFieldTmunu_phiSixth_6th_calc_every "ScalarTensor_ScalarFieldTmunu_phiSixth_6th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT ScalarTensor_ScalarFieldTmunu_phiEighth_full4th_calc_every "ScalarTensor_ScalarFieldTmunu_phiEighth_full4th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT ScalarTensor_ScalarFieldTmunu_phiEighth_6th_calc_every "ScalarTensor_ScalarFieldTmunu_phiEighth_6th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT ScalarTensor_ScalarFieldTmunu_phiBubble_full4th_calc_every "ScalarTensor_ScalarFieldTmunu_phiBubble_full4th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT ScalarTensor_ScalarFieldTmunu_phiBubble_6th_calc_every "ScalarTensor_ScalarFieldTmunu_phiBubble_6th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT ScalarTensor_ScalarFieldTmunu_phiExpand_full4th_calc_every "ScalarTensor_ScalarFieldTmunu_phiExpand_full4th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT ScalarTensor_ScalarFieldTmunu_phiExpand_6th_calc_every "ScalarTensor_ScalarFieldTmunu_phiExpand_6th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT ScalarTensor_calc_rho_none_full4th_calc_every "ScalarTensor_calc_rho_none_full4th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT ScalarTensor_calc_rho_none_6th_calc_every "ScalarTensor_calc_rho_none_6th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT ScalarTensor_calc_rho_phiFourth_full4th_calc_every "ScalarTensor_calc_rho_phiFourth_full4th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT ScalarTensor_calc_rho_phiFourth_6th_calc_every "ScalarTensor_calc_rho_phiFourth_6th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT ScalarTensor_calc_rho_phiSixth_full4th_calc_every "ScalarTensor_calc_rho_phiSixth_full4th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT ScalarTensor_calc_rho_phiSixth_6th_calc_every "ScalarTensor_calc_rho_phiSixth_6th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT ScalarTensor_calc_rho_phiEighth_full4th_calc_every "ScalarTensor_calc_rho_phiEighth_full4th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT ScalarTensor_calc_rho_phiEighth_6th_calc_every "ScalarTensor_calc_rho_phiEighth_6th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT ScalarTensor_calc_rho_phiBubble_full4th_calc_every "ScalarTensor_calc_rho_phiBubble_full4th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT ScalarTensor_calc_rho_phiBubble_6th_calc_every "ScalarTensor_calc_rho_phiBubble_6th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT ScalarTensor_calc_rho_phiExpand_full4th_calc_every "ScalarTensor_calc_rho_phiExpand_full4th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT ScalarTensor_calc_rho_phiExpand_6th_calc_every "ScalarTensor_calc_rho_phiExpand_6th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT ScalarTensor_boundaryRadiative_calc_every "ScalarTensor_boundaryRadiative_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT ScalarTensor_boundaryPhiOfT_calc_every "ScalarTensor_boundaryPhiOfT_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT ScalarTensor_EinsteinToJordan_calc_every "ScalarTensor_EinsteinToJordan_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT ScalarTensor_init_gfs_calc_offset "ScalarTensor_init_gfs_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT ScalarTensor_ADMToLocal_calc_offset "ScalarTensor_ADMToLocal_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT ScalarTensor_EvolveScalarField_full4th_calc_offset "ScalarTensor_EvolveScalarField_full4th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT ScalarTensor_EvolveScalarField_6th_calc_offset "ScalarTensor_EvolveScalarField_6th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT ScalarTensor_AddPotentialToRHS_phiFourth_calc_offset "ScalarTensor_AddPotentialToRHS_phiFourth_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT ScalarTensor_AddPotentialToRHS_phiSixth_calc_offset "ScalarTensor_AddPotentialToRHS_phiSixth_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT ScalarTensor_AddPotentialToRHS_phiEighth_calc_offset "ScalarTensor_AddPotentialToRHS_phiEighth_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT ScalarTensor_AddPotentialToRHS_phiBubble_calc_offset "ScalarTensor_AddPotentialToRHS_phiBubble_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT ScalarTensor_AddPotentialToRHS_phiExpand_calc_offset "ScalarTensor_AddPotentialToRHS_phiExpand_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT ScalarTensor_ZeroTmunuTrace_calc_offset "ScalarTensor_ZeroTmunuTrace_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT ScalarTensor_ScalarFieldTmunu_none_full4th_calc_offset "ScalarTensor_ScalarFieldTmunu_none_full4th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT ScalarTensor_ScalarFieldTmunu_none_6th_calc_offset "ScalarTensor_ScalarFieldTmunu_none_6th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT ScalarTensor_ScalarFieldTmunu_phiFourth_full4th_calc_offset "ScalarTensor_ScalarFieldTmunu_phiFourth_full4th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT ScalarTensor_ScalarFieldTmunu_phiFourth_6th_calc_offset "ScalarTensor_ScalarFieldTmunu_phiFourth_6th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT ScalarTensor_ScalarFieldTmunu_phiSixth_full4th_calc_offset "ScalarTensor_ScalarFieldTmunu_phiSixth_full4th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT ScalarTensor_ScalarFieldTmunu_phiSixth_6th_calc_offset "ScalarTensor_ScalarFieldTmunu_phiSixth_6th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT ScalarTensor_ScalarFieldTmunu_phiEighth_full4th_calc_offset "ScalarTensor_ScalarFieldTmunu_phiEighth_full4th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT ScalarTensor_ScalarFieldTmunu_phiEighth_6th_calc_offset "ScalarTensor_ScalarFieldTmunu_phiEighth_6th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT ScalarTensor_ScalarFieldTmunu_phiBubble_full4th_calc_offset "ScalarTensor_ScalarFieldTmunu_phiBubble_full4th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT ScalarTensor_ScalarFieldTmunu_phiBubble_6th_calc_offset "ScalarTensor_ScalarFieldTmunu_phiBubble_6th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT ScalarTensor_ScalarFieldTmunu_phiExpand_full4th_calc_offset "ScalarTensor_ScalarFieldTmunu_phiExpand_full4th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT ScalarTensor_ScalarFieldTmunu_phiExpand_6th_calc_offset "ScalarTensor_ScalarFieldTmunu_phiExpand_6th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT ScalarTensor_calc_rho_none_full4th_calc_offset "ScalarTensor_calc_rho_none_full4th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT ScalarTensor_calc_rho_none_6th_calc_offset "ScalarTensor_calc_rho_none_6th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT ScalarTensor_calc_rho_phiFourth_full4th_calc_offset "ScalarTensor_calc_rho_phiFourth_full4th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT ScalarTensor_calc_rho_phiFourth_6th_calc_offset "ScalarTensor_calc_rho_phiFourth_6th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT ScalarTensor_calc_rho_phiSixth_full4th_calc_offset "ScalarTensor_calc_rho_phiSixth_full4th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT ScalarTensor_calc_rho_phiSixth_6th_calc_offset "ScalarTensor_calc_rho_phiSixth_6th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT ScalarTensor_calc_rho_phiEighth_full4th_calc_offset "ScalarTensor_calc_rho_phiEighth_full4th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT ScalarTensor_calc_rho_phiEighth_6th_calc_offset "ScalarTensor_calc_rho_phiEighth_6th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT ScalarTensor_calc_rho_phiBubble_full4th_calc_offset "ScalarTensor_calc_rho_phiBubble_full4th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT ScalarTensor_calc_rho_phiBubble_6th_calc_offset "ScalarTensor_calc_rho_phiBubble_6th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT ScalarTensor_calc_rho_phiExpand_full4th_calc_offset "ScalarTensor_calc_rho_phiExpand_full4th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT ScalarTensor_calc_rho_phiExpand_6th_calc_offset "ScalarTensor_calc_rho_phiExpand_6th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT ScalarTensor_boundaryRadiative_calc_offset "ScalarTensor_boundaryRadiative_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT ScalarTensor_boundaryPhiOfT_calc_offset "ScalarTensor_boundaryPhiOfT_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT ScalarTensor_EinsteinToJordan_calc_offset "ScalarTensor_EinsteinToJordan_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+private:
+CCTK_KEYWORD STphi_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "skip"
+
+private:
+CCTK_KEYWORD STpi_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "skip"
+
+private:
+CCTK_KEYWORD STphi_group_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "none"
+
+private:
+CCTK_KEYWORD STpi_group_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "none"
+
+private:
+CCTK_REAL STphi_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL STpi_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL STphi_group_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL STpi_group_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL STphi_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL STpi_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL STphi_group_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL STpi_group_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL STphi_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+
+private:
+CCTK_REAL STpi_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+
+private:
+CCTK_REAL STphi_group_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+
+private:
+CCTK_REAL STpi_group_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+

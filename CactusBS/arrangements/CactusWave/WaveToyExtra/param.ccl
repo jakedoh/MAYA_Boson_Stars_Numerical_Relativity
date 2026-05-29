@@ -1,0 +1,21 @@
+# Parameter definitions for thorn WaveToyExtra
+# $Header$
+
+SHARES: wavetoy
+
+EXTENDS KEYWORD bound
+{
+  "custom" :: "custom boundary condition"
+}
+
+private: 
+
+STRING custom_bound "Custom boundary condition to use"
+{
+ .* :: "Any valid boundary condition"
+} ""
+
+STRING custom_options "Table string for custom boundary condition"
+{
+ .* :: "Any valid table string"
+} ""

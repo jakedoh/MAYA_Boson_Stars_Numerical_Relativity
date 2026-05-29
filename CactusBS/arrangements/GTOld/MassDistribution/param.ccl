@@ -1,0 +1,211 @@
+# Parameter definitions for thorn MassDistribution
+# $Header:$
+
+CCTK_INT calc_every "Calculate only every N iterations" STEERABLE=always
+{
+  0:* :: "Must be set to iterations no finer than the coarsest level encountered during integration"
+} 1 
+
+CCTK_INT calc_every_vol[20] "Calculate only every N iterations" STEERABLE=always
+{
+ -1   :: "use calc_mass_every"
+  0:* :: "Must be set to iterations no finer than the coarsest level encountered during integration"
+} -1 
+
+# the condition tested is: calc_after <= iteration <= dont_calc_after
+CCTK_INT calc_after_vol[20] "only compute histograms starting from this iteration" STEERABLE=always
+{
+  0:* :: "any iteration"
+} 0
+
+CCTK_INT dont_calc_after_vol[20] "stop computing histograms after this iteration" STEERABLE=always
+{
+  0:* :: "any iteration"
+} 2147483647 # 2^31-1 ie. awlays
+
+CCTK_REAL rho_min "Minimum density for fluid elements to be considered" STEERABLE=always
+{
+  0:* :: "Should be at least Whisky's rho_abs_min"
+} 0
+
+# for linear scaling we have: 
+#   bin_width = (max-min)/number_of_bins
+#   bin i contains: min+i*bin_width <= x < min+(i+1)*bin_width
+#   i = floor((x-min)/bin_width)
+# for logarithmic scaling we have:
+#   log_bin_width = log10(max/min)/number_of_bins
+#   bin_width = min*pow(10, (i+1)*log_bin_with)-min*pow(10, i*log_bin_width)
+#   bin i contains: min*pow(10, i*log_bin_width) <= x < min*pow(10, (i+1)*log_bin_with)
+#   i = floor(log10(x/min)/log_bin_width)
+#
+# recover only since it is used in interface.ccl
+CCTK_INT number_of_bins "Number of bins to use" STEERABLE=recover
+{
+  1:* :: "any number is ok"
+} 20
+
+# TODO: make it possible to use the current min/max on the grid instead
+KEYWORD bin_mode[20] "determine bining range from values on the grid automatically" STEERABLE=always
+{
+  "automatic-volume" :: "use min/max of grid function in each volume for bining range"
+  "automatic"        :: "use min/max of grid function on the grid for bining range"
+  "manual"           :: "give min/max explictely in bin_variable_minimum/maximum"
+  "mass-fraction"    :: "rescale min/max such that the histogram covers mass_fraction of the total mass in acceptable_fraction_of_bin bins"
+} "mass-fraction"
+
+KEYWORD bin_scaling[20] "scaling of the histogram x axis" STEERABLE=always
+{
+  "linear"           :: "ordinary linear axis"
+  "logarithmic"      :: "log10"
+} "linear"
+
+# NOTE: for logarithmic binning, the bin width changes
+BOOLEAN divide_by_bin_width[20] "compute Delta M/Delta Energy instead of Delta M" STEERABLE=always
+{
+} "yes"
+
+
+CCTK_REAL mass_fraction[20] "how much of the total mass should the histogram cover" STEERABLE=always
+{
+  (0:1 :: "any sensible percent value"
+} 0.99
+
+CCTK_REAL acceptable_fraction_of_bins[20] "accept histogram if its width is at least this much of number_of_bins" STEERABLE=always
+{
+  (0:1 :: "any sensible percent value"
+} 0.90
+
+# if min=max then the setting is ignored for the automatic settings or yields an error message for manual
+CCTK_REAL bin_variable_minimum[20] "lowest value to bin into, lower values are dropped!" STEERABLE=always
+{
+  *:* :: "any sensible value, inclusive"
+} 0
+
+CCTK_REAL bin_variable_maximum[20] "smallest value to no longer bin into, higher or equal values are dropped!" STEERABLE=always
+{
+  *:* :: "any sensible value, exclusive"
+} 0
+
+# NOTE: this could in theory be achieved with a second histogram and
+# (min+max)/2 = median but it would depend on getting the numbers just right
+CCTK_REAL bin_variable_threshold[20] "compute total mass above and below this value (ie unbound/bound)" STEERABLE=always
+{
+  *:* :: "any sensible value"
+} 1.0
+
+STRING bin_variable[20] "creates bins of size var_max/number_of_bins in this variable" STEERABLE=always
+{
+  "^specific energy$"       :: "rho_ADM/(W*rho), energy per unit rest mass"
+  "^u0$"                    :: "assuming d/dt is a Killing vector: energy per unit rest mass at infinity"
+  "^E_Newton$"              :: "1/2 v^2 - M/r"
+  "^E_SR$"                  :: "1/2 W^2 v^2 - M/r (1-(W^2-1)^2)"
+  ".+[:][:].+"              :: "Any valid Cactus variable"
+} "specific energy"
+
+CCTK_REAL central_mass[20] "assumed central mass for E_Newton and E_SR" STEERABLE=always
+{
+  0:*                       :: "any sensible mass"
+} 1.0
+
+STRING mass_variable[20] "content of the bins" STEERABLE=always
+{
+  "^Mass$"                 :: "relativistic rest mass density"
+  "^debug1$"               :: "0.123*x*x (for debugging)"
+  ".+[:][:].+"              :: "Any other valid variable, really"
+} "Mass"
+
+CCTK_INT max_number_of_iterations "give up after this many iterations when trying to find a 'good' histogram" STEERABLE=always
+{
+  1:* :: "any reasonable number (which is at least 2 really)"
+} 3
+
+# recover only since it is used in interface.ccl
+CCTK_INT intvolumes "Number of spheres to integrate within, in addition to the full grid" STEERABLE=recover
+{
+  0:20 :: "Hard-coded because size of int_wi_rad"
+} 0
+
+CCTK_REAL int_wi_rad[20] "Integrate within radius, hard-coded max at 20" STEERABLE=always
+{
+ 0:* :: "Anything positive, default is infinite"
+} 1e10
+
+CCTK_KEYWORD centre_from[20] "What controls the centre" STEERABLE=always
+{
+  "parameter"         :: "use parameters centre_x/y/z"
+  "spherical surface" :: "use spherical surfaces"
+} "parameter"
+
+CCTK_REAL centre_x[20] "x center" STEERABLE=always
+{
+ *:* :: "any real number"
+} 0
+
+CCTK_REAL centre_y[20] "x center" STEERABLE=always
+{
+ *:* :: "any real number"
+} 0
+
+CCTK_REAL centre_z[20] "x center" STEERABLE=always
+{
+ *:* :: "any real number"
+} 0
+
+CCTK_INT surface_index[20] "Which spherical surface to use" STEERABLE=always
+{
+ -1   :: "invalid"
+ 0:*  :: "any valid surface index"
+} -1
+
+STRING weight_variable[20] "Variable containing the weights for integration" STEERABLE=always
+{
+  "^CarpetReduce[:][:]weight$"    :: "Standard Carpet weights"
+  "^AHMask[:][:]AHmasked_weight$" :: "Mask out AHs (if found)"
+  ".+[:][:].+"                    :: "Any other valid variable, really"
+} "AHMask::AHmasked_weight"
+
+STRING out_format "Which format for Scalar floating-point number output" STEERABLE=always
+{
+  "^%(\.[1]?[0-9])?[EGefg]$" :: "output with given precision in exponential / floating point notation"
+} "%.19g"
+
+# recover only since it is used in schedule.ccl
+BOOLEAN do_custom_output "should we produce 1d ASCII output files or rely entirely on Cactus for I/O?" STEERABLE=recover
+{
+} "yes"
+
+CCTK_STRING outfile_basename "What is the name of the output file?" STEERABLE=always
+{
+  ".*" :: "printf like string, %d is the volume number"
+} "MassDistribution%d.asc"
+
+BOOLEAN ignore_invalid_cells "ignore any cell containing NaN/Inf" STEERABLE=always
+{
+} "no"
+
+# these only really matter if we have a volume not centred around the origin, otherwise they are just factors of two.
+STRING applied_symmetries "symmetries present in the simulation"
+{
+  "^[xyzr]+$"   :: "reflection symmetry across xyz=0 plane or roatingsymmetry180"
+  "^$"          :: "no symmetry applied"
+  "^autoprobe$" :: "probes for presence of RelfectionSymmetry and RotatingSYmmetry180"
+} "autoprobe"
+
+## Debug ##
+CCTK_INT verbose "Debugging" STEERABLE=always
+{
+  0:* :: "the higher the value the more verbose"
+} 0
+
+BOOLEAN debug "Debugging" STEERABLE=always
+{
+} "no"
+
+SHARES: SphericalSurface
+
+USES INT nsurfaces AS sphericalsurfaces_nsurfaces
+
+shares: IO
+
+USES STRING out_dir
+

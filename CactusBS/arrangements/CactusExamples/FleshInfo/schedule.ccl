@@ -1,0 +1,22 @@
+# Schedule definitions for thorn FleshInfo
+# $Header$
+
+schedule InterpInfo at CCTK_INITIAL
+{
+  LANG: C
+} "Information about Interpolation Operators"
+
+schedule ReduceInfo at CCTK_INITIAL
+{
+  LANG: C
+} "Information about Reduction Operators"
+
+schedule IOInfo at CCTK_INITIAL
+{
+  LANG: C
+} "Information about IO Methods"
+
+schedule CoordInfo at CCTK_INITIAL
+{
+  LANG: C
+} "Information about Coordinate Systems"

@@ -1,0 +1,47 @@
+# Interface definition for thorn NullVars
+# $Header$
+
+implements: NullVars
+
+
+public:
+
+CCTK_REAL realcharfuncs[NullGrid::N_radial_pts] TYPE=ARRAY TIMELEVELS=2 dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+  wcn, wcs,
+  bcn, bcs
+} "Evolved Real-valued Characteristic Fields"
+
+
+CCTK_COMPLEX cmplxcharfuncs_basic[NullGrid::N_radial_pts] TYPE=ARRAY TIMELEVELS=2 dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+  jcn, jcs, dxjcn, dxjcs,
+  eth2jcn, eth2jcs,
+  ucn, ucs, qcn, qcs
+} "Evolved complex-valued Characteristic Fields (basic set)"  
+
+
+CCTK_COMPLEX cmplxcharfuncs_aux[NullGrid::N_radial_pts] TYPE=ARRAY TIMELEVELS=2 dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+  nucn, nucs,
+  cbcn, cbcs,
+  ckcn, ckcs
+} "Evolved complex-valued Characteristic Fields (auxiliary set)"  
+
+CCTK_INT null_mask TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+  boundary_maskn, boundary_masks,
+  evolution_maskn, evolution_masks
+} "boundary and evolution masks"

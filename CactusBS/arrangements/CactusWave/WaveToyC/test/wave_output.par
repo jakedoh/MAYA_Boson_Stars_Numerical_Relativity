@@ -1,0 +1,53 @@
+# wave_output.par - wavetoy evolution will different output
+# $Id$
+#
+# /*@@
+#   @file      wave_output.par
+#   @date      Sunday 24th July
+#   @author    Gabrielle Allen
+#   @desc
+#   Wavetoy parameter file using different output methods
+#   @enddesc
+# @@*/          
+
+ActiveThorns = "boundary idscalarwavec time wavetoyc pugh PUGHReduce PUGHSlab CartGrid3D CoordBase SymBase ioutil iobasic localreduce IOASCII libjpeg"
+ 
+time::dtfac = 0.5
+
+idscalarwave::initial_data = "gaussian"
+idscalarwave::radius = 0
+
+wavetoyc::bound = "radiation"
+
+IDScalarWave::amplitude = 1.0
+
+driver::global_nsize = 20
+
+cactus::cctk_itlast = 2
+
+IO::out_dir             = "wave_output"
+
+IOBasic::outScalar_reductions = "norm1 norm2 minimum maximum norm_inf"
+
+IOBasic::outInfo_every = 1
+IOBasic::outInfo_vars  = "wavetoy::phi"
+
+IOBasic::outScalar_every = 1
+IOBasic::outScalar_vars  = "wavetoy::phi"
+
+
+
+IOASCII::out1D_every = 1
+IOASCII::out1D_vars  = "wavetoy::phi"
+
+IOASCII::out2D_vars  = "wavetoy::phi"
+IOASCII::out2D_every = 2
+
+IOASCII::out3D_vars  = "wavetoy::phi"
+IOASCII::out3D_every = 2
+
+IO::out_fileinfo  = "none"
+IO::parfile_write = "no"
+
+# do not use the new scheme for names of output files
+IO::new_filename_scheme = "no"

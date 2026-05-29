@@ -1,0 +1,108 @@
+# Parameter definitions for thorn FLRWBackground
+
+SHARES: HydroBase
+
+EXTENDS KEYWORD initial_hydro "Extend HydroBase initial conditions" {
+  "FLRWBackground" :: "FLRW metric background with constant matter density"
+}
+
+################################################################################
+
+SHARES: ADMBase
+
+EXTENDS KEYWORD initial_data {
+  "FLRWBackground" :: "FLRW metric background"
+}
+
+EXTENDS KEYWORD initial_lapse {
+  "FLRWBackground" :: "FLRW metric background"
+}
+
+EXTENDS KEYWORD initial_shift {
+  "FLRWBackground" :: "FLRW metric background"
+}
+
+###############################################################################
+
+restricted:
+CCTK_KEYWORD boundary_condition "Implement FLRW boundary conditions for the metric" STEERABLE = ALWAYS
+{
+  "none" :: "No metric boundary conditions"
+  "FLRW" :: "FLRW boundary conditions with regular coordinates"
+  "ConformalFLRW" ::"FLRW boundary conditions with conformal time"
+} "none"
+
+restricted:
+BOOLEAN verbose "Some debug output" STEERABLE = ALWAYS
+{
+} no
+
+restricted:
+CCTK_REAL a0 "Initial value of the scale factor in RW models" STEERABLE=ALWAYS
+{
+  0:* :: "Positive"
+} 1
+
+restricted:
+CCTK_REAL H0 "Initial value of the Hubble parameter in RW models" STEERABLE=ALWAYS
+{
+  0:* :: "Positive"
+} 0.5
+
+restricted:
+CCTK_REAL t0 "Initial time" STEERABLE=ALWAYS
+{
+  0:* :: "Positive"
+} 1
+
+restricted:
+CCTK_REAL K_intrinsic "Used to calculate the intrinsic energy eps" STEERABLE=ALWAYS
+{
+  0:* :: "Positive"
+} 100
+
+restricted:
+CCTK_REAL rho_initial "Initial value of the Hubble parameter in RW models" STEERABLE=ALWAYS
+{
+  0:* :: "Positive"
+} 3e-4
+
+
+restricted:
+CCTK_REAL tol "Tolerance for the calculation of the intrinsic energy eps" STEERABLE=ALWAYS
+{
+  0:* :: "Positive"
+} 1.e-10
+
+
+restricted:
+BOOLEAN FLRW_excision "Excision for initial conditions" STEERABLE=ALWAYS
+{
+} no
+
+restricted:
+CCTK_REAL FLRW_excisionRadius "Excision radius for initial conditions" STEERABLE=ALWAYS
+{
+0:* :: "Positive"
+} 0
+
+restricted:
+CCTK_KEYWORD Symmetry_x "Symmetry in x direction" STEERABLE = ALWAYS
+{
+  "no" :: "no symmetry"
+  "yes" :: "reflective sym"
+} "no"
+
+restricted:
+CCTK_KEYWORD Symmetry_y "Symmetry in x direction" STEERABLE = ALWAYS
+{
+  "no" :: "no symmetry"
+  "yes" :: "reflective sym"
+} "no"
+
+restricted:
+CCTK_KEYWORD Symmetry_z "Symmetry in x direction" STEERABLE = ALWAYS
+{
+  "no" :: "no symmetry"
+  "yes" :: "reflective sym"
+} "no"

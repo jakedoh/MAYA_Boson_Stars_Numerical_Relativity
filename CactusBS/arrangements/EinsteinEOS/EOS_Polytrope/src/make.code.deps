@@ -1,0 +1,4 @@
+# Module dependencies for thorn EOS_Polytrope
+
+EOS_Polytrope.F.o:		EOS_Polytrope_Scalars.F.o
+EOS_Polytrope_Startup.F.o:	EOS_Polytrope_Scalars.F.o

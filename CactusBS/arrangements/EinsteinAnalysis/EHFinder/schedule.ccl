@@ -1,0 +1,696 @@
+# Schedule definitions for thorn EHFinder
+# $Header$
+
+if (CCTK_Equals(mode,"analysis"))
+{
+  STORAGE: f[1]
+}
+else
+{
+  STORAGE: f[2]
+  STORAGE: sf
+  STORAGE: ftmp
+  STORAGE: sftmp
+  STORAGE: eh_mask
+  STORAGE: surface_arrays
+  STORAGE: eh_area2, eh_centroid2_x, eh_centroid2_y, eh_centroid2_z
+  STORAGE: eh_circ_eq2, eh_circ_pol2
+  STORAGE: find_surface_status
+  STORAGE: levelset_integers
+  STORAGE: center_arrays
+  if ( evolve_generators )
+  {
+    if (CCTK_Equals(generator_distribution,"line"))
+    {
+      STORAGE: xg[2], yg[2], zg[2]
+      STORAGE: dxg, dyg, dzg
+    }
+    if (CCTK_Equals(generator_distribution,"2D array"))
+    {
+      STORAGE: xg2[2], yg2[2], zg2[2]
+      STORAGE: dxg2, dyg2, dzg2
+    }
+  }
+}
+
+#if (CCTK_Equals(generator_tracking_method,"interpolate_after"))
+#{
+#  STORAGE: generator_gf
+#}
+
+# Check for metric_state
+
+#if (!CCTK_EQUALS(mode,"analysis"))
+#{
+
+schedule EHFinder_ParamCheck at CCTK_PARAMCHECK
+{
+  LANG: Fortran
+} "Check parameters"
+
+
+if (CCTK_Equals(initial_data,"read from file"))
+{
+  schedule EHFinder_Read_Metric at CCTK_INITIAL
+  {
+    LANG: Fortran
+  } "Read in metric from file"
+}
+
+if (CCTK_Equals(initial_lapse,"read from file"))
+{
+  schedule EHFinder_Read_Lapse at CCTK_INITIAL
+  {
+    LANG: Fortran
+  } "Read in lapse from file"
+}
+
+if (CCTK_Equals(initial_shift,"read from file"))
+{
+  schedule EHFinder_Read_Shift at CCTK_INITIAL
+  {
+    LANG: Fortran
+  } "Read in shift from file"
+}
+
+if (CCTK_Equals(metric_type,"static conformal") && CCTK_Equals(eh_metric_type,"numerical"))
+{
+  schedule EHFinder_Read_Conformal at CCTK_INITIAL
+  {
+    LANG: Fortran
+  } "Read in conformal factor from file"
+}
+
+if (use_mask)
+{
+  schedule EHFinder_Read_Mask at CCTK_INITIAL after MaskOne
+  {
+    LANG: Fortran
+  } "Read in excision mask from file"
+}
+
+# Set up the initial level set function
+
+schedule EHFinder_Init at CCTK_INITIAL
+{
+  LANG: Fortran
+  SYNC: f
+} "Setup local variables"
+
+schedule EHFinder_Init_F at CCTK_INITIAL
+{
+  LANG: Fortran
+  SYNC: f
+} "Setup the initial surface"
+
+schedule EHFinder_InitWeights at CCTK_INITIAL
+{
+  LANG: Fortran
+} "Setup weights for Simpson integration"
+
+schedule EHFinder_Init at CCTK_POST_RECOVER_VARIABLES
+{
+  LANG: Fortran
+  SYNC: f
+} "Setup local variables"
+
+schedule EHFinder_InitWeights at CCTK_POST_RECOVER_VARIABLES
+{
+  LANG: Fortran
+} "Setup weights for Simpson integration"
+
+if (CCTK_EQUALS(area_calculation_method,"standard"))
+{
+  schedule GROUP EHFinder_Level_Sets at CCTK_ANALYSIS
+  {
+    TRIGGERS: eh_area, eh_centroid_x, eh_centroid_y, eh_centroid_z
+    TRIGGERS: eh_circ_eq, eh_circ_pol
+  } "Loop over the level set functions"
+  
+  schedule EHFinder_LevelSetLoopInit in EHFinder_Level_Sets
+  {
+    LANG: Fortran
+    TRIGGERS: eh_area, eh_centroid_x, eh_centroid_y, eh_centroid_z
+    TRIGGERS: eh_circ_eq, eh_circ_pol
+  } "Initialize the loop counter over the level set functions"
+  
+  schedule GROUP EHFinder_Surfaces in EHFinder_Level_Sets while ehfinder::more_levelsets
+  {
+    STORAGE: surface_integers
+    STORAGE: surface_reals
+    STORAGE: surface_index
+    TRIGGERS: eh_area, eh_centroid_x, eh_centroid_y, eh_centroid_z
+    TRIGGERS: eh_circ_eq, eh_circ_pol
+  } "Count the number of surfaces and integrate over them"
+  
+  
+  schedule EHFinder_CountSurfacesInit in EHFinder_Surfaces
+  {
+    LANG: Fortran
+    TRIGGERS: eh_area, eh_centroid_x, eh_centroid_y, eh_centroid_z
+    TRIGGERS: eh_circ_eq, eh_circ_pol
+  } "Initialize while loop control"
+  
+  schedule GROUP EHFinder_CountMarkSurfaces in EHFinder_Surfaces after EHFinder_CountSurfacesInit WHILE ehfinder::more_surfaces
+  {
+    TRIGGERS: eh_area, eh_centroid_x, eh_centroid_y, eh_centroid_z
+    TRIGGERS: eh_circ_eq, eh_circ_pol
+  } "Counting and mark surfaces"
+  
+  schedule EHFinder_CountSurfaces in EHFinder_CountMarkSurfaces
+  {
+    LANG: Fortran
+    TRIGGERS: eh_area, eh_centroid_x, eh_centroid_y, eh_centroid_z
+    TRIGGERS: eh_circ_eq, eh_circ_pol
+    SYNC: surface_index
+  } "Check if there are more surfaces"
+  
+  schedule GROUP EHFinder_MarkPoints in EHFinder_CountMarkSurfaces after EHFinder_CountSurfaces WHILE ehfinder::more_points
+  {
+    TRIGGERS: eh_area, eh_centroid_x, eh_centroid_y, eh_centroid_z
+    TRIGGERS: eh_circ_eq, eh_circ_pol
+  } "Marking surfaces"
+  
+  schedule EHFinder_MarkSurfaces in EHFinder_MarkPoints
+  {
+    LANG: Fortran
+    TRIGGERS: eh_area, eh_centroid_x, eh_centroid_y, eh_centroid_z
+    TRIGGERS: eh_circ_eq, eh_circ_pol
+    SYNC: surface_index
+  } "Mark points inside the current surface"
+  
+  schedule EHFinder_ApplySymSC in EHFinder_MarkPoints after EHFinder_MarkSurfaces
+  {
+    LANG: Fortran
+    TRIGGERS: eh_area, eh_centroid_x, eh_centroid_y, eh_centroid_z
+    TRIGGERS: eh_circ_eq, eh_circ_pol
+  } "Select the surface counter grid function for boundary conditions"
+  
+  schedule GROUP ApplyBCs as EHFinderSC_ApplyBSc in EHFinder_MarkPoints after EHFinder_ApplySymSC
+  {
+  } "Apply boundary conditions (symmetries)"
+  
+  schedule EHFinder_InfoSurfaces in EHFinder_Surfaces after EHFinder_CountMarkSurfaces
+  {
+    LANG: Fortran
+    TRIGGERS: eh_area, eh_centroid_x, eh_centroid_y, eh_centroid_z
+    TRIGGERS: eh_circ_eq, eh_circ_pol
+  } "Output info about found surfaces"
+  
+  schedule group EHFinder_Integration in EHFinder_Surfaces after EHFinder_InfoSurfaces while ehfinder::integrate_counter
+  {
+    TRIGGERS: eh_area, eh_centroid_x, eh_centroid_y, eh_centroid_z
+    TRIGGERS: eh_circ_eq, eh_circ_pol
+  } "Find and integrate over surfaces"
+  
+  schedule EHFinder_FindSurface in EHFinder_Integration
+  {
+    LANG: Fortran
+    STORAGE: surface_tmp_arrays, surface_int_array
+    TRIGGERS: eh_area, eh_centroid_x, eh_centroid_y, eh_centroid_z
+    TRIGGERS: eh_circ_eq, eh_circ_pol
+    SYNC: surface_arrays
+  } "Find Surface"
+  
+  schedule EHFinder_FindSurfaceElement in EHFinder_Integration after EHFinder_FindSurface
+  {
+    LANG: Fortran
+    STORAGE: surface_tmp_arrays, interp_metric_arrays 
+    TRIGGERS: eh_area, eh_centroid_x, eh_centroid_y, eh_centroid_z
+    TRIGGERS: eh_circ_eq, eh_circ_pol
+  } "Find Surface Area Element"
+  
+  schedule EHFinder_IntegrateArea in EHFinder_Integration after EHFinder_FindSurfaceElement
+  {
+    LANG: Fortran
+    STORAGE: integrate_tmp_array 
+    TRIGGERS: eh_area, eh_centroid_x, eh_centroid_y, eh_centroid_z
+    TRIGGERS: eh_circ_eq, eh_circ_pol
+  } "Calculate area integrals"
+  
+  schedule EHFinder_IntegrateCentroid in EHFinder_Integration after EHFinder_IntegrateArea
+  {
+    LANG: Fortran
+    STORAGE: surface_tmp_arrays, integrate_tmp_array
+    TRIGGERS: eh_centroid_x, eh_centroid_y, eh_centroid_z
+  } "Calculate centroid integrals"
+  
+  schedule EHFinder_IntegrateCircumference in EHFinder_Integration after EHFinder_IntegrateArea
+  {
+    LANG: Fortran
+    STORAGE: surface_tmp_arrays, integrate_tmp_array
+    TRIGGERS: eh_circ_eq, eh_circ_pol
+  } "Calculate circumferences"
+  
+  schedule EHFinder_UpdateCounter in EHFinder_Surfaces
+  {
+    LANG: Fortran
+    TRIGGERS: eh_area, eh_centroid_x, eh_centroid_y, eh_centroid_z
+    TRIGGERS: eh_circ_eq, eh_circ_pol
+  } "Update the loop variables"
+  
+  schedule EHFinder_CopyArea at CCTK_ANALYSIS after EHFinder_Level_Sets
+  {
+    LANG: Fortran
+    STORAGE: eh_area
+    TRIGGERS: eh_area
+  } "Copy areas to output variable"
+  
+  schedule EHFinder_CopyCentroid at CCTK_ANALYSIS after EHFinder_Level_Sets
+  {
+    LANG: Fortran
+    STORAGE: eh_centroid_x, eh_centroid_y, eh_centroid_z
+    TRIGGERS: eh_centroid_x, eh_centroid_y, eh_centroid_z
+  } "Copy centroids to output variable"
+  
+  schedule EHFinder_CopyCircumference at CCTK_ANALYSIS after EHFinder_Level_Sets
+  {
+    LANG: Fortran
+    STORAGE: eh_circ_eq, eh_circ_pol
+    TRIGGERS: eh_circ_eq, eh_circ_pol
+  } "Copy circumferences to output variable"
+}
+
+if (CCTK_EQUALS(area_calculation_method,"isosurface"))
+{
+  schedule GROUP EHFinder_IsoSurfaceArea at CCTK_ANALYSIS
+  {
+    TRIGGERS: eh_area
+  } "Find isosurfaces and calculate the area"
+
+  schedule EHFinder_IsoSurface in EHFinder_IsoSurfaceArea
+  {
+    LANG: Fortran
+    STORAGE: eh_area
+    TRIGGERS: eh_area
+  } "Find isosurfaces"
+}
+
+# Read in the data used in reconstructing the 4-metric if necessary
+
+if (CCTK_Equals(eh_metric_type,"numerical"))
+{
+  schedule EHFinder_Read_Metric at CCTK_PRESTEP
+  {
+    LANG: Fortran
+  } "Read in metric from file"
+}
+
+if (CCTK_Equals(eh_lapse_type,"numerical"))
+{
+  schedule EHFinder_Read_Lapse at CCTK_PRESTEP
+  {
+    LANG: Fortran
+  } "Read in lapse from file"
+}
+
+if (CCTK_Equals(eh_shift_type,"numerical"))
+{
+  schedule EHFinder_Read_Shift at CCTK_PRESTEP
+  {
+    LANG: Fortran
+  } "Read in shift from file"
+}
+
+if (CCTK_Equals(metric_type,"static conformal") && CCTK_Equals(eh_metric_type,"numerical") && !read_conformal_factor_once)
+{
+  schedule EHFinder_Read_Conformal at CCTK_PRESTEP
+  {
+    LANG: Fortran
+  } "Read in conformal factor from file"
+}
+
+if (use_mask)
+{
+  schedule EHFinder_Read_Mask at CCTK_PRESTEP
+  {
+    LANG: Fortran
+  } "Read in excision mask from file"
+}
+
+# Register the level_set function and its right hand side source with MoL
+
+schedule EHFinder_MoLRegister in MoL_Register
+{
+  LANG: Fortran
+} "Register evolution variables"
+
+
+# Register the symmetries for the level set function
+
+schedule EHFinder_SetSym at CCTK_BASEGRID
+{
+  LANG: Fortran
+  STORAGE: sftmp
+} "Register the symmetries for the level set function"
+
+
+# Set the initial eh_mask at the physical outer boundaries.
+
+schedule EHFinder_MaskInit at CCTK_POSTINITIAL after EHFinder_Init
+{
+  LANG: Fortran
+} "Setup the initial mask"
+
+
+# Schedule the normal mode of operation
+
+if (CCTK_Equals(mode,"normal"))
+{
+
+  # Schedule the calculation of the source terms
+
+  schedule EHFinder_Sources in MoL_CalcRHS
+  {
+    LANG: Fortran
+    STORAGE: dfx
+    STORAGE: dfy
+    STORAGE: dfz
+    STORAGE: g3inv
+  } "Calculate the source terms"
+
+  if ( evolve_generators)
+  {
+    if (CCTK_Equals(generator_tracking_method,"interpolate_before"))
+    {
+      if (CCTK_Equals(generator_distribution,"line"))
+      {
+        schedule EHFinder_Generator_Sources in MoL_CalcRHS
+        {
+          LANG: Fortran
+          STORAGE: generator_arrays
+        } "Calculate the source terms for the generator evolution"
+      }
+      if (CCTK_Equals(generator_distribution,"2D array"))
+      {
+        schedule EHFinder_Generator_Sources_2D in MoL_CalcRHS
+        {
+          LANG: Fortran
+          STORAGE: generator_arrays2
+        } "Calculate the source terms for the 2D generator evolution"
+      }
+    }
+    if (CCTK_Equals(generator_tracking_method,"interpolate_after"))
+    {
+      schedule EHFinder_Generator_Sources2 in MoL_CalcRHS after EHFinder_Sources
+      {
+        LANG: Fortran
+        STORAGE: generator_arrays
+      } "Calculate the source terms2 for the generator evolution"
+    }
+  }
+
+  schedule GROUP EHFinder_PostStep in MoL_PostStep
+  {
+  } "Schedule group for symmetry boundaries and syncing"
+
+
+  schedule EHFinder_ApplySymF in EHFinder_PostStep
+  {
+    LANG: Fortran
+    SYNC: f
+    SYNC: sftmp
+  } "Select f for boundary conditions"
+
+  schedule GROUP ApplyBCs as EHFinderF_ApplyBCs in EHFinder_PostStep after EHFinder_ApplySymF
+  {
+  } "Apply boundary conditions (Symmetries)"
+
+
+  # Set up the schedule group for re-initialization
+
+  schedule GROUP EHFinder_ReInitialize at CCTK_POSTSTEP
+  {
+    STORAGE: fbak
+    STORAGE: eh_mask_bak
+#    STORAGE: pugh_re_init_control, carpet_re_init_control
+    STORAGE: re_init_control
+    STORAGE: niter_reinit
+  } "Re-initialize the level set function"
+
+  # Schedule the control routine, that initializes *_re_init_control if it
+  # is time for re-initialization.
+
+  schedule GROUP EHFinder_PreReInitialize
+  {
+  } "Routines for re-initialization control"
+
+  schedule EHFinder_ReInitializeControl in EHFinder_PreReInitialize
+  {
+    LANG: Fortran
+    OPTIONS: global
+  } "Initializes the re-initialization control"
+
+  schedule EHFinder_ReInitializeInitialize in EHFinder_PreReInitialize after EHFinder_ReInitializeControl
+  {
+    LANG: Fortran
+  } "Initializes variables for ReInitialization"
+
+  if (CCTK_Equals(re_init_int_method,"euler"))
+  {
+ 
+    schedule GROUP Euler_ReInitializeEvolve
+    {
+    } "Schedule group for Euler re-initialization evolution"
+
+    # Schedule the routine that does one Euler step 
+
+    schedule EHFinder_ReInitializeEuler in Euler_ReInitializeEvolve
+    {
+      LANG: Fortran
+      STORAGE: dfx
+      STORAGE: dfy
+      STORAGE: dfz
+      STORAGE: dfsq
+    } "Euler scheme"
+
+    # Then synchronize the level set and apply symmetry boundary conditions.
+ 
+    schedule  EHFinder_ApplySymFSFTMP in Euler_ReInitializeEvolve after EHFinder_ReInitializeEuler
+    {
+      LANG: Fortran
+      SYNC: f
+      SYNC: sftmp
+    } "Select f for boundary conditions"
+  
+    schedule GROUP ApplyBCs as EHFinderF_ApplyBCs in Euler_ReInitializeEvolve after EHFinder_ApplySymF
+    {
+    } "Apply boundary conditions (symmetries)"
+
+    schedule GROUP Euler_PostStep
+    {
+    } "Schedule group for Euler re-initialization post step"
+
+    schedule EHFinder_ReInitializePostStep in Euler_PostStep 
+    {
+      LANG: Fortran
+      OPTIONS: global 
+    } "Check if the re-initialization is done"
+
+    if (CCTK_IsThornActive("PUGH" ))
+    {
+      schedule GROUP EHFinder_PreReInitialize as EHFinder_PreReInitializePugh in EHFinder_ReInitialize
+      {
+      } "Pugh version of the pre-re-initialization routines"
+
+      # Set up the schedule group for euler re-initialization using 
+      # *_re_init_control to control the exit from the while loop.
+
+#      schedule GROUP Euler_ReInitialize in EHFinder_ReInitialize AFTER EHFinder_PreReInitializePUGH WHILE ehfinder::pugh_re_init_control
+      schedule GROUP Euler_ReInitialize in EHFinder_ReInitialize AFTER EHFinder_PreReInitializePUGH WHILE ehfinder::re_init_control
+      {
+      } "Schedule group for Euler re-initialization"
+   
+      schedule GROUP Euler_ReInitializeEvolve as Euler_ReInitializeEvolvePUGH in Euler_ReInitialize 
+      {
+      } "Schedule group for Euler re-initialization evolution with PUGH"
+
+      schedule GROUP Euler_PostStep as Euler_PostStepPUGH in Euler_ReInitialize after Euler_ReInitializeEvolve
+      {
+      } "Schedule group for Euler re-initialization post step"
+
+      schedule EHFinder_ReInitialize_Check in EHFinder_ReInitialize AFTER Euler_ReInitialize
+      {
+        LANG: Fortran
+      } "Check to see if re-initialization has to be undone"
+    }
+
+    if (CCTK_IsThornActive("Carpet"))
+    {
+      schedule EHFinder_PreReInitialize_Carpet in EHFinder_ReInitialize
+      {
+        LANG: C
+        OPTIONS: level
+      } "Carpet version of the pre-reinitialization routines"
+
+#      schedule EHFinder_ReInitialize_Wrapper in EHFinder_ReInitialize after EHFinder_PreReInitialize_Carpet WHILE ehfinder::carpet_re_init_control
+      schedule EHFinder_ReInitialize_Wrapper in EHFinder_ReInitialize after EHFinder_PreReInitialize_Carpet WHILE ehfinder::re_init_control
+      {
+        LANG: C
+#        OPTIONS: global
+        OPTIONS: level
+      } "Wrapper routine for Euler re-initialization for Carpet"
+    } 
+
+  }
+
+#  schedule GROUP Euler_RotateTimeLevels
+#  {
+#  } "Schedule group for rotating timelevels"
+#
+#  schedule EHFinder_RotateTimeLevels in Euler_RotateTimeLevels
+#  {
+#    LANG: Fortran
+#  } "Rotate timelevels in Euler re-initialization"
+
+  if (CCTK_Equals(re_init_int_method,"rk2"))
+  {
+
+    # Set up the schedule group for rk2 re-initialization using 
+    # re_init_control to control the exit from the while loop.
+
+    schedule GROUP RK2_ReInitialize in EHFinder_ReInitialize AFTER EHFinder_ReInitializeControl WHILE ehfinder::re_init_control
+    {
+    } "Schedule group for RK2 re-initialization"
+
+    # Schedule the routine that does the first RK2 step
+
+    schedule EHFinder_ReInitializeRK2_1 in RK2_ReInitialize 
+    {
+      LANG: Fortran
+      STORAGE: dfx
+      STORAGE: dfy
+      STORAGE: dfz
+      STORAGE: dfsq
+    } "RK2 scheme step 1"
+
+    # Then synchronize the level set and apply symmetry boundary conditions.
+   
+    schedule  EHFinder_ApplySymF AS Sym_RK2_1 in RK2_ReInitialize after EHFinder_ReInitializeRK2_1
+    {
+      LANG: Fortran
+      SYNC: f
+    } "Select f for boundary conditions"
+
+    schedule GROUP ApplyBCs as EHFinderRK2_1_ApplyBCs in RK2_ReInitialize after Sym_RK2_1
+    {
+    } "Apply boundary conditions (symmetries)"
+
+    # Schedule the routine that does the second RK2 step
+
+    schedule EHFinder_ReInitializeRK2_2 in RK2_ReInitialize after Sym_RK2_1
+    {
+      LANG: Fortran
+      STORAGE: dfx
+      STORAGE: dfy
+      STORAGE: dfz
+      STORAGE: dfsq
+    } "RK2 scheme step 2"
+
+    # Then synchronize the level set and apply symmetry boundary conditions.
+    
+    schedule  EHFinder_ApplySymF AS Sym_RK2_2 in RK2_ReInitialize after EHFinder_ReInitializeRK2_2
+    {
+      LANG: Fortran
+      SYNC: f
+    } "Select f for boundary conditions"
+
+  schedule GROUP ApplyBCs as EHFinderRK2_2_ApplyBCs in RK2_ReInitialize after Sym_RK2_2
+    {
+    } "Apply boundary conditions (symmetries)"
+  }
+
+  # Schedule modifications of the mask in group EHFinder_SetMask
+
+  schedule GROUP EHFinder_SetMask at CCTK_POSTSTEP after EHFinder_ReInitialize
+  {
+    STORAGE: tm_mask
+  } "Set the mask"
+
+  # First schedule the routine that adds or removes cells from the mask
+
+  schedule EHFinder_SetMask1 in EHFinder_SetMask
+  {
+    LANG: Fortran
+    SYNC: f
+    SYNC: eh_mask, tm_mask
+  } "Start modifying the mask"
+
+  # Then apply the symmetry boundary conditions.
+
+  schedule  EHFinder_ApplySymAll in EHFinder_SetMask after EHFinder_SetMask1
+  {
+    LANG: Fortran
+  } "Select both f and eh_mask for boundary conditions"
+
+  schedule GROUP ApplyBCs as EHFinderAll_ApplyBCs in EHFinder_SetMask after EHFinder_ApplySymAll
+  {
+  } "Apply boundary conditions (symmetries)"
+  # Finally locate the mask boundary and add values to distinguish different
+  # directions.
+
+  schedule EHFinder_SetMask2 in EHFinder_SetMask after EHFinderAll_ApplyBCs
+  {
+    LANG: Fortran
+    SYNC: eh_mask, tm_mask
+  } "Find excision boundaries"
+
+  schedule  EHFinder_ApplySymMask as ASM1 in EHFinder_SetMask after EHFinder_SetMask2
+  {
+    LANG: Fortran
+  } "Select eh_mask for boundary conditions"
+
+  schedule GROUP ApplyBCs as EHFinderMask1_ApplyBCs in EHFinder_SetMask after ASM1
+  {
+  } "Apply boundary conditions (symmetries)"
+
+  schedule EHFinder_SetMask3 in EHFinder_SetMask after EHFinder_ASM1
+  {
+    LANG: Fortran
+    SYNC: eh_mask, tm_mask
+  } "Check to see if the mask needs to be modified"
+
+  schedule  EHFinder_ApplySymMask as ASM2 in EHFinder_SetMask after EHFinder_SetMask3
+  {
+    LANG: Fortran
+  } "Select eh_mask for boundary conditions"
+ 
+  schedule GROUP ApplyBCs as EHFinderMask2_ApplyBCs in EHFinder_SetMask after ASM2
+  {
+  } "Apply boundary conditions (symmetries)"
+
+  schedule EHFinder_SetMask2 as SM2 in EHFinder_SetMask after ASM2
+  {
+    LANG: Fortran
+    SYNC: eh_mask, tm_mask
+  } "Find excision boundaries"
+
+  schedule  EHFinder_ApplySymMask as ASM3 in EHFinder_SetMask after SM2
+  {
+    LANG: Fortran
+  } "Select eh_mask for boundary conditions"
+
+  schedule GROUP ApplyBCs as EHFinderMask3_ApplyBCs in EHFinder_SetMask after ASM3
+  {
+  } "Apply boundary conditions (symmetries)"
+
+#  if ( evolve_generators)
+#  {
+#    if (CCTK_Equals(generator_tracking_method,"interpolate_before"))
+#    {
+#      schedule EHFinder_Generator_Sources as EGS in MoL_CalcRHS
+#      {
+#        LANG: Fortran
+#        STORAGE: generator_arrays
+#      } "Calculate the source terms for the generator evolution"
+#    }
+#    if (CCTK_Equals(generator_tracking_method,"interpolate_after"))
+#    {
+#      schedule EHFinder_Generator_Sources2 as EGS2 in MoL_CalcRHS
+#      {
+#        LANG: Fortran
+#        STORAGE: generator_arrays
+#      } "Calculate the source terms for the generator evolution"
+#    }
+#  }
+}

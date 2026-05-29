@@ -1,0 +1,10 @@
+# Schedule definitions for thorn NullDecomp
+# $Header$
+
+storage: kern, area
+
+schedule NullDecomp_Startup at BASEGRID AFTER NullGrid_Setup
+{
+  LANGUAGE: Fortran
+  OPTIONS: global
+} "Initialization"

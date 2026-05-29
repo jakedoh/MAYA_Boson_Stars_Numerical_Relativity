@@ -1,0 +1,11 @@
+# flesh
+cactus::cctk_itlast = 0
+
+# automagically create empty output directory
+ActiveThorns = "IOUtil"
+IO::out_dir = $parfile
+IO::parfile_write = "no"
+IO::out_fileinfo = "none"
+
+ActiveThorns = "TestTable"
+# there are no parameters for this thorn

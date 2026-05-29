@@ -1,0 +1,13 @@
+# Schedule definitions for thorn EOS_Hybrid
+
+schedule EOS_Hybrid_Startup AT startup AFTER EOS_Polytrope_Startup
+{
+  LANG: Fortran
+} "Setup the EOS used by Dimmelmeier et al. in core collapse"
+
+schedule Check_Poly_Contrib AT analysis
+{
+  LANG: Fortran
+  STORAGE: pressure_contributions
+  TRIGGERS: pressure_contributions
+} "Output the polytropic and thermal contributions"

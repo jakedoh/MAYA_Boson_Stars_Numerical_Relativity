@@ -1,0 +1,79 @@
+read `jeff-weyl.map`;
+
+rule_dmetric:={
+  diff(J,u)=J_u,diff(J,r)=J_l,diff(J,eth)=eth_J,diff(J,ethb)=ethb_J,
+   diff(J,u,r)=J_l_u,diff(J,r,r)=J_l_l,diff(J,eth,ethb)=eth_ethb_J,
+   diff(J,ethb,ethb)=ethb2_J,diff(J,eth,eth)=eth2_J,
+   diff(J,u,eth)=eth_J_u,diff(J,u,ethb)=ethb_J_u,
+   diff(J,r,eth)=eth_J_l,diff(J,r,ethb)=ethb_J_l,
+  diff(Jb,u)=conjg(J_u),diff(Jb,r)=conjg(J_l),diff(Jb,eth)=conjg(ethb_J),
+   diff(Jb,ethb)=conjg(eth_J),
+   diff(Jb,u,r)=conjg(J_l_u),diff(Jb,r,r)=conjg(J_l_l),
+   diff(Jb,ethb,ethb)=conjg(eth2_J),diff(Jb,eth,eth)=conjg(ethb2_J),
+   diff(Jb,u,eth)=conjg(ethb_J_u),diff(Jb,u,ethb)=conjg(eth_J_u),
+   diff(Jb,r,eth)=conjg(ethb_J_l),diff(Jb,r,ethb)=conjg(eth_J_l),
+  diff(U,u)=U_u,diff(U,r)=U_l,diff(U,eth)=eth_U,diff(U,ethb)=ethb_U,
+   diff(U,u,r)=U_l_u,diff(U,r,r)=U_l_l,diff(U,eth,ethb)=eth_ethb_U,
+   diff(U,ethb,ethb)=ethb2_U,diff(U,eth,eth)=eth2_U,
+   diff(U,u,eth)=eth_U_u,diff(U,u,ethb)=ethb_U_u,
+   diff(U,r,eth)=eth_U_l,diff(U,r,ethb)=ethb_U_l,
+  diff(Ub,u)=conjg(U_u),diff(Ub,r)=conjg(U_l),diff(Ub,eth)=conjg(ethb_U),
+   diff(Ub,ethb)=conjg(eth_U),
+   diff(Ub,u,r)=conjg(U_l_u),diff(Ub,r,r)=conjg(U_l_l),
+   diff(Ub,ethb,ethb)=conjg(eth2_U),diff(Ub,eth,eth)=conjg(ethb2_U),
+   diff(Ub,eth,ethb)=eth_ethb_Ub,
+   diff(Ub,u,eth)=conjg(ethb_U_u),diff(Ub,u,ethb)=conjg(eth_U_u),
+   diff(Ub,r,eth)=conjg(ethb_U_l),diff(Ub,r,ethb)=conjg(eth_U_l),
+  diff(K,u)=K_u,diff(K,r)=K_l,diff(K,eth)=eth_K,diff(K,ethb)=conjg(eth_K),
+   diff(K,u,r)=K_l_u,diff(K,r,r)=K_l_l,diff(K,eth,ethb)=eth_ethb_K,
+   diff(K,ethb,ethb)=conjg(ethb_K),diff(K,eth,eth)=eth2_K,
+   diff(K,u,eth)=eth_K_u,diff(K,u,ethb)=conjg(eth_K_u),
+   diff(K,r,eth)=eth_K_l,diff(K,r,ethb)=conjg(eth_K_l),
+  diff(B,u)=beta_u,diff(B,r)=beta_l,diff(B,eth)=eth_beta,diff(B,ethb)=conjg(eth_beta),
+   diff(B,u,r)=beta_l_u,diff(B,r,r)=beta_l_l,diff(B,eth,ethb)=eth_ethb_beta,
+   diff(B,ethb,ethb)=conjg(eth2_beta),diff(B,eth,eth)=eth2_beta,
+   diff(B,u,eth)=eth_beta_u,diff(B,u,ethb)=conjg(eth_beta_u),
+   diff(B,r,eth)=eth_beta_l,diff(B,r,ethb)=conjg(eth_beta_l)
+  };
+
+rule_metric:={
+   J=Jz,Jb=Jbz,U=Uz,Ub=Ubz,K=Kz,sigJ1=sigJz,sigJ1b=sigJbz,sigK1=sigKz,
+   sigu1=siguz,sigu1b=sigubz,sigr1=sigrz,sigr1b=sigrbz,sigru1=sigruz,siguu1=siguuz};
+
+rule_dsig:={
+  diff(sigJ1,u)=sigJ_u,diff(sigJ1,eth)=eth_sigJ,diff(sigJ1,ethb)=ethb_sigJ,
+  diff(sigJ1b,u)=conjg(sigJ_u),diff(sigJ1b,eth)=conjg(ethb_sigJ),
+   diff(sigJ1b,ethb)=conjg(eth_sigJ),
+  diff(sigK1,u)=sigK_u,diff(sigK1,eth)=eth_sigK,diff(sigK1,ethb)=ethb_sigK,
+  diff(sigu1,eth)=eth_sigu,diff(sigu1,ethb)=ethb_sigu,
+  diff(sigu1b,eth)=conjg(ethb_sigu),diff(sigu1b,ethb)=conjg(eth_sigu)
+  };
+
+proc_e2beta:=proc(X)
+  local t1,t2:
+   t1:=simplify(subs(B=BB,X)):
+   t2:=simplify(algsubs(exp(2*BB)=e2beta,t1)):
+   t2:=simplify(algsubs(exp(-2*BB)=1/e2beta,t2)):
+   return(t2):
+end;
+
+with(codegen);
+proc_fort:=proc(X)
+  local t1:
+  t1:=simplify(subs(rule_dmetric,rule_dsig,X)):
+  t1:=proc_e2beta(t1):
+  t1:=simplify(subs(rule_metric,t1)):
+  C(t1):
+  return(t1):
+end;
+
+proc_fort(psi4):
+writeto(`jeff-weyl.fort`);
+proc_fort(sigJ):
+proc_fort(sigK):
+proc_fort(sigu):
+proc_fort(sigr):
+proc_fort(sigru):
+proc_fort(siguu):
+proc_fort(psi4):
+writeto(`terminal`);

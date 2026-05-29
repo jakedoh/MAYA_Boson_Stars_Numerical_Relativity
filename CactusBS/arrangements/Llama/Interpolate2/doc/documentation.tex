@@ -1,0 +1,62 @@
+\documentclass{article}
+
+% Use the Cactus ThornGuide style file
+% (Automatically used from Cactus distribution, if you have a
+%  thorn without the Cactus Flesh download this from the Cactus
+%  homepage at www.cactuscode.org)
+\usepackage{../../../../doc/latex/cactus}
+
+\begin{document}
+
+\author{Erik Schnetter}
+\title{Interpatch Interpolation}
+
+\date{\today}
+
+\maketitle
+
+% START CACTUS THORNGUIDE
+
+\begin{abstract}
+The Interpolate2 thorn provides interpatch interpolation.
+\end{abstract}
+
+\section{Overview}
+
+The interpolator works in several steps.
+
+In the first step, during startup, it decides which points need to be
+set via interpolation. This is usually a layer N grid points deep at
+the boundaries of the patches, excluding ghost zones, and also
+excluding the outer boundaries.
+
+After each regridding, the Coordinates thorn iterates over these grid points, converts
+their locations to global coordinates, and finds out which patch ``owns''
+each location. It then assumes that this location is sufficiently far
+in the interior of the patch that one can apply a full interpolation
+stencil there. That is, the interpolation source must be surrounded by
+sufficiently many ghost zones, outer boundary points, or additional
+overlap points that the stencil does not include any other inter-patch
+boundary points. This condition depends, among other things, on the
+grid spacings in the patches, and thus there is no generic rule. It is
+tested each time via a dummy interpolation.
+
+At this point, Interpolate2 also calculates and stores the weights for the
+interpolation stencils, because calculating them is somewhat
+expensive. If the interpolation point is on a 2D plane, 1D line, or on
+a grid point (with a small tolerance of about $10^{-12}$), then the
+interpolation dimension is reduced, so that either 2D or 1D
+interpolation is performed whenever possible, or even ``0D''
+interpolation (i.e.~copying of grid points).
+
+Finally, each time the symmetry boundary conditions are applied, these
+stencils are evaluated and the result transferred (via MPI) to the
+target process.
+
+Interpolate2 provides the same interface as Interpolate, but it uses
+the CarpetInterp2 thorn to perform the actual interpolation instead of
+CarpetInterp.  This is more efficient.
+
+% END CACTUS THORNGUIDE
+
+\end{document}

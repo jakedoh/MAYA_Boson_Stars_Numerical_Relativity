@@ -1,0 +1,85 @@
+# Schedule definitions for thorn MassDistribution
+# $Header:$
+
+storage: MassPerSpecificEnergy, HistogramRange
+storage: HistogramActive, HistogramValid, HistogramLabels, have_work_to_do, file_created
+
+schedule MassDistribution_ParamCheck AT CCTK_PARAMCHECK
+{
+  LANG: C
+} "Check parameters"
+
+schedule MassDistribution_Init at CCTK_BASEGRID
+{
+  lang: C
+  OPTIONS: global
+} "Initialize Scalars and set up buffer zone information"
+
+schedule group MassDistribution at ANALYSIS
+{
+} "Find the mass histogram of the system"
+
+  # schedule everything global(-late) so that thorns that provide extra bining variables run first
+  schedule MassDistribution_InitMinMax in MassDistribution
+  {
+    lang: C
+    OPTIONS: global-late
+  } "Clear min/max counters before possible min/max finding."
+
+  schedule group MassDistribution_FindMinMax in MassDistribution after MassDistribution_InitMinMax if MassDistribution::have_work_to_do
+  {
+  } "Find (initial) bounds for histogram"
+
+    schedule MassDistribution_FindMinMax in MassDistribution_FindMinMax
+    {
+      lang: C
+      OPTIONS: global-late loop-local
+    } "Find min/max of bining variables in a grid patch on a single processor"
+
+    schedule MassDistribution_ReduceMinMax in MassDistribution_FindMinMax after MassDistribution_FindMinMax
+    {
+      lang: C
+      OPTIONS: global-late
+    } "Reduce min/max from different processors"
+  
+  schedule MassDistribution_InitMasses in MassDistribution after MassDistribution_FindMinMax
+  {
+    lang: C
+    OPTIONS: global-late
+  } "Initialize loop conters before possible integration."
+
+  schedule GROUP MassDistribution_Integrate in MassDistribution after MassDistribution_InitMasses WHILE MassDistribution::have_work_to_do
+  {
+  } "Iterate until a good histogram is found."
+
+    schedule MassDistribution_ZeroMasses in MassDistribution_Integrate
+    {
+      lang: C
+      OPTIONS: global-late
+    } "Zero masses before possible integration check if there is work to do."
+
+    schedule MassDistribution_SumLocalRestMass in MassDistribution_Integrate after MassDistribution_ZeroMasses
+    {
+      lang: C
+      OPTIONS: global-late loop-local
+    } "Compute histogram in a grid patch on a single processor"
+
+    schedule MassDistribution_SumGlobalRestMass in MassDistribution_Integrate after MassDistribution_SumLocalRestMass
+    {
+      lang: C
+      OPTIONS: global-late
+    } "Sum partial histograms from individual processors"
+
+    schedule MassDistribution_RescaleBins in MassDistribution_Integrate after MassDistribution_SumGlobalRestMass
+    {
+      lang: C
+      OPTIONS: global-late
+    } "Rescale min/max of histogram if the histrogram is not yet acceptable"
+
+  if(do_custom_output) {
+    schedule MassDistribution_Output in MassDistribution after MassDistribution_Integrate
+    {
+      lang: C
+      OPTIONS: global
+    } "Write output to files."
+  }

@@ -1,0 +1,126 @@
+# Distorted BH
+#
+# Frank Herrmann 19.Jun.2003
+#
+# runs with 128_0.2 essentially forever
+# used in the BH Spectroscopy paper by seidel, allen, carmada
+# could be used with cartoon
+
+ActiveThorns = " wave_extract idaxibrillbh spacemask admcoupling admbase staticconformal admmacros coordgauge admanalysis mol bssn_mol admconstraints carpetinterp localinterp aeilocalinterp boundary time carpet carpetlib carpetregrid carpetreduce carpetslab cartgrid3d carpetioascii ioutil iobasic ellbase nanchecker "
+
+#--- httpd
+#HTTPD::port = 7035
+
+#--- grid
+driver::global_nx   = 64
+driver::global_ny   = 64
+driver::global_nz   = 32
+driver::ghost_size  = 2
+grid::type          = "byspacing"
+grid::domain        = "bitant"
+grid::dxyz          = 0.27
+time::dtfac         = 0.25
+cactus::cctk_itlast = 10000
+
+carpet::max_refinement_levels	= 4
+carpetregrid::refinement_levels	= 1
+carpetregrid::refined_regions	= "manual-gridpoint-list"
+carpetregrid::gridpoints	= "[ [ ([68,68,8]:[188,188,72]:[4,4,4]) ], [ ([100,100,12]:[156,156,44]:[2,2,2]) ], [ ([116,116,14]:[140,140,30]:[1,1,1]) ] ]"
+carpetregrid::outerbounds	= "[ [ [[0,0],[0,0],[1,0]] ], [ [[0,0],[0,0],[1,0]] ], [ [[0,0],[0,0],[1,0]] ] ]"
+
+#--- axisymmetric brill wave+bh
+admbase::initial_data              = "axibrillbh"
+idaxibrillbh::amp                  = 0.1
+idaxibrillbh::eta0                 = 0.0
+idaxibrillbh::sigma                = 1.0
+idaxibrillbh::etamax               = 6.0
+idaxibrillbh::n                    = 4
+idaxibrillbh::ne                   = 302
+idaxibrillbh::nq                   = 54
+admbase::initial_shift             = "zero"
+admbase::evolution_method          = "adm_bssn"
+admbase::metric_type               = "static conformal"
+staticconformal::conformal_storage = "factor+derivs+2nd derivs"
+
+#--- numerics
+mol::ode_method        = "icn"
+adm_bssn::ICN_itnum    = 3
+adm_bssn::bound        = "newrad"
+adm_bssn::stencil_size = 2
+adm_bssn::advection    = "upwind2"
+boundary::radpower     = 3
+
+#--- gauge
+admbase::initial_lapse          = "one"
+admbase::lapse_evolution_method = "1+log"
+adm_bssn::lapsesource           = "modified"
+adm_bssn::harmonic_f            = 2.0
+
+adm_bssn::LapsePsiPower         = 4
+adm_bssn::AlphaDissip           = 2.0
+
+admbase::shift_evolution_method = "gamma0"
+
+adm_bssn::ShiftGammaCoeff       = 0.75
+adm_bssn::BetaDriver            = 1.1
+adm_bssn::ShiftAlpPower         = 1
+adm_bssn::ShiftPsiPower         = 2
+
+#--- extract
+wave_extract::interpolation_operator = "Lagrange polynomial interpolation"
+wave_extract::interpolation_order = 2
+wave_extract::maximum_detector_number = 1
+wave_extract::out_every         = 1
+wave_extract::rsch2_computation       ="average Schwarzschild metric"
+wave_extract::start_iteration   = 0
+wave_extract::verbose       = 10
+wave_extract::l_mode        = 2
+wave_extract::m_mode        = 0
+wave_extract::detector_radius[0]     = 1.0
+#wave_extract::detector_radius[1]     = 10.0
+#wave_extract::detector_radius[2]     = 11.0
+#wave_extract::detector_radius[3]     = 11.5
+#wave_extract::detector_radius[4]     = 11.9
+
+#--- ahfinder
+ahfinder::ahf_active    = "yes"
+#ahfinder::ahf_active    = "no"
+ahfinder::ahf_flow      = "yes"
+ahfinder::ahf_findevery = 24
+ahfinder::ahf_lmax      = 8
+ahfinder::ahf_ntheta    = 100
+ahfinder::ahf_nphi      = 100
+ahfinder::ahf_phi       = "yes"
+ahfinder::ahf_find3     = "no"
+ahfinder::ahf_guessold  = "yes"
+ahfinder::ahf_r0        = 0
+
+#--- output
+io::out_dir                              = "Carpet-a0.1w1b0n4_p4d4_gam0_g0.75b1.1a1p2_128b0.2-alp"
+iobasic::outScalar_every                = 8
+iobasic::outScalar_vars                 = "admbase::alp admbase::metric admbase::shift admconstraints::momentum admconstraints::ham admconstraints::normalized_hamiltonian extract::triggergroup"
+iobasic::outInfo_every                  = 1
+iobasic::outInfo_vars                   = "admbase::alp admconstraints::ham"
+ioascii::out1D_every                    = 8
+ioascii::out1D_vars                     = "admbase::alp admbase::metric admbase::shift admconstraints::momentum admconstraints::ham admconstraints::normalized_hamiltonian"
+#iohdf5::out_every                       = 20
+io::out_downsample_x                    = 4
+io::out_downsample_y                    = 4
+io::out_downsample_z                    = 4
+io::out_single_precision                = "yes"
+#iohdf5::out_vars = "admbase::metric staticconformal::psi[out_every=1000000] admbase::lapse admbase::shift admconstraints::hamiltonian admconstraints::normalized_hamiltonian admconstraints::momentum"
+
+#--- checkpoint
+#iohdf5::checkpoint                      = "no"
+#io::recover                             = "no"
+#io::checkpoint_every                    = 1000
+#io::checkpoint_dir                      = "Carpet-a0.1w1b0n4_p4d4_gam0_g0.75b1.1a1p2_128b0.2-alp/checkpoint"
+
+#--- nanchecker
+nanchecker::check_every     =10
+nanchecker::check_vars      ="admbase::metric admbase::curv"
+nanchecker::action_if_found ="terminate"
+
+#--- timing
+#carpet::timer_output        = "yes"
+cactus::cctk_timer_output = "FULL"

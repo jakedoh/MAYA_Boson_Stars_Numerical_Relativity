@@ -1,0 +1,107 @@
+# Parameter definitions for thorn MyTov
+
+shares:ADMBase
+
+EXTENDS KEYWORD initial_data
+{
+  "mytov" :: "my TOV star metric"
+}
+USES KEYWORD metric_type
+
+
+EXTENDS KEYWORD initial_lapse
+{
+  "mytov" :: "TOV star initial lapse; isotropic"
+}
+
+EXTENDS KEYWORD initial_shift
+{
+  "mytov" :: "TOV star initial shift"
+}
+
+private:
+
+KEYWORD initial_profile "initial profile"
+{
+  "My_Tov" :: "TOV star initial shift"
+  "ZurekPage" :: "TOV star initial shift"
+} ZurekPage
+
+REAL mygamma "The adiabatic index"
+{
+ 0:* :: "Positive"
+} 2.0
+
+#========1D SPHERICAL GRID===============
+
+
+INT Num_datos "number of data domain minimun"
+{
+  *:* :: "No restriction"
+} 100
+
+
+
+REAL myxmin "r domain minimun"
+{
+  *:* :: "No restriction"
+} 1e-14
+
+REAL myxmax "r domain maximun"
+{
+  *:* :: "No restriction"
+} 15.0
+
+INT Nx "number of points in the r direction" 
+{
+  *:* :: "No restriction"
+} 20000
+
+
+#==========================================
+REAL courant "courant number"
+{
+  *,* :: "No restriction"
+} 0.25
+
+REAL myfloor "myfloor"
+{ 
+*,* :: "No Restriction"  
+} 1.d-14                   
+                     
+REAL rho0_c "density"
+{ 
+*,* :: "No Restriction"
+} 0.00128  
+
+REAL alpha_c "lapse"
+{ 
+*,* :: "No Restriction"  
+} 0.5   
+
+REAL K_poly "Politropic Constant"
+{ 
+*,* :: "No Restriction"  
+} 100.0     
+
+
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+##PARA LA HIDRO PERO PRIMERO LA METRICA
+
+shares:HydroBase
+
+EXTENDS KEYWORD initial_hydro "mytov"
+{
+  "mytov" :: "TOV star initial hydrobase variables"
+}
+
+#!shares:GRHydro
+#!USES real rho_abs_min
+#!USES real rho_rel_min
+#!USES REAL initial_rho_abs_min
+#!USES REAL initial_rho_rel_min
+#!USES REAL initial_atmosphere_factor
+#!USES real GRHydro_rho_central
+
+
+

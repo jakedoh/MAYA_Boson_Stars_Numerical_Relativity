@@ -1,0 +1,13 @@
+Cactus Code Thorn SphericalInfall
+Thorn Author(s)     : Roland Haas <roland.haas@physics.gatech.edu>
+                      Tanja Bode <tanja.bode@physics.gatech.edu>
+Thorn Maintainer(s) : Tanja Bode <tanja.bode@physics.gatech.edu>
+--------------------------------------------------------------------------
+
+Purpose of the thorn:
+
+Provides simple initial data for radial infalling test dust into a
+Schwarzschild black hole by following ApJ 277:296 (Hawley et al).
+
+Expanded to initialize real Bondi solution as found by evolving 
+outwards from the sonic point on an isotropic spacetime.

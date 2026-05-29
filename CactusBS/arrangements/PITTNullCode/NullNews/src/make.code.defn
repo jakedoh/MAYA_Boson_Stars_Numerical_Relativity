@@ -1,0 +1,10 @@
+# Main make.code.defn file for thorn NullNews
+# $Header$ 
+
+# Source files in this directory
+SRCS =	NullNews_Bondi.F90 NullNews_GetNews.F90 NullNews_Init.F90 \
+	NullNews_Omega.F90 NullNews_ScriUtil.F90 NullNews_ScriVals.F90 NullNews_CalcPsi4.F90 NullNews_SphHarmDecomp.F90 \
+	NullNews_YlmScri.F90 NullNews_interp_to_constant_uBondi.cc
+
+# Subdirectories containing source files
+SUBDIRS =	

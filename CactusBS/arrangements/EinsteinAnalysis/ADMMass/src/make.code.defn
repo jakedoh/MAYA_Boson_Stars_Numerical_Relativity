@@ -1,0 +1,8 @@
+# Main make.code.defn file for thorn ADMMass
+# $Header$
+
+# Source files in this directory
+SRCS = surface_integral.c volume_integral.c loop.c
+
+# Subdirectories containing source files
+SUBDIRS = 

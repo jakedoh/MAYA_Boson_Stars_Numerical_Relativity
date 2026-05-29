@@ -1,0 +1,275 @@
+# Interface definition for thorn NullExact
+# $Header$
+
+implements: NullExact
+inherits: NullVars NullGrid NullNews NullConstr NullInterp NullEvolve
+friend: NullSHRExtract
+
+CCTK_INT FUNCTION MoLRegisterEvolvedGroup(CCTK_INT IN EvolvedIndex, \
+                                          CCTK_INT IN RHSIndex)
+
+REQUIRES FUNCTION MoLRegisterEvolvedGroup
+
+private:
+
+CCTK_REAL realcharfuncs_e[NullGrid::N_radial_pts] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+  wcn_e, bcn_e
+} "Error in Evolved Real-valued Characteristic Fields"
+
+CCTK_REAL realConstr_e[NullGrid::N_radial_pts] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+  R01n_e, R01s_e
+} "Error in constraints"
+
+
+CCTK_REAL cmplxcharfuncs_basic_e_split[NullGrid::N_radial_pts] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+  jcnr, jcni, jcnr_e, jcni_e
+} "Error in Evolved complex-valued Characteristic Fields (basic set, real and imag part)"  
+
+CCTK_COMPLEX cmplxcharfuncs_basic_e_mask[NullGrid::N_radial_pts] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+  Mjcn_e, Mucn_e, Meth2jcn_e
+} "Error in Evolved complex-valued Characteristic Fields (basic set)"  
+
+CCTK_COMPLEX cmplxcharfuncs_basic_e[NullGrid::N_radial_pts] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+  jcn_e, ucn_e, qcn_e, eth2jcn_e
+} "Error in Evolved complex-valued Characteristic Fields (basic set)"  
+
+CCTK_COMPLEX cmplxcharfuncs_aux_e[NullGrid::N_radial_pts] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+  nucn_e, cbcn_e, ckcn_e
+} "Error in Evolved complex-valued Characteristic Fields (auxiliary set)"  
+
+
+CCTK_REAL realcharfuncs_e_south[NullGrid::N_radial_pts] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+  wcs_e, bcs_e
+} "Error in Evolved Real-valued Characteristic Fields (south)"
+
+CCTK_COMPLEX cmplxcharfuncs_basic_e_south[NullGrid::N_radial_pts] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+  jcs_e, ucs_e, qcs_e, eth2jcs_e
+} "Error in Evolved complex-valued Characteristic Fields (basic set, south)"  
+
+CCTK_COMPLEX cmplxcharfuncs_aux_e_south[NullGrid::N_radial_pts] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+  nucs_e, cbcs_e, ckcs_e
+} "Error in Evolved complex-valued Characteristic Fields (auxiliary set, south)"  
+
+cctk_real NewsBr[2] Type=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"Real part of Bondi News"
+cctk_real NewsBi[2] Type=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"Imaginary part of Bondi News"
+
+cctk_real hmu[2] Type=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts 
+{
+  muh, EQmuh
+} "real part of omega - 1"
+
+cctk_complex hJ_l[2] Type=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts 
+{
+  Jh_l, EQJh_l
+} "derivative of J, over x, evolved values"
+
+cctk_real mu_err[2] Type=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts 
+{
+  mu_e, EGmu_e
+} "error in real part of omega - 1"
+
+cctk_complex J_l_err[2] Type=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts 
+{
+  aJ_l_e, EGaJ_l_e, nJ_l_e, EGnJ_l_e
+} "error in J_l"
+
+cctk_real Newsr_e[2] Type=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"error in real part of News"
+
+cctk_real Newsi_e[2] Type=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"error in imaginary part of News"
+
+cctk_real NewsBr_e[2] Type=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"error in real part of Bondi News"
+cctk_real NewsBi_e[2] Type=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"error in imaginary part of Bondi News"
+
+cctk_complex NewsB_e[2] Type=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"error in Bondi News"
+
+cctk_real Psi4r_e[2] Type=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"error in real part of Psi4"
+
+cctk_real Psi4i_e[2] Type=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"error in imaginary part of Psi4"
+
+cctk_complex Psi4_e[2] Type=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"error in Psi4"
+
+cctk_real uBondi_e[2] Type=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"error in Bondi time associated with the Bondi News"
+
+
+#Analytic Variables
+cctk_complex ana_J_l[2] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"analytic J_l"  
+
+cctk_complex num_J_l[2] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"derivative of J, over x, numeric values"  
+
+cctk_real ana_mu[2] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"analytic Omega"  
+
+cctk_complex ana_News[2] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"analytic complex-valued News (basic set)"  
+
+cctk_complex ana_Psi4[2] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"analytic complex-valued Psi4 (basic set)"  
+
+cctk_complex ana_J[NullGrid::N_radial_pts] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+  ana_jcn, ana_jcs
+} "Error in Evolved complex-valued Characteristic Fields J"  
+
+cctk_complex ana_U[NullGrid::N_radial_pts] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+  ana_ucn, ana_ucs
+} "Error in Evolved complex-valued Characteristic Fields U"  
+
+cctk_complex ana_Q[NullGrid::N_radial_pts] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+  ana_qcn, ana_qcs
+} "Error in Evolved complex-valued Characteristic Fields Q"  
+
+
+#MoL variables
+cctk_real dotNews_MoL[2] Type=ARRAY timelevels=2 dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"real dotNews for MoL - this is the real part of Psi4"
+cctk_real News_MoL[2] Type=ARRAY timelevels=2 dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"real News for MoL - this is the real part of integral Psi4"
+cctk_real errNews_MoL[2] Type=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"difference between News from MoL integration of Psi4 and evolved News"
+
+
+
+CCTK_COMPLEX Ylm_group[2] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+   {
+     Ylm_2,Ylm_1,Ylm_0
+   } "Ylm_s by patch"
+
+CCTK_INT WTexact_mask TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+  WTexact_maskn, WTexact_masks
+} "Worldtube mask"

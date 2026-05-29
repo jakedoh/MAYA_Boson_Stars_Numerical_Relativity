@@ -1,0 +1,13 @@
+Cactus Code Thorn NPScalars
+Author(s)    : Ulrich Sperhake
+               Helvi Witek
+               Miguel Zilhão
+Maintainer(s): Helvi Witek
+               Miguel Zilhão
+Licence      : GPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+Computes the Newman-Penrose scalar Psi4 from the ADMBase variables, as described
+in appendix C of https://arxiv.org/pdf/gr-qc/0606079.pdf

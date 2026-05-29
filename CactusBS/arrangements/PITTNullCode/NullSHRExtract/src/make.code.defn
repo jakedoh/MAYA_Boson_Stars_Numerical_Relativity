@@ -1,0 +1,22 @@
+# Main make.code.defn file for thorn NullSHRExtract
+# $Header:$
+
+# Source files in this directory
+SRCS = \
+	NullSHRE_AnaSchMetricRecon.F90 NullSHRE_ExtractWT.F90 \
+	NullSHRE_FullMetricRecon.F90 NullSHRE_InitialWT.F90 \
+	NullSHRE_MetricReconPast.F90 NullSHRE_ErrorSch.F90\
+	NullSHRE_Pointing.F90 NullSHRE_PreCalcNSYlm.F90 \
+	NullSHRE_SchReadClm.F90 NullSHRE_SchMetricRecon.F90 \
+	NullSHRE_SchPreCalc.F90 NullSHRE_modSchYlm.F90 \
+	NullSHRE_modVars.F90 NullSHRE_modSchClm.F90 \
+	NullSHRE_modsinSchClm.F90 NullSHRE_modvibSchClm.F90\
+	NullSHRE_mod4Metric.F90 NullSHRE_modAnaCoord.F90 \
+	NullSHRE_modBoundary.F90 NullSHRE_modEta.F90 \
+	NullSHRE_modGFdef.F90 NullSHRE_modInverse.F90 \
+	NullSHRE_modNullDir.F90 NullSHRE_modRadius.F90 \
+	NullSHRE_WTSphHarm.F90 \
+	wt_SphHarmDecomp.F90
+
+# Subdirectories containing source files
+SUBDIRS = 

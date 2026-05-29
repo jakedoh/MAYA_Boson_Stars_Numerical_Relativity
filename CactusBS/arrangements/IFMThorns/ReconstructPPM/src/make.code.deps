@@ -1,0 +1,15 @@
+# Module dependencies for thorn Whisky
+
+PPM_Simple1d_Routines.F90.o:    PPM_Scalars.F90.o
+PPM_Simple1d_Routines.F90.o:    PPM_EigenvalueCalcs.F90.o
+PPM_SimplePPM_1d_XYZ.F90.o:     PPM_Scalars.F90.o
+PPM_SimplePPM_1d_XYZ.F90.o:     PPM_EigenvalueCalcs.F90.o
+PPM_Extra_Routines.F90.o:       PPM_Scalars.F90.o
+PPM_PreLoop.F90.o:		PPM_Scalars.F90.o
+ReconstructPPM.F90.o:           PPM_Simple1d_Routines.F90.o
+ReconstructPPM.F90.o:           PPM_Extra_Routines.F90.o
+PPM_Polytype.F90.o:             PPM_Simple1d_Routines.F90.o
+PPM_Polytype.F90.o:             PPM_Extra_Routines.F90.o
+PPM_Fast.F90.o:                 PPM_Simple_1d_XYZ.F90.o
+PPM_Fast.F90.o:                 PPM_Extra_Routines.F90.o
+

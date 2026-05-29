@@ -1,0 +1,4 @@
+# Configuration definition for thorn EOS_Hybrid
+
+REQUIRES EOS_Base EOS_Polytrope
+

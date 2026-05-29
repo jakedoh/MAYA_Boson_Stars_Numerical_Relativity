@@ -1,0 +1,11 @@
+# Main make.code.defn file for thorn EOS_Polytrope
+# $Header$
+
+# Source files in this directory
+SRCS = 	EOS_Polytrope_Startup.F \
+	EOS_Polytrope.F \
+	EOS_Polytrope_Scalars.F
+
+# Subdirectories containing source files
+SUBDIRS = 
+

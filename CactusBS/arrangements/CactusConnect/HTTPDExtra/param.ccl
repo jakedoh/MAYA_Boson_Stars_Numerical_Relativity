@@ -1,0 +1,10 @@
+# Parameter definitions for thorn httpd_utils
+# $Header$
+
+private:
+
+INT viewport_refresh_seconds "Viewport web page refresh time seconds" STEERABLE = ALWAYS
+{
+    -1:      :: "-1 for no refresh, 0 for immediate refresh"
+} -1
+

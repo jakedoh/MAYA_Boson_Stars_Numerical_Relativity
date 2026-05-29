@@ -1,0 +1,9 @@
+Cactus Code Thorn TestMath
+Author(s)    : unknown
+Maintainer(s): Cactus team
+Licence      : LGPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+Test whether <cmath> functions compile in C++.

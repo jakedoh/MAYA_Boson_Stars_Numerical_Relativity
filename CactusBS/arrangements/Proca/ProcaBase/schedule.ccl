@@ -1,0 +1,10 @@
+# Schedule definitions
+
+STORAGE: Ei[3] Ai[3] Aphi[3] Zeta[3]
+
+schedule proca_symmetries at BASEGRID
+{
+  LANG: Fortran
+  OPTIONS: Global
+} "Register symmetries of the grid functions"
+

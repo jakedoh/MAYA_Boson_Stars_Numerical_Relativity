@@ -1,0 +1,14 @@
+Cactus Code Thorn ShiftedKerrSchild
+Author(s)    : Zach Etienne <zachetie@gmail.com>
+             : 
+Maintainer(s): Zach Etienne <zachetie@gmail.com>
+             : 
+License      : 2-clause BSD (a.k.a., "FreeBSD license"). See LICENSE file
+             : for full license terms and conditions.
+--------------------------------------------------------------------------
+
+1. Purpose
+
+To set up Kerr-Schild initial data, with a shifted radial coordinate.
+See Appendix of GiRaFFE code announcement paper for full description:
+https://arxiv.org/abs/1704.00599

@@ -1,0 +1,11 @@
+Cactus Code Thorn IDScalarWave
+Author(s)    : Tom Goodale
+               Gabrielle Allen
+Maintainer(s): Cactus team
+Licence      : LGPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+This thorns sets initial data for the scalar wave equation evolver
+

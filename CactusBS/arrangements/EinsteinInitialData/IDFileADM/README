@@ -1,0 +1,13 @@
+CVS info   : $Header$
+
+Cactus Code Thorn IDFileADM
+Thorn Author(s)     : Erik Schnetter <schnetter@aei.mpg.de>
+Thorn Maintainer(s) : Erik Schnetter <schnetter@aei.mpg.de>
+--------------------------------------------------------------------------
+
+Purpose of the thorn:
+
+Make it possible to use the file reader to read initial data for the
+ADM variables.  This checks whether the ADM variables are actually
+supposed to be read, so that it is impossible to actually leave
+something uninitialised.  However, read errors are not caught.

@@ -1,0 +1,92 @@
+!DESC "Carpet unigrid, one TOV" 
+# this is a coarsened copy of TOVSolver's test_tov_static file
+ActiveThorns = "time MoL coordbase symbase cartgrid3d ioutil boundary admbase staticconformal spacemask admcoupling coordgauge admmacros hydrobase grhydro grhydro_initdata tovsolver eos_omni admconstraints Constants LocalReduce Carpet CarpetLib CarpetRegrid2 CarpetInterp CarpetReduce CarpetIOScalar CarpetIOBasic LoopControl TmunuBase InitBase carpetiohdf5"
+
+TmunuBase::stress_energy_storage	=	yes
+TmunuBase::stress_energy_at_RHS		=	yes
+
+time::dtfac = 0.375
+
+ADMConstraints::constraints_persist	= yes
+admconstraints::bound     = "static"
+
+boundary::radpower        = 2
+
+SpaceMask::use_mask = "yes"
+
+CartGrid3D::type = "coordbase"
+CoordBase::domainsize = minmax
+
+Carpet::domain_from_coordbase = "yes"
+CoordBase::xmin =  -20.0 - 3.14
+CoordBase::ymin =  -20.0 + 42
+CoordBase::zmin =  -22.5 + 6
+CoordBase::xmax =   20.0 - 3.14
+CoordBase::ymax =   20.0 + 42
+CoordBase::zmax =   22.5 + 6
+CoordBase::dx = 5
+CoordBase::dy = 5
+CoordBase::dz = 3
+CoordBase::boundary_size_x_lower = 2
+CoordBase::boundary_size_y_lower = 2
+CoordBase::boundary_size_z_lower = 2
+CoordBase::boundary_size_x_upper = 2
+CoordBase::boundary_size_y_upper = 2
+CoordBase::boundary_size_z_upper = 2
+
+Carpet::max_refinement_levels = 2
+CarpetRegrid2::min_distance = 0
+CarpetRegrid2::num_centres = 1
+CarpetRegrid2::num_levels_1 = 2
+CarpetRegrid2::radius_1[1] = 7.5
+
+driver::ghost_size   = 2
+
+cactus::cctk_itlast   =       0
+
+methodoflines::ode_method        = "icn"
+
+hydrobase::timelevels             = 2
+hydrobase::evolution_method       = "GRHydro"
+
+GRHydro::riemann_solver            = "hlle"
+GRHydro::GRHydro_eos_type           = "Polytype"
+GRHydro::GRHydro_eos_table          = "2D_Polytrope"
+GRHydro::recon_method              = "tvd"
+GRHydro::GRHydro_stencil            = 2
+GRHydro::bound                     = "flat"
+GRHydro::tvd_limiter               = "VanLeerMC2"
+GRHydro::rho_abs_min               = 1.e-7
+GRHydro::initial_atmosphere_factor = 0.999
+
+ADMBase::initial_data  = "tov"
+ADMBase::initial_lapse = "tov"
+ADMBase::initial_shift = "tov"
+
+tovsolver::TOV_Rho_Central[0] = 1.28e-3
+tovsolver::TOV_Gamma[0]       = 2.0
+tovsolver::TOV_K[0]           = 100.0
+tovsolver::TOV_Combine_Method = "maximum"
+
+Carpet::prolongation_order_space  = 3
+Carpet::prolongation_order_time   = 0
+Carpet::init_fill_timelevels      = yes
+
+IO::out_dir			= $parfile
+IO::out_fileinfo= "none"
+
+IOScalar::outScalar_every = 0
+IOScalar::outScalar_vars  = "hydrobase::rho hydrobase::press hydrobase::eps hydrobase::vel GRHydro::dens GRHydro::tau GRHydro::scon admbase::lapse admbase::metric admbase::curv admconstraints::ham admconstraints::momentum HydroBase::w_lorentz"
+IOScalar::outScalar_reductions  = "minimum maximum norm1 norm2"
+
+IOHDF5::out_every = 1
+IOHDF5::out_vars  = "hydrobase::rho admbase::alp"
+
+activethorns = carpetioascii
+IOASCII::compact_format  = "yes"
+IOASCII::out1D_every     = 0
+IOASCII::out1D_d         = "no"
+IOASCII::out1D_vars      = "
+ ADMBase::alp
+ HydroBase::rho
+"

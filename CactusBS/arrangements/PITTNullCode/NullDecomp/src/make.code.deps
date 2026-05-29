@@ -1,0 +1,11 @@
+# Main make.code.deps file for thorn NullDecomp
+# $Header$
+
+NullDecomp_SpinDecomp.F90.o:\
+	NullDecomp_sYlm.F90.o\
+	NullDecomp_Vars.F90.o
+
+Startup.F90.o: NullDecomp_SpinDecomp.F90.o\
+	NullDecomp_Vars.F90.o
+
+#

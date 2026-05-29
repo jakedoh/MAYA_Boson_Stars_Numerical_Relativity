@@ -1,0 +1,10 @@
+CVS info   : $Header: /numrelcvs/HerrmannCVS/WaveExtract/README,v 1.1.1.1 2004/06/10 15:08:38 herrmann Exp $
+
+Cactus Code Thorn WaveExtract
+Thorn Author(s)     : Frank Herrmann <herrmann@aei.mpg.de>
+Thorn Maintainer(s) : Frank Herrmann <herrmann@aei.mpg.de>
+--------------------------------------------------------------------------
+
+Purpose of the thorn:
+Does Wave extraction and only wave extraction using the Zerilli formalism.
+This thorn was formerly Extract, but that got overloaded with lots of stuff.

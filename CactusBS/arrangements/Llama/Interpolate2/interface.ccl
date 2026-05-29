@@ -1,0 +1,106 @@
+IMPLEMENTS: Interpolate
+
+INHERITS: Coordinates grid
+
+USES INCLUDE: tensortypes.h
+USES INCLUDE: loopcontrol.h
+
+USES INCLUDE: carpetinterp2.hh
+
+
+
+CCTK_INT FUNCTION      \
+    GetRefinementLevel \
+        (CCTK_POINTER_TO_CONST IN cctkGH)
+REQUIRES FUNCTION GetRefinementLevel
+
+
+
+CCTK_INT FUNCTION     \
+    MultiPatch_GetMap \
+        (CCTK_POINTER_TO_CONST IN cctkGH)
+REQUIRES FUNCTION MultiPatch_GetMap
+
+CCTK_INT FUNCTION                         \
+    MultiPatch_GetBbox                    \
+        (CCTK_POINTER_TO_CONST IN cctkGH, \
+         CCTK_INT IN size,                \
+         CCTK_INT OUT ARRAY bbox)
+REQUIRES FUNCTION MultiPatch_GetBbox 
+
+CCTK_INT FUNCTION                           \
+    MultiPatch_GetBoundarySpecification     \
+        (CCTK_INT IN map,                   \
+         CCTK_INT IN size,                  \
+         CCTK_INT OUT ARRAY nboundaryzones, \
+         CCTK_INT OUT ARRAY is_internal,    \
+         CCTK_INT OUT ARRAY is_staggered,   \
+         CCTK_INT OUT ARRAY shiftout)
+REQUIRES FUNCTION MultiPatch_GetBoundarySpecification
+
+CCTK_INT FUNCTION                               \
+    MultiPatch_GlobalToLocal                    \
+        (CCTK_POINTER_TO_CONST IN cctkGH,       \
+         CCTK_INT IN ndims,                     \
+         CCTK_INT IN npoints,                   \
+         CCTK_POINTER_TO_CONST IN globalcoords, \
+         CCTK_INT ARRAY OUT patch,              \
+         CCTK_POINTER IN localcoords,           \
+         CCTK_POINTER IN dadx,                  \
+         CCTK_POINTER IN ddadxdx)
+USES FUNCTION MultiPatch_GlobalToLocal
+
+
+
+#CCTK_INT FUNCTION                                      \
+#    DriverInterpolate                                  \
+#        (CCTK_POINTER_TO_CONST IN cctkGH,              \
+#         CCTK_INT IN N_dims,                           \
+#         CCTK_INT IN local_interp_handle,              \
+#         CCTK_INT IN param_table_handle,               \
+#         CCTK_INT IN coord_system_handle,              \
+#         CCTK_INT IN N_interp_points,                  \
+#         CCTK_INT IN interp_coords_type,               \
+#         CCTK_POINTER_TO_CONST ARRAY IN interp_coords, \
+#         CCTK_INT IN N_input_arrays,                   \
+#         CCTK_INT ARRAY IN input_array_indices,        \
+#         CCTK_INT IN N_output_arrays,                  \
+#         CCTK_INT ARRAY IN output_array_types,         \
+#         CCTK_POINTER ARRAY IN output_arrays)
+#USES FUNCTION DriverInterpolate
+
+
+
+CCTK_INT FUNCTION                         \
+    Boundary_SelectVarForBC               \
+        (CCTK_POINTER_TO_CONST IN cctkGH, \
+         CCTK_INT IN faces,               \
+         CCTK_INT IN boundary_width,      \
+         CCTK_INT IN table_handle,        \
+         CCTK_STRING IN var_name,         \
+         CCTK_STRING IN bc_name)
+USES FUNCTION Boundary_SelectVarForBC
+
+CCTK_INT FUNCTION                            \
+    Boundary_SelectedGVs                     \
+        (CCTK_POINTER_TO_CONST IN cctkGH,    \
+         CCTK_INT IN  array_size,            \
+         CCTK_INT ARRAY OUT var_indicies,    \
+         CCTK_INT ARRAY OUT faces,           \
+         CCTK_INT ARRAY OUT boundary_widths, \
+         CCTK_INT ARRAY OUT table_handles,   \
+         CCTK_STRING IN  bc_name)
+REQUIRES FUNCTION Boundary_SelectedGVs
+
+
+
+PUBLIC:
+CCTK_INT source_patch TYPE=gf TAGS='Checkpoint="no" Prolongation="none"'
+{
+  Sn
+} "source patch number, -1 for interior points, -2 for outer boundary points, -3 for inter-processor ghost points"
+
+
+
+PRIVATE:
+CCTK_REAL test TYPE=gf TAGS='tensortypealias="Scalar" Checkpoint="no" Prolongation="none"' "Test grid function"

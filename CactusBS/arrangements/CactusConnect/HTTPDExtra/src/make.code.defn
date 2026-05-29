@@ -1,0 +1,9 @@
+# Main make.code.defn file for thorn httpd_utils
+# $Header$
+
+# Source files in this directory
+SRCS = Groups.c Startup.c IO.c Processors.c HostNames.c PtrList.c HTTPD_FileList.c TimerInfo.c
+
+# Subdirectories containing source files
+SUBDIRS = 
+

@@ -1,0 +1,17 @@
+# Main make.code.defn file for thorn ReconstructPPM
+# $Header:$
+
+# Source files in this directory
+SRCS = ReconstructPPM_ParamCheck.F90 \
+       ReconstructPPM_PreLoop.F90 \
+       ReconstructPPM.F90 \
+       PPM_Scalars.F90 \
+       PPM_Simple1d_Routines.F90 \
+       PPM_Extra_Routines.F90 \
+       PPM_fast.F90 \
+       PPM_SimplePPM_1d_XYZ.F90 \
+       PPM_Polytype.F90 \
+       PPM_EigenvalueCalcs.F90
+
+# Subdirectories containing source files
+SUBDIRS = 

@@ -1,0 +1,19 @@
+# Parameter definitions for thorn DemoInterp
+# $Header$
+
+private:
+
+real interp_radius "Radius at which to interpolate points"
+{
+  0:* :: "Non-negative"
+} 0.5
+
+int arrsize "Size of interpolating arrays"
+{
+  1:* :: "Positive"
+} 10
+
+INT interpolation_order "Order for interpolation" STEERABLE = ALWAYS
+{
+  1:3 :: "Choose between first, second, and third-order"
+} 1

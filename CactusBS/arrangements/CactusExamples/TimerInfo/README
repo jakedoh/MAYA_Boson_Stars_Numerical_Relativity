@@ -1,0 +1,11 @@
+Cactus Code Thorn TimerInfo
+Author(s)    : Cactus team
+Maintainer(s): Cactus team
+Licence      : LGPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+At the moment just prints out the value of all timers at chosen
+iteration intervals. Will be worked into a more useful thorn to 
+report of different kinds of timing information in different ways

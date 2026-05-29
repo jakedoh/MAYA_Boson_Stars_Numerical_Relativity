@@ -1,0 +1,27 @@
+
+# Set up the initial data as usual
+
+schedule add_teukolsky in ADMBase_PostInitial
+{
+  LANG: Fortran
+} "Add Teukolsky wave to ADMBase variabless"
+
+# Schedule faking of evolution if desired
+
+if (make_exact)
+{
+  if (schedule_in_evol)
+  {
+    schedule add_teukolsky at CCTK_EVOL before calc_np
+    {
+      LANG: Fortran
+    } "Set exact solution into ADM variables at every timestep"
+  }
+  else
+  {
+    schedule add_teukolsky at CCTK_POSTSTEP
+    {
+      LANG: Fortran
+    } "Set exact solution into ADM variables at every timestep"
+  }
+}

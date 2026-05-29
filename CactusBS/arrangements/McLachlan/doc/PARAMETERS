@@ -1,0 +1,110 @@
+Comparison between BSSN_MoL (ADM_BSSN) and McLachlan (ML_BSSN) parameters
+
+2009-11-14: Written by Erik Schnetter
+2010-03-29: Cross-checked by Peter Diener, fixed a few issues with the gauge
+            parameters and (hopefully) clarified things a bit.
+
+Activation:
+
+ActiveThorns = "BSSN_MoL"
+        ActiveThorns = "ML_BSSN ML_BSSN_Helper"
+
+Formulation:
+
+ADMBase::evolution_method = "ADM_BSSN"
+        ADMBase::evolution_method = "ML_BSSN"
+
+ADM_BSSN::RfromH = yes
+        [always for ML_BSSN]
+
+ADM_BSSN::bound = "radiative"
+        ML_BSSN::my_initial_boundary_condition = "extrapolate-gammas"
+        ML_BSSN::my_rhs_boundary_condition     = "NewRad"
+        # These are necessary
+        ML_BSSN::ML_log_confac_bound = "none"
+        ML_BSSN::ML_metric_bound     = "none"
+        ML_BSSN::ML_Gamma_bound      = "none"
+        ML_BSSN::ML_trace_curv_bound = "none"
+        ML_BSSN::ML_curv_bound       = "none"
+        ML_BSSN::ML_lapse_bound      = "none"
+        ML_BSSN::ML_dtlapse_bound    = "none"
+        ML_BSSN::ML_shift_bound      = "none"
+        ML_BSSN::ML_dtshift_bound    = "none"
+
+Boundary::radpower
+        Boundary::radpower
+
+
+
+Lapse:
+
+ADMBase::lapse_evolution_method = "1+log"
+        ADMBase::lapse_evolution_method   = "ML_BSSN"
+        ADMBase::dtlapse_evolution_method = "ML_BSSN"
+        ML_BSSN::harmonicN = 1   # 1+log
+
+ADM_BSSN::lapsesource = "straight"
+        ML_BSSN::LapseAdvectionCoeff = 1
+        [This can only be done with the shift advection terms on the lapse]
+ADM_BSSN::lapsesource = "modified"
+        ML_BSSN::AlphaDriver = 1
+	ML_BSSN::LapseAdvectionCoeff = 0
+        [This can only be done with the shift advection terms turned off]
+
+ADM_BSSN::harmonic_f
+        ML_BSSN::harmonicF
+
+ADM_BSSN::force_lapse_positive = yes
+        [always for ML_BSSN, but MinimumLapse can be negative]
+ADM_BSSN::force_lapse_minimum
+        ML_BSSN::MinimumLapse
+
+ADM_BSSN::lapse_advection_coeff
+        ML_BSSN::LapseAdvectionCoeff
+        [should be 0 or 1. Note that in McLachlan this also selects
+        between using the 1st time derivative lapse or not. Maybe this
+        should be changed.]
+
+
+
+Shift:
+
+ADMBase::shift_evolution_method = "gamma0"
+        ADMBase::shift_evolution_method   = "ML_BSSN"
+        ADMBase::dtshift_evolution_method = "ML_BSSN"
+        ML_BSSN::ShiftGammaCoeff = 0
+ADMBase::shift_evolution_method = "gamma1"
+        [Not implemnted in ML_BSSN]
+ADMBase::shift_evolution_method = "gamma2"
+        [Not implemnted in ML_BSSN]
+
+ADM_BSSN::ShiftGammaCoeff
+        ML_BSSN::ShiftGammaCoeff
+        [Normally chosen to be 0.75 for moving puncture gauges]
+
+ADM_BSSN::ShiftAlpPower = 0
+        [always for ML_BSSN]
+        [There is a parameter ML_BSSN::ShiftAlphaPower, but it is unused]
+
+ADM_BSSN::GammaDriver
+        [has no effect in ADM_BSSN and is not implemented in ML_BSSN]
+
+ADM_BSSN::BetaDriver
+        ML_BSSN::BetaDriver
+
+ADM_BSSN::gamma_driver_advection_coeff
+        ML_BSSN::ShiftAdvectionCoeff
+        [should be 0 or 1. For moving puncture gauges 1 should be chosen]
+
+ADM_BSSN::ApplyShiftBoundary = no
+        [not possible with ML_BSSN; shift boundary is always applied]
+
+
+
+Discretisation:
+
+ADM_BSSN::timelevels
+        ML_BSSN::timelevels
+
+ADM_BSSN::advection = "upwind4"
+        [always for ML_BSSN when 4th order is used]

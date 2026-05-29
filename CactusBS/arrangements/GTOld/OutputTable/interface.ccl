@@ -1,0 +1,6 @@
+# Interface definition for thorn OutputTable
+# $Header:$
+
+implements: OutputTable
+USES INCLUDE: OutputTable.hh
+INCLUDE HEADER: OTable.hh in OutputTable.hh

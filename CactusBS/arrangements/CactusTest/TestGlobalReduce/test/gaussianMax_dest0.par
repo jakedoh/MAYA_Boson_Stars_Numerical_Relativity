@@ -1,0 +1,28 @@
+!DESC "Test max Global Reductions, very simple and straightforward"
+                                                                                
+ActiveThorns = "PUGH PUGHReduce PUGHSlab CoordBase TestGlobalReduce LocalReduce IOUtil IOBasic IOASCII CartGrid3D"
+                                                                                
+cactus::cctk_itlast = 0
+grid::type = "byrange"
+grid::domain = "full"
+grid::xyzmin = 0.0
+grid::xyzmax = 1.0
+
+driver::local_nsize = 10
+
+
+IO::out_every = 1
+IO::out_dir   = "gaussianMax_dest0"
+                                                                                
+IOBasic::outScalar_vars  = "testglobalreduce::gf_max"
+IOBasic::outScalar_every = 1
+                                                                                
+TestGlobalReduce::dest_proc = 0
+TestGlobalReduce::array_nx = 16 
+TestGlobalReduce::array_ny = 16
+TestGlobalReduce::array_nz = 16
+TestGlobalReduce::radius = 2
+TestGlobalReduce::amplitude = 1000
+
+IO::out_fileinfo  = "none"
+IO::parfile_write = "no"

@@ -1,0 +1,17 @@
+# Parameter definitions for thorn ID_converter_GiRaFFE
+
+shares: GiRaFFE
+USES REAL Sym_Bz
+USES REAL GAMMA_SPEED_LIMIT
+
+private:
+
+INT random_seed "Random seed for random, generally roundoff-level perturbation on initial data. Seeds srand(), and rand() is used for the RNG."
+{
+ 0:99999999 :: "Anything unsigned goes."
+} 0
+
+REAL random_pert "Random perturbation atop data"
+{
+ *:* :: "Anything goes."
+} 0

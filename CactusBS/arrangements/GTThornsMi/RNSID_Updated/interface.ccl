@@ -1,0 +1,19 @@
+# Interface definition for thorn RNSID
+
+IMPLEMENTS: RNSID
+INHERITS: ADMBase HydroBase StaticConformal grid
+
+USES INCLUDE: HydroBase.h
+USES INCLUDE: constants.h
+USES INCLUDE: loopcontrol.h
+
+CCTK_REAL rnsid_scalars TYPE=SCALAR DISTRIB=CONSTANT tags='checkpoint="no"'
+{
+  ns_radius, ns_radius_iso, ns_mass, ns_oblateness, ns_omega
+} "Scalars relevant to the RNS solution" 
+
+CCTK_REAL rnsid_solution TYPE=ARRAY DIM=2 SIZE=(radial_spokes+2*nghosts),(angular_spokes+2*nghosts) DISTRIB=CONSTANT tags='checkpoint="no"' 
+{
+  rnsid_rho, rnsid_gama, rnsid_alpha, rnsid_omega,
+  rnsid_energy, rnsid_pressure, rnsid_enthalpy, rnsid_velocity_sq
+} "Solution on (s,mu) grid from RNSID, with buffer zones for the interpolator"

@@ -1,0 +1,5 @@
+# Main make.code.defn file for thorn PassNULLtoFortran
+# $Header$
+
+# Source files in this directory
+SRCS = Caller.c Callee.F77

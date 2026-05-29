@@ -1,0 +1,7 @@
+# Main make.code.defn file for thorn Interpolator
+
+# Source files in this directory
+SRCS = initial.F90
+
+# Subdirectories containing source files
+SUBDIRS = 

@@ -1,0 +1,16 @@
+# Interface definition for thorn TestFpointerNULL
+# $Header$
+
+implements: TestFpointerNULL
+
+private:
+
+REAL array_group TYPE=ARRAY DIM=2 SIZE=5,10
+{
+  array
+} "CCTK_REAL test array"
+
+INT scalar_group TYPE=SCALAR
+{
+  scalar
+} "CCTK_INT test scalar"

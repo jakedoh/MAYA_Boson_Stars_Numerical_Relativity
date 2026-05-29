@@ -1,0 +1,96 @@
+# Interface definition for thorn MatterLibs
+# $Header:$
+
+implements: MatterLibs
+inherits: ADMBase Whisky HydroBase
+friend: Whisky 
+
+USES INCLUDE: EOS_Base.h
+USES INCLUDE: EOS_Base.inc
+USES INCLUDE: HydroBase.h
+USES INCLUDE: VectorAlgebra.hh
+
+SUBROUTINE Prim2ConPoly(CCTK_INT IN handle, \
+                        CCTK_REAL IN gxx, CCTK_REAL IN gxy, CCTK_REAL IN gxz, \
+			CCTK_REAL IN gyy, CCTK_REAL IN gyz, CCTK_REAL IN gzz, \
+			CCTK_REAL IN det, CCTK_REAL OUT dens, \
+			CCTK_REAL OUT sx, CCTK_REAL OUT sy, \
+			CCTK_REAL OUT sz, CCTK_REAL OUT tau, \
+			CCTK_REAL IN rho, CCTK_REAL IN velx, \
+			CCTK_REAL IN vely, \
+			CCTK_REAL IN velz, CCTK_REAL OUT epsilon, \
+			CCTK_REAL OUT press, CCTK_REAL OUT w_lorentz)
+
+
+SUBROUTINE Prim2ConGen(CCTK_INT IN handle, \
+                          CCTK_REAL IN gxx, CCTK_REAL IN gxy, \
+                          CCTK_REAL IN gxz, CCTK_REAL IN gyy, \
+                          CCTK_REAL IN gyz, CCTK_REAL IN gzz, \
+                          CCTK_REAL IN det, CCTK_REAL OUT dens, \
+                          CCTK_REAL OUT sx, CCTK_REAL OUT sy, \
+                          CCTK_REAL OUT sz, CCTK_REAL OUT tau, \
+                          CCTK_REAL IN rho, CCTK_REAL IN velx, \
+                          CCTK_REAL IN vely, \
+                          CCTK_REAL IN velz, CCTK_REAL IN epsilon, \
+                          CCTK_REAL OUT press, CCTK_REAL OUT w_lorentz)
+
+void FUNCTION UpperMet(CCTK_REAL OUT uxx, CCTK_REAL OUT uxy, \
+                       CCTK_REAL OUT uxz, CCTK_REAL OUT uyy, \
+                       CCTK_REAL OUT uyz, CCTK_REAL OUT uzz, \
+                       CCTK_REAL IN det, CCTK_REAL IN gxx, CCTK_REAL IN gxy, \
+                       CCTK_REAL IN gxz, CCTK_REAL IN gyy, CCTK_REAL IN gyz, \
+                       CCTK_REAL IN gzz)
+
+USES FUNCTION Prim2ConPoly
+USES FUNCTION Prim2ConGen
+USES FUNCTION UpperMet
+
+#######################################################
+### functions to accees the initial data            ###
+#######################################################
+void FUNCTION calcMatterRho(CCTK_REAL IN x, CCTK_REAL IN y, CCTK_REAL IN z, \
+                            CCTK_REAL OUT psi, CCTK_REAL OUT rho, \
+                            CCTK_REAL OUT eps, CCTK_REAL OUT press, \
+                            CCTK_REAL OUT velx, CCTK_REAL OUT vely, CCTK_REAL OUT velz, \
+                            CCTK_REAL OUT bvecx, CCTK_REAL OUT bvecy, CCTK_REAL OUT bvecz) 
+CCTK_REAL FUNCTION calcMatterPsi(CCTK_REAL IN x, CCTK_REAL IN y, CCTK_REAL IN z) 
+
+PROVIDES FUNCTION calcMatterRho WITH matterlibs_calcMatterRho LANGUAGE C
+PROVIDES FUNCTION calcMatterPsi WITH matterlibs_calcMatterPsi LANGUAGE C
+
+void FUNCTION calcConformalRho(CCTK_REAL IN x, CCTK_REAL IN y, CCTK_REAL IN z, \
+                            CCTK_REAL OUT psi, CCTK_REAL OUT rho, \
+                            CCTK_REAL OUT Ebar, CCTK_REAL OUT Jbarx, \
+                            CCTK_REAL OUT Jbary, CCTK_REAL OUT Jbarz, \
+                            CCTK_REAL OUT bvecx, CCTK_REAL OUT bvecy, CCTK_REAL OUT bvecz, \
+							CCTK_REAL OUT vb, CCTK_REAL OUT w_lorentz)
+
+PROVIDES FUNCTION calcConformalRho WITH matterlibs_calcConformalRho LANGUAGE C
+#######################################################
+### functions to accees the initial guess of TP     ###
+#######################################################
+CCTK_REAL FUNCTION guessPuncturePsi(CCTK_REAL IN x, CCTK_REAL IN y, CCTK_REAL IN z)
+USES FUNCTION guessPuncturePsi
+
+###############################################################
+### functions to combine initial guesses from matter and BH ###
+###############################################################
+CCTK_REAL FUNCTION combineInitialGuesses(CCTK_REAL IN psi_BH, CCTK_REAL IN psi_matter)
+USES FUNCTION combineInitialGuesses
+
+########################################
+### Functions provided for TOV curvature
+########################################
+
+void FUNCTION calcTOVQCNRhoPsi(CCTK_INT IN star, CCTK_REAL IN distance, CCTK_REAL OUT qq, CCTK_REAL OUT cc, CCTK_REAL OUT nn, CCTK_REAL OUT rho, CCTK_REAL OUT psi_nonflat)
+
+PROVIDES FUNCTION calcTOVQCNRhoPsi WITH matterlibs_calcTOVQCNRhoPsi LANGUAGE C
+
+void FUNCTION updateTOVs()
+PROVIDES FUNCTION updateTOVs WITH matterlibs_updateTOVs LANGUAGE C
+
+CCTK_REAL FUNCTION getTOVMass(CCTK_INT IN star)
+PROVIDES FUNCTION getTOVMass WITH matterlibs_getTOVMass LANGUAGE C
+
+CCTK_REAL FUNCTION getTOVRadius(CCTK_INT IN star)
+PROVIDES FUNCTION getTOVRadius WITH matterlibs_getTOVRadius LANGUAGE C

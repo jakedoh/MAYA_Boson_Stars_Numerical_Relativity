@@ -1,0 +1,15 @@
+# Schedule definitions for thorn IOJpeg
+# $Header$
+
+########################################################################
+### register IOJpeg routines
+########################################################################
+schedule IOJpeg_Startup at STARTUP after IOUtil_Startup
+{
+  LANG:C
+} "Startup routine"
+
+schedule IOJpeg_ChooseOutput at BASEGRID after SpatialCoordinates
+{
+  LANG:C
+} "Choose 2D output planes"

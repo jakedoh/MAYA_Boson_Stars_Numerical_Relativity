@@ -1,0 +1,51 @@
+# Schedule definitions for thorn CarpetEvolutionMask
+
+STORAGE: evolution_mask
+
+if (provide_buffer_mask) {
+  STORAGE: buffer_mask
+}
+
+
+SCHEDULE GROUP EvolutionMaskBase_SetupEvolutionMask AT basegrid
+{
+} "Set up the mask function"
+
+SCHEDULE GROUP EvolutionMaskBase_SetupEvolutionMask AT postregridinitial
+{
+} "Set up the mask function"
+
+SCHEDULE GROUP EvolutionMaskBase_SetupEvolutionMask AT postregrid
+{
+} "Set up the mask function"
+
+
+
+SCHEDULE EvolutionMaskBase_InitEvolutionMask IN EvolutionMaskBase_SetupEvolutionMask
+{
+  LANG: C
+  OPTIONS: global loop-local
+  WRITES: CarpetEvolutionMask::evolution_mask(Everywhere), buffer_mask
+} "Initialise the mask function"
+
+SCHEDULE GROUP SetupEvolutionMask IN EvolutionMaskBase_SetupEvolutionMask AFTER EvolutionMaskBase_InitEvolutionMask
+{
+} "Set up the weight function (schedule other routines in here)"
+
+
+
+SCHEDULE CarpetEvolutionMaskSetup IN SetupEvolutionMask
+{
+  LANG: C
+  OPTIONS: global loop-singlemap
+  WRITES: CarpetEvolutionMask::evolution_mask(Everywhere)
+} "Set up the mask function for the restriction regions"
+
+if (enforce_mask)
+{
+  SCHEDULE enforce_evolution_mask IN MoL_PostRHS
+  {
+    LANG: C
+    READS: CarpetEvolutionMask::evolution_mask(Everywhere)
+  } "Enforce Evolution Mask"
+}

@@ -1,0 +1,58 @@
+# Interface definition for thorn CalcK
+# $Header$
+
+IMPLEMENTS: CalcK
+
+INHERITS: ADMBase StaticConformal
+
+CCTK_REAL metric_prev TYPE=gf
+{
+  gxx_prev gxy_prev gxz_prev gyy_prev gyz_prev gzz_prev
+} "ADM 3-metric, previous time"
+
+CCTK_REAL metric_prev2 TYPE=gf
+{
+  gxx_prev2 gxy_prev2 gxz_prev2 gyy_prev2 gyz_prev2 gzz_prev2
+} "ADM 3-metric, pre-previous time"
+
+CCTK_REAL metric_next TYPE=gf
+{
+  gxx_next gxy_next gxz_next gyy_next gyz_next gzz_next
+} "ADM 3-metric, next time"
+
+
+
+CCTK_INT FUNCTION Boundary_SelectGroupForBC (	\
+	CCTK_POINTER_TO_CONST IN cctkGH,	\
+	CCTK_INT IN faces,			\
+	CCTK_INT IN boundary_width,		\
+	CCTK_INT IN table_handle,		\
+	CCTK_STRING IN group_name,		\
+	CCTK_STRING IN bc_name)
+REQUIRES FUNCTION Boundary_SelectGroupForBC
+
+
+
+void FUNCTION ConfToPhysInPlace (CCTK_INT IN nx,            \
+                                 CCTK_INT IN ny,            \
+                                 CCTK_INT IN nz,            \
+                                 CCTK_REAL ARRAY IN psi,    \
+                                 CCTK_REAL ARRAY INOUT gxx, \
+                                 CCTK_REAL ARRAY INOUT gxy, \
+                                 CCTK_REAL ARRAY INOUT gxz, \
+                                 CCTK_REAL ARRAY INOUT gyy, \
+                                 CCTK_REAL ARRAY INOUT gyz, \
+                                 CCTK_REAL ARRAY INOUT gzz)
+REQUIRES FUNCTION ConfToPhysInPlace
+
+void FUNCTION PhysToConfInPlace (CCTK_INT IN nx,            \
+                                 CCTK_INT IN ny,            \
+                                 CCTK_INT IN nz,            \
+                                 CCTK_REAL ARRAY IN psi,    \
+                                 CCTK_REAL ARRAY INOUT gxx, \
+                                 CCTK_REAL ARRAY INOUT gxy, \
+                                 CCTK_REAL ARRAY INOUT gxz, \
+                                 CCTK_REAL ARRAY INOUT gyy, \
+                                 CCTK_REAL ARRAY INOUT gyz, \
+                                 CCTK_REAL ARRAY INOUT gzz)
+REQUIRES FUNCTION PhysToConfInPlace

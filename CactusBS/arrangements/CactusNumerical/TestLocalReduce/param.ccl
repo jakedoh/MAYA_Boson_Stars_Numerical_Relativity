@@ -1,0 +1,17 @@
+# Parameter definitions for thorn TestLocalReduce
+# $Header$
+
+INT array_nx "Size of arrays in x direction"
+{
+  0:* :: ""
+} 4
+
+INT array_ny "Size of arrays in y direction"
+{
+  0:* :: ""
+} 5
+
+INT array_nz "Size of arrays in z direction"
+{
+  0:* :: ""
+} 10

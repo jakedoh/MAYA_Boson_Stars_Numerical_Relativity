@@ -1,0 +1,9 @@
+# Main make.code.defn file for thorn WaveMoL
+# $Header$
+
+# Source files in this directory
+SRCS = WaveMoL.c InitSymBound.c Startup.c WaveMoLRegister.c
+
+# Subdirectories containing source files
+SUBDIRS = 
+

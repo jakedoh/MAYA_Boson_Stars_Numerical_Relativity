@@ -1,0 +1,8 @@
+# Schedule definitions for thorn IDBinarySourceC
+# $Header$
+
+schedule WaveBinaryC at EVOL after WaveToy_Evolution
+{  
+  STORAGE: wavetoy::scalarevolve[1]
+  LANG:    C
+} "Provide binary source during evolution (C)"

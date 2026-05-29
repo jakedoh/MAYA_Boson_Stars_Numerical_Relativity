@@ -1,0 +1,4 @@
+implements: BasicIntegrator
+
+USES INCLUDE: BasicIntegrator.hh
+INCLUDE HEADER: BasicIntegratorPublic.hh IN BasicIntegrator.hh

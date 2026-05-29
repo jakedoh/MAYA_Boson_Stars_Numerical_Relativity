@@ -1,0 +1,43 @@
+# Parameter definition for thorn Accelerator
+
+PRIVATE:
+
+BOOLEAN verbose "Output detailed information" STEERABLE=always
+{
+} "no"
+
+BOOLEAN veryverbose "Output even more detailed information" STEERABLE=always
+{
+} "no"
+
+BOOLEAN copy_back_all_timelevels "Copy all timelevels back to the host for output" STEERABLE=always
+{
+} "no"
+
+INT copy_back_every "When to copy variables back to the host" STEERABLE=always
+{
+  0   :: "never"
+  1:* :: "every so many iterations"
+} 1
+
+STRING copy_back_vars "Which variables to copy back" STEERABLE=always
+{
+  .* :: "list of group or variable names; empty to copy nothing, 'all' to copy all variables"
+} "all"
+
+BOOLEAN copy_back_all_written_variables_in_analysis "Copy all variables that are written to in analysis back to the host" STEERABLE=always
+{
+} "yes"
+
+RESTRICTED:
+
+# TODO: Instead of using parameters, extend the syntax of schedule
+# reads/writes clauses to accept timelevel specifications
+
+BOOLEAN only_reads_current_timelevel "Assume that functions read only the current timelevel" STEERABLE=recover
+{
+} "no"
+
+BOOLEAN only_writes_current_timelevel "Assume that functions write only the current timelevel" STEERABLE=recover
+{
+} "no"

@@ -1,0 +1,11 @@
+# Main make.code.defn file for thorn EOS_RealisticPP
+# $Header$
+
+# Source files in this directory
+SRCS = 	EOS_RealisticPP_Startup.F90 \
+	EOS_RealisticPP.F90 \
+	EOS_RealisticPP_Scalars.F90
+
+# Subdirectories containing source files
+SUBDIRS = 
+

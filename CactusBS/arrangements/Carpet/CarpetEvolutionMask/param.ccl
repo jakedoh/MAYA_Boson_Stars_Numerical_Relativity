@@ -1,0 +1,32 @@
+# Parameter definitions for thorn CarpetEvolutionMask
+
+
+
+BOOLEAN verbose "Do verbose debugging output" STEERABLE=always
+{
+} "no"
+
+BOOLEAN enforce_mask "Set RHS to zero where mask value is 0?" STEERABLE=recover
+{
+} "no"
+
+
+
+BOOLEAN writeNaNs "Write NaNs into masked regions" STEERABLE=always
+{
+} "no"
+
+STRING enforce_vars "Enforce mask in MoL automatically on the following variables" STEERABLE=always
+{
+  "" :: "a list of variables or groups"
+} ""
+
+INT enlarge_evolved_region_by "enlarge or shrink evolved region" STEERABLE=always
+{
+ 0:*  :: "positive values enlarge the evolved region"
+ *:0) :: "negative values shrink the evolved region. Up to buffer_width + nghostzones points can be removed"
+} 0
+
+BOOLEAN provide_buffer_mask "Compute mask indicating which points need only be computed for some MoL substeps"
+{
+} "no"

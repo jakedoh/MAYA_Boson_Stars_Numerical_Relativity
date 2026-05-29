@@ -1,0 +1,24 @@
+# $Header$
+
+cactus::cctk_itlast = 0
+
+ActiveThorns = "CycleClock hwloc LoopControl"
+
+ActiveThorns = "IOUtil"
+
+IO::out_dir       = $parfile
+IO::parfile_write = no
+IO::out_fileinfo  = "none"
+
+ActiveThorns = "PUGH PUGHSlab"
+
+driver::global_nx = 10
+driver::global_ny = 11
+driver::global_nz = 12
+
+ActiveThorns = "Slab SlabTest"
+
+ActiveThorns = "IOBasic"
+
+IOBasic::outScalar_every = 1
+IOBasic::outScalar_vars  = "SlabTest::success"

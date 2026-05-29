@@ -1,0 +1,4 @@
+TEST test_local_interp_2
+{
+  NPROCS 1
+}

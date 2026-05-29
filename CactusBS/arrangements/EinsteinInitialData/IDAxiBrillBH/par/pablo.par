@@ -1,0 +1,72 @@
+!DESC "Demonstration file for Pablo/AutoPilot"
+
+ActiveThorns = "SymBase LocalReduce CoordBase Pughslab FlexIO Boundary Time PsiKadelia ADMConstraints PUGH PUGHInterp PUGHReduce CartGrid3D ADMBase ADM admmacros coordgauge staticconformal ADMCoupling SpaceMask IDAxiBrillBH LocalInterp IOBasic IOASCII IOUtil IOFlexIO FlexIO"
+
+
+# Parameters which will affect performance
+# ----------------------------------------
+# Each time admconstraints:: is output thorn ADMConstraints is used
+# Each time psikadelia:: is output thorn PsiKadelia is used
+# Output can be done in as groups of variables or single variables
+# Useful groups are
+#   einstein::metric - 6 variables
+#   einstein::conv - 4 variables
+#   admconstraints::admconstraints - 4 variables
+
+
+# GLOBAL GRID SIZE IN EACH DIRECTION
+driver::global_nsize = 32
+
+# OUTPUT TO SCREEN
+iobasic::outInfo_every   = 2
+iobasic::outInfo_vars    = "ADMBase::alp PsiKadelia::psi4re admconstraints::ham"
+
+# OUTPUT Scalars reductions
+iobasic::outScalar_every = 1
+iobasic::outScalar_vars  = "ADMBase::alp ADMBase::metric admconstraints::ham PsiKadelia::psi4re"
+
+# OUTPUT 1D ASCII
+ioascii::out1D_every     = 10
+ioascii::out1D_vars      = "admbase::alp admbase::metric admconstraints::ham PsiKadelia::psi4re"
+
+# OUTPUT 3D IEEEIO
+#ioflexio::out3D_every    = 10
+#ioflexio::out3D_vars     = "admbase::alp admbase::metric admconstraints::ham PsiKadelia::psi4re"
+
+# CHECKPOINT
+IOFlexIO::checkpoint       = "yes"
+IO::checkpoint_every       = 20
+
+# Parameters which need to be tweaked
+# -----------------------------------
+
+# TOTAL NUMBER OF TIMESTEPS TO DO
+cactus::cctk_itlast        = 100
+
+# NAME OF OUTPUT DIRECTORY
+IO::out_dir                = "pablo"
+IO::checkpoint_dir         = "pablo"
+
+
+# Parameters which should be OK 
+# -----------------------------
+IO::checkpoint_keep        = 1
+IO::checkpoint_file        = "checkpoint"
+admbase::evolution_method  = "ADM"
+admbase::metric_type       = "static conformal"
+grid::type                 = "byspacing"
+grid::dxyz                 = 0.1
+grid::domain               = "octant"
+time::dtfac                = 0.25
+cactus::cctk_initial_time  = 0.
+adm::method                = "stagleap"
+adm::bound                 = "flat"
+ADMBase::lapse_evolution_method = "1+log"
+admbase::initial_data     = "axibrillbh"
+idaxibrillbh::amp          = 0.5
+idaxibrillbh::eta0         = 0.0
+idaxibrillbh::sigma        = 1.0
+idaxibrillbh::etamax       = 6.0
+idaxibrillbh::n            = 2
+idaxibrillbh::ne           = 302
+idaxibrillbh::nq           = 54

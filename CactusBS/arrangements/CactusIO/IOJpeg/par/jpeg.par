@@ -1,0 +1,54 @@
+# $Header$
+#
+# /*@@
+#   @file      jpeg.par
+#   @date      Thu 13th Sept 2001
+#   @author    Gabrielle Allen
+#   @desc
+#   Wavetoy parameter file demonstrating jpeg IO
+#   @enddesc
+# @@*/          
+
+!DESC "Orbiting binary sources ... example of jpeg IO"
+
+ActiveThorns = "PUGH PUGHSlab PUGHReduce"
+ActiveThorns = "CoordBase SymBase CartGrid3D Boundary Time"
+ActiveThorns = "IDScalarWaveC WaveToyC WaveBinarySource"
+ActiveThorns = "IOUtil IOBasic"
+ActiveThorns = "Socket HTTPD HTTPDExtra"
+ActiveThorns = "IOJpeg libjpeg LocalInterp LocalReduce"
+
+
+Cactus::cctk_run_title = "WaveToy/httpd Example"
+Cactus::terminate      = "never"
+
+Driver::global_nsize = 70
+ 
+Grid::type   = "ByRange"
+Grid::domain = "full"
+Grid::xyzmin = -1
+Grid::xyzmax = 1
+
+IOJpeg::out_vars          = "wavetoy::phi"
+IOJpeg::mode              = "remove"
+IOJpeg::out_every         = 5
+IOJpeg::refinement_factor = 10
+IOJpeg::colormap          = "auto"
+IOJpeg::colormap_min      = 0.4
+IOJpeg::colormap_max      = 1.2
+IOJpeg::colormap_factor   = 16
+IOJpeg::out_dir           = "jpeg"
+
+IOBasic::outInfo_every = 1
+IOBasic::outInfo_vars  = "wavetoy::phi"
+
+Time::dtfac = 0.25
+
+IDScalarWave::initial_data = "none"
+
+WaveBinarySource::binary_omega  = 26 
+WaveBinarySource::binary_charge = .0001
+WaveBinarySource::binary_radius = 0.25
+WaveBinarySource::binary_size   = 0.1
+
+WaveToy::bound = "radiation"

@@ -1,0 +1,27 @@
+# Interface definition for thorn HydroBase
+
+IMPLEMENTS: HydroBase
+
+USES INCLUDE: HydroBase.h
+INCLUDE HEADER: HydroBase.h in HydroBase.h
+
+Public:
+
+CCTK_REAL rho type = GF Timelevels = 3 tags='ProlongationParameter="HydroBase::prolongation_type" tensortypealias="Scalar" interpolator="matter"' "Rest-mass density"
+
+CCTK_REAL press type = GF Timelevels = 3 tags='ProlongationParameter="HydroBase::prolongation_type" tensortypealias="Scalar" interpolator="matter"' "Pressure"
+
+CCTK_REAL eps type = GF Timelevels = 3 tags='ProlongationParameter="HydroBase::prolongation_type" tensortypealias="Scalar" interpolator="matter"' "Specific internal energy"
+
+CCTK_REAL vel type = GF Timelevels = 3 tags='ProlongationParameter="HydroBase::prolongation_type" tensortypealias="U" interpolator="matter"'
+{
+  velx, vely, velz
+} "Primitive fluid 3-velocity"
+
+CCTK_REAL Bvec[3] type = GF Timelevels = 3 tags='ProlongationParameter="HydroBase::prolongation_type" tensortypealias="U" interpolator="matter" tensorparity=-1' "Magnetic field components B^i"
+
+CCTK_REAL Evec[3] type = GF Timelevels = 3 tags='ProlongationParameter="HydroBase::prolongation_type" tensortypealias="U" interpolator="matter" tensorparity=+1' "Electric field components E^i"
+
+CCTK_REAL Avec[3] type = GF Timelevels = 3 tags='ProlongationParameter="HydroBase::prolongation_type" tensortypealias="D" jacobian="jacobian" interpolator="matter"' "Vector potential"
+CCTK_REAL Aphi type = GF Timelevels = 3 tags='ProlongationParameter="HydroBase::prolongation_type" tensortypealias="Scalar" jacobian="jacobian" interpolator="matter"' "Electric potential for Lorentz Gauge"
+

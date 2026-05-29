@@ -1,0 +1,77 @@
+# Parameter definitions for thorn IHSpin
+# $Header:$
+
+INT compute_every "How frequently to compute the spin - this can be infrequent unless dS/dt has to be computed afterwards to great accuracy" STEERABLE=always
+{
+  1:* :: ""
+} 1
+
+INT compute_every_individual[101] "Detector-specific frequency" STEERABLE=always
+{
+  -1  :: "Use compute_every"
+  0   :: "Deactivate"
+  1:* :: "Whatever"
+} -1
+
+CCTK_INT find_after_individual[101] "Detector-specific starting iteration" STEERABLE=always
+{
+  0:* :: "Whatever"
+} 0
+
+CCTK_REAL find_after_individual_time[101] "Detector-specific starting time" STEERABLE=always
+{
+  0:* :: "Whatever"
+} 0
+
+INT out_offset "offset by this many iteration steps DEPRECATED"
+{
+  0:* :: ""
+} 0
+
+CCTK_INT num_horizons "how many horizons do we have" STEERABLE=recover
+{
+  0:* :: "whatever"
+} 0
+
+CCTK_INT surface_index[101] "the indices of the sphericalsurfaces from which we take the surfaces to compute the spin on" STEERABLE=always
+{
+  -1:* :: "whatever"
+} -1
+
+CCTK_STRING interpolator_name "Which interpolator should I use" STEERABLE=always 
+{
+  ".+" :: "Any nonempty string"
+} "Hermite polynomial interpolation"
+
+CCTK_STRING interpolator_pars "Parameters for the interpolator" STEERABLE=always
+{
+  ".*" :: "Any string that Util_TableSetFromString() will take"
+} "order=3"
+
+CCTK_STRING coord_system "What is the coord system?" STEERABLE=always
+{
+  ".*" :: "Any smart string will do"
+} "cart3d"
+
+CCTK_INT verbose "How verbose do you want it?" STEERABLE=always
+{
+  0:* :: "0 is nothing, 1 is interesting, >1 is crazy"
+} 1
+
+STRING out_format "Which format for Scalar floating-point number output" STEERABLE = ALWAYS
+{
+  ^(\.[1]?[0-9])?[EGefg]$ :: "output with given precision in exponential / float ing point notation"
+} ".19g"
+
+
+SHARES: SphericalSurface
+
+USES INT maxntheta
+USES INT maxnphi
+USES INT nghoststheta
+USES INT nghostsphi
+USES INT nsurfaces AS sphericalsurfaces_nsurfaces
+
+shares: IO
+
+USES STRING out_dir

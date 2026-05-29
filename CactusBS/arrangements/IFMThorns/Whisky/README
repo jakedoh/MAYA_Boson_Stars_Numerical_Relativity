@@ -1,0 +1,38 @@
+Cactus Code Thorn Whisky
+Authors    : See the ThornGuide.
+CVS info   : $Header$
+--------------------------------------------------------------------------
+
+Purpose of the thorn:
+
+This Whisky is the evolution code for a general purpose 3d relativistic
+hydrodynamics code. To work it requires Einstein, MoL (the method of lines
+thorn), CactusEOS (the general equation of state interface).
+
+For more information see the documentation in the ThornGuide.
+
+TODO:
+
+* Fix boundary treatment for Avec case 
+* Handle Bvec initialization at outer boundary
+* Add magnetized TOV option (with threshold rho over which to magnetize)
+* Add new Con2Prim MHD limits
+
+MHD Handle Situations
+
+   0 -- No MHD.
+   1 -- QuasiMHD
+           Storage for Bvec only necessary
+   2 -- MHD with Bvec/Bn evolution
+           Storage for Bvec, Bn[xyz], Bn[xyz]rhs
+           Divergence cleaning if applicable
+   3 -- MHD with Avec, algebraic gauge
+           Storage for Bvec, Bn (eventually not),
+                       Avec, Avecrhs
+   4 -- MHD with Avec, Lorenz gauge
+           Storage for Bvec, Bn (eventually not),
+                       Avec, Avecrhs,
+                       Aphi, Aphirhs
+
+
+

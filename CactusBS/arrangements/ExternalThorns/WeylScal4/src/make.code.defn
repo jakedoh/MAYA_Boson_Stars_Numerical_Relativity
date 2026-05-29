@@ -1,0 +1,8 @@
+# file produced by user hinder, 15/11/2006
+# Produced with Mathematica Version 5.2 for Linux (June 20, 2005)
+
+# Mathematica script written by Ian Hinder and Sascha Husa
+
+# $Id$
+
+SRCS = Startup.c RegisterMoL.c RegisterSymmetries.c psis_calc_2nd.c psis_calc_4th.c cactus_boundaries.c getlevelinfo.cc rounditerationnumber.cc

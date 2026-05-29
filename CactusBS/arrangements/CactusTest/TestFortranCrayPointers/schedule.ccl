@@ -1,0 +1,11 @@
+# Schedule definitions for thorn TestFortranCrayPointers
+
+SCHEDULE TestFortranCrayPointers_main AT initial
+{
+  LANG: C
+} "Test Fortran Cray pointers"
+
+SCHEDULE TestFortranCrayPointers_caller AT initial
+{
+  LANG: Fortran
+} "Test Fortran Cray pointers for passing cctkGH"

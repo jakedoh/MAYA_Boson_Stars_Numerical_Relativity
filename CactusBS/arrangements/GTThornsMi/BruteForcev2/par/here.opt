@@ -1,0 +1,18 @@
+F77=gfortran
+F90=gfortran
+CC=gcc
+CXX=g++
+
+PERL=/usr/bin/perl
+#FPP=/home/guzman/My_Cactus/lib/sbin/cpp.pl
+#FPP=/usr/bin/cpp
+FPP=/usr/bin/cpp -traditional
+F77_OPTIMISE_FLAGS=-O2 -fcray-pointer
+F90_OPTIMISE_FLAGS=-O2 -fcray-pointer
+#HDF5=yes
+#HDF5_DIR=/home/guzman/bin
+#HDF5_DIR=/hacker2/guzman/bin
+#HDF5_DIR=/home/guzman/Software_Cactus/hdf5
+
+
+PTHREADS=yes

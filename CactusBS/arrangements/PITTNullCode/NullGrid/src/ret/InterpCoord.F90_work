@@ -1,0 +1,114 @@
+! vim:syntax=fortran
+#include "cctk.h"
+#include "cctk_Functions.h"
+#include "cctk_Arguments.h"
+#include "cctk_Parameters.h"
+
+subroutine InterpCoord(CCTK_ARGUMENTS)
+  use spinweightedYlm
+  implicit none
+
+#include "Eth_Iface.h"
+INTERFACE
+  subroutine null_cinterp(cctkGH, gx, gy, lsh, lbnd, ubnd, qq, pp, zz, J1, J2, gf_indices, spin, mypc)
+   implicit none
+   CCTK_POINTER, intent(in) :: cctkGH
+   CCTK_INT, intent(in) :: spin, gx, gy, mypc
+   CCTK_INT, intent(in), dimension(2) :: lsh, lbnd, ubnd
+   CCTK_REAL, dimension(lsh(1), lsh(2)), intent(in) :: qq, pp
+   CCTK_COMPLEX, dimension(lsh(1), lsh(2)), intent(in) :: zz
+   CCTK_COMPLEX, dimension(lsh(1),lsh(2)), intent(inout) :: J1, J2
+   integer, dimension(2), intent(in) :: gf_indices
+  end subroutine null_cinterp
+END INTERFACE
+
+
+   CCTK_INT :: i, j, nx, ny, k, mypc
+   CCTK_REAL :: dx, dy
+
+   !CCTK_COMPLEX, dimension(cctk_lsh(1), cctk_lsh(2)) :: J1, J2, J3, J4
+   CCTK_INT, dimension(:,:), allocatable :: mask
+   CCTK_COMPLEX, dimension(:,:,:), allocatable :: Ylm
+   integer :: ierror, ierr
+   integer :: gf_indices(2), gsh(2), lsh(2), lbnd(2), ubnd(2)
+ 
+character(len=1000) :: message = "blank message"
+
+
+
+   DECLARE_CCTK_FUNCTIONS
+   DECLARE_CCTK_ARGUMENTS
+   DECLARE_CCTK_PARAMETERS
+
+
+    call CCTK_GroupgshGN(ierr,cctkGH,2,gsh,"NullGrid::my2dc")
+    call CCTK_GrouplshGN(ierr,cctkGH,2,lsh,"NullGrid::my2dc")
+    call CCTK_GrouplbndGN(ierr,cctkGH,2,lbnd,"NullGrid::my2dc")
+    call CCTK_GroupubndGN(ierr,cctkGH,2,ubnd,"NullGrid::my2dc")
+
+
+!   if (lsh(1) .ne. lsh(2) ) then 
+!     call CCTK_WARN(0, "nx and ny must be identical")
+!   endif
+
+   allocate(mask(lsh(1), lsh(2)), Ylm(lsh(1), lsh(2), 2))
+   call sYlm(spin,ell,em, lsh(1), lsh(2), zeta, Ylm)
+
+   J1 = Ylm(:,:,1)
+   J2 = Ylm(:,:,2)
+   J3 = J1
+   J4 = J2
+
+   mask = 0
+   if (lbnd(1) == 0) then
+     mask(1,:) = 1
+  endif
+  if(ubnd(1) == global_nx - 1) then
+     mask(lsh(1),:) = 1
+   endif
+   if (lbnd(2) == 0) then
+     mask(:,1) = 1
+  endif
+  if(ubnd(2) == global_ny - 1) then
+     mask(:,lsh(2)) = 1
+   endif
+ 
+   J3 = J3 + 1.0d50 * mask
+
+   J4 = J4  + 1.0d50 * mask
+
+   call null_d2(lsh(1), lsh(2),&
+     cctk_delta_space(1), cctk_delta_space(2), pp, zeta, J3, J1, spin,-1,1)
+   call null_d2(lsh(1), lsh(2),&
+     cctk_delta_space(1), cctk_delta_space(2), pp, zeta, J4, J2, spin,-1,1)
+
+   call CCTK_SyncGroup(ierr, cctkGH, "NullGrid::my2dcc")
+   call CCTK_VarIndex(gf_indices(2), "NullGrid::J3")
+   call CCTK_VarIndex(gf_indices(1), "NullGrid::J4")
+
+mypc = CCTK_MyProc(cctkGH)
+
+   call null_cinterp(cctkGH, global_nx, global_ny, lsh, lbnd, ubnd, stereo_q, stereo_p, zeta, J3, J4, gf_indices, spin, mypc)
+
+  call null_d2(lsh(1), lsh(2),&
+     cctk_delta_space(1), cctk_delta_space(2), pp, zeta, J1, J3, spin,1,-1)
+   call null_d2(lsh(1), lsh(2),&
+     cctk_delta_space(1), cctk_delta_space(2), pp, zeta, J2, J4, spin,1,-1)
+
+   call CCTK_SyncGroup(ierr, cctkGH, "NullGrid::my2dcc")
+  J3 = J1
+  J4 = J2
+
+  call null_cinterp(cctkGH, global_nx, global_ny, lsh, lbnd, ubnd, stereo_q, stereo_p, zeta, J3, J4, gf_indices, spin, mypc)
+
+   call sYlm(spin,ell,em, lsh(1), lsh(2), zeta, Ylm)
+   Ylm = Ylm * 2*spin 
+   J1 = Ylm(:,:,1)
+   J2 = Ylm(:,:,2)
+   E1  = abs(J3 - J1)
+   E2  = abs(J4 - J2)
+
+   deallocate(mask, Ylm)
+     
+end subroutine  InterpCoord 
+

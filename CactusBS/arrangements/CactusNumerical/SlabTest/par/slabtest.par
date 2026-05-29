@@ -1,0 +1,11 @@
+# $Header$
+
+cactus::cctk_itlast = 0
+
+ActiveThorns = "PUGH"
+
+driver::global_nx = 10
+driver::global_ny = 11
+driver::global_nz = 12
+
+ActiveThorns = "Slab SlabTest"

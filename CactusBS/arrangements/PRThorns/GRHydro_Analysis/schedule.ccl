@@ -1,0 +1,106 @@
+# Schedule definitions for thorn GRHydro_Analysis
+
+STORAGE: GRHydro_Quadrupole
+STORAGE: GRHydro_DerivativeQuadrupole
+STORAGE: GRHydro_CylDiagnostic
+STORAGE: GRHydro_MagneticDiagnostic
+
+schedule GRHydroAnalysis_Init AT INITIAL
+{
+  LANG: C
+  OPTIONS: global
+} "Initialize symmetries in GRHydro_Analysis"
+
+schedule GRHydroAnalysis_Init AT POST_RECOVER_VARIABLES
+{
+  LANG: C
+  OPTIONS: global
+} "Initialize symmetries in GRHydro_Analysis"
+
+
+## ----------------------------------------------------------------------
+##
+## ----------------------------------------------------------------------
+
+schedule GROUP GRHydroAnalysisComputeQuadrupole AT ANALYSIS
+{
+TRIGGER : GRHydro_Quadrupole
+} "HydroComputeQuadrupole group"
+
+schedule GRHydroAnalysisComputeQuadrupole_local IN GRHydroAnalysisComputeQuadrupole
+{
+  LANG: C
+  OPTIONS: global loop-local
+} "GRHydroAnalysisComputeQuadrupole local"
+
+schedule GRHydroAnalysisComputeQuadrupole_global IN GRHydroAnalysisComputeQuadrupole AFTER GRHydroAnalysisComputeQuadrupole_local
+{
+  LANG: C
+  OPTIONS: global
+} "GRHydroAnalysisComputeQuadrupole global"
+
+## ----------------------------------------------------------------------
+##
+## ----------------------------------------------------------------------
+
+schedule GROUP GRHydroAnalysisComputeDerivativeQuadrupole AT ANALYSIS
+{
+TRIGGER : GRHydro_DerivativeQuadrupole
+} "HydroComputeDerivativeQuadrupole group"
+
+schedule GRHydroAnalysisComputeDerivativeQuadrupole_local IN GRHydroAnalysisComputeDerivativeQuadrupole
+{
+  LANG: C
+  OPTIONS: global loop-local
+} "GRHydroAnalysisComputeDerivativeQuadrupole local"
+
+schedule GRHydroAnalysisComputeDerivativeQuadrupole_global IN GRHydroAnalysisComputeDerivativeQuadrupole AFTER GRHydroAnalysisComputeDerivativeQuadrupole_local
+{
+  LANG: C
+  OPTIONS: global
+} "GRHydroAnalysisComputeDerivativeQuadrupole global"
+
+
+## ----------------------------------------------------------------------
+##
+## ----------------------------------------------------------------------
+
+schedule GROUP GRHydroAnalysisComputeCylDiagnostic AT ANALYSIS
+{
+  TRIGGER : GRHydro_CylDiagnostic
+} "GRHydroAnalysisComputeCylDiagnostic group"
+
+schedule GRHydroAnalysisComputeCylDiagnostic_local IN GRHydroAnalysisComputeCylDiagnostic
+{
+  LANG: C
+  OPTIONS: global loop-local
+} "GRHydroAnalysisComputeCylDiagnostic local"
+
+schedule GRHydroAnalysisComputeCylDiagnostic_global IN GRHydroAnalysisComputeCylDiagnostic AFTER GRHydroAnalysisComputeCylDiagnostic_local
+{
+  LANG: C
+  OPTIONS: global
+} "GRHydroAnalysisComputeCylDiagnostic global"
+
+
+
+## -------------------------------------------------------
+##
+##-------------------------------------------------------
+
+schedule GROUP GRHydroAnalysisComputeMagneticDiagnostic AT ANALYSIS
+{
+  TRIGGER : GRHydro_MagneticDiagnostic
+} "GRHydroAnalysisComputeMagneticDiagnostic group"
+
+schedule GRHydroAnalysisComputeMagneticDiagnostic_local IN GRHydroAnalysisComputeMagneticDiagnostic
+{
+  LANG: C
+  OPTIONS: global loop-local
+} "GRHydroAnalysisComputeMagneticDiagnostic local"
+
+schedule GRHydroAnalysisComputeMagneticDiagnostic_global IN GRHydroAnalysisComputeMagneticDiagnostic AFTER GRHydroAnalysisComputeMagneticDiagnostic_local
+{
+  LANG: C
+  OPTIONS: global
+} "GRHydroAnalysisComputeMagneticDiagnostic global"

@@ -1,0 +1,136 @@
+# Parameter definitions for thorn HTTPD
+# $Header$
+
+shares: Cactus
+
+USES REAL cctk_final_time 
+
+USES REAL cctk_initial_time 
+
+USES INT cctk_itlast 
+
+private:
+
+# Probably the most useful parameter
+
+INT port "HTTP port number to use (can be overridden by shell variable HTTPD_PORT)"
+{
+    1:65535 :: "Any valid port"
+} 5555
+
+# If you desperately need to set the port number by hand, turn hunting off.
+BOOLEAN hunt "Should the server hunt for a port if the specified one is taken ?"
+{
+} "yes"
+
+# This allows you to control the number of times all procs need to synchronise parameters
+INT steering_frequency "How many iterations between steering events" STEERABLE = ALWAYS
+{
+ 0:  :: "Any number, 0 means don't steer"
+} 1
+
+# Switching this off means all pages must be provided by other thorns.
+BOOLEAN provide_pages "Should the server provide any pages ?"
+{
+} "yes"
+
+# Setting this to true in the parameter file will start the simulation paused.
+BOOLEAN pause "Pause ?" STEERABLE = ALWAYS
+{
+} "no"
+
+# Username and password for controlling cactus
+STRING user "The username for Cactus Control "
+{
+  ".+" :: "Any name of one or more characters"
+} "anon"
+
+STRING password "The password for Cactus Control"
+{
+  ".*" :: "Any password"
+} "anon"
+
+KEYWORD encryption_scheme "How the password is encrypted"
+{
+  "none"  :: "Not encrypted"
+  "crypt" :: "crypt(3) (standard UNIX passwd format)"
+} "none"
+
+BOOLEAN use_pthreads "Use a threaded implementation if possible ?"
+{
+} "yes"
+
+BOOLEAN verbose "Print information about HTTP requests" STEERABLE = ALWAYS
+{
+} "no"
+
+##################################################################
+# Tuning parameters
+
+INT timeout_seconds "Polling timeout seconds" STEERABLE = ALWAYS
+{
+    0:      :: "Any whole number"
+} 0
+
+INT timeout_useconds "Polling timeout micro-seconds" STEERABLE = ALWAYS
+{
+    0:      :: "Any whole number"
+} 0
+
+INT queue_length "Listen queue length"
+{
+    1:      :: "Any positive number"
+}  4
+
+INT refresh_seconds "Page refresh time seconds" STEERABLE = ALWAYS
+{
+    -1:      :: "-1 for no refresh, 0 for immediate refresh"
+} -1
+
+###################################################################
+# You probably don't want to set this in a parameter file 
+
+BOOLEAN terminate "Kill the simulation ?" STEERABLE = ALWAYS
+{
+} "no"
+
+###################################################################
+#  Dynamic control
+
+
+BOOLEAN single_step "Do one step then pause ?" STEERABLE = ALWAYS
+{
+} "no"
+
+# Iterate until
+
+BOOLEAN until_it_active "Use until_it parameter ?" STEERABLE = ALWAYS
+{
+} "no"
+
+INT until_it "Pause at this iteration" STEERABLE = ALWAYS
+{
+ : :: "Any iteration"
+} 0 
+
+# Run until
+
+BOOLEAN until_time_active "Use until_time parameter ?" STEERABLE = ALWAYS
+{
+} "no"
+
+REAL until_time "Pause after this simulation time" STEERABLE = ALWAYS
+{
+ : :: "Any time"
+} 0
+
+# Run until expression
+
+BOOLEAN until_expression_active "Use until_expression parameter ?" STEERABLE = ALWAYS
+{
+} "no"
+
+STRING until_expression "Pause if this expression evaluates to true." STEERABLE = ALWAYS
+{
+ ".*" :: "Any expression"
+} "iteration+40 < time*100"

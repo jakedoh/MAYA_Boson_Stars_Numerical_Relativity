@@ -1,0 +1,27 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}
+\BOOKMARK [1][-]{section.2}{What AHFinderDirect Needs}{}
+\BOOKMARK [1][-]{section.3}{Obtaining and Compiling AHFinderDirect}{}
+\BOOKMARK [1][-]{section.4}{AHFinderDirect Parameters}{}
+\BOOKMARK [2][-]{subsection.4.1}{Overall Parameters}{section.4}
+\BOOKMARK [2][-]{subsection.4.2}{Choosing the Local Coordinate Origin for each Apparent Horizon}{section.4}
+\BOOKMARK [2][-]{subsection.4.3}{Specifying the Initial Guess}{section.4}
+\BOOKMARK [2][-]{subsection.4.4}{I/O Parameters for the Apparent Horizon Shape\(s\)}{section.4}
+\BOOKMARK [2][-]{subsection.4.5}{Parameters for the ``BH\137diagnostics'' Files}{section.4}
+\BOOKMARK [2][-]{subsection.4.6}{\(Excision\) Mask Parameters}{section.4}
+\BOOKMARK [2][-]{subsection.4.7}{Communicating with Other Thorns}{section.4}
+\BOOKMARK [3][-]{subsubsection.4.7.1}{Parameters for Announcing a Horizon Centroid to Other Thorns}{subsection.4.7}
+\BOOKMARK [3][-]{subsubsection.4.7.2}{Aliased Functions to Provide Horizon-Shape Information}{subsection.4.7}
+\BOOKMARK [3][-]{subsubsection.4.7.3}{Storing Horizon-Shape Information in the SphericalSurface Variables}{subsection.4.7}
+\BOOKMARK [2][-]{subsection.4.8}{Other Parameters}{section.4}
+\BOOKMARK [1][-]{section.5}{Monitoring AHFinderDirect's Status}{}
+\BOOKMARK [1][-]{section.6}{Visualization}{}
+\BOOKMARK [1][-]{section.7}{Accuracy}{}
+\BOOKMARK [1][-]{section.8}{Examples}{}
+\BOOKMARK [1][-]{section.9}{Surfaces of Constant Expansion}{}
+\BOOKMARK [1][-]{section.10}{Pretracking}{}
+\BOOKMARK [1][-]{section.11}{How AHFinderDirect Works}{}
+\BOOKMARK [2][-]{subsection.11.1}{General Description of the Algorithm}{section.11}
+\BOOKMARK [2][-]{subsection.11.2}{The Multipatch System}{section.11}
+\BOOKMARK [2][-]{subsection.11.3}{Other Software Used}{section.11}
+\BOOKMARK [1][-]{section.12}{Other Related Thorns}{}
+\BOOKMARK [1][-]{section.13}{Acknowledgments}{}

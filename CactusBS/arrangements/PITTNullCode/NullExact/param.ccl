@@ -1,0 +1,131 @@
+# Parameter definitions for thorn NullExact
+# $Header$
+
+shares: NullEvolve
+
+uses BOOLEAN first_order_scheme
+
+extends keyword boundary_data "Choose boundary data type"
+{
+  "exact"	:: "boundary data provided by thorn NullExact"
+}
+
+extends keyword initial_J_data "Choose initial data for J"
+{
+  "exact"	:: "initial data provided by thorn NullExact"
+}
+
+shares: NullGrid
+uses int N_ang_pts_inside_eq
+uses int N_ang_ev_outside_eq
+uses int N_ang_stencil_size
+uses int N_ang_ghost_pts
+uses int N_radial_pts
+uses real null_xin
+
+shares: NullNews
+uses boolean linearized_news
+
+shares: MethodOfLines
+uses cctk_int MoL_Num_ArrayEvolved_Vars
+uses cctk_int MoL_Max_Evolved_Array_Size
+
+restricted:
+
+cctk_int  NullExact_NumArrayEvolvedVars "The maximum number of evolved grid arrays used by NullExact" ACCUMULATOR-BASE=MethodOfLines::MoL_Num_ArrayEvolved_Vars
+{
+  2:2          :: "Is is only the News"
+} 2
+
+cctk_int NullExact_MaxEvolvedArraySize "The maximum size of evolved grid arrays used by Null2DWave" ACCUMULATOR-BASE=MethodOfLines::MoL_Max_Evolved_Array_Size
+{
+  1:*           :: "The size of the generator grid arrays"
+} 1
+
+int l_in_Ylm "l in Ylm"
+{
+   0:*	:: "positive"
+} 2
+
+int m_in_Ylm "m in Ylm"
+{
+   *:*	:: "must be between -l and +l"
+} 0
+
+
+
+private:
+
+int testbed_ID "what testbed should we use?"
+{
+  0	:: "minkowski, in the natural associated Bondi frame"
+  1	:: "noise around minkoswski"
+  2	:: "this is a linear l=2,3 testbed"
+} 0
+
+real amplitude "testbed amplitude"
+{
+  *:*		:: "no restrictions"
+} 0
+
+boolean verbose "should this thorn be verbose?"
+{
+} "no"
+
+real omm "frequency"
+{
+  *:*		:: "no restrictions"
+} 0
+
+real beta0r "Real part of constant beta0 in linearized solution"
+{
+  *:*		:: "no restrictions"
+} 0
+
+real beta0i "Imaginary part of constant beta0 in linearized solution"
+{
+  *:*		:: "no restrictions"
+} 0
+
+real Constant_C1r "Real part of constant C1 in linearized solution"
+{
+  *:*		:: "no restrictions"
+} 0
+
+real Constant_C1i "Imaginary part of constant C1 in linearized solution"
+{
+  *:*		:: "no restrictions"
+} 0
+
+real Constant_C2r "Real part of constant C2 in linearized solution"
+{
+  *:*		:: "no restrictions"
+} 0
+
+real Constant_C2i "Imaginary part of constant C2 in linearized solution"
+{
+  *:*		:: "no restrictions"
+} 0
+
+keyword error_mask_type "type of mask for error in J"
+{
+  "none"		:: "no mask"
+  "EG_mask"		:: "mask all the active points"
+  "EQ_mask"		:: "mask only the equator points"
+  "EV_mask"		:: "mask only the evolution points"
+  "guard_mask"		:: "mask only the guard points"
+} "none"
+
+boolean analytic_fields "should the analytic values of the fields be computed?"
+{
+} "no"
+
+real A_r0 "Constant part of Bondi Radius"
+{
+  -1:1		:: "amplitude of the perturbation"
+} 0
+
+real F_r0 "Constant part of Bondi Radius"
+{
+  0:*		:: "frequency of the perturbation"
+} 1

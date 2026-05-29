@@ -1,0 +1,17 @@
+# Main make.code.defn file for thorn WaveExtract
+#
+# $Id: make.code.defn,v 1.1.1.1 2004/06/10 15:08:38 herrmann Exp $
+ 
+SRCS = IO.c                            \
+       ParamCheck.c                    \
+       WavExtrConstants.F90            \
+       Init.F90                        \
+       MoncriefQ.F90                   \
+       ProjectSphere.F90               \
+       SchwarzschildMassRadius.F90     \
+       SetupDetectors.F90              \
+       SetupSphere.F90                 \
+       SubtractSphericalMetric.F90     \
+       SphericalSurface.F90            \
+       loop_over_detectors.F90
+

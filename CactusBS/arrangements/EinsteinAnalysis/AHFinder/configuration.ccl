@@ -1,0 +1,4 @@
+# Configuration definition for thorn CactusEinstein/AHFinder
+# $Header$
+
+REQUIRES CartGrid3D

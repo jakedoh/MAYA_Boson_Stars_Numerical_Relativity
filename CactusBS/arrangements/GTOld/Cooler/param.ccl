@@ -1,0 +1,39 @@
+# Parameter definitions for thorn Cooler
+
+KEYWORD rate_function "Cooling rate function, lambda(T)" STEERABLE=always
+{
+  "Sharma" :: "Sharma et al. arXiv:1003.5546 (applicable over wide range of T)"
+} "Sharma"
+
+CCTK_REAL ion_type "Mass of gas particle in terms of proton mass (eg. m_g = ion_type*m_p) to convert rest mass density to number density (default: Proton)" STEERABLE=always
+{
+  (0:* :: "Positive"
+} 1
+
+CCTK_REAL Msys_SolarMasses "System mass in solar masses" STEERABLE=always
+{
+  (0:* :: "Positive"
+} 1e7
+
+CCTK_REAL Tfac "Ratio between gas temperature and electron temperature T_p/T_e" STEERABLE=always
+{
+  (0:* :: "Positive"
+} 1
+
+BOOLEAN verbose "Toggle verbosity." STEERABLE=always
+{
+} "no"
+
+BOOLEAN keep_radiation "Store deps/dt as a gridfunction" STEERABLE=recover
+{
+} "no"
+
+KEYWORD cool_by "Where cooling takes place"
+{
+  "RHS_Mods" 		:: "Alter the RHS of conservatives before updating."
+  "Operator_Splitting" 	:: "Cool primitives at MoL_PostStep, then reconstruct new conservatives."
+} "RHS_Mods"
+
+SHARES: Whisky
+
+USES keyword whisky_eos_type

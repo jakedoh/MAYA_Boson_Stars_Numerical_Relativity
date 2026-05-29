@@ -1,0 +1,3 @@
+# Configuration definitions for thorn SphericalHarmonicDecomp
+
+REQUIRES HDF5 GSL

@@ -1,0 +1,15 @@
+# Interface definition for thorn EOS_RealisticPP
+
+implements: EOS_RealisticPP
+inherits: EOS_Base
+
+USES INCLUDE: EOS_Base.h
+USES INCLUDE: EOS_Base.inc
+
+CCTK_REAL FUNCTION EOS_HybridColdEps(CCTK_REAL IN rho)
+
+PROVIDES FUNCTION EOS_HybridColdEps with EOS_RealisticPP_HybridColdEps LANGUAGE Fortran
+
+
+
+private:

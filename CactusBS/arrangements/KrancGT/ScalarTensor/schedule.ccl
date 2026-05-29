@@ -1,0 +1,1377 @@
+# File produced by Kranc
+
+STORAGE: STphi_group[timelevels]
+
+STORAGE: STpi_group[timelevels]
+
+STORAGE: gLocal_group[timelevels]
+
+STORAGE: alpLocal_group[timelevels]
+
+STORAGE: KtraceLocal_group[timelevels]
+
+STORAGE: TmunuTraceMatterLocal_group[timelevels]
+
+STORAGE: rhoE_group[timelevels]
+
+STORAGE: rhoJ_group[timelevels]
+
+STORAGE: STphi_grouprhs[rhs_timelevels]
+
+STORAGE: STpi_grouprhs[rhs_timelevels]
+schedule ScalarTensor_Startup at STARTUP
+{
+  LANG: C
+  OPTIONS: meta
+} "create banner"
+
+schedule ScalarTensor_RegisterSymmetries in SymmetryRegister
+{
+  LANG: C
+  OPTIONS: meta
+} "register symmetries"
+
+schedule ScalarTensor_init_gfs at BaseGrid
+{
+  LANG: C
+  WRITES: ScalarTensor::rhoE(Everywhere)
+  WRITES: ScalarTensor::rhoJ(Everywhere)
+  WRITES: ScalarTensor::STphi(Everywhere)
+  WRITES: ScalarTensor::STpi(Everywhere)
+} "ScalarTensor_init_gfs"
+
+schedule ScalarTensor_ADMToLocal AT Initial after ADMBase_PostInitial before EinsteinToJordanFrame as ScalarFieldADMToLocal_initial
+{
+  LANG: C
+  READS: admbase::kxx(Everywhere)
+  READS: admbase::kxy(Everywhere)
+  READS: admbase::kxz(Everywhere)
+  READS: admbase::kyy(Everywhere)
+  READS: admbase::kyz(Everywhere)
+  READS: admbase::kzz(Everywhere)
+  READS: admbase::alp(Everywhere)
+  READS: admbase::gxx(Everywhere)
+  READS: admbase::gxy(Everywhere)
+  READS: admbase::gxz(Everywhere)
+  READS: admbase::gyy(Everywhere)
+  READS: admbase::gyz(Everywhere)
+  READS: admbase::gzz(Everywhere)
+  WRITES: ScalarTensor::alpLocal(Everywhere)
+  WRITES: ScalarTensor::gLocal11(Everywhere)
+  WRITES: ScalarTensor::gLocal21(Everywhere)
+  WRITES: ScalarTensor::gLocal22(Everywhere)
+  WRITES: ScalarTensor::gLocal31(Everywhere)
+  WRITES: ScalarTensor::gLocal32(Everywhere)
+  WRITES: ScalarTensor::gLocal33(Everywhere)
+  WRITES: ScalarTensor::KtraceLocal(Everywhere)
+} "ScalarTensor_ADMToLocal"
+
+schedule ScalarTensor_ADMToLocal in MoL_PostStep after bssn_evolved_to_adm before EinsteinToJordanFrame as ScalarFieldADMToLocal
+{
+  LANG: C
+  READS: admbase::kxx(Everywhere)
+  READS: admbase::kxy(Everywhere)
+  READS: admbase::kxz(Everywhere)
+  READS: admbase::kyy(Everywhere)
+  READS: admbase::kyz(Everywhere)
+  READS: admbase::kzz(Everywhere)
+  READS: admbase::alp(Everywhere)
+  READS: admbase::gxx(Everywhere)
+  READS: admbase::gxy(Everywhere)
+  READS: admbase::gxz(Everywhere)
+  READS: admbase::gyy(Everywhere)
+  READS: admbase::gyz(Everywhere)
+  READS: admbase::gzz(Everywhere)
+  WRITES: ScalarTensor::alpLocal(Everywhere)
+  WRITES: ScalarTensor::gLocal11(Everywhere)
+  WRITES: ScalarTensor::gLocal21(Everywhere)
+  WRITES: ScalarTensor::gLocal22(Everywhere)
+  WRITES: ScalarTensor::gLocal31(Everywhere)
+  WRITES: ScalarTensor::gLocal32(Everywhere)
+  WRITES: ScalarTensor::gLocal33(Everywhere)
+  WRITES: ScalarTensor::KtraceLocal(Everywhere)
+} "ScalarTensor_ADMToLocal"
+
+schedule ScalarTensor_ADMToLocal at CCTK_EVOL after MoL_Evolution before EinsteinToJordanFrame as ScalarFieldADMToLocal
+{
+  LANG: C
+  READS: admbase::kxx(Everywhere)
+  READS: admbase::kxy(Everywhere)
+  READS: admbase::kxz(Everywhere)
+  READS: admbase::kyy(Everywhere)
+  READS: admbase::kyz(Everywhere)
+  READS: admbase::kzz(Everywhere)
+  READS: admbase::alp(Everywhere)
+  READS: admbase::gxx(Everywhere)
+  READS: admbase::gxy(Everywhere)
+  READS: admbase::gxz(Everywhere)
+  READS: admbase::gyy(Everywhere)
+  READS: admbase::gyz(Everywhere)
+  READS: admbase::gzz(Everywhere)
+  WRITES: ScalarTensor::alpLocal(Everywhere)
+  WRITES: ScalarTensor::gLocal11(Everywhere)
+  WRITES: ScalarTensor::gLocal21(Everywhere)
+  WRITES: ScalarTensor::gLocal22(Everywhere)
+  WRITES: ScalarTensor::gLocal31(Everywhere)
+  WRITES: ScalarTensor::gLocal32(Everywhere)
+  WRITES: ScalarTensor::gLocal33(Everywhere)
+  WRITES: ScalarTensor::KtraceLocal(Everywhere)
+} "ScalarTensor_ADMToLocal"
+
+if (CCTK_EQUALS(fd_order, "full4th"))
+{
+  schedule ScalarTensor_EvolveScalarField_full4th in MoL_CalcRHS as EvolveScalarField
+  {
+    LANG: C
+    READS: admbase::kxx(Everywhere)
+    READS: admbase::kxy(Everywhere)
+    READS: admbase::kxz(Everywhere)
+    READS: admbase::kyy(Everywhere)
+    READS: admbase::kyz(Everywhere)
+    READS: admbase::kzz(Everywhere)
+    READS: admbase::alp(Everywhere)
+    READS: admbase::gxx(Everywhere)
+    READS: admbase::gxy(Everywhere)
+    READS: admbase::gxz(Everywhere)
+    READS: admbase::gyy(Everywhere)
+    READS: admbase::gyz(Everywhere)
+    READS: admbase::gzz(Everywhere)
+    READS: admbase::betax(Everywhere)
+    READS: admbase::betay(Everywhere)
+    READS: admbase::betaz(Everywhere)
+    READS: TmunuBase::eTtt(Everywhere)
+    READS: TmunuBase::eTxx(Everywhere)
+    READS: TmunuBase::eTxy(Everywhere)
+    READS: TmunuBase::eTxz(Everywhere)
+    READS: TmunuBase::eTyy(Everywhere)
+    READS: TmunuBase::eTyz(Everywhere)
+    READS: TmunuBase::eTzz(Everywhere)
+    READS: TmunuBase::eTtx(Everywhere)
+    READS: TmunuBase::eTty(Everywhere)
+    READS: TmunuBase::eTtz(Everywhere)
+    READS: ScalarTensor::STphi(Everywhere)
+    READS: ScalarTensor::STpi(Everywhere)
+    WRITES: ScalarTensor::STphirhs(Interior)
+    WRITES: ScalarTensor::STpirhs(Interior)
+  } "ScalarTensor_EvolveScalarField_full4th"
+}
+
+if (CCTK_EQUALS(fd_order, "6th"))
+{
+  schedule ScalarTensor_EvolveScalarField_6th in MoL_CalcRHS as EvolveScalarField
+  {
+    LANG: C
+    READS: admbase::kxx(Everywhere)
+    READS: admbase::kxy(Everywhere)
+    READS: admbase::kxz(Everywhere)
+    READS: admbase::kyy(Everywhere)
+    READS: admbase::kyz(Everywhere)
+    READS: admbase::kzz(Everywhere)
+    READS: admbase::alp(Everywhere)
+    READS: admbase::gxx(Everywhere)
+    READS: admbase::gxy(Everywhere)
+    READS: admbase::gxz(Everywhere)
+    READS: admbase::gyy(Everywhere)
+    READS: admbase::gyz(Everywhere)
+    READS: admbase::gzz(Everywhere)
+    READS: admbase::betax(Everywhere)
+    READS: admbase::betay(Everywhere)
+    READS: admbase::betaz(Everywhere)
+    READS: TmunuBase::eTtt(Everywhere)
+    READS: TmunuBase::eTxx(Everywhere)
+    READS: TmunuBase::eTxy(Everywhere)
+    READS: TmunuBase::eTxz(Everywhere)
+    READS: TmunuBase::eTyy(Everywhere)
+    READS: TmunuBase::eTyz(Everywhere)
+    READS: TmunuBase::eTzz(Everywhere)
+    READS: TmunuBase::eTtx(Everywhere)
+    READS: TmunuBase::eTty(Everywhere)
+    READS: TmunuBase::eTtz(Everywhere)
+    READS: ScalarTensor::STphi(Everywhere)
+    READS: ScalarTensor::STpi(Everywhere)
+    WRITES: ScalarTensor::STphirhs(Interior)
+    WRITES: ScalarTensor::STpirhs(Interior)
+  } "ScalarTensor_EvolveScalarField_6th"
+}
+
+if (CCTK_EQUALS(potential_type, "phiFourth"))
+{
+  schedule ScalarTensor_AddPotentialToRHS_phiFourth in MoL_CalcRHS after EvolveScalarField as AddPotentialToScalarFieldRHS
+  {
+    LANG: C
+    READS: ScalarTensor::STphi(Everywhere)
+    READS: ScalarTensor::STpirhs(Everywhere)
+    WRITES: ScalarTensor::STpirhs(Interior)
+  } "ScalarTensor_AddPotentialToRHS_phiFourth"
+}
+
+if (CCTK_EQUALS(potential_type, "phiSixth"))
+{
+  schedule ScalarTensor_AddPotentialToRHS_phiSixth in MoL_CalcRHS after EvolveScalarField as AddPotentialToScalarFieldRHS
+  {
+    LANG: C
+    READS: ScalarTensor::STphi(Everywhere)
+    READS: ScalarTensor::STpirhs(Everywhere)
+    WRITES: ScalarTensor::STpirhs(Interior)
+  } "ScalarTensor_AddPotentialToRHS_phiSixth"
+}
+
+if (CCTK_EQUALS(potential_type, "phiEighth"))
+{
+  schedule ScalarTensor_AddPotentialToRHS_phiEighth in MoL_CalcRHS after EvolveScalarField as AddPotentialToScalarFieldRHS
+  {
+    LANG: C
+    READS: ScalarTensor::STphi(Everywhere)
+    READS: ScalarTensor::STpirhs(Everywhere)
+    WRITES: ScalarTensor::STpirhs(Interior)
+  } "ScalarTensor_AddPotentialToRHS_phiEighth"
+}
+
+if (CCTK_EQUALS(potential_type, "phiBubble"))
+{
+  schedule ScalarTensor_AddPotentialToRHS_phiBubble in MoL_CalcRHS after EvolveScalarField as AddPotentialToScalarFieldRHS
+  {
+    LANG: C
+    READS: ScalarTensor::STphi(Everywhere)
+    READS: ScalarTensor::STpirhs(Everywhere)
+    WRITES: ScalarTensor::STpirhs(Interior)
+  } "ScalarTensor_AddPotentialToRHS_phiBubble"
+}
+
+if (CCTK_EQUALS(potential_type, "phiExpand"))
+{
+  schedule ScalarTensor_AddPotentialToRHS_phiExpand in MoL_CalcRHS after EvolveScalarField as AddPotentialToScalarFieldRHS
+  {
+    LANG: C
+    READS: ScalarTensor::STphi(Everywhere)
+    READS: ScalarTensor::STpirhs(Everywhere)
+    WRITES: ScalarTensor::STpirhs(Interior)
+  } "ScalarTensor_AddPotentialToRHS_phiExpand"
+}
+
+if (CCTK_EQUALS(couple_scalar_field_to_matter, "no"))
+{
+  schedule ScalarTensor_ZeroTmunuTrace in AddToTmunu as ScalarFieldTmunu after Whisky_SetTmunu
+  {
+    LANG: C
+    WRITES: ScalarTensor::TmunuTraceMatterLocal(Everywhere)
+  } "ScalarTensor_ZeroTmunuTrace"
+}
+
+if (CCTK_EQUALS(potential_type, "none"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "full4th"))
+    {
+      schedule ScalarTensor_ScalarFieldTmunu_none_full4th in AddToTmunu as ScalarFieldTmunu after Whisky_SetTmunu
+      {
+        LANG: C
+        SYNC: TmunuBase::stress_energy_scalar
+        SYNC: TmunuBase::stress_energy_tensor
+        SYNC: TmunuBase::stress_energy_vector
+        SYNC: TmunuTraceMatterLocal_group
+        READS: admbase::betax(Everywhere)
+        READS: admbase::betay(Everywhere)
+        READS: admbase::betaz(Everywhere)
+        READS: TmunuBase::eTtt(Everywhere)
+        READS: TmunuBase::eTxx(Everywhere)
+        READS: TmunuBase::eTxy(Everywhere)
+        READS: TmunuBase::eTxz(Everywhere)
+        READS: TmunuBase::eTyy(Everywhere)
+        READS: TmunuBase::eTyz(Everywhere)
+        READS: TmunuBase::eTzz(Everywhere)
+        READS: TmunuBase::eTtx(Everywhere)
+        READS: TmunuBase::eTty(Everywhere)
+        READS: TmunuBase::eTtz(Everywhere)
+        READS: ScalarTensor::STphi(Everywhere)
+        READS: ScalarTensor::STpi(Everywhere)
+        READS: ScalarTensor::alpLocal(Everywhere)
+        READS: ScalarTensor::gLocal11(Everywhere)
+        READS: ScalarTensor::gLocal21(Everywhere)
+        READS: ScalarTensor::gLocal31(Everywhere)
+        READS: ScalarTensor::gLocal22(Everywhere)
+        READS: ScalarTensor::gLocal32(Everywhere)
+        READS: ScalarTensor::gLocal33(Everywhere)
+        WRITES: TmunuBase::eTtt(Interior)
+        WRITES: TmunuBase::eTtx(Interior)
+        WRITES: TmunuBase::eTty(Interior)
+        WRITES: TmunuBase::eTtz(Interior)
+        WRITES: TmunuBase::eTxx(Interior)
+        WRITES: TmunuBase::eTxy(Interior)
+        WRITES: TmunuBase::eTxz(Interior)
+        WRITES: TmunuBase::eTyy(Interior)
+        WRITES: TmunuBase::eTyz(Interior)
+        WRITES: TmunuBase::eTzz(Interior)
+        WRITES: ScalarTensor::TmunuTraceMatterLocal(Interior)
+      } "ScalarTensor_ScalarFieldTmunu_none_full4th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "none"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "6th"))
+    {
+      schedule ScalarTensor_ScalarFieldTmunu_none_6th in AddToTmunu as ScalarFieldTmunu after Whisky_SetTmunu
+      {
+        LANG: C
+        SYNC: TmunuBase::stress_energy_scalar
+        SYNC: TmunuBase::stress_energy_tensor
+        SYNC: TmunuBase::stress_energy_vector
+        SYNC: TmunuTraceMatterLocal_group
+        READS: admbase::betax(Everywhere)
+        READS: admbase::betay(Everywhere)
+        READS: admbase::betaz(Everywhere)
+        READS: TmunuBase::eTtt(Everywhere)
+        READS: TmunuBase::eTxx(Everywhere)
+        READS: TmunuBase::eTxy(Everywhere)
+        READS: TmunuBase::eTxz(Everywhere)
+        READS: TmunuBase::eTyy(Everywhere)
+        READS: TmunuBase::eTyz(Everywhere)
+        READS: TmunuBase::eTzz(Everywhere)
+        READS: TmunuBase::eTtx(Everywhere)
+        READS: TmunuBase::eTty(Everywhere)
+        READS: TmunuBase::eTtz(Everywhere)
+        READS: ScalarTensor::STphi(Everywhere)
+        READS: ScalarTensor::STpi(Everywhere)
+        READS: ScalarTensor::alpLocal(Everywhere)
+        READS: ScalarTensor::gLocal11(Everywhere)
+        READS: ScalarTensor::gLocal21(Everywhere)
+        READS: ScalarTensor::gLocal31(Everywhere)
+        READS: ScalarTensor::gLocal22(Everywhere)
+        READS: ScalarTensor::gLocal32(Everywhere)
+        READS: ScalarTensor::gLocal33(Everywhere)
+        WRITES: TmunuBase::eTtt(Interior)
+        WRITES: TmunuBase::eTtx(Interior)
+        WRITES: TmunuBase::eTty(Interior)
+        WRITES: TmunuBase::eTtz(Interior)
+        WRITES: TmunuBase::eTxx(Interior)
+        WRITES: TmunuBase::eTxy(Interior)
+        WRITES: TmunuBase::eTxz(Interior)
+        WRITES: TmunuBase::eTyy(Interior)
+        WRITES: TmunuBase::eTyz(Interior)
+        WRITES: TmunuBase::eTzz(Interior)
+        WRITES: ScalarTensor::TmunuTraceMatterLocal(Interior)
+      } "ScalarTensor_ScalarFieldTmunu_none_6th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "phiFourth"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "full4th"))
+    {
+      schedule ScalarTensor_ScalarFieldTmunu_phiFourth_full4th in AddToTmunu as ScalarFieldTmunu after Whisky_SetTmunu
+      {
+        LANG: C
+        SYNC: TmunuBase::stress_energy_scalar
+        SYNC: TmunuBase::stress_energy_tensor
+        SYNC: TmunuBase::stress_energy_vector
+        SYNC: TmunuTraceMatterLocal_group
+        READS: admbase::betax(Everywhere)
+        READS: admbase::betay(Everywhere)
+        READS: admbase::betaz(Everywhere)
+        READS: TmunuBase::eTtt(Everywhere)
+        READS: TmunuBase::eTxx(Everywhere)
+        READS: TmunuBase::eTxy(Everywhere)
+        READS: TmunuBase::eTxz(Everywhere)
+        READS: TmunuBase::eTyy(Everywhere)
+        READS: TmunuBase::eTyz(Everywhere)
+        READS: TmunuBase::eTzz(Everywhere)
+        READS: TmunuBase::eTtx(Everywhere)
+        READS: TmunuBase::eTty(Everywhere)
+        READS: TmunuBase::eTtz(Everywhere)
+        READS: ScalarTensor::STphi(Everywhere)
+        READS: ScalarTensor::STpi(Everywhere)
+        READS: ScalarTensor::alpLocal(Everywhere)
+        READS: ScalarTensor::gLocal11(Everywhere)
+        READS: ScalarTensor::gLocal21(Everywhere)
+        READS: ScalarTensor::gLocal31(Everywhere)
+        READS: ScalarTensor::gLocal22(Everywhere)
+        READS: ScalarTensor::gLocal32(Everywhere)
+        READS: ScalarTensor::gLocal33(Everywhere)
+        WRITES: TmunuBase::eTtt(Interior)
+        WRITES: TmunuBase::eTtx(Interior)
+        WRITES: TmunuBase::eTty(Interior)
+        WRITES: TmunuBase::eTtz(Interior)
+        WRITES: TmunuBase::eTxx(Interior)
+        WRITES: TmunuBase::eTxy(Interior)
+        WRITES: TmunuBase::eTxz(Interior)
+        WRITES: TmunuBase::eTyy(Interior)
+        WRITES: TmunuBase::eTyz(Interior)
+        WRITES: TmunuBase::eTzz(Interior)
+        WRITES: ScalarTensor::TmunuTraceMatterLocal(Interior)
+      } "ScalarTensor_ScalarFieldTmunu_phiFourth_full4th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "phiFourth"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "6th"))
+    {
+      schedule ScalarTensor_ScalarFieldTmunu_phiFourth_6th in AddToTmunu as ScalarFieldTmunu after Whisky_SetTmunu
+      {
+        LANG: C
+        SYNC: TmunuBase::stress_energy_scalar
+        SYNC: TmunuBase::stress_energy_tensor
+        SYNC: TmunuBase::stress_energy_vector
+        SYNC: TmunuTraceMatterLocal_group
+        READS: admbase::betax(Everywhere)
+        READS: admbase::betay(Everywhere)
+        READS: admbase::betaz(Everywhere)
+        READS: TmunuBase::eTtt(Everywhere)
+        READS: TmunuBase::eTxx(Everywhere)
+        READS: TmunuBase::eTxy(Everywhere)
+        READS: TmunuBase::eTxz(Everywhere)
+        READS: TmunuBase::eTyy(Everywhere)
+        READS: TmunuBase::eTyz(Everywhere)
+        READS: TmunuBase::eTzz(Everywhere)
+        READS: TmunuBase::eTtx(Everywhere)
+        READS: TmunuBase::eTty(Everywhere)
+        READS: TmunuBase::eTtz(Everywhere)
+        READS: ScalarTensor::STphi(Everywhere)
+        READS: ScalarTensor::STpi(Everywhere)
+        READS: ScalarTensor::alpLocal(Everywhere)
+        READS: ScalarTensor::gLocal11(Everywhere)
+        READS: ScalarTensor::gLocal21(Everywhere)
+        READS: ScalarTensor::gLocal31(Everywhere)
+        READS: ScalarTensor::gLocal22(Everywhere)
+        READS: ScalarTensor::gLocal32(Everywhere)
+        READS: ScalarTensor::gLocal33(Everywhere)
+        WRITES: TmunuBase::eTtt(Interior)
+        WRITES: TmunuBase::eTtx(Interior)
+        WRITES: TmunuBase::eTty(Interior)
+        WRITES: TmunuBase::eTtz(Interior)
+        WRITES: TmunuBase::eTxx(Interior)
+        WRITES: TmunuBase::eTxy(Interior)
+        WRITES: TmunuBase::eTxz(Interior)
+        WRITES: TmunuBase::eTyy(Interior)
+        WRITES: TmunuBase::eTyz(Interior)
+        WRITES: TmunuBase::eTzz(Interior)
+        WRITES: ScalarTensor::TmunuTraceMatterLocal(Interior)
+      } "ScalarTensor_ScalarFieldTmunu_phiFourth_6th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "phiSixth"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "full4th"))
+    {
+      schedule ScalarTensor_ScalarFieldTmunu_phiSixth_full4th in AddToTmunu as ScalarFieldTmunu after Whisky_SetTmunu
+      {
+        LANG: C
+        SYNC: TmunuBase::stress_energy_scalar
+        SYNC: TmunuBase::stress_energy_tensor
+        SYNC: TmunuBase::stress_energy_vector
+        SYNC: TmunuTraceMatterLocal_group
+        READS: admbase::betax(Everywhere)
+        READS: admbase::betay(Everywhere)
+        READS: admbase::betaz(Everywhere)
+        READS: TmunuBase::eTtt(Everywhere)
+        READS: TmunuBase::eTxx(Everywhere)
+        READS: TmunuBase::eTxy(Everywhere)
+        READS: TmunuBase::eTxz(Everywhere)
+        READS: TmunuBase::eTyy(Everywhere)
+        READS: TmunuBase::eTyz(Everywhere)
+        READS: TmunuBase::eTzz(Everywhere)
+        READS: TmunuBase::eTtx(Everywhere)
+        READS: TmunuBase::eTty(Everywhere)
+        READS: TmunuBase::eTtz(Everywhere)
+        READS: ScalarTensor::STphi(Everywhere)
+        READS: ScalarTensor::STpi(Everywhere)
+        READS: ScalarTensor::alpLocal(Everywhere)
+        READS: ScalarTensor::gLocal11(Everywhere)
+        READS: ScalarTensor::gLocal21(Everywhere)
+        READS: ScalarTensor::gLocal31(Everywhere)
+        READS: ScalarTensor::gLocal22(Everywhere)
+        READS: ScalarTensor::gLocal32(Everywhere)
+        READS: ScalarTensor::gLocal33(Everywhere)
+        WRITES: TmunuBase::eTtt(Interior)
+        WRITES: TmunuBase::eTtx(Interior)
+        WRITES: TmunuBase::eTty(Interior)
+        WRITES: TmunuBase::eTtz(Interior)
+        WRITES: TmunuBase::eTxx(Interior)
+        WRITES: TmunuBase::eTxy(Interior)
+        WRITES: TmunuBase::eTxz(Interior)
+        WRITES: TmunuBase::eTyy(Interior)
+        WRITES: TmunuBase::eTyz(Interior)
+        WRITES: TmunuBase::eTzz(Interior)
+        WRITES: ScalarTensor::TmunuTraceMatterLocal(Interior)
+      } "ScalarTensor_ScalarFieldTmunu_phiSixth_full4th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "phiSixth"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "6th"))
+    {
+      schedule ScalarTensor_ScalarFieldTmunu_phiSixth_6th in AddToTmunu as ScalarFieldTmunu after Whisky_SetTmunu
+      {
+        LANG: C
+        SYNC: TmunuBase::stress_energy_scalar
+        SYNC: TmunuBase::stress_energy_tensor
+        SYNC: TmunuBase::stress_energy_vector
+        SYNC: TmunuTraceMatterLocal_group
+        READS: admbase::betax(Everywhere)
+        READS: admbase::betay(Everywhere)
+        READS: admbase::betaz(Everywhere)
+        READS: TmunuBase::eTtt(Everywhere)
+        READS: TmunuBase::eTxx(Everywhere)
+        READS: TmunuBase::eTxy(Everywhere)
+        READS: TmunuBase::eTxz(Everywhere)
+        READS: TmunuBase::eTyy(Everywhere)
+        READS: TmunuBase::eTyz(Everywhere)
+        READS: TmunuBase::eTzz(Everywhere)
+        READS: TmunuBase::eTtx(Everywhere)
+        READS: TmunuBase::eTty(Everywhere)
+        READS: TmunuBase::eTtz(Everywhere)
+        READS: ScalarTensor::STphi(Everywhere)
+        READS: ScalarTensor::STpi(Everywhere)
+        READS: ScalarTensor::alpLocal(Everywhere)
+        READS: ScalarTensor::gLocal11(Everywhere)
+        READS: ScalarTensor::gLocal21(Everywhere)
+        READS: ScalarTensor::gLocal31(Everywhere)
+        READS: ScalarTensor::gLocal22(Everywhere)
+        READS: ScalarTensor::gLocal32(Everywhere)
+        READS: ScalarTensor::gLocal33(Everywhere)
+        WRITES: TmunuBase::eTtt(Interior)
+        WRITES: TmunuBase::eTtx(Interior)
+        WRITES: TmunuBase::eTty(Interior)
+        WRITES: TmunuBase::eTtz(Interior)
+        WRITES: TmunuBase::eTxx(Interior)
+        WRITES: TmunuBase::eTxy(Interior)
+        WRITES: TmunuBase::eTxz(Interior)
+        WRITES: TmunuBase::eTyy(Interior)
+        WRITES: TmunuBase::eTyz(Interior)
+        WRITES: TmunuBase::eTzz(Interior)
+        WRITES: ScalarTensor::TmunuTraceMatterLocal(Interior)
+      } "ScalarTensor_ScalarFieldTmunu_phiSixth_6th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "phiEighth"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "full4th"))
+    {
+      schedule ScalarTensor_ScalarFieldTmunu_phiEighth_full4th in AddToTmunu as ScalarFieldTmunu after Whisky_SetTmunu
+      {
+        LANG: C
+        SYNC: TmunuBase::stress_energy_scalar
+        SYNC: TmunuBase::stress_energy_tensor
+        SYNC: TmunuBase::stress_energy_vector
+        SYNC: TmunuTraceMatterLocal_group
+        READS: admbase::betax(Everywhere)
+        READS: admbase::betay(Everywhere)
+        READS: admbase::betaz(Everywhere)
+        READS: TmunuBase::eTtt(Everywhere)
+        READS: TmunuBase::eTxx(Everywhere)
+        READS: TmunuBase::eTxy(Everywhere)
+        READS: TmunuBase::eTxz(Everywhere)
+        READS: TmunuBase::eTyy(Everywhere)
+        READS: TmunuBase::eTyz(Everywhere)
+        READS: TmunuBase::eTzz(Everywhere)
+        READS: TmunuBase::eTtx(Everywhere)
+        READS: TmunuBase::eTty(Everywhere)
+        READS: TmunuBase::eTtz(Everywhere)
+        READS: ScalarTensor::STphi(Everywhere)
+        READS: ScalarTensor::STpi(Everywhere)
+        READS: ScalarTensor::alpLocal(Everywhere)
+        READS: ScalarTensor::gLocal11(Everywhere)
+        READS: ScalarTensor::gLocal21(Everywhere)
+        READS: ScalarTensor::gLocal31(Everywhere)
+        READS: ScalarTensor::gLocal22(Everywhere)
+        READS: ScalarTensor::gLocal32(Everywhere)
+        READS: ScalarTensor::gLocal33(Everywhere)
+        WRITES: TmunuBase::eTtt(Interior)
+        WRITES: TmunuBase::eTtx(Interior)
+        WRITES: TmunuBase::eTty(Interior)
+        WRITES: TmunuBase::eTtz(Interior)
+        WRITES: TmunuBase::eTxx(Interior)
+        WRITES: TmunuBase::eTxy(Interior)
+        WRITES: TmunuBase::eTxz(Interior)
+        WRITES: TmunuBase::eTyy(Interior)
+        WRITES: TmunuBase::eTyz(Interior)
+        WRITES: TmunuBase::eTzz(Interior)
+        WRITES: ScalarTensor::TmunuTraceMatterLocal(Interior)
+      } "ScalarTensor_ScalarFieldTmunu_phiEighth_full4th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "phiEighth"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "6th"))
+    {
+      schedule ScalarTensor_ScalarFieldTmunu_phiEighth_6th in AddToTmunu as ScalarFieldTmunu after Whisky_SetTmunu
+      {
+        LANG: C
+        SYNC: TmunuBase::stress_energy_scalar
+        SYNC: TmunuBase::stress_energy_tensor
+        SYNC: TmunuBase::stress_energy_vector
+        SYNC: TmunuTraceMatterLocal_group
+        READS: admbase::betax(Everywhere)
+        READS: admbase::betay(Everywhere)
+        READS: admbase::betaz(Everywhere)
+        READS: TmunuBase::eTtt(Everywhere)
+        READS: TmunuBase::eTxx(Everywhere)
+        READS: TmunuBase::eTxy(Everywhere)
+        READS: TmunuBase::eTxz(Everywhere)
+        READS: TmunuBase::eTyy(Everywhere)
+        READS: TmunuBase::eTyz(Everywhere)
+        READS: TmunuBase::eTzz(Everywhere)
+        READS: TmunuBase::eTtx(Everywhere)
+        READS: TmunuBase::eTty(Everywhere)
+        READS: TmunuBase::eTtz(Everywhere)
+        READS: ScalarTensor::STphi(Everywhere)
+        READS: ScalarTensor::STpi(Everywhere)
+        READS: ScalarTensor::alpLocal(Everywhere)
+        READS: ScalarTensor::gLocal11(Everywhere)
+        READS: ScalarTensor::gLocal21(Everywhere)
+        READS: ScalarTensor::gLocal31(Everywhere)
+        READS: ScalarTensor::gLocal22(Everywhere)
+        READS: ScalarTensor::gLocal32(Everywhere)
+        READS: ScalarTensor::gLocal33(Everywhere)
+        WRITES: TmunuBase::eTtt(Interior)
+        WRITES: TmunuBase::eTtx(Interior)
+        WRITES: TmunuBase::eTty(Interior)
+        WRITES: TmunuBase::eTtz(Interior)
+        WRITES: TmunuBase::eTxx(Interior)
+        WRITES: TmunuBase::eTxy(Interior)
+        WRITES: TmunuBase::eTxz(Interior)
+        WRITES: TmunuBase::eTyy(Interior)
+        WRITES: TmunuBase::eTyz(Interior)
+        WRITES: TmunuBase::eTzz(Interior)
+        WRITES: ScalarTensor::TmunuTraceMatterLocal(Interior)
+      } "ScalarTensor_ScalarFieldTmunu_phiEighth_6th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "phiBubble"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "full4th"))
+    {
+      schedule ScalarTensor_ScalarFieldTmunu_phiBubble_full4th in AddToTmunu as ScalarFieldTmunu after Whisky_SetTmunu
+      {
+        LANG: C
+        SYNC: TmunuBase::stress_energy_scalar
+        SYNC: TmunuBase::stress_energy_tensor
+        SYNC: TmunuBase::stress_energy_vector
+        SYNC: TmunuTraceMatterLocal_group
+        READS: admbase::betax(Everywhere)
+        READS: admbase::betay(Everywhere)
+        READS: admbase::betaz(Everywhere)
+        READS: TmunuBase::eTtt(Everywhere)
+        READS: TmunuBase::eTxx(Everywhere)
+        READS: TmunuBase::eTxy(Everywhere)
+        READS: TmunuBase::eTxz(Everywhere)
+        READS: TmunuBase::eTyy(Everywhere)
+        READS: TmunuBase::eTyz(Everywhere)
+        READS: TmunuBase::eTzz(Everywhere)
+        READS: TmunuBase::eTtx(Everywhere)
+        READS: TmunuBase::eTty(Everywhere)
+        READS: TmunuBase::eTtz(Everywhere)
+        READS: ScalarTensor::STphi(Everywhere)
+        READS: ScalarTensor::STpi(Everywhere)
+        READS: ScalarTensor::alpLocal(Everywhere)
+        READS: ScalarTensor::gLocal11(Everywhere)
+        READS: ScalarTensor::gLocal21(Everywhere)
+        READS: ScalarTensor::gLocal31(Everywhere)
+        READS: ScalarTensor::gLocal22(Everywhere)
+        READS: ScalarTensor::gLocal32(Everywhere)
+        READS: ScalarTensor::gLocal33(Everywhere)
+        WRITES: TmunuBase::eTtt(Interior)
+        WRITES: TmunuBase::eTtx(Interior)
+        WRITES: TmunuBase::eTty(Interior)
+        WRITES: TmunuBase::eTtz(Interior)
+        WRITES: TmunuBase::eTxx(Interior)
+        WRITES: TmunuBase::eTxy(Interior)
+        WRITES: TmunuBase::eTxz(Interior)
+        WRITES: TmunuBase::eTyy(Interior)
+        WRITES: TmunuBase::eTyz(Interior)
+        WRITES: TmunuBase::eTzz(Interior)
+        WRITES: ScalarTensor::TmunuTraceMatterLocal(Interior)
+      } "ScalarTensor_ScalarFieldTmunu_phiBubble_full4th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "phiBubble"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "6th"))
+    {
+      schedule ScalarTensor_ScalarFieldTmunu_phiBubble_6th in AddToTmunu as ScalarFieldTmunu after Whisky_SetTmunu
+      {
+        LANG: C
+        SYNC: TmunuBase::stress_energy_scalar
+        SYNC: TmunuBase::stress_energy_tensor
+        SYNC: TmunuBase::stress_energy_vector
+        SYNC: TmunuTraceMatterLocal_group
+        READS: admbase::betax(Everywhere)
+        READS: admbase::betay(Everywhere)
+        READS: admbase::betaz(Everywhere)
+        READS: TmunuBase::eTtt(Everywhere)
+        READS: TmunuBase::eTxx(Everywhere)
+        READS: TmunuBase::eTxy(Everywhere)
+        READS: TmunuBase::eTxz(Everywhere)
+        READS: TmunuBase::eTyy(Everywhere)
+        READS: TmunuBase::eTyz(Everywhere)
+        READS: TmunuBase::eTzz(Everywhere)
+        READS: TmunuBase::eTtx(Everywhere)
+        READS: TmunuBase::eTty(Everywhere)
+        READS: TmunuBase::eTtz(Everywhere)
+        READS: ScalarTensor::STphi(Everywhere)
+        READS: ScalarTensor::STpi(Everywhere)
+        READS: ScalarTensor::alpLocal(Everywhere)
+        READS: ScalarTensor::gLocal11(Everywhere)
+        READS: ScalarTensor::gLocal21(Everywhere)
+        READS: ScalarTensor::gLocal31(Everywhere)
+        READS: ScalarTensor::gLocal22(Everywhere)
+        READS: ScalarTensor::gLocal32(Everywhere)
+        READS: ScalarTensor::gLocal33(Everywhere)
+        WRITES: TmunuBase::eTtt(Interior)
+        WRITES: TmunuBase::eTtx(Interior)
+        WRITES: TmunuBase::eTty(Interior)
+        WRITES: TmunuBase::eTtz(Interior)
+        WRITES: TmunuBase::eTxx(Interior)
+        WRITES: TmunuBase::eTxy(Interior)
+        WRITES: TmunuBase::eTxz(Interior)
+        WRITES: TmunuBase::eTyy(Interior)
+        WRITES: TmunuBase::eTyz(Interior)
+        WRITES: TmunuBase::eTzz(Interior)
+        WRITES: ScalarTensor::TmunuTraceMatterLocal(Interior)
+      } "ScalarTensor_ScalarFieldTmunu_phiBubble_6th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "phiExpand"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "full4th"))
+    {
+      schedule ScalarTensor_ScalarFieldTmunu_phiExpand_full4th in AddToTmunu as ScalarFieldTmunu after Whisky_SetTmunu
+      {
+        LANG: C
+        SYNC: TmunuBase::stress_energy_scalar
+        SYNC: TmunuBase::stress_energy_tensor
+        SYNC: TmunuBase::stress_energy_vector
+        SYNC: TmunuTraceMatterLocal_group
+        READS: admbase::betax(Everywhere)
+        READS: admbase::betay(Everywhere)
+        READS: admbase::betaz(Everywhere)
+        READS: TmunuBase::eTtt(Everywhere)
+        READS: TmunuBase::eTxx(Everywhere)
+        READS: TmunuBase::eTxy(Everywhere)
+        READS: TmunuBase::eTxz(Everywhere)
+        READS: TmunuBase::eTyy(Everywhere)
+        READS: TmunuBase::eTyz(Everywhere)
+        READS: TmunuBase::eTzz(Everywhere)
+        READS: TmunuBase::eTtx(Everywhere)
+        READS: TmunuBase::eTty(Everywhere)
+        READS: TmunuBase::eTtz(Everywhere)
+        READS: ScalarTensor::STphi(Everywhere)
+        READS: ScalarTensor::STpi(Everywhere)
+        READS: ScalarTensor::alpLocal(Everywhere)
+        READS: ScalarTensor::gLocal11(Everywhere)
+        READS: ScalarTensor::gLocal21(Everywhere)
+        READS: ScalarTensor::gLocal31(Everywhere)
+        READS: ScalarTensor::gLocal22(Everywhere)
+        READS: ScalarTensor::gLocal32(Everywhere)
+        READS: ScalarTensor::gLocal33(Everywhere)
+        WRITES: TmunuBase::eTtt(Interior)
+        WRITES: TmunuBase::eTtx(Interior)
+        WRITES: TmunuBase::eTty(Interior)
+        WRITES: TmunuBase::eTtz(Interior)
+        WRITES: TmunuBase::eTxx(Interior)
+        WRITES: TmunuBase::eTxy(Interior)
+        WRITES: TmunuBase::eTxz(Interior)
+        WRITES: TmunuBase::eTyy(Interior)
+        WRITES: TmunuBase::eTyz(Interior)
+        WRITES: TmunuBase::eTzz(Interior)
+        WRITES: ScalarTensor::TmunuTraceMatterLocal(Interior)
+      } "ScalarTensor_ScalarFieldTmunu_phiExpand_full4th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "phiExpand"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "6th"))
+    {
+      schedule ScalarTensor_ScalarFieldTmunu_phiExpand_6th in AddToTmunu as ScalarFieldTmunu after Whisky_SetTmunu
+      {
+        LANG: C
+        SYNC: TmunuBase::stress_energy_scalar
+        SYNC: TmunuBase::stress_energy_tensor
+        SYNC: TmunuBase::stress_energy_vector
+        SYNC: TmunuTraceMatterLocal_group
+        READS: admbase::betax(Everywhere)
+        READS: admbase::betay(Everywhere)
+        READS: admbase::betaz(Everywhere)
+        READS: TmunuBase::eTtt(Everywhere)
+        READS: TmunuBase::eTxx(Everywhere)
+        READS: TmunuBase::eTxy(Everywhere)
+        READS: TmunuBase::eTxz(Everywhere)
+        READS: TmunuBase::eTyy(Everywhere)
+        READS: TmunuBase::eTyz(Everywhere)
+        READS: TmunuBase::eTzz(Everywhere)
+        READS: TmunuBase::eTtx(Everywhere)
+        READS: TmunuBase::eTty(Everywhere)
+        READS: TmunuBase::eTtz(Everywhere)
+        READS: ScalarTensor::STphi(Everywhere)
+        READS: ScalarTensor::STpi(Everywhere)
+        READS: ScalarTensor::alpLocal(Everywhere)
+        READS: ScalarTensor::gLocal11(Everywhere)
+        READS: ScalarTensor::gLocal21(Everywhere)
+        READS: ScalarTensor::gLocal31(Everywhere)
+        READS: ScalarTensor::gLocal22(Everywhere)
+        READS: ScalarTensor::gLocal32(Everywhere)
+        READS: ScalarTensor::gLocal33(Everywhere)
+        WRITES: TmunuBase::eTtt(Interior)
+        WRITES: TmunuBase::eTtx(Interior)
+        WRITES: TmunuBase::eTty(Interior)
+        WRITES: TmunuBase::eTtz(Interior)
+        WRITES: TmunuBase::eTxx(Interior)
+        WRITES: TmunuBase::eTxy(Interior)
+        WRITES: TmunuBase::eTxz(Interior)
+        WRITES: TmunuBase::eTyy(Interior)
+        WRITES: TmunuBase::eTyz(Interior)
+        WRITES: TmunuBase::eTzz(Interior)
+        WRITES: ScalarTensor::TmunuTraceMatterLocal(Interior)
+      } "ScalarTensor_ScalarFieldTmunu_phiExpand_6th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "none"))
+{
+  if (CCTK_EQUALS(calculate_rho, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "full4th"))
+    {
+      schedule ScalarTensor_calc_rho_none_full4th at CCTK_ANALYSIS as ScalarFieldRhoCalc
+      {
+        LANG: C
+        SYNC: rhoE_group
+        SYNC: rhoJ_group
+        READS: admbase::betax(Everywhere)
+        READS: admbase::betay(Everywhere)
+        READS: admbase::betaz(Everywhere)
+        READS: ScalarTensor::STphi(Everywhere)
+        READS: ScalarTensor::STpi(Everywhere)
+        READS: ScalarTensor::gLocal11(Everywhere)
+        READS: ScalarTensor::gLocal21(Everywhere)
+        READS: ScalarTensor::gLocal31(Everywhere)
+        READS: ScalarTensor::gLocal22(Everywhere)
+        READS: ScalarTensor::gLocal32(Everywhere)
+        READS: ScalarTensor::gLocal33(Everywhere)
+        WRITES: ScalarTensor::rhoE(Interior)
+        WRITES: ScalarTensor::rhoJ(Interior)
+      } "ScalarTensor_calc_rho_none_full4th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "none"))
+{
+  if (CCTK_EQUALS(calculate_rho, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "6th"))
+    {
+      schedule ScalarTensor_calc_rho_none_6th at CCTK_ANALYSIS as ScalarFieldRhoCalc
+      {
+        LANG: C
+        SYNC: rhoE_group
+        SYNC: rhoJ_group
+        READS: admbase::betax(Everywhere)
+        READS: admbase::betay(Everywhere)
+        READS: admbase::betaz(Everywhere)
+        READS: ScalarTensor::STphi(Everywhere)
+        READS: ScalarTensor::STpi(Everywhere)
+        READS: ScalarTensor::gLocal11(Everywhere)
+        READS: ScalarTensor::gLocal21(Everywhere)
+        READS: ScalarTensor::gLocal31(Everywhere)
+        READS: ScalarTensor::gLocal22(Everywhere)
+        READS: ScalarTensor::gLocal32(Everywhere)
+        READS: ScalarTensor::gLocal33(Everywhere)
+        WRITES: ScalarTensor::rhoE(Interior)
+        WRITES: ScalarTensor::rhoJ(Interior)
+      } "ScalarTensor_calc_rho_none_6th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "phiFourth"))
+{
+  if (CCTK_EQUALS(calculate_rho, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "full4th"))
+    {
+      schedule ScalarTensor_calc_rho_phiFourth_full4th at CCTK_ANALYSIS as ScalarFieldRhoCalc
+      {
+        LANG: C
+        SYNC: rhoE_group
+        SYNC: rhoJ_group
+        READS: admbase::betax(Everywhere)
+        READS: admbase::betay(Everywhere)
+        READS: admbase::betaz(Everywhere)
+        READS: ScalarTensor::STphi(Everywhere)
+        READS: ScalarTensor::STpi(Everywhere)
+        READS: ScalarTensor::gLocal11(Everywhere)
+        READS: ScalarTensor::gLocal21(Everywhere)
+        READS: ScalarTensor::gLocal31(Everywhere)
+        READS: ScalarTensor::gLocal22(Everywhere)
+        READS: ScalarTensor::gLocal32(Everywhere)
+        READS: ScalarTensor::gLocal33(Everywhere)
+        WRITES: ScalarTensor::rhoE(Interior)
+        WRITES: ScalarTensor::rhoJ(Interior)
+      } "ScalarTensor_calc_rho_phiFourth_full4th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "phiFourth"))
+{
+  if (CCTK_EQUALS(calculate_rho, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "6th"))
+    {
+      schedule ScalarTensor_calc_rho_phiFourth_6th at CCTK_ANALYSIS as ScalarFieldRhoCalc
+      {
+        LANG: C
+        SYNC: rhoE_group
+        SYNC: rhoJ_group
+        READS: admbase::betax(Everywhere)
+        READS: admbase::betay(Everywhere)
+        READS: admbase::betaz(Everywhere)
+        READS: ScalarTensor::STphi(Everywhere)
+        READS: ScalarTensor::STpi(Everywhere)
+        READS: ScalarTensor::gLocal11(Everywhere)
+        READS: ScalarTensor::gLocal21(Everywhere)
+        READS: ScalarTensor::gLocal31(Everywhere)
+        READS: ScalarTensor::gLocal22(Everywhere)
+        READS: ScalarTensor::gLocal32(Everywhere)
+        READS: ScalarTensor::gLocal33(Everywhere)
+        WRITES: ScalarTensor::rhoE(Interior)
+        WRITES: ScalarTensor::rhoJ(Interior)
+      } "ScalarTensor_calc_rho_phiFourth_6th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "phiSixth"))
+{
+  if (CCTK_EQUALS(calculate_rho, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "full4th"))
+    {
+      schedule ScalarTensor_calc_rho_phiSixth_full4th at CCTK_ANALYSIS as ScalarFieldRhoCalc
+      {
+        LANG: C
+        SYNC: rhoE_group
+        SYNC: rhoJ_group
+        READS: admbase::betax(Everywhere)
+        READS: admbase::betay(Everywhere)
+        READS: admbase::betaz(Everywhere)
+        READS: ScalarTensor::STphi(Everywhere)
+        READS: ScalarTensor::STpi(Everywhere)
+        READS: ScalarTensor::gLocal11(Everywhere)
+        READS: ScalarTensor::gLocal21(Everywhere)
+        READS: ScalarTensor::gLocal31(Everywhere)
+        READS: ScalarTensor::gLocal22(Everywhere)
+        READS: ScalarTensor::gLocal32(Everywhere)
+        READS: ScalarTensor::gLocal33(Everywhere)
+        WRITES: ScalarTensor::rhoE(Interior)
+        WRITES: ScalarTensor::rhoJ(Interior)
+      } "ScalarTensor_calc_rho_phiSixth_full4th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "phiSixth"))
+{
+  if (CCTK_EQUALS(calculate_rho, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "6th"))
+    {
+      schedule ScalarTensor_calc_rho_phiSixth_6th at CCTK_ANALYSIS as ScalarFieldRhoCalc
+      {
+        LANG: C
+        SYNC: rhoE_group
+        SYNC: rhoJ_group
+        READS: admbase::betax(Everywhere)
+        READS: admbase::betay(Everywhere)
+        READS: admbase::betaz(Everywhere)
+        READS: ScalarTensor::STphi(Everywhere)
+        READS: ScalarTensor::STpi(Everywhere)
+        READS: ScalarTensor::gLocal11(Everywhere)
+        READS: ScalarTensor::gLocal21(Everywhere)
+        READS: ScalarTensor::gLocal31(Everywhere)
+        READS: ScalarTensor::gLocal22(Everywhere)
+        READS: ScalarTensor::gLocal32(Everywhere)
+        READS: ScalarTensor::gLocal33(Everywhere)
+        WRITES: ScalarTensor::rhoE(Interior)
+        WRITES: ScalarTensor::rhoJ(Interior)
+      } "ScalarTensor_calc_rho_phiSixth_6th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "phiEighth"))
+{
+  if (CCTK_EQUALS(calculate_rho, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "full4th"))
+    {
+      schedule ScalarTensor_calc_rho_phiEighth_full4th at CCTK_ANALYSIS as ScalarFieldRhoCalc
+      {
+        LANG: C
+        SYNC: rhoE_group
+        SYNC: rhoJ_group
+        READS: admbase::betax(Everywhere)
+        READS: admbase::betay(Everywhere)
+        READS: admbase::betaz(Everywhere)
+        READS: ScalarTensor::STphi(Everywhere)
+        READS: ScalarTensor::STpi(Everywhere)
+        READS: ScalarTensor::gLocal11(Everywhere)
+        READS: ScalarTensor::gLocal21(Everywhere)
+        READS: ScalarTensor::gLocal31(Everywhere)
+        READS: ScalarTensor::gLocal22(Everywhere)
+        READS: ScalarTensor::gLocal32(Everywhere)
+        READS: ScalarTensor::gLocal33(Everywhere)
+        WRITES: ScalarTensor::rhoE(Interior)
+        WRITES: ScalarTensor::rhoJ(Interior)
+      } "ScalarTensor_calc_rho_phiEighth_full4th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "phiEighth"))
+{
+  if (CCTK_EQUALS(calculate_rho, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "6th"))
+    {
+      schedule ScalarTensor_calc_rho_phiEighth_6th at CCTK_ANALYSIS as ScalarFieldRhoCalc
+      {
+        LANG: C
+        SYNC: rhoE_group
+        SYNC: rhoJ_group
+        READS: admbase::betax(Everywhere)
+        READS: admbase::betay(Everywhere)
+        READS: admbase::betaz(Everywhere)
+        READS: ScalarTensor::STphi(Everywhere)
+        READS: ScalarTensor::STpi(Everywhere)
+        READS: ScalarTensor::gLocal11(Everywhere)
+        READS: ScalarTensor::gLocal21(Everywhere)
+        READS: ScalarTensor::gLocal31(Everywhere)
+        READS: ScalarTensor::gLocal22(Everywhere)
+        READS: ScalarTensor::gLocal32(Everywhere)
+        READS: ScalarTensor::gLocal33(Everywhere)
+        WRITES: ScalarTensor::rhoE(Interior)
+        WRITES: ScalarTensor::rhoJ(Interior)
+      } "ScalarTensor_calc_rho_phiEighth_6th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "phiBubble"))
+{
+  if (CCTK_EQUALS(calculate_rho, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "full4th"))
+    {
+      schedule ScalarTensor_calc_rho_phiBubble_full4th at CCTK_ANALYSIS as ScalarFieldRhoCalc
+      {
+        LANG: C
+        SYNC: rhoE_group
+        SYNC: rhoJ_group
+        READS: admbase::betax(Everywhere)
+        READS: admbase::betay(Everywhere)
+        READS: admbase::betaz(Everywhere)
+        READS: ScalarTensor::STphi(Everywhere)
+        READS: ScalarTensor::STpi(Everywhere)
+        READS: ScalarTensor::gLocal11(Everywhere)
+        READS: ScalarTensor::gLocal21(Everywhere)
+        READS: ScalarTensor::gLocal31(Everywhere)
+        READS: ScalarTensor::gLocal22(Everywhere)
+        READS: ScalarTensor::gLocal32(Everywhere)
+        READS: ScalarTensor::gLocal33(Everywhere)
+        WRITES: ScalarTensor::rhoE(Interior)
+        WRITES: ScalarTensor::rhoJ(Interior)
+      } "ScalarTensor_calc_rho_phiBubble_full4th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "phiBubble"))
+{
+  if (CCTK_EQUALS(calculate_rho, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "6th"))
+    {
+      schedule ScalarTensor_calc_rho_phiBubble_6th at CCTK_ANALYSIS as ScalarFieldRhoCalc
+      {
+        LANG: C
+        SYNC: rhoE_group
+        SYNC: rhoJ_group
+        READS: admbase::betax(Everywhere)
+        READS: admbase::betay(Everywhere)
+        READS: admbase::betaz(Everywhere)
+        READS: ScalarTensor::STphi(Everywhere)
+        READS: ScalarTensor::STpi(Everywhere)
+        READS: ScalarTensor::gLocal11(Everywhere)
+        READS: ScalarTensor::gLocal21(Everywhere)
+        READS: ScalarTensor::gLocal31(Everywhere)
+        READS: ScalarTensor::gLocal22(Everywhere)
+        READS: ScalarTensor::gLocal32(Everywhere)
+        READS: ScalarTensor::gLocal33(Everywhere)
+        WRITES: ScalarTensor::rhoE(Interior)
+        WRITES: ScalarTensor::rhoJ(Interior)
+      } "ScalarTensor_calc_rho_phiBubble_6th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "phiExpand"))
+{
+  if (CCTK_EQUALS(calculate_rho, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "full4th"))
+    {
+      schedule ScalarTensor_calc_rho_phiExpand_full4th at CCTK_ANALYSIS as ScalarFieldRhoCalc
+      {
+        LANG: C
+        SYNC: rhoE_group
+        SYNC: rhoJ_group
+        READS: admbase::betax(Everywhere)
+        READS: admbase::betay(Everywhere)
+        READS: admbase::betaz(Everywhere)
+        READS: ScalarTensor::STphi(Everywhere)
+        READS: ScalarTensor::STpi(Everywhere)
+        READS: ScalarTensor::gLocal11(Everywhere)
+        READS: ScalarTensor::gLocal21(Everywhere)
+        READS: ScalarTensor::gLocal31(Everywhere)
+        READS: ScalarTensor::gLocal22(Everywhere)
+        READS: ScalarTensor::gLocal32(Everywhere)
+        READS: ScalarTensor::gLocal33(Everywhere)
+        WRITES: ScalarTensor::rhoE(Interior)
+        WRITES: ScalarTensor::rhoJ(Interior)
+      } "ScalarTensor_calc_rho_phiExpand_full4th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "phiExpand"))
+{
+  if (CCTK_EQUALS(calculate_rho, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "6th"))
+    {
+      schedule ScalarTensor_calc_rho_phiExpand_6th at CCTK_ANALYSIS as ScalarFieldRhoCalc
+      {
+        LANG: C
+        SYNC: rhoE_group
+        SYNC: rhoJ_group
+        READS: admbase::betax(Everywhere)
+        READS: admbase::betay(Everywhere)
+        READS: admbase::betaz(Everywhere)
+        READS: ScalarTensor::STphi(Everywhere)
+        READS: ScalarTensor::STpi(Everywhere)
+        READS: ScalarTensor::gLocal11(Everywhere)
+        READS: ScalarTensor::gLocal21(Everywhere)
+        READS: ScalarTensor::gLocal31(Everywhere)
+        READS: ScalarTensor::gLocal22(Everywhere)
+        READS: ScalarTensor::gLocal32(Everywhere)
+        READS: ScalarTensor::gLocal33(Everywhere)
+        WRITES: ScalarTensor::rhoE(Interior)
+        WRITES: ScalarTensor::rhoJ(Interior)
+      } "ScalarTensor_calc_rho_phiExpand_6th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(boundary_condition, "radiative"))
+{
+  schedule ScalarTensor_boundaryRadiative in MoL_RHSBoundaries as ScalarFieldBoundaries
+  {
+    LANG: C
+    READS: grid::x(Everywhere)
+    READS: grid::y(Everywhere)
+    READS: grid::z(Everywhere)
+    READS: grid::r(Everywhere)
+    READS: ScalarTensor::STphi(Everywhere)
+    READS: ScalarTensor::STpi(Everywhere)
+    WRITES: ScalarTensor::rhoE(Boundary)
+    WRITES: ScalarTensor::rhoJ(Boundary)
+    WRITES: ScalarTensor::STphirhs(Boundary)
+    WRITES: ScalarTensor::STpirhs(Boundary)
+  } "ScalarTensor_boundaryRadiative"
+}
+
+if (CCTK_EQUALS(boundary_condition, "phi_of_t"))
+{
+  schedule ScalarTensor_boundaryPhiOfT in MoL_RHSBoundaries as ScalarFieldBoundaries
+  {
+    LANG: C
+    READS: grid::x(Everywhere)
+    READS: grid::y(Everywhere)
+    READS: grid::z(Everywhere)
+    READS: grid::r(Everywhere)
+    READS: ScalarTensor::STphi(Everywhere)
+    READS: ScalarTensor::STpi(Everywhere)
+    WRITES: ScalarTensor::rhoE(Boundary)
+    WRITES: ScalarTensor::rhoJ(Boundary)
+    WRITES: ScalarTensor::STphirhs(Boundary)
+    WRITES: ScalarTensor::STpirhs(Boundary)
+  } "ScalarTensor_boundaryPhiOfT"
+}
+
+schedule ScalarTensor_EinsteinToJordan AT Initial as EinsteinToJordanFrame after bssn_evolved_to_adm_initial before HydroBase_Prim2ConInitial
+{
+  LANG: C
+  READS: admbase::kxx(Everywhere)
+  READS: admbase::kxy(Everywhere)
+  READS: admbase::kxz(Everywhere)
+  READS: admbase::kyy(Everywhere)
+  READS: admbase::kyz(Everywhere)
+  READS: admbase::kzz(Everywhere)
+  READS: admbase::alp(Everywhere)
+  READS: admbase::gxx(Everywhere)
+  READS: admbase::gxy(Everywhere)
+  READS: admbase::gxz(Everywhere)
+  READS: admbase::gyy(Everywhere)
+  READS: admbase::gyz(Everywhere)
+  READS: admbase::gzz(Everywhere)
+  READS: ScalarTensor::STphi(Everywhere)
+  READS: ScalarTensor::STpi(Everywhere)
+  WRITES: admbase::alp(Everywhere)
+  WRITES: admbase::gxx(Everywhere)
+  WRITES: admbase::gxy(Everywhere)
+  WRITES: admbase::gxz(Everywhere)
+  WRITES: admbase::gyy(Everywhere)
+  WRITES: admbase::gyz(Everywhere)
+  WRITES: admbase::gzz(Everywhere)
+  WRITES: admbase::kxx(Everywhere)
+  WRITES: admbase::kxy(Everywhere)
+  WRITES: admbase::kxz(Everywhere)
+  WRITES: admbase::kyy(Everywhere)
+  WRITES: admbase::kyz(Everywhere)
+  WRITES: admbase::kzz(Everywhere)
+} "ScalarTensor_EinsteinToJordan"
+
+schedule ScalarTensor_EinsteinToJordan in MoL_PostStep as EinsteinToJordanFrame after bssn_evolved_to_adm before HydroBase_PostStep
+{
+  LANG: C
+  READS: admbase::kxx(Everywhere)
+  READS: admbase::kxy(Everywhere)
+  READS: admbase::kxz(Everywhere)
+  READS: admbase::kyy(Everywhere)
+  READS: admbase::kyz(Everywhere)
+  READS: admbase::kzz(Everywhere)
+  READS: admbase::alp(Everywhere)
+  READS: admbase::gxx(Everywhere)
+  READS: admbase::gxy(Everywhere)
+  READS: admbase::gxz(Everywhere)
+  READS: admbase::gyy(Everywhere)
+  READS: admbase::gyz(Everywhere)
+  READS: admbase::gzz(Everywhere)
+  READS: ScalarTensor::STphi(Everywhere)
+  READS: ScalarTensor::STpi(Everywhere)
+  WRITES: admbase::alp(Everywhere)
+  WRITES: admbase::gxx(Everywhere)
+  WRITES: admbase::gxy(Everywhere)
+  WRITES: admbase::gxz(Everywhere)
+  WRITES: admbase::gyy(Everywhere)
+  WRITES: admbase::gyz(Everywhere)
+  WRITES: admbase::gzz(Everywhere)
+  WRITES: admbase::kxx(Everywhere)
+  WRITES: admbase::kxy(Everywhere)
+  WRITES: admbase::kxz(Everywhere)
+  WRITES: admbase::kyy(Everywhere)
+  WRITES: admbase::kyz(Everywhere)
+  WRITES: admbase::kzz(Everywhere)
+} "ScalarTensor_EinsteinToJordan"
+
+schedule ScalarTensor_EinsteinToJordan at CCTK_EVOL as EinsteinToJordanFrame after bssn_evolved_to_adm
+{
+  LANG: C
+  READS: admbase::kxx(Everywhere)
+  READS: admbase::kxy(Everywhere)
+  READS: admbase::kxz(Everywhere)
+  READS: admbase::kyy(Everywhere)
+  READS: admbase::kyz(Everywhere)
+  READS: admbase::kzz(Everywhere)
+  READS: admbase::alp(Everywhere)
+  READS: admbase::gxx(Everywhere)
+  READS: admbase::gxy(Everywhere)
+  READS: admbase::gxz(Everywhere)
+  READS: admbase::gyy(Everywhere)
+  READS: admbase::gyz(Everywhere)
+  READS: admbase::gzz(Everywhere)
+  READS: ScalarTensor::STphi(Everywhere)
+  READS: ScalarTensor::STpi(Everywhere)
+  WRITES: admbase::alp(Everywhere)
+  WRITES: admbase::gxx(Everywhere)
+  WRITES: admbase::gxy(Everywhere)
+  WRITES: admbase::gxz(Everywhere)
+  WRITES: admbase::gyy(Everywhere)
+  WRITES: admbase::gyz(Everywhere)
+  WRITES: admbase::gzz(Everywhere)
+  WRITES: admbase::kxx(Everywhere)
+  WRITES: admbase::kxy(Everywhere)
+  WRITES: admbase::kxz(Everywhere)
+  WRITES: admbase::kyy(Everywhere)
+  WRITES: admbase::kyz(Everywhere)
+  WRITES: admbase::kzz(Everywhere)
+} "ScalarTensor_EinsteinToJordan"
+
+schedule ScalarTensor_SelectBoundConds in MoL_PostStep
+{
+  LANG: C
+  OPTIONS: level
+  SYNC: STphi_group
+  SYNC: STpi_group
+} "select boundary conditions"
+
+schedule ScalarTensor_CheckBoundaries at BASEGRID
+{
+  LANG: C
+  OPTIONS: meta
+} "check boundaries treatment"
+
+schedule ScalarTensor_RegisterVars in MoL_Register
+{
+  LANG: C
+  OPTIONS: meta
+} "Register Variables for MoL"
+schedule group ApplyBCs as ScalarTensor_ApplyBCs in MoL_PostStep after ScalarTensor_SelectBoundConds
+{
+} "Apply boundary conditions controlled by thorn Boundary"

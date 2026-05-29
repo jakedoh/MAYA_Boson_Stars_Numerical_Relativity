@@ -1,0 +1,104 @@
+# $Header$
+
+Cactus::cctk_run_title     = "Kerr with a 180 degree rotational symmetry"
+Cactus::cctk_full_warnings = yes
+Cactus::cctk_itlast        = 3
+
+ActiveThorns = "Slab"
+
+ActiveThorns = "IOUtil"
+IO::out_dir = $parfile
+
+ActiveThorns = "PUGH PUGHReduce PUGHSlab"
+driver::global_nx  = 32
+driver::global_ny  = 32
+driver::global_nz  = 18
+driver::ghost_size =  2
+
+ActiveThorns = "NaNChecker"
+
+ActiveThorns = "Boundary CartGrid3D CoordBase SymBase"
+CartGrid3D::type         = byrange
+CartGrid3D::domain       = bitant
+CartGrid3D::avoid_origin = yes
+CartGrid3D::xmin         = -3.875
+CartGrid3D::ymin         = -3.875
+CartGrid3D::zmin         = -0.375
+CartGrid3D::xmax         =  3.875
+CartGrid3D::ymax         =  3.875
+CartGrid3D::zmax         =  3.875
+
+ActiveThorns = "ADMBase ADMCoupling ADMMacros CoordGauge SpaceMask StaticConformal"
+SpaceMask::use_mask = yes
+
+ActiveThorns = "Exact"
+ADMBase::initial_data  = exact
+ADMBase::initial_lapse = exact
+ADMBase::initial_shift = exact
+Exact::exact_model = "Kerr/Kerr-Schild"
+Exact::Kerr_KerrSchild__mass = 1.0
+Exact::Kerr_KerrSchild__spin = 0.6
+
+ActiveThorns = "LegoExcision"
+LegoExcision::fixed_excision = sphere
+LegoExcision::fixed_size      =  1.01
+
+ActiveThorns = "Time"
+Time::dtfac = 0.25
+
+ActiveThorns = "MoL"
+MoL::ODE_Method = RK3
+
+ActiveThorns = "BSSN_MoL"
+BSSN_MoL::excise       = yes
+BSSN_MoL::excisionType = lego
+
+ADMBase::evolution_method = ADM_BSSN
+ADM_BSSN::stencil_size = 2
+ADM_BSSN::advection    = upwind2
+ADM_BSSN::bound        = newrad
+
+ADMBase::lapse_evolution_method = 1+log
+ADM_BSSN::lapsesource           = modified
+ADM_BSSN::harmonic_f            = 2.0
+ADM_BSSN::LapsePsiPower         = 4
+ADM_BSSN::force_lapse_positive  = yes
+
+ADMBase::shift_evolution_method = gamma0
+ADM_BSSN::ShiftGammaCoeff       = 0.75
+ADM_BSSN::BetaDriver            = 2.5
+ADM_BSSN::ShiftAlpPower         = 2
+ADM_BSSN::ShiftPsiPower         = 4
+
+ActiveThorns = "ADMConstraints"
+ADMConstraints::excise = yes
+
+ActiveThorns = "IOBasic LocalReduce"
+IOBasic::outInfo_every      = 1
+IOBasic::outInfo_reductions = "norm2"
+IOBasic::outInfo_vars       = "
+        ADMConstraints::ham
+        ADMConstraints::momx
+"
+
+IOBasic::outScalar_every      = 1
+IOBasic::outScalar_reductions = "minimum maximum average norm1 norm2 norm_inf"
+IOBasic::outScalar_style      = gnuplot
+IOBasic::outScalar_vars       = "
+        ADMBase::metric
+        ADMBase::lapse
+        ADMBase::shift
+        ADMConstraints::hamiltonian
+        ADMConstraints::momentum
+"
+
+ActiveThorns = "IOASCII"
+IOASCII::out1D_every = 1
+IOASCII::out1D_style = "gnuplot f(x)"
+IOASCII::out1D_vars  = "
+        ADMBase::metric
+        ADMBase::lapse
+        ADMBase::shift
+        ADMConstraints::hamiltonian
+        ADMConstraints::momentum
+"

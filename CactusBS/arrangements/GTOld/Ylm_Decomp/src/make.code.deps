@@ -1,0 +1,9 @@
+# Main make.code.deps file for thorn Ylm_decomp
+#
+# $Id: make.code.deps,v 1.4 2004/02/11 14:42:04 herrmann Exp $
+
+Init.F90.o:                       Ylm_Constants.F90.o
+Setup_Detectors.F90.o:            Ylm_Constants.F90.o
+Setup_Sphere.F90.o:               Ylm_Constants.F90.o
+Integrate_Sphere.F90.o:           Ylm_Constants.F90.o ylm_isnan.c.o
+SphericalSurface.F90.o:           Ylm_Constants.F90.o

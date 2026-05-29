@@ -1,0 +1,87 @@
+# Interface definition for thorn ADMAnalysis
+# $Header$
+
+implements: ADMAnalysis
+
+inherits: ADMBase, StaticConformal, Grid, ADMMacros
+
+USES INCLUDE HEADER: Symmetry.h
+
+void FUNCTION CartToSphere(CCTK_INT IN ARRAY ash, \
+                           CCTK_INT IN r2norm, \
+			   CCTK_REAL IN ARRAY x, \
+			   CCTK_REAL IN ARRAY y, \
+			   CCTK_REAL IN ARRAY z, \
+			   CCTK_REAL IN ARRAY r, \
+			   CCTK_REAL IN ARRAY cart_xx, \
+			   CCTK_REAL IN ARRAY cart_xy, \
+			   CCTK_REAL IN ARRAY cart_xz, \
+			   CCTK_REAL IN ARRAY cart_yy, \
+			   CCTK_REAL IN ARRAY cart_yz, \
+			   CCTK_REAL IN ARRAY cart_zz, \
+			   CCTK_REAL OUT ARRAY sphere_rr, \
+			   CCTK_REAL OUT ARRAY sphere_rq, \
+			   CCTK_REAL OUT ARRAY sphere_rp, \
+			   CCTK_REAL OUT ARRAY sphere_qq, \
+			   CCTK_REAL OUT ARRAY sphere_qp, \
+			   CCTK_REAL OUT ARRAY sphere_pp)
+
+void FUNCTION Trace(CCTK_INT IN ARRAY ash, \
+                    CCTK_REAL IN ARRAY g11, \
+		    CCTK_REAL IN ARRAY g12, \
+		    CCTK_REAL IN ARRAY g13, \
+		    CCTK_REAL IN ARRAY g22, \
+		    CCTK_REAL IN ARRAY g23, \
+		    CCTK_REAL IN ARRAY g33, \
+		    CCTK_REAL OUT ARRAY tensor11, \
+		    CCTK_REAL OUT ARRAY tensor12, \
+		    CCTK_REAL OUT ARRAY tensor13, \
+		    CCTK_REAL OUT ARRAY tensor22, \
+		    CCTK_REAL OUT ARRAY tensor23, \
+		    CCTK_REAL OUT ARRAY tensor33, \
+		    CCTK_REAL OUT ARRAY trace, \
+		    CCTK_REAL OUT ARRAY detg)
+
+PROVIDES FUNCTION CartToSphere WITH ADMAnalysis_CartToSphere LANGUAGE C
+PROVIDES FUNCTION Trace WITH ADMAnalysis_Trace LANGUAGE C
+
+CCTK_INT FUNCTION Boundary_SelectGroupForBC(CCTK_POINTER_TO_CONST IN GH, \
+  CCTK_INT IN faces, CCTK_INT IN boundary_width, CCTK_INT IN table_handle, \
+  CCTK_STRING IN group_name, CCTK_STRING IN bc_name)
+REQUIRES FUNCTION Boundary_SelectGroupForBC
+
+public:
+
+# For evaltrK
+REAL trace_of_K TYPE = GF TAGS = 'tensortypealias="scalar" Prolongation="none"'
+{
+  trK 
+} "trace of extrinsic curvature"
+
+REAL detofg TYPE = GF TAGS = 'tensortypealias="scalar" Prolongation="none"'
+{
+  detg 
+} "determinant of the conformal metric"
+
+# For carttoshpere (p=phi, q=theta)
+REAL spherical_metric TYPE = GF TAGS = 'Prolongation="none"'
+{
+  grr,gqq,gpp,grq,grp,gqp
+} "Metric in spherical coordinates"
+
+REAL spherical_curv TYPE = GF TAGS = 'Prolongation="none"'
+{
+  krr,kqq,kpp,krq,krp,kqp
+} "extrinsic curvature in spherical coordinates"
+
+# For the Ricci tensor and scalar
+
+REAL ricci_tensor TYPE = GF TIMELEVELS = 3 TAGS = 'tensortypealias="dd_sym" ProlongationParameter="ADMAnalysis::ricci_prolongation_type"'
+{
+  Ricci11, Ricci12, Ricci13, Ricci22, Ricci23, Ricci33
+} "Components of the Ricci tensor"
+
+REAL ricci_scalar TYPE = GF TIMELEVELS = 3 TAGS = 'tensortypealias="scalar" ProlongationParameter="ADMAnalysis::ricci_prolongation_type"'
+{
+  Ricci
+} "The Ricci scalar"

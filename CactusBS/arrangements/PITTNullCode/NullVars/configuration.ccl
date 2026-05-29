@@ -1,0 +1,6 @@
+# configuration.ccl file for thorn NullGrid
+
+PROVIDES NullVars
+{
+  LANG
+}

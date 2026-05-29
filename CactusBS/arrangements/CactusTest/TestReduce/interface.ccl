@@ -1,0 +1,49 @@
+# Interface definition for thorn TestReduce
+# $Header$
+
+implements: testreduce
+
+private:
+
+cctk_real testreduce_3gfs type = GF dim=3
+{
+  phi_gf3
+} "Test grid function"
+
+cctk_real testreduce_2gfs type = GF dim=2
+{
+  phi_gf2
+} "Test grid function"
+
+cctk_real testreduce_1gfs type = GF dim=1
+{
+  phi_gf1
+} "Test grid function"
+
+cctk_real testreduce_scalars type = SCALAR
+{
+  phi_scalar
+} "Test scalar"
+
+cctk_int testreduce_3igfs type = GF dim=3
+{
+  phi_igf3
+} "Test grid function"
+
+cctk_int testreduce_2igfs type = GF dim=2
+{
+  phi_igf2
+} "Test grid function"
+
+cctk_int testreduce_1igfs type = GF dim=1
+{
+  phi_igf1
+} "Test grid function"
+
+cctk_int testreduce_iscalars type = SCALAR
+{
+  phi_iscalar
+} "Test scalar"
+
+
+ 

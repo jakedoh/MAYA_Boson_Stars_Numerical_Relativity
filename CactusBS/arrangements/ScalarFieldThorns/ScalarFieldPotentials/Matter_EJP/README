@@ -1,0 +1,12 @@
+Cactus Code Thorn Matter_EJP
+Author(s)    : Yupeng Zhang <yzhang3433@physics.gatech.edu>
+Maintainer(s): Yupeng Zhang <yzhang3433@physics.gatech.edu>
+Licence      : GPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+Extremely basic thorn to sum over the energy, momentum, and angular momentum of matter in entire spacetime.
+Implements simple summation of rho*dV*weight where weight is generally
+just the CarpetWeight with modifications by AHMask to avoid the area 
+inside the AH.

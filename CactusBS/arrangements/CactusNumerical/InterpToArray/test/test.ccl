@@ -1,0 +1,5 @@
+# Carpet output contains empty lines whose number depends the number of processes
+TEST wavetoy2
+{
+  NPROCS 2
+}

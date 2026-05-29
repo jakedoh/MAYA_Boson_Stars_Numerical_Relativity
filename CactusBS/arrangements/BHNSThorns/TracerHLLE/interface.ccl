@@ -1,0 +1,27 @@
+# Interface definition for thorn TracerHLLE
+# $Header:$
+
+implements: TracerHLLE
+inherits: Whisky HydroBase
+
+# for primitive vars on bounds (needs to be fixed)
+friend: Whisky
+
+USES INCLUDE: SpaceMask.h
+
+#######################################################
+### function(s) exported by Whisky for our benefit  ###
+#######################################################
+
+void FUNCTION SpatialDet(CCTK_REAL IN gxx, CCTK_REAL IN gxy, \
+                         CCTK_REAL IN gxz, CCTK_REAL IN gyy, \
+                         CCTK_REAL IN gyz, CCTK_REAL IN gzz, \
+                         CCTK_REAL OUT det)
+void FUNCTION UpperMet(CCTK_REAL OUT uxx, CCTK_REAL OUT uxy, \
+                       CCTK_REAL OUT uxz, CCTK_REAL OUT uyy, \
+                       CCTK_REAL OUT uyz, CCTK_REAL OUT uzz, \
+                       CCTK_REAL IN det, CCTK_REAL IN gxx, CCTK_REAL IN gxy, \
+                       CCTK_REAL IN gxz, CCTK_REAL IN gyy, CCTK_REAL IN gyz, \
+                       CCTK_REAL IN gzz)
+USES FUNCTION SpatialDet
+USES FUNCTION UpperMetric

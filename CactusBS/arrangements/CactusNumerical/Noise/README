@@ -1,0 +1,10 @@
+Cactus Code Thorn Noise
+Authors: Denis Pollney <pollney@aei.mpg.de>
+CVS info: $Header$
+--------------------------------------------------------------------------
+
+Purpose of the thorn:
+
+This thorn adds random noise to grid variables at initial data and/or
+boundaries, for performing the "robust stability" tests proposed by
+Jeff Winicour.

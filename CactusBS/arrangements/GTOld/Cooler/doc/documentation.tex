@@ -1,0 +1,324 @@
+% *======================================================================*
+%  Cactus Thorn template for ThornGuide documentation
+%  Author: Ian Kelley
+%  Date: Sun Jun 02, 2002
+%  $Header: /cactusdevcvs/Cactus/doc/ThornGuide/template.tex,v 1.12 2004/01/07 20:12:39 rideout Exp $
+%
+%  Thorn documentation in the latex file doc/documentation.tex
+%  will be included in ThornGuides built with the Cactus make system.
+%  The scripts employed by the make system automatically include
+%  pages about variables, parameters and scheduling parsed from the
+%  relevant thorn CCL files.
+%
+%  This template contains guidelines which help to assure that your
+%  documentation will be correctly added to ThornGuides. More
+%  information is available in the Cactus UsersGuide.
+%
+%  Guidelines:
+%   - Do not change anything before the line
+%       % START CACTUS THORNGUIDE",
+%     except for filling in the title, author, date, etc. fields.
+%        - Each of these fields should only be on ONE line.
+%        - Author names should be separated with a \\ or a comma.
+%   - You can define your own macros, but they must appear after
+%     the START CACTUS THORNGUIDE line, and must not redefine standard
+%     latex commands.
+%   - To avoid name clashes with other thorns, 'labels', 'citations',
+%     'references', and 'image' names should conform to the following
+%     convention:
+%       ARRANGEMENT_THORN_LABEL
+%     For example, an image wave.eps in the arrangement CactusWave and
+%     thorn WaveToyC should be renamed to CactusWave_WaveToyC_wave.eps
+%   - Graphics should only be included using the graphicx package.
+%     More specifically, with the "\includegraphics" command.  Do
+%     not specify any graphic file extensions in your .tex file. This
+%     will allow us to create a PDF version of the ThornGuide
+%     via pdflatex.
+%   - References should be included with the latex "\bibitem" command.
+%   - Use \begin{abstract}...\end{abstract} instead of \abstract{...}
+%   - Do not use \appendix, instead include any appendices you need as
+%     standard sections.
+%   - For the benefit of our Perl scripts, and for future extensions,
+%     please use simple latex.
+%
+% *======================================================================*
+%
+% Example of including a graphic image:
+%    \begin{figure}[ht]
+% 	\begin{center}
+%    	   \includegraphics[width=6cm]{MyArrangement_MyThorn_MyFigure}
+% 	\end{center}
+% 	\caption{Illustration of this and that}
+% 	\label{MyArrangement_MyThorn_MyLabel}
+%    \end{figure}
+%
+% Example of using a label:
+%   \label{MyArrangement_MyThorn_MyLabel}
+%
+% Example of a citation:
+%    \cite{MyArrangement_MyThorn_Author99}
+%
+% Example of including a reference
+%   \bibitem{MyArrangement_MyThorn_Author99}
+%   {J. Author, {\em The Title of the Book, Journal, or periodical}, 1 (1999),
+%   1--16. {\tt http://www.nowhere.com/}}
+%
+% *======================================================================*
+
+% If you are using CVS use this line to give version information
+% $Header: /cactusdevcvs/Cactus/doc/ThornGuide/template.tex,v 1.12 2004/01/07 20:12:39 rideout Exp $
+
+\documentclass{article}
+
+% Use the Cactus ThornGuide style file
+% (Automatically used from Cactus distribution, if you have a
+%  thorn without the Cactus Flesh download this from the Cactus
+%  homepage at www.cactuscode.org)
+\usepackage{../../../../doc/latex/cactus}
+
+\begin{document}
+
+% The author of the documentation
+\author{Tanja Bode \textless tanja.bode@physics.gatech.edu\textgreater}
+
+% The title of the document (not necessarily the name of the Thorn)
+\title{Cooling}
+
+% the date your document was last changed, if your document is in CVS,
+% please use:
+%    \date{$ $Date: 2004/01/07 20:12:39 $ $}
+\date{April 20 2010}
+
+\maketitle
+
+% Do not delete next line
+% START CACTUS THORNGUIDE
+
+% Add all definitions used in this documentation here
+%   \def\mydef etc
+
+% Add an abstract for this thorn's documentation
+\begin{abstract}
+
+\end{abstract}
+
+% The following sections are suggestive only.
+% Remove them or add your own.
+\small
+\section{Introduction}
+
+This thorn is a vehicle for cooling a hydrodynamic gas cloud.
+Currently it only implements simple radiative cooling in the form
+of a cooling function to decrease the internal energy.
+
+\section{Cooling Functions}
+
+The idea of a cooling function is to specify the radiated energy per unit volume 
+in an approximate analytical function, $\Lambda$.  Currently we implement
+the cooling function given by Tozzi and Norman, ApJ 546, 63 (2001) and presented
+as a simple piece-wise function by Sharma et al (arXiv:1003.5546).
+
+The cooling function $\Lambda\left(T_\mathrm{keV}\right)$ is calculated in cgs 
+units.  The energy density is modified as
+\begin{equation}
+   e \rightarrow e - n^2 \Lambda\left(T_\mathrm{keV}\right) dt
+\end{equation}
+where $n$ is the number density of the gas.
+
+Keeping track of units, we can rewrite this in terms of the change in our primitive
+variable $\epsilon=e/\rho$, the internal energy per unit mass.  The change in energy
+density can then be rewritten in terms of code units as
+\begin{subequations}
+\begin{eqnarray}
+   \Delta\epsilon &=&  \left( \frac{1}{1.48\times 10^5\cdot m_p^2\cdot G\cdot c} \right) \frac{\rho_\mathrm{code} \Lambda_\mathrm{cgs}}{Z^2 N} \Delta t \\
+   &=& 1.2094 \times 10^{39} \frac{\rho_\mathrm{code} \Lambda_\mathrm{cgs}}{Z^2 N} \Delta t
+\end{eqnarray}
+\end{subequations}
+where $N$ is the number of solar masses $M_\odot$ in the system and $Z$ is the ratio 
+of the constituent gas particle to the mass of a proton ($m_\mathrm{ion} = Z m_p$).
+
+\section{Units Conversion}
+
+\subsection{Method 1}
+First we convert the cooling function from cgs to code units.
+\begin{subequations}
+\begin{eqnarray}
+    \Lambda_\mathrm{code} &=& \Lambda_\mathrm{cgs}\,\mathrm{ \frac{erg\cdot cm^3}{s} \left( \frac{ G \, cm }{c^4\,erg} \right) \left( \frac{s}{c \, cm} \right) } \\
+       &=& \Lambda_\mathrm{cgs}\,\frac{G}{c^5}\,\mathrm{cm^3} \mathrm{ \left( \frac{M_\odot}{1.48\times 10^5\,cm} \right)^3\,\left( \frac{M_h}{N\,M_\odot} \right)^3 } \\
+       &=& \Lambda_\mathrm{cgs}\,\frac{G}{(1.48\times 10^5)^3\, N^3 c^5}\,\mathrm{M_h^3}
+\end{eqnarray}
+\end{subequations}
+
+Now the entire $\Delta \epsilon$ term is constructed as
+\begin{subequations}
+\begin{eqnarray}
+    \Delta \epsilon &=& - \frac{n^2 \Lambda}{\rho} \Delta t = - \frac{\rho^2 \Lambda}{m_g^2 \rho} \Delta t = - \frac{\rho \Lambda}{m_g^2} \Delta t \\
+	&=& - \left( \frac{\rho_\mathrm{code}}{\mathrm{M_h^2}} \right) 
+	\left( \frac{1}{m_g \cdot \mathrm{g}}\cdot\frac{c^2 \, \mathrm{g}}{G\, \mathrm{cm}} \cdot \frac{1.48\times 10^5\,\mathrm{cm}}{M_\odot}\cdot \frac{N M_\odot}{M_h} \right)^2
+	\left( \Lambda_\mathrm{cgs}\,\frac{G}{(1.48\times 10^5)^3\,N^3 c^5}\,\mathrm{M_h^3} \right) \Delta t\,M_h \\
+	&=& - \left( \frac{ \rho_\mathrm{code}\,\Lambda_\mathrm{cgs}\, \Delta t}{m_g^2} \right) 
+		\left( \frac{1}{1.48\times 10^5\cdot N\cdot G\cdot c} \right) \left(\mathrm{unitless}\right)
+\end{eqnarray}
+\end{subequations}
+where $m_g$ is the mass, in grams, of a unit particle from the gas.
+
+Now, we can write $m_g$ in terms of the mass of a proton and a factor $Z$ 
+and bunch up the factors that are from the parameter file (like $N$ and $Z$) 
+and those that are from the code together.  Then input the numerical constants.
+\begin{subequations}
+\begin{eqnarray}
+    \Delta \epsilon &=& - \left( \frac{ \rho_\mathrm{code}\,\Lambda_\mathrm{cgs}\, \Delta t}{Z^2\cdot N} \right) 
+                \left( \frac{1}{1.48\times 10^5\cdot m_p^2\cdot G\cdot c} \right) \left(\mathrm{unitless}\right) \\
+    &=& - \left( \frac{ \rho_\mathrm{code}\,\Lambda_\mathrm{cgs}\, \Delta t}{Z^2\cdot N} \right) 
+                \left( 1.207\times 10^{39} \right) \left(\mathrm{unitless}\right)
+\end{eqnarray}
+\end{subequations}
+
+\subsection{Method 2}
+
+We are interested in finding the numerical value of $\Delta \epsilon$ in code units.
+\begin{subequations}
+\begin{eqnarray}
+	\left[\Delta \epsilon \right] &=& \left[ \Delta \epsilon \right]_\mathrm{cgs} \mathrm{\frac{erg}{g}} \cdot
+		\frac{G/c^4 \mathrm{cm}}{\mathrm{erg}} \cdot \frac{M_\odot}{M_\odot(cm)} \cdot \frac{M_h}{N M_\odot}
+		\frac{M_\odot(g)}{M_\odot} \cdot \frac{N M_\odot}{M_h} \\
+	&=& \left[ \frac{G}{c^4} \Delta \epsilon \right]_\mathrm{cgs} \frac{M_\odot(g)}{M_\odot(cm)}
+\end{eqnarray}
+\end{subequations}
+Now, we want to rewrite $\Delta \epsilon_\mathrm{cgs}$ in terms of a cooling function 
+\begin{subequations}
+\begin{eqnarray}
+	\Delta\epsilon_\mathrm{cgs} &=& - \left[ \frac{n^2 \Lambda \Delta t}{\rho} \right]_\mathrm{cgs}\\
+	&=& - \left[ \frac{\rho^2 \Lambda \Delta t}{\rho m_g^2} \right]_\mathrm{cgs}\\
+	&=& - \left[ \frac{\rho \Lambda \Delta t}{m_g^2} \right]_\mathrm{cgs}\\
+	&=& - \left[ \frac{\Lambda}{m_g^2} \right]_\mathrm{cgs} \rho_\mathrm{cgs} 
+		\left( \Delta t_\mathrm{c} M_h \frac{N M_\odot}{M_h} \frac{M_\odot(s)}{M_\odot} \right) \\
+	&=& - \left[ \frac{\Lambda}{m_g^2} \right]_\mathrm{cgs} \rho_\mathrm{cgs} 
+		\left( \Delta t_\mathrm{c} N M_\odot(s) \right)
+\end{eqnarray}
+\end{subequations}
+Now we also need to write the rest mass density in terms of code units so we don't have to convert that to cgs in the code.
+\begin{subequations}
+\begin{eqnarray}
+	\rho_\mathrm{cgs} &=& \rho_\mathrm{c} \frac{1}{M_h^2} \cdot 
+		\left( \frac{M_h}{N M_\odot} \cdot \frac{M_\odot}{M_\odot(cm)} \right)^2 
+		\cdot \frac{M_\odot(g)}{M_\odot(cm)} \\
+	&=& \rho_\mathrm{c} \cdot \frac{ M_\odot(g) }{ N^2 M_\odot(cm)^3 }
+\end{eqnarray}
+\end{subequations}
+Going back to $\Delta \epsilon_\mathrm{cgs}$,
+\begin{subequations}
+\begin{eqnarray}
+	\Delta\epsilon_\mathrm{cgs} &=& - \left[ \frac{\Lambda}{m_g^2} \right]_\mathrm{cgs} 
+		\left( \rho_\mathrm{c} \cdot \frac{ M_\odot(g) }{ N^2 M_\odot(cm)^3 } \right)
+		\left( \Delta t_\mathrm{c} N M_\odot(s) \right) \\
+	&=& - \left[ \frac{\Lambda}{m_g^2} \right]_\mathrm{cgs} \left( \rho \Delta t \right)_\mathrm{c}
+		\left( \frac{M_\odot(g)\, M_\odot(s)}{N M_\odot(cm)^3} \right) \\
+	&=& - \left[ \frac{\Lambda}{c\,m_p^2} \right]_\mathrm{cgs} \frac{\left( \rho \Delta t \right)_\mathrm{c}}{Z^2 N}
+		\left( \frac{M_\odot(g)}{M_\odot(cm)^2} \right)
+\end{eqnarray}
+\end{subequations}
+where we have used $M_\odot(cm)/M_\odot(s) = c_\mathrm{cgs} \mathrm{cm/s}$ and $m_g = Z m_p$ with $m_p$ the mass of 
+a proton.  $Z$ is a parameter.
+
+Now we bring this together to form write $\Delta \epsilon_\mathrm{c}$:
+\begin{equation}
+	\left[\Delta \epsilon \right] = -\left[ \frac{G\,\Lambda}{c^5\,m_p^2} \right]_\mathrm{cgs} 
+		\frac{ \left( \rho \Delta t \right)_\mathrm{c}}{Z^2 N} \frac{M_\odot(g)^2}{M_\odot(cm)^3}
+\end{equation}
+Again we can rewrite $M_\odot(cm) = M_\odot(g) \times (G/c^2)\;\mathrm{cm/g}$.
+\begin{subequations}
+\begin{eqnarray}
+	\left[\Delta \epsilon \right] &=& - \left[ \frac{G\,\Lambda}{c^5\,m_p^2} \right]_\mathrm{cgs} 
+		\frac{ \left( \rho \Delta t \right)_\mathrm{c}}{Z^2 N} \frac{c^6}{G^3\,M_\odot(g)} \\
+	&=& - \left[ \frac{c\,\Lambda}{G\,M_\odot(g)\,m_p^2} \right]_\mathrm{cgs} 
+		\frac{ \left( \rho \Delta t \right)_\mathrm{c}}{Z^2 N} \\
+	&\simeq& - 1.2094\times10^{39}\, \frac{ \Lambda_\mathrm{cgs} \left( \rho \Delta t \right)_\mathrm{c}}{Z^2 N}
+\end{eqnarray}
+\end{subequations}
+
+\subsection{Order of magnitude estimate}
+For our PPiG runs, $\rho_c \simeq 10^{-14}$ and $T\simeq10^{12}\,\mathrm{K} \cdot \left(8.6\times10^{-5} \mathrm{eV/K} \right)
+\simeq 8.6\times10^4 \mathrm{keV}$. At this temperature, the Sharma cooling function is
+\begin{subequations}
+\begin{eqnarray}
+	\Lambda_\mathrm{cgs} &=& 10^{-22} \cdot \left( 8.6\times10^{-3}\,T_\mathrm{keV}^{-1.7} + 0.058\,T_\mathrm{keV}^{0.5}+0.063\right)
+		\,\mathrm{ergs\cdot cm^3\cdot s^{-1}} \\
+	&\simeq& 1.7 \times 10^{-21} \,\mathrm{ergs\cdot cm^3\cdot s^{-1}}
+\end{eqnarray}
+\end{subequations}
+Then, over a timescale of $1\,M_h$, the change in specific internal energy in code units is
+\begin{equation}
+	\Delta \epsilon_\mathrm{code} = -2.06\times10^4\, N^{-1} \sim -0.0021
+\end{equation}
+
+
+\section{Numerical Implementation}
+
+For the Whisky/Scotch implementation of hydrodynamics, we are evolving conserved variables
+and not directly $\epsilon$.  These variables are defined as
+\begin{subequations}
+\begin{eqnarray}
+    D &\equiv& \sqrt{\gamma} \rho W \\
+    S_i &\equiv& \sqrt{\gamma} \rho h W^2 v_i \\
+    \tau &\equiv& \sqrt{\gamma} \left( \rho h W^2 - P \right) - D
+\end{eqnarray}
+\end{subequations}
+where $h = 1 + \epsilon + P/\rho$ is the specific enthalpy.  A change in the internal energy 
+changes both the enthalpy and the pressure term (of $\tau$).
+\begin{equation}
+   \Delta h = \Delta \epsilon + \frac{\Delta P}{\rho} 
+	= \Delta \epsilon \left( 1 + \frac{1}{\rho} \frac{\partial P}{\partial \epsilon} \right) \\
+\end{equation}
+Thus, the cooling requires a modification of the RHS of only $S_i$ and $\tau$.  We then remove
+energy by applying the following alterations to the RHS of these variables:
+\begin{subequations}
+\begin{eqnarray}
+   \dot{\tau} &\rightarrow& \dot{\tau} - \sqrt{\gamma} \rho W \Delta h + \sqrt{\gamma} \frac{\partial P}{\partial \epsilon} \Delta \epsilon \\
+   \dot{S}_i &\rightarrow& \dot{S}_i - \sqrt{\gamma} \rho W^2 \Delta h v_i
+\end{eqnarray}
+\end{subequations}
+or alternatively
+\begin{subequations}
+\begin{eqnarray}
+   \dot{\tau} &\rightarrow& \dot{\tau} - D W \Delta h + \sqrt{\gamma} \frac{\partial P}{\partial \epsilon} \Delta \epsilon \\
+   \dot{S}_i &\rightarrow& \dot{S}_i - D W \Delta h v_i \\
+\end{eqnarray}
+\end{subequations}
+
+\section{Using This Thorn}
+
+Don't forget to specify the mass of the system and the mass of the particles 
+constituting the gas.  Otherwise, just activate the thorn.
+
+\subsection{Obtaining This Thorn}
+
+This thorn is currently in the PSUThorns darcs repository.
+
+\subsection{Interaction With Other Thorns}
+
+Cooler currently depends explicitly on Whisky because it needs to alter
+the RHS of the evolved variables.
+
+\section{History}
+
+\subsection{Thorn Source Code}
+
+Tanja Bode
+
+\subsection{Thorn Documentation}
+
+Tanja Bode
+
+\subsection{Acknowledgements}
+
+The initial Sharma cooling function and implementation idea came from Tamara Bogdanovi\'{c} at the University of Maryland. 
+
+\begin{thebibliography}{9}
+
+\end{thebibliography}
+
+% Do not delete next line
+% END CACTUS THORNGUIDE
+
+\end{document}

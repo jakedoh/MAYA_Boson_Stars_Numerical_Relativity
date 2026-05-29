@@ -1,0 +1,408 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+
+<html>
+
+<head>
+<title>Using the thorn AHFinder</title>
+</head>
+
+<BODY TEXT="#333333" BGCOLOR="#FFFFFF" LINK="#006699" VLINK="#999900" ALINK="#999900">
+
+<H1 ALIGN=CENTER>Using the thorn AHFinder</H1>
+
+<CENTER>
+<TABLE WIDTH=600 BORDER=0 CELLSPACING=0 CELLPADDDING=0>
+<TR><TD>
+<CENTER>
+<A HREF="#parameters">Parameters</a><BR>
+<A HREF="#minimum">Minimal Parameter Settings</A><BR>
+<A HREF="#hints">Hints for Parameter Settings</A><BR>
+<A HREF="#output">Output to Files</A><BR>
+<A HREF="#results">Some Results with the Finder</A><BR>
+</CENTER>
+
+<P><BR>
+Thorn_MinimumAHF can be used either with a minimization or a flow algorithm.
+
+<A NAME="parameters"></A><H3>Parameters</H3>
+<UL>
+
+<LI><B>General parameters</B><BR>
+        <UL>
+        <LI>To activate the thorn use:<BR>
+        <FONT FACE="Courier">ahf_active = "yes"</FONT><BR>
+        This parameter is set by default to <FONT FACE="Courier">
+        "no"</FONT>.<BR><BR>
+        <LI>By default the minimization algorithm is used. To switch
+        to the flow algorithm one has to set<BR>
+        <FONT FACE="Courier">ahf_flow = "yes"</FONT><BR>
+        </UL>
+        <BR>
+
+<LI><B>Parameters used in evolutions</B><BR>
+        <UL>
+        <LI>To specify how often the finder is called the parameter:<BR>
+        <FONT FACE="Courier">ahf_findevery = 1</FONT><BR>
+        must be specified as the number of iterations. Here 1 is default.
+        <BR><BR>
+        <LI>The number of iterations after which the thorn is called the
+        first time can be specified by:<BR>
+        <FONT FACE="Courier">ahf_findafter = 0</FONT><BR>
+        Here the default is 0, calling the thorn also on the initial time
+        slice.<BR><BR>
+        <LI>Instead specifying the number of iterations one can specify
+        after how much coordinate time the thorn is called first. This is
+        done by using the parameter:<BR>
+        <FONT FACE="Courier">ahf_findaftertime = 0.0</FONT><BR>
+        When different from zero, this parameter overrides the value of
+        <FONT FACE="Courier">ahf_findafter</FONT>. Default here is
+        also 0.<BR>
+        </UL>
+        <BR>
+
+<LI><B>Parameters specifying the expansion of the surface in sperical
+       harmonics.</B>
+<BR>
+        <UL>
+        <LI>The expansion in theta is specified by the maximal number
+        of terms using:<BR>
+        <FONT FACE="Courier">ahf_lmax = 8</FONT><BR>
+        Here 8 is the default. <BR><BR>
+        <LI>If axisymmetry is expected the surface does not need to be
+        expanded in phi. This is set by:<BR>
+        <FONT FACE="Courier">ahf_phi = "no"</FONT>.<BR>
+	The surface is expanded in theta and phi by default.<BR><BR>
+        <LI>The position of the center of the expansion is set by the
+        parameters:<BR>
+        <FONT FACE="Courier">ahf_xc = 0.0<BR> ahf_yc = 0.0<BR>
+        ahf_zc = 0.0</FONT>.<BR>
+        Here the origin is default. The center of the expansion should be
+        set the expected center of the apparent horizon. But it works also
+        with a non-centered horizon as long as the center of expansion lies
+        inside the horizon (otherwise the algorithm will fail).<BR><BR>
+
+        <LI>The center of the expansion can also be allowed to move. This
+        is controlled by:<BR>
+        <FONT FACE="Courier">ahf_wander = "yes"</FONT>.<BR>
+        However, at the moment this only works with the minimization
+        algorithm.<BR><BR>
+
+        <LI>Finally the radius of the initial sphere can also be specified.
+        This is controlled by the parameter:<BR>
+        <FONT FACE="Courier">ahf_r0 = 0.0</FONT>.<BR>
+        The default is 0.0, forcing the largest sphere possible in the grid.
+        <BR><BR>
+        </UL>
+
+<LI><B>Parameters for the initial guess</B><BR>
+        The initial guess can be specified by some parameters which are
+        set to <FONT FA=CE="Courier">"no"</FONT> by default.<BR><BR>
+        <UL>
+
+        <LI>To use on old horizon as initial guess one must set:<BR>
+        <FONT FACE="Courier">ahf_guessold = "yes"</FONT>.<BR>
+        However, if in the evolutionof the apparent horizon jumps
+        discontinuously it might be lost by using this.<BR><BR>
+
+        <LI>If no old horizon is used the inital guess can be specified
+        further for the minimization algorithm. This algorithm is sensitive
+        to the initial guess, so this is important. The initial guess is
+        set up by an expansion in spherical harmonics in the first two
+        coefficients (l=0,l=2). For both of these a number of subdivisions
+        can be specified by:<BR>
+        <FONT FACE="Courier">ahf_nn0 = 10</FONT><BR>
+        <FONT FACE="Courier">ahf_nn2 = 10</FONT><BR>
+        The algorithm then tests in this case 100 different combinations to
+        find the best initial guess.<BR><BR>
+
+        <LI>It is also possible to use only a sphere as initial guess.
+        This is much faster and is done by setting:<BR>
+        <FONT FACE="Courier">ahf_sloppyguess = "yes"</FONT>.<BR>
+        In this case a number of spheres (specified by
+       <FONT FACE="Courier">ahf_nn0</FONT>) with different radii are
+        tested for the initial guess.<BR><BR>
+
+        <LI>If one want to look for an inner horizon instead of an outer one,
+        this can be done by setting<BR>
+        <FONT FACE="Courier">ahf_inner = "yes"</FONT>.<BR>
+        This only works with the minimization algorithm.<BR><BR>
+        </UL>
+
+<LI><B>Parameters for surface intergrals</B><BR>
+        The number of subdivisions in theta and phi are specified by:<BR>
+        <FONT FACE="Courier">ahf_ntheta = 200</FONT><BR>
+        <FONT FACE="Courier">ahf_nphi = 200</FONT>.<BR>
+        200 is the default for both parameters.<BR><BR>
+
+<LI><B>Parameters indicating symmetries</B><BR>
+        Symmetries can either be specified by reflection symmetry on single
+        planes or by octant symmetry.  Please notice that this symmetries
+        refer to the symmetries of the surface, and not of the computational
+        grid.<BR><BR>
+        <UL>
+        <LI>Reflection symmetry on the yz-plane, i.e. symmetry x -> -x,
+        is indicated by:<BR>
+        <FONT FACE="Courier">ahf_refx = "yes"</FONT>.<BR>
+        For the symmetries y -> -y and z -> -z this is done in an analogous
+        way by<BR>
+        <FONT FACE="Courier">ahf_refy = "yes"</FONT><BR>
+        <FONT FACE="Courier">ahf_refz = "yes"</FONT><BR>
+        By default these parameters are set to
+        <FONT FACE="Courier">"no"</FONT>.<BR><BR>
+
+        <LI>Octant symmetry is specified by the parameter:<BR>
+        <FONT FACE="Courier">ahf_octant = "yes"</FONT>.<BR>
+        This is set to <FONT FACE="Courier">no</FONT> by default.
+        Possible parmeter settings are <FONT FACE="Courier">"yes"</FONT>
+        for reflection symmetries on all three coordinate planes and
+        <FONT FACE="Courier">"high"</FONT> for an additional rotational
+        symmetry of pi/2 around the z axis.<BR><BR>
+        </UL>
+
+<LI><B>Parameters for the minimization algorithm</B><BR>
+        <UL>
+        <LI>The tolerance for the minimization algorithm can be specified
+         by:<BR>
+        <FONT FACE="Courier">ahf_tol = 0.1</FONT><BR>
+        with 0.1 being default.<BR><BR>
+
+        <LI>The number if iterations for each step (POWELL algorithm) is
+        specified by:<BR>
+        <FONT FACE="Courier">ahf_maxiter = 10</FONT> .<BR>
+         10 is the default.<BR><BR>
+
+        <LI>usually the square of the expansion is minimized. To switch
+        to minimization of the area one can use:<BR>
+        <FONT FACE="Courier">ahf_minarea = "yes"</FONT><BR>
+        (default is <FONT FACE="Courier">"no"</FONT>). Only for time
+        symmetric data the surface found by area minimization corresponds
+        to an apparent horizon.<BR><BR>
+        </UL>
+
+<LI><B>Parameters for the flow algorithm</B><BR>
+        <UL>
+        <LI>The maximum number of iterations for the flow algorithm is
+        specified by:<BR>
+        <FONT FACE="Courier">ahf_flowiter = 200</FONT>,<BR>
+        with 200 being default.<BR><BR>
+
+        <LI>The tolerance can be set by<BR>
+        <FONT FACE="Courier">ahf_flowtol = 0.0001</FONT>.<BR>
+        The default is 0.0001.<BR><BR>
+
+        <LI>Further, the flow algorithm can be tuned by some additional
+        parameters (see Carsten's paper). The default values are shown
+        here:<BR>
+        <FONT FACE="Courier">ahf_flowa = 0.01</FONT>,
+        gives the alpha parameter for the flow.<BR>
+        <FONT FACE="Courier">ahf_flowb = 0.5</FONT>,
+        sets the beta parameter for the flow.<BR>
+        <FONT FACE="Courier">ahf_flowh = 0.0</FONT>, 
+        specifies the weight of H flow.<BR>
+        <FONT FACE="Courier">ahf_flowc = 1.0</FONT>,
+        specifies the weight of C flow.<BR>
+        <FONT FACE="Courier">ahf_flown = 0.0</FONT>,
+        specifies the weight of N flow (this is not yet implemented)<BR><BR>
+        </UL>
+
+        The character of the differnet flows and the alpha and beta
+       parameters are described in Carsten Gundlach's paper on his
+       pseudo-spectral apparent horizon finder (gr-qc/9707050).<BR><BR>
+
+<LI><B>Parameters for output</B><BR>
+        <UL>
+        <LI>By default no logfile for MinimumAHF is written. To obtain
+         a log file one must set:<BR>
+        <FONT FACE="Courier">ahf_logfile = "yes"</FONT><BR><BR>
+
+        <LI>There are two modes for verbosity:<BR>
+        <FONT FACE="Courier">ahf_verbose = "yes"</FONT><BR>
+        prints messages to screen at the beginning and the end of the
+        algorithm, and<BR>
+        <FONT FACE="Courier">ahf_veryverbose = "yes"</FONT><BR>
+        prints messages also during the iteration process. By default
+        the verbose mode is set to <FONT FACE="Courier">"yes"</FONT>,
+        and the veryverbose mode to <FONT FACE="Courier">"no"</FONT>.<BR><BR>
+
+        <LI>Up to now the thorn only supports 2D output of grid functions.
+        The output is controlled be the thorn itself, not by cactus standard
+        output. 2D output can be switched off by<BR>
+        <FONT FACE="Courier">ahf_2Doutput = "no"</FONT>.<BR>
+        In future versions of the thorn a 3D output will be possible by setting
+        <BR>
+        <FONT FACE="Courier">ahf_3Doutput = "yes"</FONT>.<BR><BR>
+
+        <LI>Finally an area map can be found by setting<BR>
+        <FONT FACE="Courier">ahf_areamap = "yes"</FONT>.<BR>
+        This is useful for looking at the behaviour of the area for
+        surfaces close to the horizon.<BR><BR>
+        </UL>
+
+<LI><B>Parameters for mask</B><BR>
+        <UL>
+        <LI>The mask is 0 inside the horizon and 1 outside, and is used in
+        black-hole excision (AHBC) techniques. By default the mask is off.
+        It can be enabled by setting:<BR>
+        <FONT FACE="Courier">ahf_mask = "yes"</FONT>.<BR>
+        This sets the mask only if the finder is sure that a horizon was
+        found. Setting also:<BR>
+        <FONT FACE="Courier">ahf_weakmask = "yes"</FONT>.<BR>
+        makes the finder set the mask also if a horizon is probably there
+        but the resolution or lmax are to low to really resolve it.<BR><BR>
+
+        <LI>There can be a buffer zone between the region inside the
+        horizon and the region where the mask is 0. This is controlled
+        by the shrink factor:<BR>
+        <FONT FACE="Courier">ahf_maskshrink = -2.0</FONT>.<BR>
+        which here sets the region with where the mask is zero to be
+        2 gridpoints inside the horizon.<BR><BR>
+        </UL>
+
+</UL>
+<A NAME="minimum"></A>
+<H3>Minimal Parameter Settings</H3>
+
+Usually only a few of the parameters described above are needed in the
+parameter file. The simplest parameter settings for using the flow
+algorithm for a full 3D horizon with a sphere as initial guess is
+<PRE>
+     intorder          = 2     # Second order interpolation
+
+     ahf_active = "yes"
+     ahf_flow         = "yes"
+
+     ahf_phi          = "yes"
+     ahf_sloppyguess  = "yes"
+</PRE>
+This looks for a horizon around the origin with lmax = 8. It starts with
+a sphere of maximum radius and outputs 2D grid functions. The other
+parameters can be used if needed.<BR>
+
+<A NAME="hints"></A>
+<H3>Hints for Parameter Settings</H3>
+
+In full 3D the flow algorithm is faster than the minimization algorithm. 
+However, in cases where the terms in the expansion in spherical harmonics 
+is less than about the minimization can be faster. In axisymmetry this 
+can happen for l<sub>max</sub><=10.<BR>
+
+<P>
+While the default settings usually work fine, they can be changed to meet
+special purposes:<BR>
+<UL>
+        <LI>If the horizon is expected to be far from spherical the parameter
+        <FONT FACE="Courier">ahf_lmax</FONT> can be set to a higher value.
+        <FONT FACE="Courier">12</FONT> should be high enough. However values 
+        up to 20 are supported.<BR><BR>
+        <LI>If the latter parameter is set to a values higher then 
+        <FONT FACE="Courier">8</FONT> the parameter
+        <FONT FACE="Courier">ahf_maxiter</FONT> can be raised to e.g. 
+        <FONT FACE="Courier">14</FONT>. This can be useful since more 
+        iterations can be necessary for higher coefficients of the expansion.
+        <BR><BR>
+        <LI>Usually I suffices to use a sphere for the initial guell of the
+        surface. So it can be set<BR>
+        <FONT FACE="Courier">ahf_sloppyguess  = "yes"</FONT>.<BR><BR>
+        <LI>The finder is not running with the convergence mode of cactus, 
+        since there are confusions with the names of the finder's output 
+        files.<BR>
+</UL>
+<A NAME="output"></A>
+<H3>Output to Files</H3>
+
+The output of the thorn consists of two gridfunctions and several one dimensional output files.
+<UL>
+        <LI>To depict the position of the horizon most important are the 
+        files <FONT FACE="Courier">ahfgrid_2d_...ieee</FONT>. This files 
+        contain a 2D gridfunction. The zero level of this locates the horizon.
+        <BR><BR>
+        <LI>The files <FONT FACE="Courier">ahf_exp_2d_...ieee</FONT> show the
+        expansion of outgoing photoons on the level set of the gridfunction 
+        ahfgrid. The horizon generally coincides with zeros of the expansion.
+        <BR><BR>
+        <LI>The surface area of the horizon is given in <FONT FACE="Courier">
+        ahf_area.tl</FONT><BR><BR>
+        <LI><FONT FACE="Courier">ahf_mass.tl</FONT> contains the mass of the
+        surface.<BR><BR>
+        <LI>The coefficients of the expansion in spherical harmonics are given
+        in <FONT FACE="Courier">ahf_coeff.alm</FONT>.<BR><BR>
+        <LI>The files <FONT FACE="Courier">ahf_circ_eq.tl</FONT>,
+        <FONT FACE="Courier">ahf_meri_p1.tl</FONT> and <FONT FACE="Courier">
+        ahf_meri_p2.tl</FONT> contain the equatorial circumference of the 
+        surface, the length of the meridian at phi=0, and the length of the 
+        meridian at phi=pi/2 of the surface, respectively.<BR><BR>
+        <LI>If an output of a logfile is set in the parameters, the log file
+        for the last time the horizon was called is <FONT FACE="Courier">
+        ahf_logfile</FONT>.
+</UL>
+<A NAME="results"></A>
+<H3>Some Results with the Finder</H3>
+
+The finder algorithms have been examined with puncture initial data for
+single and binary-black hole scenarios.
+<P>
+
+Calculations with different grid spacings but constant grid size show
+convergence of the horizon area. The convergence is of the order of 4,
+as should be expected if the radius converges with second order.<P>
+
+This has been checked with different linear momenta in z direction p<sub>
+z</sub>= (0M, 2M, 5M) and vanishing spin. Also for p<sub>z</sub>=2M
+and a spin of 5M in x direction the horizon converges. The figure shows
+the case with p<sub>z</sub>=2M and vanishing spin.
+<CENTER><IMG SRC="p2_areacomp.gif">
+</CENTER>
+<P>
+
+Further not only the area converges but also the shape of the horizon. For
+both the minimization and the flow algorithm the horizon converges to
+the same shape, as can be seen from the coefficients fo the expansion. The
+order of convergence for the coefficients is between 1.4 and 1.7.
+<P>
+By using the parameters <FONT FACE="Courier">ahf_xc, ahf_yc,
+ahf_zc</FONT> it can also be shown that the finder also locates
+horizons which are not centered around the point given by these parameters.
+This works in general as long as the surface can be expanded in spherical
+harmonics around this point but the error increases with the off-centering.
+<P>
+
+The parameter <FONT FACE="Courier">ahf_r0</FONT> can be used
+e.g. when dealing with two black holes. If one searches for separate
+horizons one can center the finder on one of the locations of the
+holes and use an initial radius <FONT FACE="Courier">ahf_r0</FONT>
+smaller than the coordinate distance of the holes. With this parameter
+settings the single horizon can be found faster. But also a setup with
+an initial sphere of maximum radius should work at least for the flow
+algorithm. This has been checked with puncture data for two holes with
+vanishing linear and angular momentum for each hole (equivalent to
+Brill-Lindquist data). Here for a coordinate distance of the holes of
+1.6M the separated horizons for the holes are found but no common
+horizon. For a coordinate distance of 1.5M a common horizon is found
+and also single ones, which are inner surfaces in this case. This coincides
+with other work where the critical coordinate distance for a single horizon
+is between 1.53M and 1.56M (gr-qc/9809004).<BR>
+<CENTER>
+<P>
+<IMG SRC="hori_bl.gif">
+<P>
+</CENTER>
+The dashed lines show inner trapped surfaces in the left figure and
+the surface where the algorithm stopped without finding a horizon in
+the right figure.
+<P>
+
+Also the Misner case was checked. Here for mu = 1.35 a common horizon
+is found. For mu = 1.37 separated horizons are found.  From the
+literature we know that (e.g. gr-qc/9809004) the critical value of mu
+is 1.36. This is confirmed by the horizon finder.
+<P>
+
+The information of when a horizon was found can be seen in the cactus-logfile.
+There will be output from the thorn even if no horizon was found.
+<P>
+
+</TD></TR>
+</TABLE>
+</CENTER>
+</BODY>
+</html>

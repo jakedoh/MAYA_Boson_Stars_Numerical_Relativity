@@ -1,0 +1,4 @@
+NPROCS 1
+
+# incr. abstol since we expect some values of order 100 in the metric
+ABSTOL 1.e-10

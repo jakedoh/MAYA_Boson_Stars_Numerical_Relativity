@@ -1,0 +1,11 @@
+Cactus Code Thorn EllSOR
+Author(s)    : Cactus team
+Maintainer(s): Cactus team
+Licence      : LGPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+This thorn provides basic elliptic solvers for different equation types 
+using SOR iterative methods. The thorn is written to be robust and 
+pedagogical rather that a viable fast solver.

@@ -1,0 +1,31 @@
+# Interface for thorn ShiftTracker
+implements: shifttracker
+inherits: sphericalsurface
+
+public:
+CCTK_REAL shift_track[num_trackers] type=SCALAR
+{
+  st_x
+  st_y
+  st_z
+} "the actual locations of the shift trackers"
+
+CCTK_REAL shift_track_vel[num_trackers] type=SCALAR
+{
+  st_vx
+  st_vy
+  st_vz
+  vx_last
+  vy_last
+  vz_last
+  vx_last2
+  vy_last2
+  vz_last2
+} "the velocites of the trackers at the locations (-1*shift)"
+
+CCTK_REAL shift_track_acc[num_trackers] type=SCALAR
+{
+  st_ax
+  st_ay
+  st_az
+} "the acceleration of the trackers at the locations"

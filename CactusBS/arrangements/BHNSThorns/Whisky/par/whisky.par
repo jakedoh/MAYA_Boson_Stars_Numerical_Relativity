@@ -1,0 +1,39 @@
+ActiveThorns = "time MoL pugh pughreduce pughslab cartgrid3d ioutil ioascii iobasic boundary einstein hydrobase whisky whisky::whisky_init_data nanchecker eos_base eos_idealfluid"
+
+#This is a hack. ghost_size should be the same as whisky::whisky_stencil.
+
+pugh::ghost_size=2
+
+time::dtfac = 0.25
+
+methodoflines::ode_method = "rk2"
+
+einstein::evolution_system="none"
+einstein::shift="none"
+einstein::use_conformal = "no"
+einstein::use_conformal_derivs = "no"
+einstein::initial_data="shocktube"
+whisky_init_data::shocktube_type="diagshock"
+whisky_init_data::shock_case="Simple"
+
+EOS_IdealFluid::eos_ideal_fluid_gamma=1.66666666666666
+whisky::riemann_solver="Roe"
+whisky::tvd_limiter="minmod"
+whisky::bound="flat"
+whisky::whisky_eos_table="Ideal_Fluid"
+
+grid::type = "BySpacing"
+grid::domain = "full"
+grid::dxyz = 0.5
+
+driver::global_nx = 15
+driver::global_ny = 15
+driver::global_nz = 15
+
+cactus::cctk_itlast = 5
+
+IO::outdir = "whisky_shocktube"
+IOBasic::outInfo_every = 1
+IOBasic::outInfo_vars = "HydroBase::rho"
+IOASCII::out1D_every = 1
+IOASCII::out1D_vars = "HydroBase::rho HydroBase::press HydroBase::eps HydroBase::vel whisky::whisky_cons_scalar_var whisky::whisky_cons_vector_var"

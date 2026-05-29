@@ -1,0 +1,4 @@
+# Configuration definition for thorn TestFortranDependencies1
+# $Header$
+
+REQUIRES TestFortranDependencies

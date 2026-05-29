@@ -1,0 +1,20 @@
+Cactus Code Thorn TestFpointerNULL
+Author(s)    : Thomas Radke
+Maintainer(s): Cactus team
+Licence      : LGPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+This thorn tests whether a Fortran routine accepts a NULL pointer reference
+as a function argument when called from a C function. The code should not crash
+as long as the NULL pointer argument isn't dereferenced.
+
+Currently this mechanism is used by the Cactus scheduler bindings C functions
+which pass unallocated grid variables as NULL pointers to a scheduled Fortran
+routine. Cactus makes the assumption here that those NULL pointers are legal
+function arguments.
+
+Once we find out that this basic assumption is no longer true we have a problem.
+So always run this thorn's testsuite on a new platform / with a new fortran
+compiler !

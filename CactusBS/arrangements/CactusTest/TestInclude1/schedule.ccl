@@ -1,0 +1,7 @@
+# Schedule definitions for thorn Include1
+# $Header$
+
+schedule PrintInclude1 at INITIAL
+{
+  LANG: C
+} "Print contents of include files"

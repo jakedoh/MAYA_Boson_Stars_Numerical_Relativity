@@ -1,0 +1,78 @@
+# Parameter definitions for thorn ADMMass
+# $Header$
+
+CCTK_INT ADMMass_number "number of measurements" STEERABLE=ALWAYS
+{
+  0: :: "0 or positive"
+} 1
+
+CCTK_REAL ADMMass_x_min[100] "x position of the leftmost yz-plane for the integration box" STEERABLE=ALWAYS
+{
+  :	:: "anything"
+} -100.0
+CCTK_REAL ADMMass_x_max[100] "x position of the righttmost yz-plane for the integration box" STEERABLE=ALWAYS
+{
+  :	:: "anything"
+} 100.0
+
+CCTK_REAL ADMMass_y_min[100] "y position of the leftmost xz-plane for the integration box" STEERABLE=ALWAYS
+{
+  :	:: "anything"
+} -100.0
+CCTK_REAL ADMMass_y_max[100] "y position of the rightmost xz-plane for the integration box" STEERABLE=ALWAYS
+{
+  :	:: "anything"
+} 100.0
+
+CCTK_REAL ADMMass_z_min[100] "z position of the leftmost xy-plane for the integration box" STEERABLE=ALWAYS
+{
+  :	:: "anything"
+} -100.0
+CCTK_REAL ADMMass_z_max[100] "z position of the rightmost xy-plane for the integration box" STEERABLE=ALWAYS
+{
+  :	:: "anything"
+} 100.0
+
+CCTK_REAL ADMMass_x_pos[100] "x position of the center of the integration box" STEERABLE=ALWAYS
+{
+  :	:: "anything"
+} 0.0
+CCTK_REAL ADMMass_y_pos[100] "y position of the center of the integration box" STEERABLE=ALWAYS
+{
+  :	:: "anything"
+} 0.0
+CCTK_REAL ADMMass_z_pos[100] "z position of the center of the integration box" STEERABLE=ALWAYS
+{
+  :	:: "anything"
+} 0.0
+
+CCTK_REAL ADMMass_distance_from_grid_boundary[100] "distance between the grid boundaries and the surface of the integration box" STEERABLE=ALWAYS
+{
+  :	:: "<=0 for disable, positive otherwise"
+} -1.0
+
+CCTK_REAL ADMMass_surface_distance[100] "distance between the above-defined center of the integration (cubic) box and its surface" STEERABLE=ALWAYS
+{
+  :	:: "<=0 for disable, positive otherwise"
+} -1.0
+
+CCTK_REAL ADMMass_volume_radius[100] "radius of the sphere inside which the volume integral is computed" STEERABLE=ALWAYS
+{
+  :	:: "<=0 for disable, positive otherwise"
+} -1.0
+
+BOOLEAN ADMMass_use_surface_distance_as_volume_radius "Use ADMMass_surface_distance instead of ADMMass_volume_radius" STEERABLE=ALWAYS
+{
+} "yes"
+
+BOOLEAN ADMMass_use_all_volume_as_volume_radius "Use the whole grid for volume integration" STEERABLE=ALWAYS
+{
+} "no"
+
+BOOLEAN ADMMass_Excise_Horizons "Should we exclude the region inside the AH to the volume integral" STEERABLE=ALWAYS
+{
+} "no"
+
+BOOLEAN ADMMass_Debug "Enable some info at runtime" STEERABLE=ALWAYS
+{
+} "no"

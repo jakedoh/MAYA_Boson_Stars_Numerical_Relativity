@@ -1,0 +1,150 @@
+# Schedule definitions for thorn NullExact
+# $Header$
+
+if (CCTK_EQUALS(boundary_data, "exact") && CCTK_EQUALS(initial_J_data, "exact"))
+{
+  STORAGE: Ylm_group, WTexact_mask
+  STORAGE: NullSHRExtract::x_wt[2], NullSHRExtract::WT_r0
+  STORAGE: NullSHRExtract::j_wt[2], NullSHRExtract::beta_wt[2], NullSHRExtract::w_wt[2] 
+  STORAGE: NullSHRExtract::q_wt[2], NullSHRExtract::u_wt[2], NullSHRExtract::u_x_wt
+  STORAGE: NullSHRExtract::j_l, NullSHRExtract::beta_l, NullSHRExtract::u_l, NullSHRExtract::w_l
+
+
+  schedule NullExact_PreCalcYlm at cctk_initial before NullEvol_BoundaryInit before NullEvol_Initial
+  {
+     LANG: Fortran
+  } "precalculate spherical harmonics"
+
+  {
+
+     schedule NullExact_Error_Cmplx at analysis 
+     {
+        LANG: Fortran
+        TRIGGER: cmplxcharfuncs_basic_e_split,cmplxcharfuncs_basic_e_mask
+        STORAGE: cmplxcharfuncs_basic_e_split,cmplxcharfuncs_basic_e_mask
+        TRIGGER: cmplxcharfuncs_basic_e
+        STORAGE: cmplxcharfuncs_basic_e
+        TRIGGER: cmplxcharfuncs_basic_e_south
+        STORAGE: cmplxcharfuncs_basic_e_south
+     } "error in characteristic evolution variables"
+
+  }
+
+     schedule NullExact_Error_NewsB at analysis 
+     {
+        LANG: Fortran
+        TRIGGER: NewsB_e, uBondi_e, NewsBi_e, NewsBr_e, NewsBr, NewsBi, Newsr_e, Newsi_e, Psi4r_e, Psi4i_e, Psi4_e, mu_err, hmu, J_l_err, hJ_l
+        STORAGE: NewsB_e, uBondi_e, NewsBi_e, NewsBr_e, NewsBr, NewsBi, Newsr_e, Newsi_e, Psi4r_e, Psi4i_e, Psi4_e, mu_err, hmu, J_l_err, hJ_l
+     } "error in characteristic evolution variables"
+
+  {
+
+     schedule NullExact_Error_Real at analysis 
+     {
+        LANG: Fortran
+        TRIGGER: realcharfuncs_e
+        STORAGE: realcharfuncs_e
+        TRIGGER: realcharfuncs_e_south
+        STORAGE: realcharfuncs_e_south
+#       OPTIONS: global
+     } "error in characteristic evolution variables"
+
+  }
+
+  {
+
+     schedule NullExact_Error_Constr at analysis after NullConstr_Driver
+     {
+        LANG: Fortran
+        TRIGGER: realConstr_e
+        STORAGE: realConstr_e
+#       OPTIONS: global
+     } "error in constraints"
+
+  }
+
+  {
+
+     if (first_order_scheme) {
+        schedule NullExact_Error_CmplxAux at analysis 
+        {
+           LANG: Fortran
+           TRIGGER: cmplxcharfuncs_aux_e
+           STORAGE: cmplxcharfuncs_aux_e
+           TRIGGER: cmplxcharfuncs_aux_e_south
+           STORAGE: cmplxcharfuncs_aux_e_south
+#          OPTIONS: global
+        } "error in characteristic evolution variables"
+     }
+
+  }
+
+  {
+
+     if (analytic_fields) {
+        schedule NullExact_AnaFields at analysis 
+        {
+           LANG: Fortran
+           TRIGGER: ana_News, ana_mu, ana_Psi4, ana_J, ana_Q, ana_U, ana_J_l, num_J_l 
+           STORAGE: ana_News, ana_mu, ana_Psi4, ana_J, ana_Q, ana_U, ana_J_l, num_J_l
+#          OPTIONS: global
+        } "error in characteristic evolution variables"
+     }
+  }
+
+}
+
+
+if (CCTK_EQUALS(boundary_data, "exact")) {
+
+  schedule NullExact_Boundary in NullEvol_BoundaryInit
+  {
+    LANG: Fortran
+#    OPTIONS: global
+  } "exact boundary data for the characteristic evolution variables"
+
+  schedule NullExact_BoundaryPast in NullEvol_BoundaryInit
+  {
+    LANG: Fortran
+#    OPTIONS: global
+  } "exact boundary data for the characteristic evolution variables, past level"
+
+  schedule NullExact_Boundary in NullEvol_Boundary
+  {
+    LANG: Fortran
+#    OPTIONS: global
+  } "exact boundary data for the characteristic evolution variables"
+
+}
+
+if (CCTK_EQUALS(initial_J_data, "exact")) {
+  schedule NullExact_Initial in NullEvol_Initial after NullEvol_InitialData before NullEvol_InitialSlice
+  {
+    LANG: Fortran
+#    OPTIONS: global
+  } "exact initial data for J"
+}
+
+######## initialization: MoL
+  STORAGE: News_MoL[2] dotNews_MoL[2] errNews_MoL
+
+
+  schedule NullExact_InitMoL in NullEvol_Initial after NullEvol_InitialSlice
+  {
+    LANG: Fortran
+    OPTIONS: global
+  } "Initial Data"
+
+  schedule NullExact_MoLRegister in MoL_Register
+  {
+    LANG: C
+  } "Register variables for MoL"
+
+
+######## MoL evolution
+
+  schedule NullExact_dotNewsMoL in MoL_CalcRHS
+  {
+   LANG: Fortran
+   SYNC: dotNews_MoL 
+  } "calculate the integral of Psi4"

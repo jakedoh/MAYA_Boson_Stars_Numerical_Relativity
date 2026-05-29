@@ -1,0 +1,429 @@
+# Interface definition for thorn NullSHRExtract 
+# $Header:$
+
+implements: NullSHRExtract
+inherits: NullInterp, NullGrid, NullVars
+
+CCTK_INT \
+FUNCTION GetCurrentExtractionCoefs(\
+             CCTK_INT IN l,\
+             CCTK_INT IN m,\
+             CCTK_REAL OUT ARRAY RC,\
+             CCTK_REAL OUT ARRAY IC,\
+             CCTK_REAL OUT ARRAY RCr,\
+             CCTK_REAL OUT ARRAY ICr,\
+             CCTK_REAL OUT ARRAY RCt,\
+             CCTK_REAL OUT ARRAY ICt )
+
+USES FUNCTION GetCurrentExtractionCoefs
+
+CCTK_INT \
+FUNCTION GetExtractionParameters(\
+         CCTK_INT OUT l_max,\
+         CCTK_REAL OUT r_inner,\
+         CCTK_REAL OUT r_outer)
+
+USES FUNCTION GetExtractionParameters
+
+CCTK_INT FUNCTION IO_TruncateOutputFiles \
+  (CCTK_POINTER_TO_CONST IN GH)
+
+USES FUNCTION IO_TruncateOutputFiles
+
+private:
+
+CCTK_REAL NYlm[(l_max+1)*(l_max+1)] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts 
+{
+   reYN, imYN
+} "Ylm in (p,q) coordinates -- north patch"
+
+CCTK_REAL SYlm[(l_max+1)*(l_max+1)] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts 
+{
+   reYS, imYS
+} "Ylm in (p,q) coordinates -- south patch"
+
+CCTK_REAL N1Ylm[(l_max+1)*(l_max+1)] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts 
+{
+   re1YN, im1YN
+} "1Ylm in (p,q) coordinates -- north patch"
+
+CCTK_REAL S1Ylm[(l_max+1)*(l_max+1)] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts 
+{
+   re1YS, im1YS
+} "1Ylm in (p,q) coordinates -- south patch"
+
+CCTK_REAL NTYlm[(l_max+1)*(l_max+1)] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts 
+{
+   reTYN, imTYN
+} "Ylm in (p,q) coordinates for Schw metric north patch"
+
+CCTK_REAL STYlm[(l_max+1)*(l_max+1)] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts 
+{
+   reTYS, imTYS
+} "Ylm in (p,q) coordinates for Schw metric south patch"
+
+CCTK_REAL NT1Ylm[(l_max+1)*(l_max+1)] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts 
+{
+   re1TYN, im1TYN
+} "1Ylm in (p,q) coordinates for Schw metric north patch"
+
+CCTK_REAL ST1Ylm[(l_max+1)*(l_max+1)] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts 
+{
+   re1TYS, im1TYS
+} "1Ylm in (p,q) coordinates for Schw metric south patch"
+
+CCTK_REAL TClm[(l_max+1)*(l_max+1)] TYPE=ARRAY dim=1 size=10  DISTRIB=CONSTANT 
+{
+  RTC, ITC
+} "Expansion coefficients for the Schwarzchild metric"
+
+CCTK_REAL TCrlm[(l_max+1)*(l_max+1)] TYPE=ARRAY dim=1 size=10  DISTRIB=CONSTANT 
+{
+  RTCr, ITCr
+} "Radial  derivatives of expansion coefficients for the Schwarzchild metric"
+
+CCTK_REAL TCtlm[(l_max+1)*(l_max+1)] TYPE=ARRAY dim=1 size=10  DISTRIB=CONSTANT 
+{
+  RTCt, ITCt
+} "Time derivatives of xpansion coefficients for the Schwarzchild metric"
+
+# (0):gxx, (1):gxy, (2):gxz, (3):gyy, (4):gyz, (5):gzz,
+# (6):betax, (7):betay, (8):betaz, (9):alpha, 
+CCTK_REAL Clm TYPE=ARRAY dim=1 size=10  DISTRIB=CONSTANT 
+{
+  RC, IC
+} "Expansion coefficients for the metric"
+
+CCTK_REAL drClm TYPE=ARRAY dim=1 size=10  DISTRIB=CONSTANT 
+{
+   RCr, ICr
+} "Expansion coefficients for the radial derivative of the metric"
+
+CCTK_REAL dtClm TYPE=ARRAY dim=1 size=10  DISTRIB=CONSTANT 
+{
+   RCt, ICt 
+} "Expansion coefficients for the time derivative of the metric"
+
+public:
+
+########### Cauchy Variables ###########
+
+# (1-2):gxx, (3-4):gxy, (5-6):gxz, (7-8):gyy, (9-10):gyz, (11-12): gzz
+CCTK_REAL SHRE_gij[12] TYPE = ARRAY  timelevels=3 dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+ "The spatial metric components on the extraction worldtube"
+
+# (1-2):gxt, (3-4):gyt, (5-6):gzt, (7-8):gtt
+CCTK_REAL SHRE_git[8] TYPE = ARRAY  timelevels=3 dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+ "The mixt space-time metric components on the extraction worldtube"
+
+CCTK_REAL SHRE_beta[6] TYPE = ARRAY  timelevels=3 dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+ "The shift beta"
+
+CCTK_REAL SHRE_alpha[2] TYPE = ARRAY  timelevels=3 dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+ "The lapse alpha"
+
+CCTK_REAL SHRE_dgij[12] TYPE = ARRAY  timelevels=3 dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts 
+{
+  SHRE_drgij, SHRE_dqgij, SHRE_dpgij, SHRE_dtgij
+}"Derivatives of the spatial metric components on the extraction worldtube"
+
+CCTK_REAL SHRE_dgit[8] TYPE = ARRAY  timelevels=3 dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts 
+{
+  SHRE_drgit, SHRE_dqgit, SHRE_dpgit, SHRE_dtgit
+}"Derivatives of the mixt metric components on the extraction worldtube"
+
+CCTK_REAL SHRE_dbeta[6] TYPE = ARRAY  timelevels=3 dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts 
+{
+  SHRE_drbeta, SHRE_dqbeta, SHRE_dpbeta, SHRE_dtbeta
+}"Derivatives of the shift beta"
+
+CCTK_REAL SHRE_dalpha[2] TYPE = ARRAY  timelevels=3 dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts 
+{
+  SHRE_dralpha, SHRE_dqalpha, SHRE_dpalpha, SHRE_dtalpha
+}"Derivatives of the lapse alpha"
+
+private:
+
+############ Affine Variables ###############
+
+CCTK_REAL WT_r1[2] TYPE = ARRAY  timelevels=3 dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+ "Lambda derivative of the radius"
+
+CCTK_REAL WT_scalars[2] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+  WT_detg, WT_temp, WT_sigma2, WT_elld
+}"various scalars"
+
+CCTK_REAL WT_3vectors[6] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{   
+  WT_sigma_vect, WT_dr0_vect
+}"various 3-vectors"
+
+CCTK_REAL WT_4vectors[8] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+   WT_dr1_vect, WT_ell_vect, WT_delld_vect, WT_na_vect, WT_sa_vect
+}"various 4-vectors"
+
+CCTK_REAL WT_d4vectors[24] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+   WT_DSnorm_vect, WT_DNnorm_vect
+}"3-deriv of various 4-vectors"
+
+CCTK_REAL WT_dsigma_vect[12] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+ "derivative of sigma"
+
+CCTK_REAL WT_g1_vect[20] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+ "lambda deriv. of covariant metric"
+
+CCTK_REAL WT_gup_vect[20] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"contravariant metric"
+
+CCTK_REAL WT_jac[32] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+  WT_j0_vect, WT_j0inv_vect, WT_j1_vect
+}"jacobian"
+
+CCTK_REAL WT_dj0_vect[18] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+ "second angular deriv. of Cart. coord"
+
+CCTK_REAL WT_affine_metric[20] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+ WT_eta0_vect, WT_etaup0_vect, WT_eta1_vect, WT_etaup1_vect
+}"affine metric and its derivative"
+
+CCTK_REAL WT_deta0_vect[12] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"Angular derivatives of angular null metric components"
+
+CCTK_COMPLEX WT_CmpxCoord TYPE = ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+ qa_2, qa_3
+}"The complex dyad"
+
+
+protected:
+
+########## Characteristic Variables ###########
+
+# Note that the two time-levels in x_wt and j_wt will not get used until the 2nd
+# time-step (i.e., the tim-level where the J evolution equation is first called).
+
+CCTK_REAL WT_r0[2] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+ "Bondi radius of the world-tube"
+
+CCTK_REAL x_wt[2] TYPE = ARRAY dim=2 TIMELEVELS=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+ "The worldline path"
+
+CCTK_COMPLEX j_wt[2] TYPE = ARRAY dim=2 TIMELEVELS=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+ "The metric function J of the worldtube"
+
+CCTK_COMPLEX j_l[2] TYPE = ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+ "Lambda derivative of the metric function J of the worldtube"
+
+CCTK_REAL beta_wt[2] TYPE = ARRAY dim=2 TIMELEVELS=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+ "The expansion factor beta"
+
+CCTK_REAL beta_l[2] TYPE = ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+ "Lambda derivative of the expansion factor beta"
+
+CCTK_COMPLEX u_wt[2] TYPE = ARRAY dim=2 TIMELEVELS=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+ "The shift U"
+
+CCTK_COMPLEX u_l[2] TYPE = ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+ "Lambda derivative of the shift U"
+
+CCTK_COMPLEX u_x_wt[2] TYPE = ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+ "Radial derivative of the shift U"
+
+CCTK_COMPLEX q_wt[2] TYPE = ARRAY dim=2 TIMELEVELS=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+ "The auxiliary variable of the U equation, Q"
+
+
+CCTK_REAL w_wt[2] TYPE = ARRAY dim=2 TIMELEVELS=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+ "The mass aspect W"
+
+CCTK_REAL w_l[2] TYPE = ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+ "Lambda derivative of the mass aspect W"
+
+
+########### Errors for the Analytic Cauchy Variables on the Worldtube###########
+
+# (1-2):gxx, (3-4):gxy, (5-6):gxz, (7-8):gyy, (9-10):gyz, (11-12): gzz
+CCTK_REAL SHRE_gij_e[12] TYPE = ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+ "The spatial metric components on the extraction worldtube"
+
+# (1-2):gxt, (3-4):gyt, (5-6):gzt, (7-8):gtt
+CCTK_REAL SHRE_git_e[8] TYPE = ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+ "The mixt space-time metric components on the extraction worldtube"
+
+CCTK_REAL SHRE_beta_e[6] TYPE = ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+ "The shift beta"
+
+CCTK_REAL SHRE_alpha_e[2] TYPE = ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+ "The lapse alpha"
+
+CCTK_REAL SHRE_dgij_e[12] TYPE = ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts 
+{
+  SHRE_drgij_e, SHRE_dqgij_e, SHRE_dpgij_e, SHRE_dtgij_e
+}"Derivatives of the spatial metric components on the extraction worldtube"
+
+CCTK_REAL SHRE_dgit_e[8] TYPE = ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts 
+{
+  SHRE_drgit_e, SHRE_dqgit_e, SHRE_dpgit_e, SHRE_dtgit_e
+}"Derivatives of the mixt metric components on the extraction worldtube"
+
+CCTK_REAL SHRE_dbeta_e[6] TYPE = ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts 
+{
+  SHRE_drbeta_e, SHRE_dqbeta_e, SHRE_dpbeta_e, SHRE_dtbeta_e
+}"Derivatives of the shift beta"
+
+CCTK_REAL SHRE_dalpha_e[2] TYPE = ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts 
+{
+  SHRE_dralpha_e, SHRE_dqalpha_e, SHRE_dpalpha_e, SHRE_dtalpha_e
+}"Derivatives of the lapse alpha"

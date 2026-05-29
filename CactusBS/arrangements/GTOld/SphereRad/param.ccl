@@ -1,0 +1,69 @@
+# Parameter definitions for thorn SphereRad
+# $Header:$
+
+CCTK_INT verbose "verbosity"
+{
+ 0:10 :: "0 is nothing, 10 is a lot"
+} 1
+
+CCTK_INT max_nsurface "maximum number of horizons from sphericalsurface"
+{
+  1:100 :: "whatever"
+} 1
+
+CCTK_INT surface_index[100] "the indices of the sphericalsurfaces containing the horizon information" STEERABLE=always
+{
+  -1:* :: "whatever"
+} -1
+
+CCTK_INT shifttracker_index[100] "the indices of the sphericalsurfaces/shifttracker containing the horizon information" STEERABLE=always
+{
+  -1:* :: "whatever"
+} -1
+
+CCTK_BOOLEAN spherical_surface[100] "is this a sphericalsurface rather than direct from shifttracker?" STEERABLE=always
+{
+} "no"
+
+CCTK_BOOLEAN force_position[100] "force the position to it's parameter value?"
+{
+} "false"
+
+CCTK_REAL radius_surface[100] "radius of the surface"
+{
+  0:* :: ""
+} 1
+
+CCTK_REAL x_fixed[100] "fixed x value"
+{
+  *:* :: "x_fixed"
+} 0
+
+CCTK_REAL y_fixed[100] "fixed y value"
+{
+  *:* :: "y_fixed"
+} 0
+
+CCTK_REAL z_fixed[100] "fixed y value"
+{
+  *:* :: "z_fixed"
+} 0
+
+# note that this assumes individual horizons in 1st and 2nd surfaces
+CCTK_BOOLEAN center_of_mass[100] "do center of mass calculation for these surfaces"
+{
+} "no"
+
+CCTK_REAL mass[100] "mass for the 1st and 2nd surface!"
+{
+  0:* :: "positive"
+} 0.5
+
+SHARES: SphericalSurface
+
+USES INT nsurfaces AS sphericalsurfaces_nsurfaces
+
+USES INT maxntheta
+USES INT maxnphi
+
+

@@ -1,0 +1,7 @@
+# ABSTOL 1.0e-11
+# RELTOL 1.0e-11
+
+TEST ML_CCZ4_sgw3d
+{
+  ABSTOL 1e-11
+}

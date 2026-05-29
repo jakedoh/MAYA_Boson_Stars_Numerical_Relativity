@@ -1,0 +1,28 @@
+
+implements: minsearch
+inherits: sphericalsurface
+inherits: grid
+
+USES INCLUDE HEADER: carpet_public.hh
+
+public:
+CCTK_REAL minimum[nminima] type=SCALAR
+{
+  min_value
+  min_x
+  min_y
+  min_z
+} "The location and value of the minima"
+
+CCTK_REAL extra_variable_value[nminima] DIM=1 SIZE=30 type=ARRAY DISTRIB=CONSTANT tags='checkpoint="no"' "Values of the extra variables at the minima"
+
+private:
+CCTK_REAL minimum_new[nminima] type=SCALAR
+{
+  min_x_new
+  min_y_new
+  min_z_new
+  min_value_new
+} "Temp location of the minima during POSTSTEP"
+
+CCTK_REAL extra_variable_value_new[nminima] DIM=1 SIZE=30 type=ARRAY DISTRIB=CONSTANT tags='checkpoint="no"' "Temporary values of the extra variables at the minima"

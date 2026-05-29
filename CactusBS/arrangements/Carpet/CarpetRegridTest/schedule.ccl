@@ -1,0 +1,26 @@
+# Schedule definitions for thorn CarpetRegridTest
+
+
+schedule CarpetRegridTest_Startup AT STARTUP
+{
+  LANG: C
+} "Startup banner"
+
+
+schedule CarpetRegrid_SetupGaussian at INITIAL
+{
+  STORAGE:       testscalar[3]
+  LANG:          C
+  READS: grid::r
+  WRITES: phi(everywhere)
+} "Gaussian Initial Data"
+
+schedule CarpetRegrid_TestGaussian at Analysis
+{
+  STORAGE:       testscalar[3]
+  LANG:          C
+  READS: grid::x, grid::y, grid::z
+  WRITES: phi
+  WRITES: phi_error(everywhere), phi_relerror(everywhere)
+} "Test Gaussian Data"
+

@@ -1,0 +1,46 @@
+# Parameter definitions for thorn GRHydro_Analysis
+
+
+###########################################################################
+############# Needed number of temporary grid variables for doing Analysis#
+###########################################################################
+shares: TempPool
+USES CCTK_INT maxntemp
+
+restricted:
+
+CCTK_INT GRHydro_Analysis_maxntemp "Turns on the necessary numbers of temporary variables in TempPool" ACCUMULATOR-BASE=TempPool::maxntemp
+{
+  23:23 :: ""
+} 23
+
+CCTK_INT Verbosity "Verbosity level for GRHydro_Analysis Thorn" STEERABLE = always
+{
+  0:* :: ""
+} 0
+
+CCTK_INT masktype "mask type  for GRHydro_Analysis Thorn"
+{
+  0:* :: ""
+} 0
+
+CCTK_REAL maskvalue "mask value for GRHydro_Analysis Thorn"
+{
+  0:* :: ""
+} 0
+
+CCTK_INT GRHydro_Analysis_SphericalSurfaceIndex  "Index of spherical surface to use to set the estimated center of mass"
+{
+  -1:* :: "-1 to disable (default), >=0 for any index"
+} -1
+
+
+CCTK_REAL GRHydro_Analysis_FuzzyTiny "Radius below which points count as 'origin' and are ignored for some calculations due to large errors"
+{
+  0:* :: "0 or positive"
+} 1.e-14
+
+CCTK_REAL Atmosphere_Cutoff "Absolute value of rho for atmosphere cut-off for MA"
+{
+  0:* :: "0 or positive"
+} 1.e-11

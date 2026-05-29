@@ -1,0 +1,91 @@
+# Interface definition for thorn NullConstr
+# $Header$
+
+implements: NullConstr
+inherits: NullGrid NullVars NullInterp
+
+CCTK_INT FUNCTION							\
+  GZPatchSystem_patch_number_from_global_XYZ				\
+		(CCTK_INT IN psn,					\
+		 CCTK_REAL IN x,					\
+		 CCTK_REAL IN y,					\
+		 CCTK_REAL IN z)
+USES FUNCTION GZPatchSystem_patch_number_from_global_XYZ
+
+void function GZPatchSystem_sync_groups					\
+	(CCTK_POINTER IN GH,						\
+	 CCTK_INT IN N_groups_to_sync,					\
+	 CCTK_POINTER_TO_CONST ARRAY IN group_names, 			\
+	 CCTK_INT IN psn,						\
+	 CCTK_INT IN min_jwr, CCTK_INT IN max_jwr)
+USES FUNCTION GZPatchSystem_sync_groups
+
+#private:
+public:
+
+CCTK_REAL Null_R00[NullGrid::N_radial_pts] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts\
+   tags='tensortypealias="Scalar"'
+
+CCTK_REAL Null_R01[NullGrid::N_radial_pts] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts\
+   tags='tensortypealias="Scalar"'
+
+CCTK_COMPLEX Null_R0A[NullGrid::N_radial_pts] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts\
+   tags='tensortypealias="Scalar"'
+
+CCTK_REAL Null_R0A_split[NullGrid::N_radial_pts] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts\
+   tags='tensortypealias="Scalar"'
+{
+Null_R0A_r, Null_R0A_i
+} "Real and Imaginary part of Null_R0A"
+
+CCTK_COMPLEX Null_AuxConstr[NullGrid::N_radial_pts] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts\
+   tags='tensortypealias="Scalar"'
+{
+  Null_AuxConstr_nucn, \
+  Null_AuxConstr_cbcn, \
+  Null_AuxConstr_ckcn
+} "Constraints associated with the auxiliary variables"
+
+CCTK_REAL Null_R00_south[NullGrid::N_radial_pts] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts\
+   tags='tensortypealias="Scalar"'
+
+CCTK_REAL Null_R01_south[NullGrid::N_radial_pts] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts\
+   tags='tensortypealias="Scalar"'
+
+CCTK_COMPLEX Null_R0A_south[NullGrid::N_radial_pts] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts\
+   tags='tensortypealias="Scalar"'
+
+CCTK_COMPLEX Null_AuxConstr_south[NullGrid::N_radial_pts] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts\
+   tags='tensortypealias="Scalar"'
+{
+  Null_AuxConstr_nucs, \
+  Null_AuxConstr_cbcs, \
+  Null_AuxConstr_ckcs
+} "Constraints associated with the auxiliary variables (south)"

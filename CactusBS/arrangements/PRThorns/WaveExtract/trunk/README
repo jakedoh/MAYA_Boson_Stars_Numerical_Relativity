@@ -1,0 +1,10 @@
+Cactus Code Thorn WaveExtract
+Author(s)    : Frank Herrmann
+Maintainer(s): Frank Herrmann
+Licence      : unknown
+--------------------------------------------------------------------------
+
+1. Purpose
+
+Does Wave extraction and only wave extraction using the Zerilli formalism.
+This thorn was formerly Extract, but that got overloaded with lots of stuff.

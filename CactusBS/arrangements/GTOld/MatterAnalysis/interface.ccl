@@ -1,0 +1,16 @@
+# Interface definition for Thorn MatterAnalysis
+
+IMPLEMENTS: MatterAnalysis
+INHERITS: TmunuBase ADMBase HydroBase
+
+PUBLIC:
+
+REAL momentum_density_vector TYPE=gf TIMELEVELS=1
+{
+	eJx, eJy, eJz
+} "J^i = T_ab n^a g^{ib}"
+
+REAL density_weighted_position TYPE=gf TIMELEVELS=1
+{
+	rho_times_x, rho_times_y, rho_times_z
+} "Density weighted position integrates to the center of mass"

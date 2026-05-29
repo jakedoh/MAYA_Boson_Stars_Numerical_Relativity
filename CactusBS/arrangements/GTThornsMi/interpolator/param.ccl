@@ -1,0 +1,66 @@
+# Parameter definitions for thorn Interpolator
+
+
+
+
+shares:ADMBase
+
+EXTENDS KEYWORD initial_data
+{
+  "interpolation" :: "my TOV star metric"
+}
+USES KEYWORD metric_type
+
+
+EXTENDS KEYWORD initial_lapse
+{
+  "interpolation" :: "TOV star initial lapse; isotropic"
+}
+
+EXTENDS KEYWORD initial_shift
+{
+  "interpolation" :: "TOV star initial shift"
+}
+
+private:
+
+KEYWORD initial_profile "initial profile"
+{
+  "My_Tov" :: "TOV star initial shift"
+  "ZurekPage" :: "TOV star initial shift"
+} ZurekPage
+
+REAL mygamma "The adiabatic index"
+{
+ 0:* :: "Positive"
+} 2.0
+
+#========1D SPHERICAL GRID===============
+
+INT Num_datos "number of data domain minimun"
+{
+  0:* :: "No restriction"
+} 100
+
+#==========================================
+
+REAL K_poly "Politropic Constant"
+{ 
+0:* :: "No Restriction"  
+} 100.0     
+
+
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+##PARA LA HIDRO PERO PRIMERO LA METRICA
+
+shares:HydroBase
+
+EXTENDS KEYWORD initial_hydro "mytov"
+{
+  "interpolation" :: "Interpolation of from 1D to 3D"
+}
+
+
+
+
+

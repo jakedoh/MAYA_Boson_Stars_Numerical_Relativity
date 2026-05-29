@@ -1,0 +1,5 @@
+# Interface definition for thorn Seed_Magnetic_Fields
+
+IMPLEMENTS: seed_magnetic_fields
+
+INHERITS: grid ADMBase HydroBase

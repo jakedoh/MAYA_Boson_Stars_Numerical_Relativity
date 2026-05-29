@@ -1,0 +1,31 @@
+# Schedule definitions for thorn MyTov
+
+
+if (CCTK_Equals(initial_data,"mytov")) 
+{
+schedule initial_tov in HydroBase_Initial
+{
+  LANG:         Fortran
+  SYNC:ADMBase::metric,ADMBase::curv,ADMBase::lapse,ADMBase::shift
+  SYNC: rho
+  SYNC: press
+  SYNC: eps
+  SYNC: vel
+  SYNC: w_lorentz
+} "Initial data myTOV star"
+
+#schedule calcrhs at CCTK_INITIAL
+#schedule calcrhs in HydroBase_Initial
+#{
+#  LANG:         Fortran
+#} "rhs calculation"
+}
+
+
+
+
+
+
+
+
+

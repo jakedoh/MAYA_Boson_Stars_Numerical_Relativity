@@ -1,0 +1,5 @@
+# Main make.code.defn file for thorn AHMask
+# $Header:$
+
+# Source files in this directory
+SRCS = get_sf_centres.cc set_weights.cc RegisterMask.cc

@@ -1,0 +1,201 @@
+% *======================================================================*
+%  Cactus Thorn template for ThornGuide documentation
+%  Author: Ian Kelley
+%  Date: Sun Jun 02, 2002
+%  $Header$
+%
+%  Thorn documentation in the latex file doc/documentation.tex
+%  will be included in ThornGuides built with the Cactus make system.
+%  The scripts employed by the make system automatically include
+%  pages about variables, parameters and scheduling parsed from the
+%  relevant thorn CCL files.
+%
+%  This template contains guidelines which help to assure that your
+%  documentation will be correctly added to ThornGuides. More
+%  information is available in the Cactus UsersGuide.
+%
+%  Guidelines:
+%   - Do not change anything before the line
+%       % START CACTUS THORNGUIDE",
+%     except for filling in the title, author, date, etc. fields.
+%        - Each of these fields should only be on ONE line.
+%        - Author names should be separated with a \\ or a comma.
+%   - You can define your own macros, but they must appear after
+%     the START CACTUS THORNGUIDE line, and must not redefine standard
+%     latex commands.
+%   - To avoid name clashes with other thorns, 'labels', 'citations',
+%     'references', and 'image' names should conform to the following
+%     convention:
+%       ARRANGEMENT_THORN_LABEL
+%     For example, an image wave.eps in the arrangement CactusWave and
+%     thorn WaveToyC should be renamed to CactusWave_WaveToyC_wave.eps
+%   - Graphics should only be included using the graphicx package.
+%     More specifically, with the "\includegraphics" command.  Do
+%     not specify any graphic file extensions in your .tex file. This
+%     will allow us to create a PDF version of the ThornGuide
+%     via pdflatex.
+%   - References should be included with the latex "\bibitem" command.
+%   - Use \begin{abstract}...\end{abstract} instead of \abstract{...}
+%   - Do not use \appendix, instead include any appendices you need as
+%     standard sections.
+%   - For the benefit of our Perl scripts, and for future extensions,
+%     please use simple latex.
+%
+% *======================================================================*
+%
+% Example of including a graphic image:
+%    \begin{figure}[ht]
+% 	\begin{center}
+%    	   \includegraphics[width=6cm]{MyArrangement_MyThorn_MyFigure}
+% 	\end{center}
+% 	\caption{Illustration of this and that}
+% 	\label{MyArrangement_MyThorn_MyLabel}
+%    \end{figure}
+%
+% Example of using a label:
+%   \label{MyArrangement_MyThorn_MyLabel}
+%
+% Example of a citation:
+%    \cite{MyArrangement_MyThorn_Author99}
+%
+% Example of including a reference
+%   \bibitem{MyArrangement_MyThorn_Author99}
+%   {J. Author, {\em The Title of the Book, Journal, or periodical}, 1 (1999),
+%   1--16. {\tt http://www.nowhere.com/}}
+%
+% *======================================================================*
+
+% If you are using CVS use this line to give version information
+% $Header$
+
+\documentclass{article}
+
+% Use the Cactus ThornGuide style file
+% (Automatically used from Cactus distribution, if you have a
+%  thorn without the Cactus Flesh download this from the Cactus
+%  homepage at www.cactuscode.org)
+\usepackage{../../../../doc/latex/cactus}
+
+\begin{document}
+
+% The author of the documentation
+\author{Frank Löffler}
+
+% The title of the document (not necessarily the name of the Thorn)
+\title{ADMMass}
+
+% the date your document was last changed, if your document is in CVS,
+% please use:
+%    \date{$ $Date: 2004-01-07 14:12:39 -0600 (Wed, 07 Jan 2004) $ $}
+\date{2012-05-07}
+
+\maketitle
+
+% Do not delete next line
+% START CACTUS THORNGUIDE
+
+% Add all definitions used in this documentation here
+%   \def\mydef etc
+
+% Add an abstract for this thorn's documentation
+\begin{abstract}
+Thorn ADMMass can compute the ADM mass from quantities in ADMBase.
+\end{abstract}
+
+% The following sections are suggestive only.
+% Remove them or add your own.
+
+\section{Introduction}
+The ADM mass evaluated as either surface integrals at infinity or volume
+integrals over entire hypersurfaces give a measure of the total energy in the
+spacetime.
+
+ The ADM mass can be defined~\cite{ADM_mass_Omurchadha74} as a surface integral over a
+ sphere with infinite radius:
+ \begin{equation}
+ \label{eq:ADM_mass}
+  M_{\mbox{\tiny ADM}}=\frac{1}{16\pi}\oint_\infty
+  \sqrt{\gamma}\gamma^{ij}\gamma^{kl}
+  (\gamma_{ik,j}-\gamma_{ij,k})\textrm{d}\! S_l
+ \end{equation}.
+ This is, assuming $\alpha=1$ at infinity, equivalent to
+ \begin{equation}
+ \label{eq:ADM_mass_volume}
+  M_{\mbox{\tiny ADM}}=\frac{1}{16\pi}\int
+  \left(\alpha\sqrt{\gamma}\gamma^{ij}\gamma^{kl}
+  (\gamma_{ik,j}-\gamma_{ij,k})\right)_{,l}\textrm{d}\!^{\,3}\!\!x
+ \end{equation}.
+In practice, the following equation can also be used within the thorn:
+  \begin{equation}
+   \label{eq:ADM_mass_lapse}
+   M_{\mbox{\tiny ADM}}=\frac{1}{16\pi}\oint_\infty
+   \alpha\sqrt{\gamma}\gamma^{ij}\gamma^{kl}
+   (\gamma_{ik,j}-\gamma_{ij,k})\textrm{d}\! S_l.
+  \end{equation}
+  This differs from equation~(\ref{eq:ADM_mass}) by the factor $\alpha$ inside
+  the integral. For evaluations of those equations at infinity, $\alpha=1$ is
+  assumed, and they are equal. For evaluations at a finite distance, however,
+  this is usually not the case and the approximation of the ADM mass is
+  gauge-dependent~\cite{ADM_mass_Omurchadha74}. Depending on circumstances,
+  either~(\ref{eq:ADM_mass}),~(\ref{eq:ADM_mass_lapse} or~~(\ref{eq:ADM_mass_volume})
+  might give better results.
+
+\section{Using This Thorn}
+
+Multiple measurements can be done for both volume and surface integral, but the
+limit for both is 100 (change param.ccl if you need more). You need to
+specify the number of integrations with \texttt{ADMMass\_number} (and ADMMass
+will perform both integrations that many times).
+
+Also note that this thorn uses the ADMMacros for derivatives. Thus, converegence
+of results is limited to the order of these derivatives (ADMMacros::spatial\_order).
+
+ADMMass provides several possibilities to specify the (finite) integration domain,
+both for surface and volume integral, which we list in the following:
+
+\begin{itemize}
+ \item Surface Integral (over rectangular domain)
+  \begin{itemize}
+   \item \texttt{ADMMass\_distance\_from\_grid\_boundary}: specifies the distance
+         between the physical domain boundary and the integration domain. If
+         this is set, this fully specifies the domain boundary.
+   \item \texttt{ADMMass\_surface\_distance}: specifies a distance of the integration
+         boundary from a given point, specified using \texttt{ADMMass\_x\_pos[3]}.
+   \item Otherwise, \texttt{ADMMass\_[xyz]\_[min|max]} specify a rectangular
+         integration domain.
+  \end{itemize}
+ \item Volume Integral (over sphere)
+  \begin{itemize}
+   \item If \texttt{ADMMass\_use\_all\_volume\_as\_volume\_radius} is set,
+         the whole volume is used for integration.
+   \item If \texttt{ADMMass\_use\_surface\_distance\_as\_volume\_radius} is set
+         and \texttt{ADMMass\_volume\_radius} is not (negative),
+         \texttt{ADMMass\_surface\_distance} is used to specify the integration
+         radius.
+   \item Otherwise, \texttt{ADMMass\_volume\_radius} specifies this radius.
+   \item \texttt{ADMMass\_[xyz]\_pos} specify the position of the integration
+         sphere.
+   \item Use \texttt{ADMMass\_Excise\_Horizons} to exclude domains where
+         thorn \texttt{OutsideMask} didn't specify domain as \texttt{outside}.
+         This can be used to, e.g. excise black hole apparent horizons.
+  \end{itemize}
+\end{itemize}
+
+You should output \texttt{ADMMass::ADMMass\_Masses} for the result of the
+integrations, which will include the results for the volume integral, the
+usual surface integral and the sorface integral including the lapse.
+
+\begin{thebibliography}{1}
+\bibitem{ADM_mass_Omurchadha74}
+N.~O Murchadha and J.~W.~York,
+  ``Gravitational energy,''
+  Phys.\ Rev.\ D {\bf 10}, 2345 (1974).
+  doi:10.1103/PhysRevD.10.2345
+  %%CITATION = doi:10.1103/PhysRevD.10.2345;%%  %%CITATION = doi:10.1103/PhysRevD.10.428;%%
+\end{thebibliography}
+
+% Do not delete next line
+% END CACTUS THORNGUIDE
+
+\end{document}
+

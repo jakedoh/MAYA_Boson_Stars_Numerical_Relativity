@@ -1,0 +1,63 @@
+# Schedule definitions for thorn WaveToyCXX
+# $Header$
+
+STORAGE: scalarevolve[3]
+
+schedule WaveToyCXX_Startup at STARTUP
+{
+  LANG: C
+} "Register banner"
+
+schedule WaveToyCXX_InitSymBound at BASEGRID
+{
+  LANG: C
+} "Schedule symmetries"
+
+schedule WaveToyCXX_Evolution as WaveToy_Evolution at EVOL
+{
+  LANG: C
+} "Evolution of 3D wave equation"
+
+schedule WaveToyCXX_Boundaries as WaveToy_Boundaries at EVOL AFTER WaveToy_Evolution
+{
+  LANG: C
+  OPTIONS: level
+  SYNC: scalarevolve
+} "Boundaries of 3D wave equation"
+  
+schedule GROUP ApplyBCs as WaveToyCXX_ApplyBCs at EVOL after WaveToy_Boundaries
+{
+} "Apply boundary conditions"
+
+schedule WaveToyCXX_Boundaries as WaveToy_Boundaries at POSTRESTRICT
+{
+  LANG: C
+  OPTIONS: level
+  SYNC: scalarevolve
+} "Boundaries of 3D wave equation"
+  
+schedule GROUP ApplyBCs as WaveToyCXX_ApplyBCs at POSTRESTRICT after WaveToy_Boundaries
+{
+} "Apply boundary conditions"
+
+schedule WaveToyCXX_Boundaries as WaveToy_Boundaries at POSTRESTRICTINITIAL
+{
+  LANG: C
+  OPTIONS: level
+  SYNC: scalarevolve
+} "Boundaries of 3D wave equation"
+
+schedule GROUP ApplyBCs as WaveToyCXX_ApplyBCs at POSTRESTRICTINITIAL after WaveToy_Boundaries
+{
+} "Apply boundary conditions"
+
+schedule WaveToyCXX_Boundaries as WaveToy_Boundaries at POST_RECOVER_VARIABLES
+{
+  LANG: C
+  OPTIONS: level
+  SYNC: scalarevolve
+} "Boundaries of 3D wave equation"
+
+schedule GROUP ApplyBCs as WaveToyCXX_ApplyBCs at POST_RECOVER_VARIABLES after WaveToy_Boundaries
+{
+} "Apply boundary conditions"

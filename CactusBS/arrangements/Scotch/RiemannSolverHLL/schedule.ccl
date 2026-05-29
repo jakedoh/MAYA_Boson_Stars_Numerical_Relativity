@@ -1,0 +1,10 @@
+# Schedule definitions for thorn RiemannSolverHLL
+# $Header:$
+
+if(CCTK_Equals(riemann_solver, "HLL")) {
+
+  schedule RiemannSolverHLL_Solve IN FluxTerms AFTER Whisky_Convert AS Riemann
+  {
+    LANG: C
+  } "Solve the local Riemann problems"
+}

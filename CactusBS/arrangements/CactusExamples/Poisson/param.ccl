@@ -1,0 +1,23 @@
+# Parameter definitions for thorn Poisson
+
+STRING solver "Name of TATelliptic solver that should be used"
+{
+  .* :: "must be an activated TATelliptic solver"
+} "TATJacobi"
+
+STRING options "Options for the solver"
+{
+  .* :: "no restriction"
+} ""
+
+
+
+REAL radius "Radius of uniformly charged sphere"
+{
+  0:* :: ""
+} 1.0
+
+REAL charge "Charge of uniformly charged sphere"
+{
+  *:* :: ""
+} 1.0

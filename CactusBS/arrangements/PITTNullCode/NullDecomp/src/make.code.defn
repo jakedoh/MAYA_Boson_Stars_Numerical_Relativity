@@ -1,0 +1,11 @@
+# Main make.code.defn file for thorn NullDecomp
+# $Header$
+
+# Source files in this directory
+SRCS = NullDecomp_SpinDecomp.F90 \
+       NullDecomp_sYlm.F90 \
+       NullDecomp_Vars.F90 \
+       NullDecomp_IO.F90 \
+       Startup.F90
+
+# Subdirectories containing source files

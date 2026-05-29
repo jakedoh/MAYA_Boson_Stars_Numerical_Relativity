@@ -1,0 +1,41 @@
+!DESC "1+log sliced Kerr black hole"
+
+#Required thorns
+ActiveThorns = "Boundary Time CartGrid3D CoordBase SymBase pugh pughslab pughreduce IOUtil iobasic ioascii ADMBase ADMAnalysis SpaceMask CoordGauge IDAnalyticBH StaticConformal localreduce ADMMacros"
+
+# GENERAL 
+ 
+driver::global_nx          = 20     
+driver::global_ny          = 20     
+driver::global_nz          = 20     
+
+grid::type                 = "byspacing"
+grid::dxyz                 =  0.8 
+grid::domain               = "full"
+
+time::dtfac                =  0.25 
+  
+admbase::initial_data     = "kerr" 
+
+cactus::cctk_itlast        = 0
+
+admanalysis::normalize_dtheta_dphi = "yes"
+
+IO::out_dir               = "kerr"
+IO::out_fileinfo         = "none"
+IOBasic::outInfo_every   = 1
+IOBasic::outInfo_vars    = "admbase::gxx admbase::kxx"
+
+IOASCII::out1d_every   = 5
+IOASCII::out1d_vars    = "admbase::alp admbase::metric admbase::curv admanalysis::spherical_metric admanalysis::spherical_curv admanalysis::trk admanalysis::detg"
+IOASCII::out1d_x = "no"
+IOASCII::out1d_y = "no"
+IOASCII::out1d_z = "no"
+
+IOBasic::outScalar_every = 2
+IOBasic::outScalar_vars  = "admanalysis::grr admanalysis::trk"
+
+##################################################################
+
+# do not use the new scheme for names of output files
+IO::new_filename_scheme = "no"

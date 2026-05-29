@@ -1,0 +1,10 @@
+Cactus Code Thorn IOHDF5Util
+Author(s)    : Thomas Radke
+Maintainer(s): Cactus team
+Licence      : LGPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+This thorn serves as a utility thorn for other HDF5 I/O thorns such as
+IOStreamedHDF5 and IOHDF5.

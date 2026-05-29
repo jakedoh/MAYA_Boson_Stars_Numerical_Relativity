@@ -1,0 +1,9 @@
+# Schedule definitions for thorn EOS_Polytrope
+# $Header$
+
+
+schedule EOS_Polytrope_Startup AT startup
+{
+  LANG: Fortran
+} "Setup the polytropic EOS"
+

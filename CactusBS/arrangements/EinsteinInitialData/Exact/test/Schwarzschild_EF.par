@@ -1,0 +1,43 @@
+# Schwarzschild/Eddington-Finkelstein initial data
+
+# Required thorns
+ActiveThorns = "Time CartGrid3D CoordBase SymBase Boundary PUGH PUGHReduce PUGHSlab IOAscii IOUtil IOBasic ADMBase StaticConformal CoordGauge Exact"
+
+# Grid
+driver::global_nx = 30
+driver::global_ny = 30
+driver::global_nz = 30
+driver::ghost_size = 1
+grid::type    = "byrange"
+grid::domain  = "full"
+
+# n.b. this does NOT put a grid point at the origin:
+#      the grid points are at -2.9, -2.5, ... -0.1, +0.3, 0.5, ..., 2.9
+grid::xyzmin = -2.9
+grid::xyzmax =  2.9
+
+cactus::cctk_itlast       = 0
+time::dtfac = 0.25
+
+# Initial data
+ADMBase::initial_data  = "exact"
+ADMBase::initial_lapse = "exact"
+ADMBase::initial_shift = "exact"
+Exact::exact_model = "Schwarzschild/EF"
+Exact::Schwarzschild_EF__mass = 1.0
+Exact::exact_eps = 1e-3
+
+# Gauge
+ADMBase::lapse_evolution_method = "exact"
+ADMBase::shift_evolution_method = "exact"
+
+# Output
+IO::out_dir = "Schwarzschild_EF"
+IO::parfile_write = "no"
+IO::out_fileinfo = "none"
+
+IOASCII::out1D_every =  1
+IOASCII::out1D_vars  = "ADMBase::metric ADMBase::curv ADMBase::lapse ADMBase::shift"
+
+IOASCII::out2D_every =  1
+IOASCII::out2D_vars  = "ADMBase::metric ADMBase::curv ADMBase::lapse ADMBase::shift"

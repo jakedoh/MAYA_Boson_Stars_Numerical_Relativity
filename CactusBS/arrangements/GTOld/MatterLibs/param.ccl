@@ -1,0 +1,536 @@
+# Parameter definitions for thorn MatterLibs
+# $Header:$
+
+KEYWORD rho_profile "Type of mass density profile"
+{
+  "Gaussian"	:: "Gaussian density: avoids boundaries"
+  "Constant"	:: "Constant density with atmosphere outside"
+  "Bondi"       :: "Spherical stationary gas infall"
+  "TOV"		:: "Tollman-Oppenheimer-Volkoff Star"
+  "CB Disk"	:: "Circumbinary Disk approximation of O'Neill et al arXiv:0812.4874"
+} "Gaussian"
+
+BOOLEAN rescale_hydro "Recalculate hydro variables after solving, before Tmunu. Should do unless you skipped solving."
+{
+} "yes"
+
+KEYWORD combination_method "how to combine the two spacetimes"
+{
+  "rescale or background only" :: "old style choice ia rescale_hydro"
+  "rescale"         :: "rescale source terms assuming that we solved the constraints"
+  "background only" :: "construct matter terms using background metric only (assumes no solve)"
+  "sum metric"      :: "sum the non-minkowskian part of the metric"
+} "rescale or background only"
+
+CCTK_REAL num_clouds "Number of clouds"
+{
+  0:10	:: "Currently maxed at 10 for reasonableness"
+} 1
+
+CCTK_REAL cloud_rho[10] "Density (central density if gaussian profile)"
+{
+  *:*   :: "Anything, though positive is physically realistic" 
+} 0.2
+
+BOOLEAN old_rho "Toggle the old Gaussian rho profile: includes 1/sig"
+{
+} "yes"
+
+CCTK_REAL cloud_omega_x[10] "Angular frequency of rigid rotation around x-axis of body"
+{
+  *:*   :: "Anything, as long as no part of the matter distribution moves faster than c=1" 
+} 0.0
+
+CCTK_REAL cloud_omega_y[10] "Angular frequency of rigid rotation around y-axis of body"
+{
+  *:*   :: "Anything, as long as no part of the matter distribution moves faster than c=1" 
+} 0.0
+
+CCTK_REAL cloud_omega_z[10] "Angular frequency of rigid rotation around z-axis of body"
+{
+  *:*   :: "Anything, as long as no part of the matter distribution moves faster than c=1" 
+} 0.0
+
+CCTK_REAL Omega "angular frequency around the z-axis with which the whole matter system rotates around the origin"
+{
+  *:*   :: "Anything, as long as no part of the matter distribution moves faster than c=1"
+} 0.0
+
+CCTK_REAL b0_uniform[3] "Initial (primitive) magnetic field if designated as uniform"
+{
+  *:*   :: "Anything reasonable at the moment"
+} 0.0
+
+BOOLEAN fake_matter "Don't create Tmunu"
+{
+} "no"
+
+CCTK_INT poison_value "Integer value (0..255) used to poison the EOS against true 2D EOSs" STEERABLE=always
+{
+  0:255 :: "Must fit into a byte.  Use 0 for zero, 255 for nan, and e.g. 113 for a large value."
+} 255
+
+BOOLEAN testsuite "set to true to dump various internal data structures"
+{
+} "no"
+
+CCTK_REAL chiEps "Express a minimum of chi"
+{
+  *:*	:: "Anything"
+} 1e-4
+
+CCTK_REAL r_epsilon "Express a minimum of r for calculations in cylindrical/polar (e.g. Bondi)"
+{
+  0:*   :: "Positive definite"
+} 1e-10
+
+# parameters controlling the solver used to recover rho from \bar{e}
+# the solver stops once for two consecutive values x_0,x_1:
+# |x_1 - x_0| < epsabs + epsrel |x_1|
+CCTK_REAL abs_err "absolute error tolerance"
+{
+  0:* :: "any non-negative value"
+} 0.
+
+CCTK_REAL rel_err "relative error tolerance"
+{
+  0:* :: "any non-negative number"
+} 1e-5
+
+CCTK_INT max_iter "maximum number of iterations to go through"
+{
+  1:* :: "at least one iteration is necesary"
+} 10 
+
+# the default is historical. The best choice for a gas not dominated by
+# pressure over rest mass energy is probably "rescaled rho".
+KEYWORD initial_guess "initial guess for the steffenson solver"
+{
+  "rescaled E"   :: "hat E / psi_solved^8"
+  "rho"          :: "initial rest mass density"
+  "rescaled rho" :: "rho (psi_initial/psi_solved)^8"
+} "rescaled E"
+
+# Parameters for constant cloud
+CCTK_REAL cloud_radius[10] "Radius of cloud (for constant density)"
+{
+  0:*	:: "Anything positive"
+} 5.0
+
+CCTK_REAL cloud_x0[10] "Center of cloud" STEERABLE=ALWAYS
+{
+  *:*	:: "Anywhere"
+} 0.0
+
+CCTK_REAL cloud_y0[10] "Center of cloud" STEERABLE=ALWAYS
+{
+  *:*	:: "Anywhere"
+} 0.0
+
+CCTK_REAL cloud_z0[10] "Center of cloud" STEERABLE=ALWAYS
+{
+  *:*	:: "Anywhere"
+} 0.0
+
+# Parameters for gaussian density profile
+CCTK_REAL cloud_r0[10] "Center of a gaussian shell"
+{
+  0:*	:: "Anything positive"
+} 0.0
+
+CCTK_REAL cloud_sig[10] "FWHM of gaussian cloud (may become obsolete eventually)"
+{
+  (0:*	:: "Anything positive"
+} 5.0
+
+CCTK_REAL cloud_sig_x[10] "Overrides cloud_sig for x-direction."
+{
+  *:*	:: "Should be positive.  Negative to avoid overriding."
+} -1
+
+CCTK_REAL cloud_sig_y[10] "Overrides cloud_sig for y-direction."
+{
+  *:*	:: "Should be positive.  Negative to avoid overriding."
+} -1
+
+CCTK_REAL cloud_sig_z[10] "Overrides cloud_sig for z-direction."
+{
+  *:*	:: "Should be positive.  Negative to avoid overriding."
+} -1
+
+# Parameters for TOV stars
+# uses cloud_[xyz]0[10] from constant cloud
+
+CCTK_INT cloud_numpoints[10] "points used in the radial integration"
+{
+  1:*  :: "any number of points"
+} 100000
+
+CCTK_REAL cloud_dr[10] "stepsize for the radial integration"
+{
+  (0:*	:: "anything positive"
+} 5e-4
+
+CCTK_REAL cloud_Gamma[10] "The polytropic constant in P = K rho^Gamma"
+{
+  1.0:2.0 :: "The physical range is [1,2]"
+} 2.0
+
+CCTK_REAL cloud_K[10] "The polytropic constant in P = K rho^Gamma"
+{
+  (0.0:* :: "Greater than 0"
+} 100.0
+
+CCTK_REAL cloud_vx[10] "x component of the stars three velocity" STEERABLE=ALWAYS
+{
+  *:* :: "Only for v=0 is the TOV solution strictly valid"
+} 0.0
+
+CCTK_REAL cloud_vy[10] "y component of the stars three velocity" STEERABLE=ALWAYS
+{
+  *:* :: "Only for v=0 is the TOV solution strictly valid"
+} 0.0
+
+CCTK_REAL cloud_vz[10] "z component of the stars three velocity" STEERABLE=ALWAYS
+{
+  *:* :: "Only for v=0 is the TOV solution strictly valid"
+} 0.0
+
+BOOLEAN provide_momentum "give total momenta for objects instead of setting velocities"
+{
+} "no"
+
+CCTK_REAL cloud_px[10] "x component of the stars three momentum" STEERABLE=ALWAYS
+{
+  *:* :: "Only for p=0 is the TOV solution strictly valid"
+} 0.0
+
+CCTK_REAL cloud_py[10] "y component of the stars three momentum" STEERABLE=ALWAYS
+{
+  *:* :: "Only for p=0 is the TOV solution strictly valid"
+} 0.0
+
+CCTK_REAL cloud_pz[10] "z component of the stars three momentum" STEERABLE=ALWAYS
+{
+  *:* :: "Only for p=0 is the TOV solution strictly valid"
+} 0.0
+
+CCTK_REAL cloud_jx[10] "x component of the stars angular momentum" STEERABLE=ALWAYS
+{
+  *:* :: "Only for j=0 is the TOV solution strictly valid"
+} 0.0
+
+CCTK_REAL cloud_jy[10] "y component of the stars angular momentum" STEERABLE=ALWAYS
+{
+  *:* :: "Only for j=0 is the TOV solution strictly valid"
+} 0.0
+
+CCTK_REAL cloud_jz[10] "z component of the stars angular momentum" STEERABLE=ALWAYS
+{
+  *:* :: "Only for j=0 is the TOV solution strictly valid"
+} 0.0
+
+
+BOOLEAN perturb_TOV "Add perturbation"
+{
+} "no"
+
+KEYWORD perturb_type "Perturbation Type"
+{
+  "Fundamental Radial"  :: "Fundamental Radial Mode"
+  "Zink fmode"		:: "A Sin (r/Rs) Y^{lm}"
+} "Fundamental Radial"
+
+CCTK_REAL perturb_amp "Perturbation amplitude"
+{
+  *:* :: "Anything, but should be small"
+} 1e-3
+
+
+# Parameters for circumbinary-type disk (aka O'Neill)
+CCTK_REAL h_by_r "Ratio of height to radius"
+{
+  (0:1 :: "0.1=thick disk, 1=gas cloud, 0.05=thin disk"
+} 0.1
+
+CCTK_REAL disk_center[3] "Center of disk"
+{
+  *:* :: "Anywhere"
+} 0
+
+CCTK_REAL disk_rho_inner "Peak density"
+{
+  (0:* :: "Positive"
+} 1e-10
+
+CCTK_REAL disk_inner_radius "Peak density"
+{
+  *:* :: "Positive makes sense. Negative has no inner edge."
+} 10
+
+CCTK_REAL disk_max_vel "Upper limit to velocity. Some Transition occurs here."
+{
+  (0:1 :: "Under 1 makes sense"
+} 0.95
+
+CCTK_REAL disk_tanh_width "Width A: (tanh( (r - inner_radius)/W )+1)/2"
+{
+  *:* :: "Positive. Negative for not triggering."
+} -1.
+
+BOOLEAN disk_retrograde "Reverse velocity field: hat{L} = - hat{z}"
+{
+} "no"
+
+CCTK_INT verbose "how much diagnostic output is desired"
+{
+    0:0 :: "be quiet"
+    1:1 :: "some physics information"
+    2:2 :: "add more short diagnostics"
+    3:3 :: "obscenely verbose (e.g. Bondi)"
+} 1
+
+CCTK_STRING matterlibs_eos_type "Type of Equation of State (identical to Whisky)"
+{
+  "Polytype"	:: "P = P(rho) or P = P(eps)"
+  "General"	:: "P = P(rho, eps)"
+  ""            :: "use whisky_eos_type"
+} ""
+
+# boosted spacetimes
+CCTK_REAL boost_x "x component of boost vector"
+{
+  *:* :: "any real number"
+} 0.0
+CCTK_REAL boost_y "y component of boost vector"
+{
+  *:* :: "any real number"
+} 0.0
+CCTK_REAL boost_z "z component of boost vector"
+{
+  *:* :: "any real number"
+} 0.0
+
+# offset such that origin of matter distribution appears at
+# [offset_x,offset_y,offset_z] in the simulation
+CCTK_REAL offset_x "x component of offset vector"
+{
+  *:* :: "any real number"
+} 0.0
+CCTK_REAL offset_y "y component of offset vector"
+{
+  *:* :: "any real number"
+} 0.0
+CCTK_REAL offset_z "z component of offset vector"
+{
+  *:* :: "any real number"
+} 0.0
+
+## Params for Bondi on Isotropic, integrating from sonic points out/in-wards
+# For Bondi solution, integrate outwards from the sonic point
+
+CCTK_REAL tov_centralrho[10] "Overrides cloud_rho as central density for TOV case" STEERABLE=ALWAYS
+{
+  0:* :: "Positive triggers use" 
+} 0
+
+INT bondi_num_solutions "Number of bondi solutions to solve for (e.g. for superimposing >1 bondi solution for multiple BH systems)"
+{
+  1:20 :: "Currently hard-coded at 3. Change below arrays for more."
+} 1
+
+INT bondi_maxnpts "Number of points in solution."
+{
+  2:2500 :: "Number of points in solution. Max hard-coded."
+} 2500
+
+INT bondi_npts[20] "Number of points in solution."
+{
+  2:2500 :: "Number of points in solution. Max hard-coded."
+} 2000
+
+REAL bondi_sonicpt_radius[20] "Location of the sonic point in Schwarzschild coordinates"
+{
+  (0:* :: "Anything positive"
+} 8.0
+
+REAL bondi_central_mass[20] "Central mass of bondi solution."
+{
+  (0:* :: "Anything positive"
+} 1
+
+REAL bondi_mdot[20] "Accretion rate for the Bondi solution"
+{
+  (0:* :: "Anything positive"
+} 0.01
+
+REAL bondi_bmag[20] "Add radial magnetic field if mhd set"
+{
+  *:*  :: "Anything"
+} 0
+
+REAL bondi_bh_x0[20] "Location of BH, x"
+{ 
+  *:* :: "Anything"
+} 0 
+
+REAL bondi_bh_y0[20] "Location of BH, y"
+{
+  *:* :: "Anything"
+} 0 
+
+REAL bondi_bh_z0[20] "Location of BH, z"
+{
+  *:* :: "Anything"
+} 0 
+
+REAL bondi_rmin[20] "Minimum radius for bondi solution (Schwarzschild)"
+{
+  0:* :: "Anything"
+} 1e-15 
+
+REAL bondi_rmax[20] "Maximum radius for bondi solution (Schwarzschild)"
+{
+  *:* :: "Anything"
+} 400.
+
+BOOLEAN bondi_output_solutions "Dump bondi solutions to files for debugging"
+{
+} "no"
+
+BOOLEAN bondi_interp_after_solution "Interpolate after initial solution instead of additional iterative solves"
+{
+} "yes"
+
+# For magnetic fields, particularly poloidal fields:
+
+CCTK_REAL add_Bfield_minP  "Pressure cut used to confine the B field inside a star"
+{ 
+  *:*  :: "Negative applies B-field everywhere"
+} -1
+  
+CCTK_REAL poloidal_A_b  "Vector potential strength"
+{ 
+  *:* :: "Anything."
+} 0.1
+  
+CCTK_INT poloidal_n_p  "Vector potential strength"
+{ 
+  (0:*  :: "Any positive integer."
+} 3
+  
+CCTK_REAL poloidal_rho_max  "Maximum initial density"
+{ 
+  (0:*  :: "Anything positive."
+} 1.0e-3
+
+## Iterative Solver Tolerances ##
+REAL rel_tolerance "Relative tolerance, Bondi solver"
+{
+ 0:* :: "Positive"
+} 1e-14
+
+REAL abs_tolerance "Absolute tolerance, Bondi solver"
+{
+ 0:* :: "Positive"
+} 5e-14
+
+INT extra_iterations "Extra iterations to polish to root"
+{
+ 0:* :: "Positive"
+} 2
+
+INT max_iterations "Maximum number of iterations (per group)"
+{
+ 2:* :: "Something usefully big"
+} 50
+
+## Interpolator params ##
+
+CCTK_STRING interpolator_name "Which interpolator should I use" STEERABLE = ALWAYS
+{ 
+  ".+" :: "Any nonempty string"
+} "Hermite polynomial interpolation"
+  
+CCTK_STRING interpolator_pars "Parameters for the interpolator" STEERABLE = ALWAYS
+{ 
+  ".*" :: "Any string that Util_TableSetFromString() will take"
+} "order=3"
+
+
+# set geometry as well as matter variables?
+BOOLEAN set_metric "set g_ij = g_ij_ADM + g_ij_matter - delta_ij"
+{
+} "no"
+BOOLEAN set_curvature "compute extrinsic curvature (numerically) via CalcK"
+{
+} "no"
+BOOLEAN set_lapse "set lapse from g00 = g00_ADM + g00_matter + 1.0"
+{
+} "no"
+BOOLEAN set_shift "set beta_i = beta_i_ADM + beta_i_matter"
+{
+} "no"
+
+# temporary testing with TPO
+BOOLEAN add_rhohats "add conformal densities, instead of adding rhos first"
+{
+} "yes"
+
+REAL conformal_density_power "exponent for conformal density"
+{
+  *:* :: "should be no smaller than 5"
+} 8.
+
+SHARES: Whisky
+
+USES KEYWORD whisky_eos_type ""
+USES real rho_abs_min
+USES real rho_rel_min
+USES REAL initial_rho_abs_min
+USES REAL initial_rho_rel_min
+USES REAL initial_atmosphere_factor
+
+SHARES: HydroBase
+
+EXTENDS KEYWORD initial_hydro
+{
+  "MatterLibs"  :: "Any MatterLibs initiated hydro"
+}
+
+EXTENDS KEYWORD initial_Bvec
+{
+  "uniformB"         :: "B = B_0"
+  "uniformBn"        :: "B = B_0/sqrt(detg)"
+  "poloidalBfield"   :: "Poloidal magnetic field"
+  "magnetized Bondi" :: "Radial magnetic field set with Bondi"
+}
+
+EXTENDS KEYWORD initial_Avec
+{
+  "AforPoloidalB"    :: "Avec for poloidal Bfield"
+}
+
+SHARES: PrimRecovery
+USES REAL atmo_tolerance
+
+SHARES: EOS_2d_Polytrope
+USES CCTK_REAL eos_k
+USES CCTK_REAL eos_gamma
+
+SHARES: ADMBase
+EXTENDS KEYWORD initial_lapse 
+{
+  "tov" :: "lapse appropriate for an isolated TOV star; isotropic"
+  "Bondi" :: "lapse approximation from Bondi infall -- 1/psi^2 for psi from single BH case; isotropic"
+}
+
+EXTENDS KEYWORD initial_data 
+{
+  "tov" :: "metric and curvature appropriate for an isolated TOV star; isotropic"
+  "Bondi" :: "Constraint-violating Bondi infall on a predescribed metric, isotropic"
+}
+
+
+SHARES: IO
+USES CCTK_STRING out_dir

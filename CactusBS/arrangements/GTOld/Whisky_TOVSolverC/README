@@ -1,0 +1,8 @@
+Cactus Code Thorn TOVSolverC
+Authors    : Frank Loeffler, converted from fortran thorn by Ian Hawke
+--------------------------------------------------------------------------
+
+Purpose of the thorn:
+
+This thorn provides the stress energy contributions of the static TOV star
+in isotropic coordinates.

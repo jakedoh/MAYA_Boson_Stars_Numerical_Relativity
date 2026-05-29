@@ -1,0 +1,4 @@
+# Module dependencies for thorn EOS_RealisticPP
+
+EOS_RealisticPP.F90.o:		EOS_RealisticPP_Scalars.F90.o
+EOS_RealisticPP_Startup.F90.o:	EOS_RealisticPP_Scalars.F90.o

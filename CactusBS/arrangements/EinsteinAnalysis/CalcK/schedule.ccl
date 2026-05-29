@@ -1,0 +1,39 @@
+# Schedule definitions for thorn CalcK
+# $Header$
+
+STORAGE: metric_prev metric_prev2 metric_next
+
+if (copy_to_prev) {
+  SCHEDULE CalcK_copy_to_prev AT postinitial
+  {
+    LANG: Fortran
+  } "Copy ADMBase::metric to CalcK::metric_prev"
+}
+
+if (copy_to_prev2) {
+  SCHEDULE CalcK_copy_to_prev2 AT postinitial
+  {
+    LANG: Fortran
+  } "Copy ADMBase::metric to CalcK::metric_prev2"
+}
+
+if (copy_to_next) {
+  SCHEDULE CalcK_copy_to_next AT postinitial
+  {
+    LANG: Fortran
+  } "Copy ADMBase::metric to CalcK::metric_next"
+}
+
+if (calc_extcurv) {
+  
+  SCHEDULE CalcK AT postinitial
+  {
+    LANG: Fortran
+    SYNC: ADMBase::curv
+  } "Calculate K_ij from gamma_ij, alpha, and beta^i"
+  
+  SCHEDULE GROUP ApplyBCs as CalcK_ApplyBCs AT postinitial AFTER CalcK
+  {
+  } "Apply boundary conditions"
+  
+}

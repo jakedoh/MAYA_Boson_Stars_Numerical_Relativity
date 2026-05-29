@@ -1,0 +1,33 @@
+# Interface definition for thorn SphericalHarmonicRecon
+# $Header:$
+
+implements:SphericalHarmonicRecon
+inherits:
+
+CCTK_POINTER_TO_CONST \
+FUNCTION GetMPICommWorld (CCTK_POINTER_TO_CONST IN cctkGH)
+
+USES FUNCTION GetMPICommWorld
+
+CCTK_INT \
+FUNCTION GetCurrentExtractionCoefs(\
+            CCTK_INT IN l,\
+            CCTK_INT IN m,\
+            CCTK_REAL OUT ARRAY reC,\
+            CCTK_REAL OUT ARRAY imC,\
+            CCTK_REAL OUT ARRAY reCr,\
+            CCTK_REAL OUT ARRAY imCr,\
+            CCTK_REAL OUT ARRAY reCt,\
+            CCTK_REAL OUT ARRAY imCt )
+
+PROVIDES FUNCTION GetCurrentExtractionCoefs WITH \
+    SphericalHarmonicRecon_GetCurrentCoefs LANGUAGE C
+
+CCTK_INT \
+FUNCTION GetExtractionParameters(\
+        CCTK_INT OUT lmax,\
+        CCTK_REAL OUT r_inner,\
+        CCTK_REAL OUT r_outer)
+
+PROVIDES FUNCTION GetExtractionParameters WITH \
+        SphericalHarmonicRecon_GetParameters LANGUAGE C

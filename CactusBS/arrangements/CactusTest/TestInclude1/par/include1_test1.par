@@ -1,0 +1,4 @@
+!DESC "Test Cactus build include files mechanism (full include)"
+
+ActiveThorns = "pugh testinclude1 testinclude2"
+

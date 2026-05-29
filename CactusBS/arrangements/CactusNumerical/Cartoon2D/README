@@ -1,0 +1,18 @@
+Cactus Code Thorn Cartoon2D
+Author(s)    : Sai Iyer
+               Denis Pollney
+               Thomas Radke
+               David Rideout
+Maintainer(s): Cactus team
+Licence      : LGPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+Implements a "cartoon" axisymmetric evolution according to the method
+described in gr-qc/9908012.  The original idea for 'Cartoon2D' was due
+to Steve Brandt.
+
+See doc/documentation.tex for usage notes.
+
+See the test/ directory for sample parameter files.

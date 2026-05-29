@@ -1,0 +1,61 @@
+STORAGE: source_patch
+
+SCHEDULE Interpolate2Init AT basegrid AFTER (ChoosePatchSystem CorrectCoordinates SpatialCoordinates Coordinates_SetGlobalCoords_Group)
+{
+  LANG: C
+  READS: grid::coordinates
+  READS: Coordinates::interpolate_boundary_points
+  READS: Coordinates::jacobian
+  WRITES: Sn(everywhere)
+} "Initialise interpolating inter-patch boundaries"
+
+
+
+if (continue_if_selftest_fails)
+{
+  STORAGE: test
+}
+
+SCHEDULE GROUP Interpolate2Test AT basegrid AFTER Interpolate2Init
+{
+  STORAGE: test
+} "Test interpolating inter-patch boundaries"
+
+SCHEDULE Interpolate2TestInit IN Interpolate2Test
+{
+  LANG: C
+  READS: grid::coordinates
+  READS: Sn(everywhere)
+  WRITES: test(everywhere)
+} "Test: Initialise test grid function"
+
+SCHEDULE Interpolate2TestSelectBCs IN Interpolate2Test AFTER Interpolate2TestInit
+{
+  LANG: C
+  OPTIONS: level
+  SYNC: test
+} "Test: Interpolate test grid function"
+
+SCHEDULE GROUP ApplyBCs AS Interpolate2TestApplyBCs IN Interpolate2Test AFTER Interpolate2TestSelectBCs
+{
+  OPTIONS: level
+} "Test: Interpolate test grid function"
+
+SCHEDULE Interpolate2TestCheck IN Interpolate2Test AFTER Interpolate2TestApplyBCs
+{
+  LANG: C
+  READS: grid::coordinates
+  READS: Sn(everywhere)
+  READS: test(everywhere)
+} "Test: Check test grid function"
+
+
+
+SCHEDULE Interpolate2ApplyBC IN BoundaryConditions
+{
+  LANG: C
+  OPTIONS: level
+  READS: grid::coordinates
+  READS: Coordinates::jacobian
+  READS: Sn
+} "Apply interpolating inter-patch boundaries"

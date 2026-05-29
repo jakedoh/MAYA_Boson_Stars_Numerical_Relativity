@@ -1,0 +1,284 @@
+# File produced by Kranc
+
+implements: CT_Analytic
+
+inherits:   Boundary GenericFD Grid
+
+
+
+USES INCLUDE: loopcontrol.h
+USES INCLUDE: Symmetry.h
+USES INCLUDE: Boundary.h
+
+CCTK_INT FUNCTION MoLRegisterEvolved(CCTK_INT IN EvolvedIndex, CCTK_INT IN RHSIndex)
+USES FUNCTION MoLRegisterEvolved
+
+SUBROUTINE Diff_coeff(CCTK_POINTER_TO_CONST IN cctkGH, CCTK_INT IN dir, CCTK_INT IN nsize, CCTK_INT OUT ARRAY imin, CCTK_INT OUT ARRAY imax, CCTK_REAL OUT ARRAY q, CCTK_INT IN table_handle)
+USES FUNCTION Diff_coeff
+
+CCTK_INT FUNCTION MultiPatch_GetMap(CCTK_POINTER_TO_CONST IN cctkGH)
+USES FUNCTION MultiPatch_GetMap
+
+CCTK_INT FUNCTION MultiPatch_GetBbox(CCTK_POINTER_TO_CONST IN cctkGH, CCTK_INT IN size, CCTK_INT OUT ARRAY bbox)
+USES FUNCTION MultiPatch_GetBbox
+
+CCTK_INT FUNCTION GetBoundarySpecification(CCTK_INT IN size, CCTK_INT OUT ARRAY nboundaryzones, CCTK_INT OUT ARRAY is_internal, CCTK_INT OUT ARRAY is_staggered, CCTK_INT OUT ARRAY shiftout)
+USES FUNCTION GetBoundarySpecification
+
+CCTK_INT FUNCTION MultiPatch_GetBoundarySpecification(CCTK_INT IN map, CCTK_INT IN size, CCTK_INT OUT ARRAY nboundaryzones, CCTK_INT OUT ARRAY is_internal, CCTK_INT OUT ARRAY is_staggered, CCTK_INT OUT ARRAY shiftout)
+USES FUNCTION MultiPatch_GetBoundarySpecification
+
+CCTK_INT FUNCTION SymmetryTableHandleForGrid(CCTK_POINTER_TO_CONST IN cctkGH)
+USES FUNCTION SymmetryTableHandleForGrid
+
+CCTK_INT FUNCTION Boundary_SelectGroupForBC(CCTK_POINTER_TO_CONST IN GH, CCTK_INT IN faces, CCTK_INT IN boundary_width, CCTK_INT IN table_handle, CCTK_STRING IN group_name, CCTK_STRING IN bc_name)
+USES FUNCTION Boundary_SelectGroupForBC
+
+CCTK_INT FUNCTION Driver_SelectGroupForBC(CCTK_POINTER_TO_CONST IN GH, CCTK_INT IN faces, CCTK_INT IN boundary_width, CCTK_INT IN table_handle, CCTK_STRING IN group_name, CCTK_STRING IN bc_name)
+USES FUNCTION Driver_SelectGroupForBC
+
+CCTK_INT FUNCTION Boundary_SelectVarForBC(CCTK_POINTER_TO_CONST IN GH, CCTK_INT IN faces, CCTK_INT IN boundary_width, CCTK_INT IN table_handle, CCTK_STRING IN var_name, CCTK_STRING IN bc_name)
+USES FUNCTION Boundary_SelectVarForBC
+
+CCTK_INT FUNCTION Driver_SelectVarForBC(CCTK_POINTER_TO_CONST IN GH, CCTK_INT IN faces, CCTK_INT IN boundary_width, CCTK_INT IN table_handle, CCTK_STRING IN var_name, CCTK_STRING IN bc_name)
+USES FUNCTION Driver_SelectVarForBC
+
+public:
+CCTK_REAL CT_testinipsi type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  testinipsi
+} "CT_testinipsi"
+
+public:
+CCTK_REAL CT_testinixx type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  testinixx
+} "CT_testinixx"
+
+public:
+CCTK_REAL CT_testinixy type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  testinixy
+} "CT_testinixy"
+
+public:
+CCTK_REAL CT_testinixz type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  testinixz
+} "CT_testinixz"
+
+public:
+CCTK_REAL CT_epsi type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  epsi
+} "CT_epsi"
+
+public:
+CCTK_REAL CT_elaplacian type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  elaplacian
+} "CT_elaplacian"
+
+public:
+CCTK_REAL CT_testcxx type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  testcxx
+} "CT_testcxx"
+
+public:
+CCTK_REAL CT_testcxy type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  testcxy
+} "CT_testcxy"
+
+public:
+CCTK_REAL CT_testcxz type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  testcxz
+} "CT_testcxz"
+
+public:
+CCTK_REAL CT_testcyy type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  testcyy
+} "CT_testcyy"
+
+public:
+CCTK_REAL CT_testcyz type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  testcyz
+} "CT_testcyz"
+
+public:
+CCTK_REAL CT_testczz type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  testczz
+} "CT_testczz"
+
+public:
+CCTK_REAL CT_testcx type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  testcx
+} "CT_testcx"
+
+public:
+CCTK_REAL CT_testcy type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  testcy
+} "CT_testcy"
+
+public:
+CCTK_REAL CT_testcz type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  testcz
+} "CT_testcz"
+
+public:
+CCTK_REAL CT_testc0 type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  testc0
+} "CT_testc0"
+
+public:
+CCTK_REAL CT_testc1 type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  testc1
+} "CT_testc1"
+
+public:
+CCTK_REAL CT_testc2 type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  testc2
+} "CT_testc2"
+
+public:
+CCTK_REAL CT_testc3 type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  testc3
+} "CT_testc3"
+
+public:
+CCTK_REAL CT_testc4 type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  testc4
+} "CT_testc4"
+
+public:
+CCTK_REAL CT_testa0 type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  testa0
+} "CT_testa0"
+
+public:
+CCTK_REAL CT_testa1 type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  testa1
+} "CT_testa1"
+
+public:
+CCTK_REAL CT_testa2 type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  testa2
+} "CT_testa2"
+
+public:
+CCTK_REAL CT_testa3 type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  testa3
+} "CT_testa3"
+
+public:
+CCTK_REAL CT_testa4 type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  testa4
+} "CT_testa4"
+
+public:
+CCTK_REAL CT_testW type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  testW
+} "CT_testW"
+
+public:
+CCTK_REAL CT_testK type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  testK
+} "CT_testK"
+
+public:
+CCTK_REAL CT_testdxK type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  testdxK
+} "CT_testdxK"
+
+public:
+CCTK_REAL CT_testdyK type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  testdyK
+} "CT_testdyK"
+
+public:
+CCTK_REAL CT_testdzK type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  testdzK
+} "CT_testdzK"
+
+public:
+CCTK_REAL CT_testXx type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  testXx
+} "CT_testXx"
+
+public:
+CCTK_REAL CT_testXy type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  testXy
+} "CT_testXy"
+
+public:
+CCTK_REAL CT_testXz type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  testXz
+} "CT_testXz"
+
+public:
+CCTK_REAL CT_testZ type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  testZ
+} "CT_testZ"
+
+public:
+CCTK_REAL CT_testAxx type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  testAxx
+} "CT_testAxx"
+
+public:
+CCTK_REAL CT_testAxy type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  testAxy
+} "CT_testAxy"
+
+public:
+CCTK_REAL CT_testAxz type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  testAxz
+} "CT_testAxz"
+
+public:
+CCTK_REAL CT_testAyy type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  testAyy
+} "CT_testAyy"
+
+public:
+CCTK_REAL CT_testAyz type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  testAyz
+} "CT_testAyz"
+
+public:
+CCTK_REAL CT_testAzz type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  testAzz
+} "CT_testAzz"

@@ -1,0 +1,30 @@
+ /*@@
+   @file      Steering.txt
+   @date      Fri Sep 15 14:05:49 2000
+   @author    Tom Goodale
+   @desc 
+   Description of parameter steering interface.
+   @enddesc 
+   @version $Header$
+ @@*/
+
+There is a parameter steering interface, which is accessed by
+including http_Steer.h.
+
+This defines two functions:
+
+
+int HTTP_SteerQueue(const char *thorn, 
+                    const char *parameter, 
+                    const char *value);
+
+which schedules a parameter to be steered, and
+
+int HTTP_SteerDispatch(void);
+
+which broadcasts the data to other processors and then
+steers all the parameters which were queued.
+
+This is to allow steering requests to be queued up over several
+iterations, and then broadcast at once, which should reduce the
+number of barriers called by the code.

@@ -1,0 +1,18 @@
+TEST KS-tilted
+{
+  RELTOL 1e-12
+}
+
+TEST Schwarzschild_EF
+{
+  ABSTOL 5e-12
+}
+
+TEST de_Sitter
+{
+  ABSTOL 1e-9 ham_.*[.]xg
+}
+
+
+
+

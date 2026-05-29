@@ -1,0 +1,133 @@
+# Interface definition for thorn Geodesics
+implements: Geodesics
+inherits: ShiftTracker #TmunuBase ADMAnalysis
+
+USES INCLUDE: carpet.hh
+
+CCTK_INT FUNCTION MoLRegisterConstrainedGroup(CCTK_INT IN ConstrainedIndex)
+CCTK_INT FUNCTION MoLRegisterSaveAndRestoreGroup(CCTK_INT IN SandRIndex)
+CCTK_INT FUNCTION MoLRegisterEvolvedGroup(CCTK_INT IN EvolvedIndex, \
+                                          CCTK_INT IN RHSIndex)
+
+CCTK_INT FUNCTION HorizonLocalCoordinateOrigin                          \
+   (CCTK_INT IN horizon_number,                                         \
+    CCTK_REAL OUT origin_x, CCTK_REAL OUT origin_y, CCTK_REAL OUT origin_z)
+ 
+CCTK_INT FUNCTION HorizonRadiusInDirection                              \
+   (CCTK_INT IN horizon_number,                                         \
+    CCTK_INT IN N_points,                                               \
+    CCTK_REAL IN ARRAY x, CCTK_REAL IN ARRAY y, CCTK_REAL IN ARRAY z,   \
+    CCTK_REAL OUT ARRAY radius)
+
+
+REQUIRES FUNCTION MoLRegisterConstrainedGroup
+REQUIRES FUNCTION MoLRegisterSaveAndRestoreGroup
+REQUIRES FUNCTION MoLRegisterEvolvedGroup
+
+USES FUNCTION HorizonLocalCoordinateOrigin
+USES FUNCTION HorizonRadiusInDirection
+
+
+#protected:
+public:
+CCTK_REAL geo_pos type=array dim=1 timelevels=2 size=num_geo ghostsize=0 #tags='tensortypealias="U"'
+{
+  geo_x
+  geo_y
+  geo_z
+}
+
+CCTK_REAL geo_pos_rhs type=array dim=1 timelevels=1 size=num_geo ghostsize=0 #tags='prolongation="none"'
+{
+  geo_x_rhs
+  geo_y_rhs
+  geo_z_rhs
+}
+
+CCTK_REAL geo_u type=array dim=1 timelevels=2 size=num_geo ghostsize=0 #tags='tensortypealias="D"'
+{
+  geo_ux
+  geo_uy
+  geo_uz
+}
+
+CCTK_REAL geo_u_rhs type=array dim=1 timelevels=1 size=num_geo ghostsize=0 #tags='prolongation="none"' 
+{ 
+  geo_ux_rhs
+  geo_uy_rhs
+  geo_uz_rhs
+}
+
+#CCTK_REAL geo_g type=GF 
+#{
+#  geo_gi
+#  geo_gj
+#  geo_gk
+#}
+
+# This is just to test that mol is working right (with geo_t_rhs = 1, geo_t should stay synced with cctk_time)
+CCTK_REAL geo_tg type=array dim=1 timelevels=2 size=num_geo ghostsize=0 #tags='tensortypealias="D"'
+{
+  geo_t
+}
+
+CCTK_REAL geo_t_rhsg type=array dim=1 timelevels=1 size=num_geo ghostsize=0 #tags='prolongation="none"' 
+{
+  geo_t_rhs
+}
+
+CCTK_REAL geo_iu type=array dim=1 timelevels=1 size=num_geo ghostsize=0 #tags='tensortypealias="4U"' 
+{
+  geo_iut
+  geo_iux
+  geo_iuy
+  geo_iuz
+}
+
+CCTK_REAL geo_props type=array dim=1 timelevels=1 size=num_geo ghostsize=0
+{
+  geo_m
+  geo_q
+}
+
+CCTK_REAL geo_em type=array dim=1 timelevels=1 size=num_geo ghostsize=0
+{
+  geo_bx
+  geo_by
+  geo_bz
+  geo_ex
+  geo_ey
+  geo_ez
+}
+
+#CCTK_REAL geo_current type=array dim=1 timelevels=1 size=num_geo ghostsize=0
+#{
+#  geo_jx
+#  geo_jy
+#  geo_jz
+#}
+
+#CCTK_REAL geo_test type=array dim=1 timelevels=1 size=num_geo ghostsize=0
+#{
+#  test1_x
+#  test1_y
+#  test1_z
+#  test2_x
+#  test2_y
+#  test2_z
+#  test3
+#}
+
+CCTK_REAL geo_synchro type=array dim=1 timelevels=1 size=num_geo ghostsize=0
+{
+  geo_sync
+  geo_nu_c
+}
+
+CCTK_INT geo_flags type=array dim=1 timelevels=1 size=num_geo ghostsize=0
+{
+  active_geo
+#  in_horizon
+}
+
+

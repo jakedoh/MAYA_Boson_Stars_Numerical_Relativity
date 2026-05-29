@@ -1,0 +1,47 @@
+# wavetoyc.par - wavetoy evolution
+# $Header$
+#
+# /*@@
+#   @file      wavetoyc.par
+#   @date      6 May 2003
+#   @author    David Rideout
+#   @desc
+#              Test uses wavetoyC with linear extrapolation boundary conditions
+#   @enddesc
+# @@*/          
+
+# Note that wavetoyextra is in the BetaThorns arrangement
+ActiveThorns = "wavetoyextra idscalarwavec time boundary wavetoyc pugh pughreduce pughslab cartgrid3d CoordBase SymBase ioutil ioascii iobasic SampleBoundary localreduce"
+ 
+time::dtfac = 0.5
+
+idscalarwave::initial_data = "gaussian"
+idscalarwave::sigma = 2.8 
+idscalarwave::radius = 0
+
+grid::type = "BySpacing"
+grid::domain = "full"
+grid::dxyz = 0.3
+
+driver::global_nx = 15
+driver::global_ny = 15
+driver::global_nz = 15
+
+cactus::cctk_itlast = 10
+
+wavetoy::bound = "custom"
+wavetoyextra::custom_bound = "LinExtrap"
+
+IO::out_dir = "wavetoyc"
+IO::out_fileinfo = "none"
+IO::parfile_write = "no"
+
+IOBasic::outScalar_every = 2
+IOBasic::outScalar_vars = "wavetoy::phi"
+IOBasic::outInfo_every = 1
+IOBasic::outInfo_vars = "wavetoy::phi"
+ 
+IOASCII::out1D_every = 1
+IOASCII::out1D_z = "no"
+IOASCII::out1D_y = "no"
+IOASCII::out1D_vars = "wavetoy::phi "

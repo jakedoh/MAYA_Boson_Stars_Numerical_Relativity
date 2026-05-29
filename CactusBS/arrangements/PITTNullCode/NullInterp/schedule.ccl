@@ -1,0 +1,31 @@
+# Schedule definitions for thorn NullInterp
+# $Header$
+
+storage: tmp_cgf tmp_rgf tmp_cgf3 tmp_mask
+storage: nullgrid::EG_mask nullgrid::guard_mask
+storage: nullgrid::EV_mask nullgrid::EQ_mask
+storage: evolution_radius
+
+#storage: my2de my2dcc my2dcr
+
+SCHEDULE  NullInterp_MaskInit at CCTK_INITIAL 
+{
+  LANG: Fortran
+  STORAGE: tmp_mask
+  SYNC: NullGrid::EG_mask
+#  SYNC: NullGrid::EQ_mask
+#  SYNC: NullGrid::EV_mask
+  SYNC: NullGrid::guard_mask
+} "Initialize the mask used in interpolation"
+
+SCHEDULE  NullInterp_TempInit at CCTK_INITIAL 
+{
+  LANG: Fortran
+# OPTIONS: global loop-local
+} "Initialize the temporaries used in interpolation"
+
+schedule NullInterp_ParamCheck at CCTK_PARAMCHECK
+{
+  LANG: Fortran
+  OPTIONS: meta
+} "check parameters"

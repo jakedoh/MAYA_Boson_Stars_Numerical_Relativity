@@ -1,0 +1,53 @@
+\documentclass{article}
+
+% Use the Cactus ThornGuide style file
+% (Automatically used from Cactus distribution, if you have a 
+%  thorn without the Cactus Flesh download this from the Cactus
+%  homepage at www.cactuscode.org)
+\usepackage{../../../../doc/latex/cactus}
+
+\begin{document}
+
+\title{IOJpeg}
+\author{Gabrielle Allen, Thomas Radke}
+\date{$ $Date$ $}
+
+\maketitle
+
+% Do not delete next line
+% START CACTUS THORNGUIDE
+
+\begin{abstract}
+Output method using the jpeg format
+\end{abstract}
+
+\section{Use}
+
+Thorn IOJpeg provides 2D images from grid functions in jpeg format, these
+images are currently intended to be used for two purposes:
+
+\begin{itemize}
+
+\item{Monitoring from Web Server} Jpeg images can be directly visualised
+in the {\it viewport} provided by thorn {\tt CactusConnect/HTTPDExtra}. For 
+the images to be advertised to the Web Server the parameter {\tt iojpeg::mode = ``remove''} must be used.
+
+\item{Constructing Movies} A series of jpeg movies can easily
+ be used to construct a time series movie (e.g. using the Unix utilities
+{\tt convert} or {\tt xanim}). In this case the parameter {\tt iojpeg::mode = ``standard''} must be used.
+
+\end{itemize}
+
+Note that the parameter {\tt iojpeg::mode} determines whether a jpeg image is ccreated and kept for individual timesteps, or whether only the image from the current data is kept. Only in the second case is the jpeg file {\tt advertised} (otherwise there are potentially thousands of files advertised to e.g. the {\tt HTTPD} thorn). Also note that using the standard mode and creating jpegs every iteration can quite quickly lead to {\it inode} problems on a machine.
+
+The steerable parameter {\tt IOJpeg::refinement\_factor} determines whether the
+resulting JPEG images (of same size as the underlying grid) should be refined
+by a certain factor. If refinement is enabled ({\tt IOJpeg::refinement\_factor} $>$ 1) an interpolation will be done to enlarge the images to the requested size. For this case, a thorn providing local interpolation operators must be activated (eg. thorn {\tt CactusBase/LocalInterp}).
+
+We are planning to develop this thorn more to provide more features (eg 
+a range of 2D images from a 3D dataset, add possibility to save images for a movie and advertise current image).
+
+% Do not delete next line
+% END CACTUS THORNGUIDE
+
+\end{document}

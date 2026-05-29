@@ -1,0 +1,14 @@
+# Schedule definitions for thorn Extract
+# $Header$
+
+schedule Extract_ParamCheck at PARAMCHECK
+{
+  LANG: C
+  OPTIONS: global
+} "Check parameters"
+
+schedule Extract at POSTSTEP
+{
+  LANG: Fortran
+  STORAGE: temps
+} "Extract waveforms"

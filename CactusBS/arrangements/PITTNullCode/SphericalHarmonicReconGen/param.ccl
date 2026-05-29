@@ -1,0 +1,267 @@
+# Parameter definitions for thorn SphericalHarmonicRecon
+# $Header:$
+
+private:
+
+KEYWORD format "Boundary data file format" STEERABLE=RECOVER
+{
+  ASCII      :: "standard ASCII format: lm-modes and spheres are stored in a 2d array (gnuplot style) for a given timestep"
+  DAT        :: "optimized ASCII format: all variables and lm-modes are stored in one row for a given timestep"
+  DAT-v2     :: "optimized ASCII format: all variables and lm-modes are stored in one row for a given timestep. m-modes are in reverse order."
+  SpEC-H5    :: "SpEC-HDF5 format: Data is stored in HDF5 files grouped according to SpEC output."
+  SpEC-H5-v2 :: "SpEC-HDF5 format (v2): Data is stored in HDF5 files grouped according to new SpEC output."
+} "ASCII"
+
+BOOLEAN disable_auto_time_offset "Should the automatically determined time-offset be diabled?"
+{
+} no
+
+BOOLEAN adjust_timestep "Should the time-step be adjusted? Ignored if time_interpolate==false."
+{
+} no
+
+CCTK_INT adjust_timestep__target_steps_per_time_level \
+"Target number of time-steps between two time-values in the datafile."
+{
+ 1:* :: "at least one"
+} 1
+
+CCTK_REAL adjust_timestep__maximum_time_step \
+"Maximum allowed time-step."
+{
+ (0:* :: "larger than zero"
+} 0.1
+
+CCTK_REAL adjust_timestep__rate_of_change \
+"Rate of change of the time-step."
+{
+ (0:* :: "The smaller the value the more gradual the change in cctk_delta_time."
+} 0.001
+
+CCTK_INT sphere_number "the sphere number (if multiple spheres are present in one file) that corresponds to the worldtube radius NullSHRExtract::cr"
+{
+  0:* :: "positive"
+} 0
+
+
+CCTK_INT lmaxInFile "maximum l-mode contained in file (only needed for DAT format)"
+{
+  0:* :: "anything positive"
+} 0
+
+
+BOOLEAN time_derivative_in_file "is the time derivative of the metric in the cauchy file"
+{
+} "no"
+
+CCTK_INT time_fd_order "the order of accuracy of time derivative if not contained in file"
+{
+   2  :: "second-order"
+   4  :: "fourth-order"
+} 4
+
+
+BOOLEAN time_interpolate "Interpolate coefficients to different dt?" STEERABLE=RECOVER
+{
+} no
+
+
+CCTK_REAL initial_time "time from the worldtube data that we use as first characteristic timestep (this is a relative time, i.e. we always count the time from 0, independent of the actual initial time t_0 found in the file)"
+{
+  *:* :: "anything"
+} 0.0
+
+REAL initial_relaxation_time "A time intervall for which we just use the initial set of metric data in order to relax the characteristic slice towards our initial data"
+{
+  0:* :: "A psoitive timescale"
+} 0.0
+
+
+BOOLEAN verbose "turn verbosity on/off" STEERABLE=ALWAYS
+{
+} no
+
+
+INT cached_timesteps "Number of timesteps that shall be read in advance and cached in memory for faster access." STEERABLE=RECOVER
+{
+  0:* :: "anything positive"
+} 0
+
+
+KEYWORD sYlm_convention "convention of sYlm's used for decomposed input worldtube data."
+{
+   Goldberg67             :: "Convention used in the Goldberg 1967 paper."
+   Condon-Shortley-Phase  :: "Definition that differs by a factor (-1)^m wrt to the Goldberg67 definition."
+} Goldberg67
+
+
+CCTK_REAL dt_tolerance "A minimum tolerance for which timesteps are considered being identical" STEERABLE=ALWAYS
+{
+  0:* :: "Small and positive"
+} 1e-9
+
+STRING file "The boundary data file. If this string is empty, we assume that the user provided files for each quantity individually (parameters below)" STEERABLE=RECOVER
+{
+ ""	:: "a valid filename"
+} ""
+
+STRING path "the directory that contains the input files, leave blank if filenames contain directory paths already" STEERABLE=RECOVER
+{
+ ""	:: "a path name"
+} ""
+
+STRING file_lapse[3] "filename for the lapse, its radial derivative, and its time derivative" STEERABLE=RECOVER
+{
+ ".*"	:: "a filename"
+} "metric_Decomp.asc"
+
+STRING file_shiftx[3] "filename for the x-component of shift, its radial derivative, and its time derivative" STEERABLE=RECOVER
+{
+ ".*"	:: "a filename"
+} "metric_Decomp.asc"
+
+STRING file_shifty[3] "filename for the y-component of shift, its radial derivative, and its time derivative" STEERABLE=RECOVER
+{
+ ".*"	:: "a filename"
+} "metric_Decomp.asc"
+
+STRING file_shiftz[3] "filename for the z-component of shift, its radial derivative, and its time derivative" STEERABLE=RECOVER
+{
+ ".*"	:: "a filename"
+} "metric_Decomp.asc"
+
+STRING file_gxx[3] "filename for the xx-component of the 3-metric, its radial derivative, and its time derivative" STEERABLE=RECOVER
+{
+ ".*"	:: "a filename"
+} "metric_Decomp.asc"
+
+STRING file_gxy[3] "filename for the xy-component of the 3-metric, its radial derivative, and its time derivative" STEERABLE=RECOVER
+{
+ ".*"	:: "a filename"
+} "metric_Decomp.asc"
+
+STRING file_gxz[3] "filename for the xz-component of the 3-metric, its radial derivative, and its time derivative" STEERABLE=RECOVER
+{
+ ".*"	:: "a filename"
+} "metric_Decomp.asc"
+
+STRING file_gyy[3] "filename for the yy-component of the 3-metric, its radial derivative, and its time derivative" STEERABLE=RECOVER
+{
+ ".*"	:: "a filename"
+} "metric_Decomp.asc"
+
+STRING file_gyz[3] "filename for the yz-component of the 3-metric, its radial derivative, and its time derivative" STEERABLE=RECOVER
+{
+ ".*"	:: "a filename"
+} "metric_Decomp.asc"
+
+STRING file_gzz[3] "filename for the zz-component of the 3-metric, its radial derivative, and its time derivative" STEERABLE=RECOVER
+{
+ ".*"	:: "a filename"
+} "metric_Decomp.asc"
+
+
+INT column_iteration "the column of the iteration (counting from 1)"
+{
+  -1  :: "-1 if not avalaible"
+  1:* :: "column number"
+} -1
+
+INT column_time "the column of the time (counting from 1)"
+{
+  -1  :: "-1 if not avalaible"
+  1:* :: "column number"
+} 1
+
+INT column_radius "the column of the radius (counting from 1)"
+{
+  -1  :: "-1 if not avalaible"
+  1:* :: "column number"
+} -1
+
+INT column_lmax "the column of number of l-modes (counting from 1)"
+{
+  -1  :: "-1 if not avalaible"
+  1:* :: "column number"
+} -1
+
+INT column_n_variables "the column of number of variables (counting from 1)"
+{
+  -1  :: "-1 if not avalaible"
+  1:* :: "column number"
+} -1
+
+INT column_data "the column where the data begins (only needed for DAT format)"
+{
+  2:* :: "anything greater than 2"
+} 3
+
+INT column_lapse[3] "ASCII-format: the column of the lapse, its radial derivative, and its time derivative (always counting from 1), \
+                     DAT-format: the variable number counting from 0 (if multiple variables are in one file)"
+{
+  0:* :: "column number"
+} 3
+
+INT column_shiftx[3] "ASCII-format: the column of the lapse, its radial derivative, and its time derivative (always counting from 1), \
+                     DAT-format: the variable number counting from 0 (if multiple variables are in one file)"
+{
+  0:* :: "column number or variable number"
+} 5
+
+INT column_shifty[3] "ASCII-format: the column of the lapse, its radial derivative, and its time derivative (always counting from 1), \
+                     DAT-format: the variable number counting from 0 (if multiple variables are in one file)"
+{
+  0:* :: "column number or variable number"
+} 7
+
+INT column_shiftz[3] "ASCII-format: the column of the lapse, its radial derivative, and its time derivative (always counting from 1), \
+                     DAT-format: the variable number counting from 0 (if multiple variables are in one file)"
+{
+  0:* :: "column number or variable number"
+} 9
+
+INT column_gxx[3] "ASCII-format: the column of the xx-component of the 3-metric, its radial derivative, and its time derivative (always counting from 1), \
+                     DAT-format: the variable number counting from 0 (if multiple variables are in one file)"
+{
+  0:* :: "column number or variable number"
+} 11
+
+INT column_gxy[3] "ASCII-format: the column of the xy-component of the 3-metric, its radial derivative, and its time derivative (always counting from 1), \
+                     DAT-format: the variable number counting from 0 (if multiple variables are in one file)"
+{
+  0:* :: "column number or variable number"
+} 13
+
+INT column_gxz[3] "ASCII-format: the column of the xz-component of the 3-metric, its radial derivative, and its time derivative (always counting from 1), \
+                     DAT-format: the variable number counting from 0 (if multiple variables are in one file)"
+{
+  0:* :: "column number or variable number"
+} 15
+
+INT column_gyy[3] "ASCII-format: the column of the yy-component of the 3-metric, its radial derivative, and its time derivative (always counting from 1), \
+                     DAT-format: the variable number counting from 0 (if multiple variables are in one file)"
+{ 
+  0:* :: "column number or variable number"
+} 17
+
+INT column_gyz[3] "ASCII-format: the column of the yz-component of the 3-metric, its radial derivative, and its time derivative (always counting from 1), \
+                     DAT-format: the variable number counting from 0 (if multiple variables are in one file)"
+{
+  0:* :: "column number or variable number"
+} 19
+
+INT column_gzz[3] "ASCII-format: the column of the zz-component of the 3-metric, its radial derivative, and its time derivative (always counting from 1), \
+                     DAT-format: the variable number counting from 0 (if multiple variables are in one file)"
+{
+  0:* :: "column number or variable number"
+} 21
+
+
+
+
+SHARES: NullSHRExtract
+USES REAL cr
+USES INT l_max
+
+
+

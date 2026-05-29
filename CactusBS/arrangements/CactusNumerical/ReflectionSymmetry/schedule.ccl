@@ -1,0 +1,11 @@
+# Schedule definitions for thorn ReflectionSymmetry
+
+SCHEDULE ReflectionSymmetry_Register IN SymmetryRegister
+{
+  LANG: C
+} "Register reflection symmetry boundaries"
+
+SCHEDULE ReflectionSymmetry_Apply IN BoundaryConditions
+{
+  LANG: C
+} "Apply reflection symmetries"

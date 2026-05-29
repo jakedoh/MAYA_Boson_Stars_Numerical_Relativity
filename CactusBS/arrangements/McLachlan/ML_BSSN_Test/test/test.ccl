@@ -1,0 +1,7 @@
+# ABSTOL 1.0e-11
+# RELTOL 1.0e-11
+
+TEST ML_BSSN_MP_O8_bh
+{
+  ABSTOL 1e-10
+}

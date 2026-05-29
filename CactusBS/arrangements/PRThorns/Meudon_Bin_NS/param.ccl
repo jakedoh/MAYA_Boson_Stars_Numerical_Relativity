@@ -1,0 +1,52 @@
+# Parameter definitions for thorn Meudon_Bin_NS
+
+SHARES: ADMBase
+
+EXTENDS KEYWORD initial_data
+{
+  "Meudon_Bin_NS" :: ""
+}
+
+EXTENDS KEYWORD initial_lapse
+{
+  "Meudon_Bin_NS" :: ""
+}
+
+EXTENDS KEYWORD initial_shift
+{
+  "Meudon_Bin_NS" :: ""
+}
+
+EXTENDS KEYWORD initial_dtlapse
+{
+  "Meudon_Bin_NS" :: ""
+}
+
+EXTENDS KEYWORD initial_dtshift
+{
+  "Meudon_Bin_NS" :: ""
+}
+
+
+
+SHARES: HydroBase
+
+EXTENDS KEYWORD initial_hydro
+{
+  "Meudon_Bin_NS" :: ""
+}
+
+
+
+PRIVATE:
+
+STRING filename "Input file name"
+{
+  "" :: ""
+} ""
+
+STRING init_eos_table "Initial EOS name"
+{
+"" :: "Any string"
+}"2D_Polytrope"
+

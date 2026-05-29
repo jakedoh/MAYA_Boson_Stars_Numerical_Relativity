@@ -1,0 +1,15 @@
+# Schedule definitions for thorn IDScalarWaveC
+# $Header$
+
+schedule IDScalarWaveC_CheckParameters at CCTK_PARAMCHECK
+{
+  LANG: C
+} "Check parameters"
+
+schedule IDScalarWaveC_InitialData at CCTK_INITIAL as WaveToy_InitialData
+{
+  STORAGE:       wavetoy::scalarevolve[3]
+  LANG:          C
+  READS: grid::x, grid::y, grid::z
+  WRITES: wavetoy::phi(everywhere), wavetoy::phi_p(everywhere)
+} "Initial data for 3D wave equation"

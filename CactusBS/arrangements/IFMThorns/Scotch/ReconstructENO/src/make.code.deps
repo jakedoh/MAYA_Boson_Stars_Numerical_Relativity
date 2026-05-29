@@ -1,0 +1,3 @@
+# Module dependencies for thorn Whisky
+
+ENO.F90.o:            ENO_Scalars.F90.o

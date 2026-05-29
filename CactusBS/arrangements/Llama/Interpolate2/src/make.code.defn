@@ -1,0 +1,3 @@
+# -*-Makefile-*-
+
+SRCS = init.cc interpolate.cc calc_inv3.F90 test.cc

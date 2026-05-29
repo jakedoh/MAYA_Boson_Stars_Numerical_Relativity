@@ -1,0 +1,16 @@
+# Schedule definitions for thorn RiemannSolverROE
+# $Header:$
+
+if(CCTK_Equals(riemann_solver, "ROE")) {
+
+SCHEDULE ROE_Scalar_Setup IN MoL_PreStep
+{
+  LANG: Fortran
+} "Set up scalars for efficiency"
+
+schedule Whisky_ROE IN FluxTerms AFTER Whisky_Convert AS Riemann
+{
+  LANG: Fortran
+} "Solve the local Riemann problems"
+
+}

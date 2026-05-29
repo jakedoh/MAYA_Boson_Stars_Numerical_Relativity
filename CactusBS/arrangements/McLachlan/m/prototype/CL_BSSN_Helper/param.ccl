@@ -1,0 +1,39 @@
+SHARES: Boundary
+
+USES CCTK_INT radpower
+
+SHARES: MethodofLines
+
+USES CCTK_INT MoL_Num_Constrained_Vars
+
+SHARES: ADMBase
+
+USES KEYWORD evolution_method
+
+SHARES: GenericFD
+
+USES CCTK_INT boundary_width
+
+SHARES: CL_BSSN
+
+USES CCTK_INT timelevels
+USES CCTK_INT rhs_timelevels
+USES KEYWORD calculate_ADMBase_variables_at
+
+USES CCTK_REAL harmonicF
+
+EXTENDS KEYWORD my_initial_boundary_condition
+{
+  "extrapolate-gammas" :: "extrapolate-gammas"
+}
+EXTENDS KEYWORD my_rhs_boundary_condition
+{
+  "NewRad" :: "NewRad"
+}
+
+PRIVATE:
+
+CCTK_INT CL_BSSN_MaxNumConstrainedVars "Number of constrained variables used by this thorn" ACCUMULATOR-BASE=MethodofLines::MoL_Num_Constrained_Vars
+{
+  20:20 :: "Number of constrained variables used by this thorn"
+} 20

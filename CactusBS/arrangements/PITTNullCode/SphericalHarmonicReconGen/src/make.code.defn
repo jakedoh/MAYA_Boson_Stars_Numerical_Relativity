@@ -1,0 +1,10 @@
+# Main make.code.defn file for thorn SphericalHarmonicReconASCII
+# $Header:$
+
+# Source files in this directory
+SRCS = get.cc read.cc startup.cc sph_database.cc vars.cc
+
+# Subdirectories containing source files
+SUBDIRS = 
+
+#CXXFLAGS += -Wall

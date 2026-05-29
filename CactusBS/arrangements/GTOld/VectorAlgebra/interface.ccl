@@ -1,0 +1,6 @@
+# Interface definition for thorn VectorAlgebra
+# $Header:$
+
+implements: VectorAlgebra
+USES INCLUDE: VectorAlgebra.hh
+INCLUDE HEADER: Vectors.hh in VectorAlgebra.hh

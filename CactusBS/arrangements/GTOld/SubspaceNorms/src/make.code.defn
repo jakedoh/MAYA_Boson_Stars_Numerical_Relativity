@@ -1,0 +1,8 @@
+# Main make.code.defn file for thorn TotalRestMass
+# $Header:$
+
+# Source files in this directory
+SRCS = SubspaceNorms.c ParamCheck.c
+
+# Subdirectories containing source files
+SUBDIRS = 

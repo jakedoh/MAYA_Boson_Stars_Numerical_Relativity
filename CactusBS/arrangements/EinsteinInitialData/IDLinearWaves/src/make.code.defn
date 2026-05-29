@@ -1,0 +1,13 @@
+# Main make.code.defn file for thorn IDLinearWaves
+# $Header$
+
+# Source files in this directory
+SRCS = 	ParamCheck.c\
+	planewaves.F77\
+	sine_planewaves.F77\
+	standing_planewaves.F77\
+	teukwaves.F77
+
+# Subdirectories containing source files
+SUBDIRS = 
+

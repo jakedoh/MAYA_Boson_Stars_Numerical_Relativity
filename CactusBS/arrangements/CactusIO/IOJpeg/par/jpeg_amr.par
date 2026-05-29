@@ -1,0 +1,99 @@
+!DESC "Orbiting binary sources, example of jpeg IO with AMR"
+
+ActiveThorns = "
+        Boundary
+        CartGrid3D
+        CoordBase
+        IOUtil
+        InitBase
+        LocalInterp
+        SymBase
+        Time
+        
+        HTTPD
+        HTTPDExtra
+        Socket
+        
+        GSL
+        libjpeg
+        
+        IOJpeg
+        
+        Carpet
+        CarpetIOBasic
+        CarpetInterp
+        CarpetLib
+        CarpetReduce
+        CarpetRegrid
+        CarpetSlab
+        LoopControl
+        
+        IDScalarWaveC
+        WaveBinarySource
+        WaveToyC
+
+        AEILocalInterp
+"
+
+Cactus::cctk_run_title = "WaveToy/httpd Example"
+Cactus::terminate      = "never"
+
+InitBase::initial_data_setup_method = "init_some_levels"
+Carpet::init_fill_timelevels        = yes
+
+Carpet::max_refinement_levels   = 2
+CarpetRegrid::refinement_levels = 2
+
+Carpet::domain_from_coordbase = yes
+Grid::type                    = "coordbase"
+
+CoordBase::spacing  = "numcells"
+CoordBase::ncells_x = 70
+CoordBase::ncells_y = 70
+CoordBase::ncells_z = 70
+CoordBase::xmin     = -1.0
+CoordBase::ymin     = -1.0
+CoordBase::zmin     = -1.0
+CoordBase::xmax     = +1.0
+CoordBase::ymax     = +1.0
+CoordBase::zmax     = +1.0
+
+IOJpeg::out_vars          = "wavetoy::phi"
+IOJpeg::mode              = "remove"
+IOJpeg::gridpoints        = "interpolate"
+
+IOJpeg::out_every         =  5
+IOJpeg::refinement_factor = 10
+#IOJpeg::colormap          = "auto-old"   # does not work with mesh refinement
+IOJpeg::colormap          = "custom"
+IOJpeg::colormap_min      =  0.0 # -1.0
+IOJpeg::colormap_max      =  1.0 # +1.0
+IOJpeg::colormap_factor   = 16
+IOJpeg::out_dir           = $parfile
+
+IOJpeg::multiply_by_radius = yes
+IOJpeg::array2d_x0         = -1.0
+IOJpeg::array2d_y0         = -1.0
+IOJpeg::array2d_z0         =  0.0
+IOJpeg::array2d_npoints_i  = 101
+IOJpeg::array2d_dx_i       =  0.02
+IOJpeg::array2d_dy_i       =  0
+IOJpeg::array2d_dz_i       =  0
+IOJpeg::array2d_npoints_j  = 101
+IOJpeg::array2d_dx_j       =  0
+IOJpeg::array2d_dy_j       =  0.02
+IOJpeg::array2d_dz_j       =  0
+
+IOBasic::outInfo_every = 1
+IOBasic::outInfo_vars  = "wavetoy::phi"
+
+Time::dtfac = 0.25
+
+IDScalarWave::initial_data = "none"
+
+WaveBinarySource::binary_omega  = 26 
+WaveBinarySource::binary_charge =  0.0001
+WaveBinarySource::binary_radius =  0.25
+WaveBinarySource::binary_size   =  0.1
+
+WaveToy::bound = "radiation"

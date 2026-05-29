@@ -1,0 +1,6 @@
+# Schedule definitions for thorn HelloWorldOpenCL
+
+SCHEDULE HelloWorldOpenCL_evol AT evol
+{
+  LANG: C
+} "Output message"

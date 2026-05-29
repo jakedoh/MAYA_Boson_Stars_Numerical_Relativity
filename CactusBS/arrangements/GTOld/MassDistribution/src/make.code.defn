@@ -1,0 +1,8 @@
+# Main make.code.defn file for thorn MassDistribution
+# $Header:$
+
+# Source files in this directory
+SRCS = BinMasses.c FindMinMax.c Init.c Output.c ParamCheck.c get_centre.c get_do_level_every.cc sumLocalMass.c RescaleBins.c special_variables.c symmetries.c
+
+# Subdirectories containing source files
+SUBDIRS = 

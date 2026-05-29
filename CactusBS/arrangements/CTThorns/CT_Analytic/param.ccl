@@ -1,0 +1,425 @@
+# File produced by Kranc
+
+
+shares: GenericFD
+
+USES CCTK_INT assume_stress_energy_state
+
+
+shares: MethodOfLines
+
+USES CCTK_INT MoL_Num_Evolved_Vars
+USES CCTK_INT MoL_Num_ArrayEvolved_Vars
+
+restricted:
+CCTK_INT verbose "verbose" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT other_timelevels "Number of active timelevels for non-evolved grid functions" STEERABLE=RECOVER
+{
+  0:3 :: ""
+} 1
+
+restricted:
+CCTK_REAL kx "Wavelength parameter along x"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL ky "Wavelength parameter along y"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL kz "Wavelength parameter along z"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL ampG "Coefficient of the gaussian term in the exact solution"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL ampS "Coefficient of the sine term in the exact solution"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL ampC "Constant coefficient in the exact solution"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL ampI "Multiplication factor between initial guess and exact solution"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL ampC1 "Initial value for testc1"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL ampSg "Coefficient of the 1/r term in the exact solution"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL ampV "Coefficient of the vector part in the exact solution"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL ampVG "Coefficient of the vector part in the exact solution (gaussian term)"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL sigma "Width of transition function in extrinsic curvature"
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_REAL l "Location of transition function in extrinsic curvature"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL phasex "Phase in the initial data for psi along x"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL phasey "Phase in the initial data for psi along y"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL phasez "Phase in the initial data for psi along z"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL Kc "Coefficient of extrinsic curvature"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL Ke "Coefficient of extrinsic curvature in exact solution"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL massa "mass of first black hole"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL massb "mass of second black hole"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL xa "x-coordinate of first black hole for BY initial data"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL ya "y-coordinate of first black hole for BY initial data"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL za "z-coordinate of first black hole for BY initial data"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL xb "x-coordinate of second black hole for BY initial data"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL yb "y-coordinate of second black hole for BY initial data"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL zb "z-coordinate of second black hole for BY initial data"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL Pax "x-component of linear momentum of first black hole for BY initial data"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL Pay "y-component of linear momentum of first black hole for BY initial data"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL Paz "z-component of linear momentum of first black hole for BY initial data"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL Pbx "x-component of linear momentum of second black hole for BY initial data"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL Pby "y-component of linear momentum of second black hole for BY initial data"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL Pbz "z-component of linear momentum of second black hole for BY initial data"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL eps "Smoothing factor"
+{
+  *:* :: ""
+} 1.e-6
+
+restricted:
+CCTK_REAL edgeL "Coordinate length of cell edge"
+{
+  *:* :: ""
+} 10
+
+restricted:
+CCTK_REAL rBall "Coordinate radius of ball of density for Poisson's equation"
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_REAL vecA "Coordinate center of gaussian representing the X^i vector in the CTT decomposition of the constraints"
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_REAL amp[5] "Initial amplitude of peaks"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL x0[5] "Initial x-locations of peaks"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL y0[5] "Initial y-locations of peaks"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL z0[5] "Initial z-locations of peaks"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL sigmax[5] "x-spreads of initial gaussians"
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_REAL sigmay[5] "y-spreads of initial gaussians"
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_REAL sigmaz[5] "z-spreads of initial gaussians"
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT imaxF "Max number of Fourier modes to include in x direction"
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT jmaxF "Max number of Fourier modes to include in y direction"
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT kmaxF "Max number of Fourier modes to include in z direction"
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT tile_size "Loop tile size"
+{
+  *:* :: ""
+} -1
+
+private:
+CCTK_KEYWORD free_data "How to set the free data for the extrinsic curvature?"
+{
+  "exact" :: ""
+  "Expanding BH lattice" :: ""
+  "Bowen-York" :: ""
+  "Poisson" :: ""
+  "Lump" :: ""
+} "exact"
+
+restricted:
+CCTK_INT CT_Analytic_MaxNumEvolvedVars "Number of evolved variables used by this thorn" ACCUMULATOR-BASE=MethodofLines::MoL_Num_Evolved_Vars STEERABLE=RECOVER
+{
+  0:0 :: "Number of evolved variables used by this thorn"
+} 0
+
+restricted:
+CCTK_INT CT_Analytic_MaxNumArrayEvolvedVars "Number of Array evolved variables used by this thorn" ACCUMULATOR-BASE=MethodofLines::MoL_Num_ArrayEvolved_Vars STEERABLE=RECOVER
+{
+  0:0 :: "Number of Array evolved variables used by this thorn"
+} 0
+
+restricted:
+CCTK_INT timelevels "Number of active timelevels" STEERABLE=RECOVER
+{
+  0:3 :: ""
+} 3
+
+restricted:
+CCTK_INT rhs_timelevels "Number of active RHS timelevels" STEERABLE=RECOVER
+{
+  0:3 :: ""
+} 1
+
+restricted:
+CCTK_INT CT_Analytic_Poisson_Calc_calc_every "CT_Analytic_Poisson_Calc_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT CT_Analytic_Exact_Calc_calc_every "CT_Analytic_Exact_Calc_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT CT_Analytic_ExpandingLattice_Calc_calc_every "CT_Analytic_ExpandingLattice_Calc_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT CT_Analytic_BY_Calc_calc_every "CT_Analytic_BY_Calc_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT CT_Analytic_Lump_Calc_calc_every "CT_Analytic_Lump_Calc_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT CT_Analytic_ExactBoundary_calc_every "CT_Analytic_ExactBoundary_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT CT_Analytic_LumpBoundary_calc_every "CT_Analytic_LumpBoundary_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT CT_Analytic_Poisson_Calc_calc_offset "CT_Analytic_Poisson_Calc_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT CT_Analytic_Exact_Calc_calc_offset "CT_Analytic_Exact_Calc_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT CT_Analytic_ExpandingLattice_Calc_calc_offset "CT_Analytic_ExpandingLattice_Calc_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT CT_Analytic_BY_Calc_calc_offset "CT_Analytic_BY_Calc_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT CT_Analytic_Lump_Calc_calc_offset "CT_Analytic_Lump_Calc_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT CT_Analytic_ExactBoundary_calc_offset "CT_Analytic_ExactBoundary_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT CT_Analytic_LumpBoundary_calc_offset "CT_Analytic_LumpBoundary_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+

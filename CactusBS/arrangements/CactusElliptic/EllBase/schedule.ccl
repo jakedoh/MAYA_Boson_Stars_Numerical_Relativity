@@ -1,0 +1,7 @@
+# Schedule definitions for thorn EllBase
+# $Header$
+
+schedule Ell_RegisterBaseEqTypes at STARTUP
+{
+  LANG:C
+} "Register the standard elliptic classes"

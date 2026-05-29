@@ -1,0 +1,4 @@
+# make.configuration.defn for Whisky
+
+# add the utilities to the list
+ALL_UTILS += Riemann1d

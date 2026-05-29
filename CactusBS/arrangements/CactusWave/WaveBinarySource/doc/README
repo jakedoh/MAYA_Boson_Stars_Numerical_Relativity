@@ -1,0 +1,10 @@
+Cactus Code Thorn WaveBinarySource
+Authors    : Cactus Maintainers (cactusmaint@cactuscode.org)
+CVS info   : $Header$
+--------------------------------------------------------------------------
+
+Purpose of the thorn:
+
+This thorn adds a source term to the 3D scalar wave equation. The 
+source term represents two orbiting scalar sources.
+

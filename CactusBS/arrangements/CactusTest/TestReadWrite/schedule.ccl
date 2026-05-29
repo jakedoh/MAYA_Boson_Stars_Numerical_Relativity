@@ -1,0 +1,189 @@
+# Schedule definitions for thorn TestReadWrite
+
+STORAGE: Var1[2] Var2 TestGroup[3] UnusedVar Var3
+STORAGE: rad1, rad2, rad3, Scalarvar
+STORAGE: gridarraygroup[2]
+STORAGE: results
+
+SCHEDULE TestReadWrite_SelectBCs IN Driver_BoundarySelect
+{
+  OPTIONS: global
+
+  LANG: C
+} "Select boundary conditons for grid functions"
+
+# C test functions
+
+SCHEDULE TestReadWrite_TestC_A AT initial
+{
+  WRITES: TestReadWriteIMP::testgroup(InteriorWithBoundary)
+  WRITES: groupVar1_p_p[0](evERywhere) groupVar2_p_p[0](All)
+  WRITES: TestReadWriteIMP::var3(interiorwithboundary)
+  WRITES: TestReadWrite::var2(interiorwithboundary)
+  WRITES: GridArray1(iN)
+  WRITES: ValidRegionsC
+  WRITES: testreadwriteimp::rad1[0]
+  WRITES: ScalarVar(all)
+  # has only 2 active time levels
+  WRITES: testreadwriteimp::GridArrayGroup_p_p
+  WRITES: testreadwriteimp::rad2
+  WRITES: testreadwriteimp::rad3
+  READS: grid::x
+
+  SYNC: var3
+
+  LANG: C
+} "Test Read / Write Statements"
+
+# check that union of variables is used when constructing macro
+SCHEDULE TestReadWrite_TestC_A AT initial AFTER TestReadWrite_TestC_A as TestReadWrite_TestC_A_2nd
+{
+  WRITES: var1(everywhere), var1_p
+  WRITES: ValidRegionsC
+
+  LANG: C
+} "Test Read / Write Statements 2nd schedule"
+
+SCHEDULE TestReadWrite_TestC_B AT initial AFTER TestReadWrite_TestC_A_2nd
+{
+  WRITES: TestReadWrite::var2(interiorwithboundary)
+  READS: testReadWriteIMP::var3[1]
+  # has only 2 active time levels
+  READS: testreadwriteimp::GridArrayGroup_p_p
+
+  WrITES: UnusedVarIsNullC,
+          # check that comments are allowed
+          UnusedGroupIsNullC, ValidRegionsC
+
+  SYNC: var2
+
+  LANG: C
+} "Test Read / Write Statements"
+
+# check that unused variables are NULL pointers
+SCHEDULE TestReadWrite_TestC_B
+{
+  WRITES: testgroup
+  READs: var1
+  WRITES: var1_p
+
+  LANG: C
+} "Test Read / Write Statements 2nd schedule"
+
+SCHEDULE TestReadWrite_TestC_C AT initial AFTER TestReadWrite_TestC_B
+{
+  WrITES: TestReadWriteimp::varpastlevelc
+  WRITES: grouppastlevelc( inTErior )  # some comment
+  ReADs: Var1, TestReadWrite::ScalarVar(all)
+  READS: TestReadWriteImp::Var1_p (interIOr)
+  READs: var2 var3
+  READs: TestReadWriteImp::groupvar1[0]
+  READS: TestReadWriteImp::groupvar2[0] testreadwriteimp::testgroup_p_p
+  READS: GridArray1, testreadwriteimp::rad1
+  WrITES: VarCurrentLevelC, GroupCurrentLevelC(everywhere), ArrayCurrentLevelC,
+          ScalarVarCurrentLevelC
+
+  SYNC: TestReadWriteImp::testgroup
+  SYNC: TestReadWriteImp::var1
+  SYNC: TestReadWriteImp::var2
+
+  LANG: C
+} "Record results in grid scalars"
+
+# reset valid states
+SCHEDULE TestReadWrite_Reset AT initial after TestReadWrite_TestC_C before TestReadWrite_TestF_A
+{
+  LANG: C
+} "Reset valid state of variables"
+
+# Fortran test functions
+
+SCHEDULE TestReadWrite_TestF_A AT initial AFTER TestReadWrite_TestC_C
+{
+  WRITES: TestReadWriteIMP::testgroup(InteriorWithBoundary)
+  WRITES: groupVar1_p_p[0](evERywhere) groupVar2_p_p[0](All)
+  WRITES: TestReadWriteIMP::var3(interiorwithboundary)
+  WRITES: TestReadWrite::var2(interiorwithboundary)
+  WRITES: GridArray1 (iN)
+  WRITES: ValidRegionsF
+  WRITES: testreadwriteimp::rad1[0]
+  WRITES: ScalarVar(all)
+  # has only 2 active time levels
+  WRITES: testreadwriteimp::GridArrayGroup_p_p
+  WRITES: testreadwriteimp::rad2
+  WRITES: testreadwriteimp::rad3
+  READS: grid::x
+
+  WRITES: ArraySizeF
+
+  SYNC: var3
+
+  LANG: Fortran
+} "Test Read / Write Statements"
+
+# check that union of variables is used when constructing macro
+SCHEDULE TestReadWrite_TestF_A AT initial AFTER TestReadWrite_TestF_A as TestReadWrite_TestF_A_2nd
+{
+  WRITES: var1(everywhere), var1_p
+  WRITES: ValidRegionsF
+
+  LANG: Fortran
+} "Test Read / Write Statements 2nd schedule"
+
+SCHEDULE TestReadWrite_TestF_B AT initial AFTER TestReadWrite_TestF_A_2nd
+{
+  WRITES: TestReadWrite::var2(interiorwithboundary)
+  READS: testReadWriteIMP::var3[1]
+  # has only 2 active time levels
+  READS: testreadwriteimp::GridArrayGroup_p_p
+
+  WrITES: UnusedVarIsNullF,
+          # check that comments are allowed
+          UnusedGroupIsNullF, ValidRegionsF
+
+  SYNC: var2
+
+  LANG: Fortran
+} "Test Read / Write Statements"
+
+# check that unused variables are NULL pointers
+SCHEDULE TestReadWrite_TestF_B
+{
+  WRITES: testgroup
+  READs: var1
+  WRITES: var1_p
+
+  LANG: Fortran
+} "Test Read / Write Statements 2nd schedule"
+
+SCHEDULE TestReadWrite_TestF_C AT initial AFTER TestReadWrite_TestF_B
+{
+  WrITES: TestReadWriteImp::varpastlevelf
+  WRITES: grouppastlevelf( inTErior )  # some comment
+  ReADs : Var1, TestReadWrite::ScalarVar(all)
+  READS: TestReadWriteImp::Var1_p (interIOr)
+  READs: var2 var3
+  READs: TestReadWriteImp::groupvar1[0]
+  READS: TestReadWriteImp::groupvar2[0] testreadwriteimp::testgroup_p_p
+  READS: GridArray1, testreadwriteimp::rad1
+  WrITES: VarCurrentLevelF, GroupCurrentLevelF(everywhere), ArrayCurrentLevelF,
+          ScalarVarCurrentLevelF
+
+  SYNC: TestReadWriteImp::testgroup
+  SYNC: TestReadWriteImp::var1
+  SYNC: TestReadWriteImp::var2
+
+  LANG: Fortran
+} "Record results in grid scalars"
+
+SCHEDULE TestReadWrite_TestF_D  AT POST_RECOVER_VARIABLES
+{
+  ReADs: Var1
+  READS: TestReadWriteImp::Var1_p
+  READs: var2
+  READs: TestReadWriteImp::groupvar1[0]
+  READS: TestReadWriteImp::groupvar2[0]
+  READs: testreadwriteimp::testgroup_p_p
+
+  LANG: Fortran
+} "Check behaviour of unused variable declarations (must never execute)"

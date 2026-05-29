@@ -1,0 +1,11 @@
+# Schedule definitions for thorn TestPar
+
+SCHEDULE TestPar_PrintStrings AT initial
+{
+  LANG: C
+} "Output string parameters"
+
+SCHEDULE TestPar_SetValues AT initial
+{
+  LANG: C
+} "Set values based on parameters"

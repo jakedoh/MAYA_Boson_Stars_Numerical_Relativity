@@ -1,0 +1,241 @@
+# This parameter file
+# sets up BH + Brill-wave initial data
+# and evolves it with the standard CactusEinstein and AEIThorns thorns,
+# finding the apparent horizon frequently
+
+########################################
+
+#
+# ***** output setup (also see below for more output stuff) *****
+#
+ActiveThorns = "IOUtil IOBasic LocalReduce"
+IO::out_dir = $parfile
+
+########################################
+ 
+#
+# time integration
+#
+
+##Cactus::cctk_itlast = 0
+Cactus::terminate = "time"
+Cactus::cctk_final_time = 10
+
+ActiveThorns = "Time"
+Time::dtfac = 0.5			# dt = 0.025
+
+ActiveThorns = "MoL"
+MoL::verbose = "register"
+
+# RK4 time integration
+MoL::ODE_Method = "generic"
+MoL::MoL_Intermediate_Steps = 4
+MoL::MoL_Num_Scratch_Levels = 3
+
+########################################
+
+#
+# basic grid setup
+#
+
+ActiveThorns = "Carpet CarpetLib CarpetInterp CarpetReduce"
+Carpet::domain_from_coordbase    = true
+
+ActiveThorns = "SymBase"
+ActiveThorns = "CoordBase"
+CoordBase::domainsize = "spacing"
+CoordBase::dx   = 0.04
+CoordBase::dy   = 0.04
+CoordBase::dz   = 0.04
+CoordBase::ncells_x = 80
+CoordBase::ncells_y = 80
+CoordBase::ncells_z = 80
+
+#
+# ghost zones
+#
+
+driver::ghost_size_x = 2
+driver::ghost_size_y = 2
+driver::ghost_size_z = 2
+
+# ghost zones are outside the nominal grid
+CoordBase::boundary_internal_x_lower = false
+CoordBase::boundary_internal_x_upper = false
+CoordBase::boundary_internal_y_lower = false
+CoordBase::boundary_internal_y_upper = false
+CoordBase::boundary_internal_z_lower = false
+CoordBase::boundary_internal_z_upper = false
+
+# ghost zone widths
+CoordBase::boundary_size_x_lower     = 2
+CoordBase::boundary_size_x_upper     = 2
+CoordBase::boundary_size_y_lower     = 2
+CoordBase::boundary_size_y_upper     = 2
+CoordBase::boundary_size_z_lower     = 2
+CoordBase::boundary_size_z_upper     = 2
+
+# ghost zones start 1 point outside nominal grid boundary
+CoordBase::boundary_shiftout_x_lower = 1
+CoordBase::boundary_shiftout_x_upper = 1
+CoordBase::boundary_shiftout_y_lower = 1
+CoordBase::boundary_shiftout_y_upper = 1
+CoordBase::boundary_shiftout_z_lower = 1
+CoordBase::boundary_shiftout_z_upper = 1
+
+# staggered grids everywhere
+CoordBase::boundary_staggered_x_lower = true
+CoordBase::boundary_staggered_x_upper = true
+CoordBase::boundary_staggered_y_lower = true
+CoordBase::boundary_staggered_y_upper = true
+CoordBase::boundary_staggered_z_lower = true
+CoordBase::boundary_staggered_z_upper = true
+
+ActiveThorns = "CartGrid3D"
+CartGrid3D::type = "CoordBase"
+
+########################################
+
+#
+# BH + Brill-wave initial data
+#
+
+ActiveThorns = "ADMBase StaticConformal SpaceMask"
+ADMBase::metric_type = "static conformal"
+ADMBase::evolution_method = "none"
+ADMBase::initial_lapse    = "one"
+ADMBase::initial_shift    = "zero"
+
+ActiveThorns = "AEILocalInterp"
+ActiveThorns = "IDAxiBrillBH"
+
+ADMBase::initial_data = "axibrillbh"
+IDAxiBrillBH::amp      = 1.0
+IDAxiBrillBH::eta0     = 0.0
+IDAxiBrillBH::sigma    = 1.0
+IDAxiBrillBH::etamax   = 6.0
+IDAxiBrillBH::n        = 2
+
+IDAxiBrillBH::ne              = 1000
+IDAxiBrillBH::nq              = 2000
+
+IDAxiBrillBH::interpolator_name = "Lagrange polynomial interpolation"
+IDAxiBrillBH::interpolator_pars = "order=4"
+
+########################################
+
+#
+# BSSN evolution with 1+log slicing
+#
+ActiveThorns = "CoordGauge ADMMacros ADMCoupling ADMConstraints ADMAnalysis"
+ActiveThorns = "Boundary"
+ActiveThorns = "BSSN_MoL"
+
+ADMBase::lapse_evolution_method = "1+log"
+
+BSSN_MoL::lapsesource     = "modified"
+BSSN_MoL::harmonic_f      = 2.0
+BSSN_MoL::LapsePsiPower   = 4
+BSSN_MoL::AlphaDissip     = 0.002
+
+ADMBase::evolution_method = "ADM_BSSN"
+
+BSSN_MoL::stencil_size    = 2
+BSSN_MoL::advection       = "upwind2"
+
+BSSN_MoL::bound           = "radiative"
+Boundary::radpower        = 2
+
+########################################
+
+#
+# gamma-driver shift
+#
+
+ADMBase::shift_evolution_method  = "gamma2"
+
+BSSN_MoL::ShiftGammaCoeff        = 0.75
+BSSN_MoL::ShiftAlpPower          = 1
+BSSN_MoL::ShiftPsiPower          = 4
+BSSN_MoL::ShiftPhiPower          = 0
+
+BSSN_MoL::BetaDriver             = 3.0	# scales with 1/M_adm
+BSSN_MoL::BetaDriverPsi          = 0.0
+BSSN_MoL::BetaDriverPhi          = 0.0
+
+########################################
+
+#
+# find apparent horizons
+#
+
+ActiveThorns = "AEILocalInterp"
+ActiveThorns = "SphericalSurface AHFinderDirect"
+
+# run at poststep so excision mask is set for BSSN et al
+AHFinderDirect::run_at_CCTK_ANALYSIS = false
+AHFinderDirect::run_at_CCTK_POSTSTEP = true
+
+AHFinderDirect::N_horizons = 1
+
+AHFinderDirect::initial_guess_method[1] = "coordinate sphere"
+AHFinderDirect::initial_guess__coord_sphere__radius[1] = 0.50
+
+AHFinderDirect::find_every       = 10
+AHFinderDirect::h_base_file_name = "h"
+
+AHFinderDirect::set_mask_for_all_horizons = true
+AHFinderDirect::mask_radius_multiplier     = 1.0
+AHFinderDirect::mask_radius_offset         = -5.0
+AHFinderDirect::mask_buffer_thickness      = 0.0
+AHFinderDirect::mask_is_noshrink           = true
+AHFinderDirect::set_old_style_mask         = true
+AHFinderDirect::set_new_style_mask         = false
+
+########################################
+
+#
+# Lego Excision
+#
+ActiveThorns = "LegoExcision"
+SpaceMask::use_mask    = true
+BSSN_MoL::excise       = true
+BSSN_MoL::excisiontype = "Lego"
+ADMConstraints::excise = true
+
+########################################
+
+#
+# ASCII output
+#
+
+ActiveThorns = "CarpetIOASCII"
+CarpetIOASCII::out3D_ghosts = true
+CarpetIOASCII::out3D_outer_ghosts = true
+
+IOBasic::outInfo_every = 1
+IOBasic::outInfo_vars = "
+        ADMConstraints::ham
+	ADMBase::alp
+	SpaceMask::emask
+                        "
+IOASCII::out1d_every = 10
+IOASCII::out1d_vars  =  "
+        ADMConstraints::ham
+	ADMBase::alp           ADMBase::shift
+	ADMAnalysis::grr
+	ADM_BSSN::ADM_BS_phi   ADM_BSSN::ADM_BS_K
+	SpaceMask::emask
+                        "
+IOASCII::out2d_every = 1
+##IOASCII::out2d_style = "gnuplot f(x,y)"
+IOASCII::out2d_every = 10
+IOASCII::out2d_vars  =  "
+        ADMConstraints::ham
+	ADMBase::alp           ADMBase::shift
+	ADMAnalysis::grr
+	ADM_BSSN::ADM_BS_phi   ADM_BSSN::ADM_BS_K
+	SpaceMask::emask
+                        "
+
+########################################

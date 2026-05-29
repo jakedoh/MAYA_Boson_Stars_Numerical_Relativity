@@ -1,0 +1,3 @@
+# Interface definition for thorn HelloWorldCUDA
+
+IMPLEMENTS: HelloWorldCUDA

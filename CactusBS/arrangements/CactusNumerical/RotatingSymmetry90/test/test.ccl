@@ -1,0 +1,10 @@
+# Require 2 processors, because CarpetIOASCII's output format depends on this
+TEST KerrSchild-rotating-90
+{
+  NPROCS 2
+}
+
+TEST KerrSchild-rotating-90-EE
+{
+  NPROCS 2
+}

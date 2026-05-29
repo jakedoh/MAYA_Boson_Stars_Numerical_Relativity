@@ -1,0 +1,10 @@
+# Parameter definitions for thorn EOS_Ideal_Fluid
+# $Header$
+
+restricted:
+
+REAL eos_ideal_fluid_gamma "Adiabatic Index for Ideal Fluid"
+{
+ : :: ""
+} 2.0
+

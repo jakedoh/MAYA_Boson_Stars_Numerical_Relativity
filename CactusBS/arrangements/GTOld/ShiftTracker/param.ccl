@@ -1,0 +1,112 @@
+# Parameter definitions for thorn ShiftTracker
+
+########################################################################
+
+shares: SphericalSurface
+
+USES CCTK_INT nsurfaces
+
+restricted:
+# Initial position of punctures
+CCTK_REAL x0[101] "What is the x coordinate of each tracker" \
+STEERABLE=recover
+{
+  *:* :: "Anything in the grid should be ok"
+} 0.0
+
+CCTK_REAL y0[101] "What is the y coordinate of each tracker" \
+STEERABLE=recover
+{
+    *:* :: "Anything in the grid should be ok"
+} 0.0
+
+CCTK_REAL z0[101] "What is the z coordinate of each tracker" \
+STEERABLE=recover
+{
+    *:* :: "Anything in the grid should be ok"
+} 0.0
+
+CCTK_INT num_trackers "How may shift trackers do you want" \
+STEERABLE=recover
+{
+  0:101 :: "Can't have more that 101"
+} 2
+
+# Any interpolator should be ok.  Only thought about AEILocalInterp though
+CCTK_STRING interpolator_name "Which interpolator should I use" 
+{
+  ".+" :: "Any nonempty string"
+} "Hermite polynomial interpolation"
+
+CCTK_STRING interpolator_pars "Parameters for the interpolator"
+{
+  ".*" :: "Any string that Util_TableSetFromString() will take"
+} "order=3"
+
+CCTK_STRING coord_system "What is the coord system?"
+{
+  ".*" :: "Any smart string will do"
+} "cart3d"
+
+CCTK_STRING beta1rhs_var "Shift variable RHS x"
+{
+  ".*" :: "deprecated"
+} "DEP"
+
+CCTK_STRING beta2rhs_var "Shift variable RHS y"
+{
+  ".*" :: "deprecated"
+} "DEP"
+
+CCTK_STRING beta3rhs_var "Shift variable RHS z"
+{
+  ".*" :: "deprecated"
+} "DEP"
+
+CCTK_STRING beta1_var "Shift variable x"
+{
+  ".*" :: ""
+} "ADMBase::betax"
+
+CCTK_STRING beta2_var "Shift variable y"
+{
+  ".*" :: ""
+} "ADMBase::betay"
+
+CCTK_STRING beta3_var "Shift variable z"
+{
+  ".*" :: ""
+} "ADMBase::betaz"
+
+CCTK_INT verbose "How verbose do you want it?"
+{
+  0:* :: "0 is nothing, 1 is interesting, >1 is crazy"
+} 0
+
+CCTK_INT output_every "How often to output data" \
+STEERABLE=recover
+{
+  0:* :: "Any positive number should do (zero is never)"
+} 1
+
+CCTK_INT output_threshold "How many trackers before all output goes to one file?" \
+STEERABLE=recover
+{
+  0:101 :: "0 is always, 101 is never"
+} 5
+
+CCTK_INT io_precision "How many digits to output?" STEERABLE=recover
+{
+  0:* :: "Anything you want"
+} 10
+
+# which sphericalsurfaces to set
+CCTK_INT surface_index[101] "the indices of the sphericalsurfaces into which we write the tracker values"
+{
+    -1:* :: "whatever"
+} -1
+
+CCTK_INT interp_num_timelevels "How many timelevels to use for interpolation?"
+{
+  -1:* :: "-1 means use the interpolator's default"
+} 1

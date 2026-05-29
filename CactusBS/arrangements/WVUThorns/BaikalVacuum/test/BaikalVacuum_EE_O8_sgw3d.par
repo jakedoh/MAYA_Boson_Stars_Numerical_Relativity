@@ -1,0 +1,136 @@
+
+ActiveThorns = "CoordBase SymBase Boundary NanChecker CartGrid3d Time MoL CarpetIOBasic CarpetIOScalar IOUtil Carpet CarpetLib CarpetReduce CarpetInterp CarpetIOASCII ADMBase StaticConformal SpaceMask ShiftedGaugeWave GenericFD CoordGauge LoopControl BaikalVacuum SphericalSurface ADMMacros TimerReport NewRad"
+
+###################
+## WARNING: IF YOU WANT TO DO SCIENCE WITH THIS PARFILE,
+##          IT IS STRONGLY SUGGESTED THAT YOU ENABLE PERIODIC
+##          BOUNDARY CONDITIONS (CURRENTLY UNTESTED WITH
+##          BaikalVacuum)
+
+ADMBase::evolution_method         = "BaikalVacuum"
+ADMBase::lapse_evolution_method   = "BaikalVacuum"
+ADMBase::shift_evolution_method   = "BaikalVacuum"
+ADMBase::dtlapse_evolution_method = "BaikalVacuum"
+ADMBase::dtshift_evolution_method = "BaikalVacuum"
+
+# We use the BBH gauge to ensure it is regression-tested.  Also, there
+# is no harmonic shift in McLachlan
+BaikalVacuum::FD_order      = 8
+BaikalVacuum::diss_strength = 0.1
+
+Boundary::radpower                     = 2
+
+#############################################################
+# Grid
+#############################################################
+
+CoordBase::domainsize                   = minmax
+
+CoordBase::boundary_size_x_lower        = 5
+CoordBase::boundary_size_y_lower        = 5
+CoordBase::boundary_size_z_lower        = 5
+# CoordBase::boundary_shiftout_x_lower    = 1
+# CoordBase::boundary_shiftout_y_lower    = 1
+# CoordBase::boundary_shiftout_z_lower    = 1
+
+CoordBase::boundary_size_x_upper        = 5
+CoordBase::boundary_size_y_upper        = 5
+CoordBase::boundary_size_z_upper        = 5
+# CoordBase::boundary_shiftout_x_upper    = 0
+# CoordBase::boundary_shiftout_y_upper    = 0
+# CoordBase::boundary_shiftout_z_upper    = 0
+
+CartGrid3D::type                        = "coordbase"
+CartGrid3D::domain                      = "full"
+CartGrid3D::avoid_origin                = "no"
+
+# Periodic::periodic = "yes"
+
+CoordBase::xmin                         =-1
+CoordBase::ymin                         =-1
+CoordBase::zmin                         =-1
+
+CoordBase::xmax                         = 1
+CoordBase::ymax                         = 1
+CoordBase::zmax                         = 1
+
+CoordBase::dx                           = 0.1
+CoordBase::dy                           = 0.1
+CoordBase::dz                           = 0.1
+
+#############################################################
+# Carpet
+#############################################################
+
+Carpet::ghost_size                      = 5
+Carpet::domain_from_coordbase           = "yes"
+Carpet::init_3_timelevels               = "no"
+Carpet::poison_new_timelevels           = yes
+
+#############################################################
+# Timers
+#############################################################
+
+# Do not commit these as testsuite output as they will change on
+# different machines.  They are useful for performance monitoring in
+# automated build and test systems.
+TimerReport::output_all_timers_readable = yes
+TimerReport::n_top_timers               = 40
+TimerReport::output_schedule_timers     = no
+
+#############################################################
+# Time integration
+#############################################################
+
+Cactus::terminate                         = "iteration"
+Cactus::cctk_itlast                       = 8
+# Use 0.5 for RK4 and 0.25 for ICN
+Time::dtfac                           = 0.5
+
+MethodOfLines::ode_method             = "RK4"
+MethodOfLines::MoL_Intermediate_Steps = 4
+
+#MethodOfLines::ode_method             = "generic"
+#MethodOfLines::generic_type             = "RK"
+#MethodOfLines::MoL_Intermediate_Steps = 1
+
+MethodOfLines::MoL_Num_Scratch_Levels = 1
+MethodOfLines::MoL_NaN_Check          = "no"
+MethodOfLines::initial_data_is_crap   = "no"
+
+#############################################################
+# Initial data
+#############################################################
+ADMBase::initial_data = "ShiftedGaugeWave"
+ADMBase::initial_lapse = "ShiftedGaugeWave"
+ADMBase::initial_shift = "ShiftedGaugeWave"
+ADMBase::initial_dtlapse = "ShiftedGaugeWave"
+ADMBase::initial_dtshift = "ShiftedGaugeWave"
+
+ShiftedGaugeWave::amp = 0.1
+ShiftedGaugeWave::period = 0.577350269189626
+
+ShiftedGaugeWave::psi = -1.9216757376671543544
+ShiftedGaugeWave::theta = 0.66214523564555227398
+ShiftedGaugeWave::phi = 1.2199169159226388841
+
+#############################################################
+# Output
+#############################################################
+
+IO::out_dir                   = $parfile
+IO::out_fileinfo              = "none"
+IO::parfile_write             = "no"
+CarpetIOBasic::outInfo_every        = 1
+CarpetIOBasic::outInfo_vars         = "ADMBase::alp"
+
+IOASCII::out1D_every          = 8
+IOASCII::out_precision        = 14
+IOASCII::out1D_x              = "yes"
+IOASCII::out1D_y              = "no"
+IOASCII::out1D_z              = "no"
+IOASCII::out1D_d              = "no"
+IOASCII::out1D_vars           = "ADMBase::gxx ADMBase::kxx ADMBase::alp ADMBase::betax"
+
+CarpetIOASCII::compact_format = yes
+CarpetIOASCII::output_ghost_points = no

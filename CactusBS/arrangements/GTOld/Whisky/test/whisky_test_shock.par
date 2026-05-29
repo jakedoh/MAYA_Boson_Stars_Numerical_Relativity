@@ -1,0 +1,67 @@
+!DESC "Diagonal shocktube, RK2, Roe, TVD-Minmod, Ideal Gas"
+
+ActiveThorns = "carpet carpetreduce LocalReduce carpetlib carpetslab"
+
+cactus::cctk_itlast 			= 	5
+
+driver::ghost_size			=	2
+driver::global_nx 			= 	15
+driver::global_ny 			= 	15
+driver::global_nz 			= 	15
+
+ActiveThorns = "coordbase symbase cartgrid3d boundary"
+
+grid::type 				= 	"BySpacing"
+grid::domain 				= 	"full"
+grid::dxyz 				= 	0.5
+
+ActiveThorns = "time"
+
+time::dtfac 				= 	0.25
+
+ActiveThorns = "ioutil carpetioascii carpetiobasic"
+
+IO::out_fileinfo			=	"none"
+IO::out_dir 				= 	"whisky_test_shock"
+
+IOBasic::outInfo_every 			= 	1
+IOBasic::outInfo_vars 			= 	"HydroBase::rho"
+
+IOASCII::out1D_every 			= 	1
+IOASCII::out1D_vars 			= 	"whisky::whisky_aux_scalar_var HydroBase::rho HydroBase::press HydroBase::eps HydroBase::vel whisky::whisky_cons_scalar_var whisky::whisky_cons_vector_var"
+
+ActiveThorns = "nanchecker mol"
+
+methodoflines::ode_method 		= 	"rk2"
+methodoflines::mol_intermediate_steps	=	2
+
+ActiveThorns = "ADMBase StaticConformal SpaceMask CoordGauge ADMMacros ADMCoupling"
+
+ADMBase::evolution_method		=	"none"
+ADMBase::initial_shift			=	"zero"
+ADMBase::metric_type			= 	"physical"
+SpaceMask::use_mask			=	"yes"
+
+ActiveThorns = "eos_base eos_idealfluid eos_polytrope"
+
+EOS_IdealFluid::eos_ideal_fluid_gamma	=	1.66666666666666
+
+ActiveThorns = "hydrobase tmunubase whisky reconstructTVD riemannsolverroe recovermarti sphericalsurface"
+
+HydroBase::evolution_method             =       "Scotch_HD"
+TmunuBase::stress_energy_storage = "yes"
+TmunuBase::stress_energy_at_RHS  = "yes"
+
+whisky::riemann_solver			=	"Roe"
+whisky::whisky_eos_type			=	"General"
+whisky::whisky_eos_table		=	"Ideal_Fluid"
+whisky::whisky_stencil			=	2
+whisky::recon_method			=	"tvd"
+reconstructTVD::tvd_limiter		=	"minmod"
+whisky::bound				=	"flat"
+
+ActiveThorns = "whisky_init_data"
+
+whisky_init_data::whisky_initial_data	=	"shocktube"
+whisky_init_data::shocktube_type	=	"diagshock"
+whisky_init_data::shock_case		=	"Simple"

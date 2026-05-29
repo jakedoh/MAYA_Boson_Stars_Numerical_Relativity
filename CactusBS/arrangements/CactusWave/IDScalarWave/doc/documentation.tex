@@ -1,0 +1,76 @@
+% If you are using CVS use this line to give version information
+% $Header$
+
+\documentclass{article}
+
+% Use the Cactus ThornGuide style file
+% (Automatically used from Cactus distribution, if you have a 
+%  thorn without the Cactus Flesh download this from the Cactus
+%  homepage at www.cactuscode.org)
+\usepackage{../../../../doc/latex/cactus}
+
+\begin{document}
+
+\title{IDScalarWave}
+\author{Gabrielle Allen \\ Horst Beyer}
+\date{$ $Date$ $}
+
+\maketitle
+
+% Do not delete next line
+% START CACTUS THORNGUIDE
+
+\begin{abstract}
+Initial Data for the 3D Scalar Wave Equation
+\end{abstract}
+
+\section{Purpose}
+
+This thorn provides different initial data for the 3D scalar wave
+equation. 
+
+\section{Spherically Symmetric Solutions}
+
+The general spherically symmetric solution can be written
+\begin{equation}
+\Psi(r,t) = \frac{1}{r}\left(f(r+t)+g(r-t)\right)
+\end{equation}
+where the functions $f$ and $g$ can be freely chosen. 
+
+Making the additional requirement of time symmetry at $t=0$, forces
+\begin{equation}
+f(r)=g(r)
+\end{equation}
+Thus if the solution at t=0 is given by $\phi(r)$, the general solution
+will be
+\begin{equation}
+\Psi(r,t) = \frac{1}{2r}\left( (r+t)\phi(r+t)+(r-t)\phi(r-t) \right)
+\end{equation}
+
+\section{Gaussian}
+
+The gaussian solution is {\it spherically symmetric} about the 
+origin of the Cartesian coordinate system, and is {\it time symmetric}.
+The initial profile is
+\begin{equation}
+\phi(r) = A \exp (- r^2/\sigma)
+\end{equation}
+with the solution at the origin being
+\begin{equation}
+\Psi(r=0,t) = \left(1-2\frac{t^2}{\sigma}\right)\exp(-t^2/\sigma)
+\end{equation}
+
+The Gaussian solution is set with the parameters
+\begin{itemize}
+
+\item {\tt amplitude} = $A$
+
+\item {\tt sigma} = $\sigma$
+
+\end{itemize}
+
+
+% Do not delete next line
+% END CACTUS THORNGUIDE
+
+\end{document}

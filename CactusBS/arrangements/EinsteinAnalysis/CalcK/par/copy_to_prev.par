@@ -1,0 +1,72 @@
+# $Header$
+
+Cactus::cctk_run_title     = "Copy to prev"
+Cactus::cctk_full_warnings = yes
+Cactus::cctk_timer_output  = full
+
+Cactus::cctk_itlast = 0
+
+ActiveThorns = "PUGH PUGHInterp PUGHReduce PUGHSlab"
+driver::global_nx = 80
+driver::global_ny = 80
+driver::global_nz = 40
+
+ActiveThorns = "NaNChecker"
+
+ActiveThorns = "IOUtil"
+IO::out_dir = $parfile
+
+IO::filereader_ID_files = "
+	gxx gxy gxz gyy gyz gzz
+"
+IO::filereader_ID_vars = "
+	ADMBase::metric[cctk_iteration=100]
+"
+
+ActiveThorns = "IOHDF5 IOHDF5Util"
+
+ActiveThorns = "Boundary CartGrid3D CoordBase SymBase"
+CartGrid3D::type         = byspacing
+CartGrid3D::domain       = bitant
+CartGrid3D::dxyz         = 0.08
+CartGrid3D::avoid_origin = no
+
+ActiveThorns = "ADMBase ADMCoupling ADMMacros CoordGauge SpaceMask StaticConformal"
+
+ADMBase::metric_type = "static conformal"
+StaticConformal::conformal_storage = "factor"
+
+ActiveThorns = "IDFileADM"
+
+ADMBase::initial_data = "read from file"
+ADMBase::initial_shift = zero
+
+ActiveThorns = "CalcK"
+CalcK::copy_to_prev = yes
+
+ActiveThorns = "IOBasic"
+IOBasic::outInfo_every      = 1
+IOBasic::outInfo_reductions = "minimum maximum"
+IOBasic::outInfo_vars       = "
+        ADMBase::gxx
+        CalcK::gxx_prev
+"
+
+IOBasic::outScalar_every      = 1
+IOBasic::outScalar_reductions = "minimum maximum mean norm1 norm2 norm_inf"
+IOBasic::outScalar_style      = gnuplot
+IOBasic::outScalar_vars       = "
+        ADMBase::metric
+"
+
+ActiveThorns = "IOASCII"
+IOASCII::out1D_every = 1
+IOASCII::out1D_style = "gnuplot f(x)"
+IOASCII::out1D_vars  = "
+        ADMBase::metric
+"
+
+IOHDF5::out_every = 1
+IOHDF5::out_vars  = "
+        CalcK::metric_prev
+"

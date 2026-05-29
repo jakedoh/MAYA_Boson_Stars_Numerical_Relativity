@@ -1,0 +1,26 @@
+# Main make.code.defn file for thorn EHFinder
+# $Header$
+
+# Source files in this directory
+SRCS = EHFinder_mod.F90 \
+       IsoSurface_mod.F90 \
+       EHFinder_ParamCheck.F90 \
+       EHFinder_Init.F90 \
+       MoL_Init.F90 \
+       EHFinder_Sources.F90 \
+       EHFinder_SetMask.F90 \
+       EHFinder_SetSym.F90 \
+       EHFinder_ReadData.F90 \
+       EHFinder_Check.F90 \
+       EHFinder_Integrate.F90 \
+       EHFinder_FindSurface.F90 \
+       EHFinder_IsoSurface_optimized.F90 \
+       EHFinder_Generator_Sources.F90 \
+       EHFinder_Generator_Sources2.F90 \
+       EHFinder_ReInitialize.F90 \
+       EHFinder_CarpetSupport.cc \
+       EHFinder_fuzzy.F90
+
+# Subdirectories containing source files
+SUBDIRS = 
+

@@ -1,0 +1,64 @@
+# Parameter definitions for thorn NullInterp
+# $Header$
+
+shares: NullGrid
+
+uses int N_ang_pts_inside_eq
+uses int N_ang_ev_outside_eq
+uses int N_ang_stencil_size
+uses int N_ang_ghost_pts
+
+private:
+
+keyword interpolation_name "What interpolator should be used for interpatch intrepolation?"
+{
+  "Lagrange"	:: "Use the Lagrange, or generalized polynomial interpolation"
+  "Hermite"	:: "Use the Hermite polynomial interpolation"
+} "Lagrange"
+
+CCTK_INT interpolation_order "Order for interpolation" # STEERABLE = ALWAYS
+{
+  1:6	:: "Choose between first, second, third, and fourth-order"
+} 3
+
+boolean use_edge_check "Should we check for appropriate syncing of the edges?"
+{
+} "no"
+
+restricted:
+
+CCTK_INT deriv_accuracy "Order of derivative operators"
+{
+  2	:: "2nd order accurate derivatives"
+  4	:: "4th order accurate derivatives"  
+} 2
+
+keyword stereo_patch_type "Type of stereo patches"
+{
+  "square"	:: "Use square-shape patches"
+  "circle"	:: "Use circle-shape patches"
+} "square"
+
+BOOLEAN poison_test "should invalid interpolation input points be poisoned?"
+{
+} "no"
+
+private:
+
+BOOLEAN skip_interpolation "should the interpolation be skipped?"
+{
+} "no"
+
+BOOLEAN extended_guard_zone "should the set of guard points be extended to contain all inactive points?"
+{
+} "no"
+
+CCTK_REAL poison_value "use this value to mark illegal interpolation input points"
+{
+ *:*	:: "any value, should be something like a NaN"
+} 1.0e+10
+
+CCTK_REAL mask_testinterp_tolerance "tolerance level when detecting interpolation values from illegal input points"
+{
+ *:*	:: "any value, should be something like eps"
+} 1.0e-10

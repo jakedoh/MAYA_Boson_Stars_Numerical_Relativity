@@ -1,0 +1,53 @@
+!DESC "1+log sliced 4 BL black holes, ADM, double leapfrog"
+
+# This testsuite is taken from IDAnalyticBH/test/test_bl.par
+# but with modified output to make more use of this thorn.
+
+ActiveThorns = "Boundary localreduce Time ADMBase ADM ADMAnalysis CoordGauge ADMMacros SpaceMask StaticConformal CartGrid3D CoordBase SymBase pugh pughreduce  pughslab IDanalyticBH IOUtil iobasic IOASCII"
+
+driver::global_nx          = 20
+driver::global_ny          = 20
+driver::global_nz          = 20
+
+grid::type                 = "byspacing"
+grid::dxyz                 =  0.8
+grid::domain               = "full"
+
+time::dtfac                =  0.25
+
+admbase::metric_type      = "static conformal"
+admbase::evolution_method = "ADM"
+admbase::lapse_evolution_method = "1+log"
+admbase::initial_data     = "bl_bh"
+
+idanalyticbh::bl_nbh       = 4
+idanalyticbh::bl_x0_1      = 3.5
+idanalyticbh::bl_y0_1      = 3.5
+idanalyticbh::bl_z0_1      = 3.5
+idanalyticbh::bl_M_1       = 0.1
+idanalyticbh::bl_x0_2      = 3.5
+idanalyticbh::bl_y0_2      = -3.5
+idanalyticbh::bl_z0_2      = 3.1
+idanalyticbh::bl_M_2       = 0.2
+idanalyticbh::bl_x0_3      = -3.5
+idanalyticbh::bl_y0_3      = 3.2
+idanalyticbh::bl_z0_3      = -3.5
+idanalyticbh::bl_M_3       = 0.3
+idanalyticbh::bl_x0_4      = -3.5
+idanalyticbh::bl_y0_4      = -3.3
+idanalyticbh::bl_z0_4      = 3.5
+idanalyticbh::bl_M_4       = 0.4
+
+cactus::cctk_itlast        = 4
+adm::bound                 = "flat"
+adm::method                = "leapfrog"
+
+IO::out_dir              = "4BL_holes"
+IO::out_fileinfo         = "none"
+IOBasic::outInfo_every   = 1
+IOBasic::outInfo_vars    = "admbase::gxx admanalysis::Ricci"
+IOBasic::outScalar_every = 2
+IOBasic::outScalar_vars  = "admanalysis::grr admanalysis::ricci admanalysis::ricci22 admanalysis::ricci13"
+IOBasic::outScalar_vars  = "admanalysis::ricci admanalysis::ricci22 admanalysis::ricci13"
+IO::out_every            = 2
+IOASCII::out1D_vars     = "admanalysis::grr admanalysis::ricci admanalysis::ricci22"

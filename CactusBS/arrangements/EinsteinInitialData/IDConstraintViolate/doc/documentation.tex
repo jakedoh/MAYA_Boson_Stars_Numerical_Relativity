@@ -1,0 +1,48 @@
+% /*@@
+%   @file      documentation.tex
+%   @date      20 May 2002
+%   @author    Gabrielle Allen
+%   @desc 
+%              IDConstraintViolate
+%   @enddesc 
+%   @version $Header$
+% @@*/
+
+\documentclass{article}
+
+\usepackage{../../../../doc/latex/cactus}
+
+\begin{document}
+\title{Creating Constraint Violating Initial Data}
+\author{Gabrielle Allen}
+\date{$Date$}
+
+\maketitle
+
+% Do not delete next line
+% START CACTUS THORNGUIDE
+
+\begin{abstract}
+The \texttt{IDConstraintViolate} thorn creates initial data
+which purposefully violates the constraint equations for testing purposes.
+\end{abstract}
+
+
+\section{Gaussian}
+
+Choosing the {\tt ADMBase} parameter {\tt initial\_data} to have the 
+value {\tt Constraint violating gaussian} creates initial data with the
+form
+\begin{eqnarray*}
+g_{xx} = g_{yy} = g_{zz} &=& 1 + A \exp \left(\frac{-(r-r_0)^2}{\sigma^2}\right)
+\\
+g_{xy} = g_{xz} = g_{yz} &=& 0
+\\
+K_{ij} &=& 0
+\end{eqnarray*}
+where the size and shape of the Gaussian is specified by parameters, $A$={\tt amplitude}, $r_0$={\tt radius} and $\sigma$={\tt sigma}.
+
+% Do not delete next line
+% END CACTUS THORNGUIDE
+
+\end{document}

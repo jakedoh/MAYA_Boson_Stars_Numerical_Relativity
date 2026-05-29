@@ -1,0 +1,108 @@
+# Schedule definitions for thorn MakeParticels
+
+schedule MakeParticles_ParamCheck at CCTK_PARAMCHECK
+{
+  lang: C
+} "Check parameters. In particular, make sure subdirectory exists."
+
+schedule MakeParticles at CCTK_ANALYSIS
+{
+  lang: C
+} "Compute pseudo particles from Cactus grid"
+
+if (!CCTK_Equals(read_particles_from_file, "")) {
+  schedule MakeParticles_ReadParticles AT CCTK_WRAGH
+  {
+    options: global
+    lang: C
+  } "read in particle data into array"
+  schedule MakeParticles_FreeParticleData AT CCTK_PostPostInitial
+  {
+    options: global
+    lang: C
+  } "free in particle data"
+
+  schedule MakeParticles_SetHydroVariables IN HydroBase_Initial
+  {
+    lang: C
+  } "set primitive hydro variables based on particle data"
+  schedule MakeParticles_SelectHydroVariablesBC IN HydroBase_Initial AFTER MakeParticles_SetHydroVariables
+  {
+    OPTIONS: level
+    lang: C
+    SYNC: rho press eps vel
+    #SYNC: HydroBase::rho HydroBase::eps HydroBase::press HydroBase::vel
+  } "select boundary conditions for primitive hydro variables"
+  schedule group ApplyBCs as MakeParticles_ApplyBCs in HydroBase_Initial after MakeParticles_SelectHydroVariablesBC
+  {
+    # no language specified
+  } "Apply symmetry conditions to primitives"
+
+  if (CCTK_Equals(initial_data, "particles")) {
+    schedule MakeParticles_SetMetric IN ADMBase_InitialData
+    {
+      lang: C
+    } "set metric based on particle data"
+    schedule MakeParticles_SelectMetricBC IN ADMBase_InitialData AFTER MakeParticles_SetMetric
+    {
+      options: level
+      lang: C
+      SYNC: ADMBase::metric
+    } "select boundary conditions for metric"
+    schedule group ApplyBCs as MakeParticles_ApplyBCs in ADMBase_InitialData after MakeParticles_SelectMetricBC
+    {
+      # no language specified
+    } "Apply symmetry conditions to metric"
+  }
+
+  if (CCTK_Equals(initial_lapse, "particles")) {
+    schedule MakeParticles_SetLapse IN ADMBase_InitialGauge
+    {
+      lang: C
+    } "set lapse based on particle data"
+    schedule MakeParticles_SelectLapseBC IN ADMBase_InitialGauge AFTER MakeParticles_SetLapse
+    {
+      options: level
+      lang: C
+      SYNC: ADMBase::lapse
+    } "select boundary condition for lapse"
+  }
+
+  if (CCTK_Equals(initial_shift, "particles")) {
+    schedule MakeParticles_SetShift IN ADMBase_InitialGauge
+    {
+      lang: C
+    } "set shift based on particle data"
+    schedule MakeParticles_SelectShiftBC IN ADMBase_InitialGauge AFTER MakeParticles_SetShift
+    {
+      options: level
+      lang: C
+      SYNC: ADMBase::shift
+    } "set shift based on particle data"
+  }
+
+  if (CCTK_Equals(initial_lapse, "particles") || CCTK_Equals(initial_shift, "particles")) {
+    schedule group ApplyBCs as MakeParticles_ApplyBCs in ADMBase_InitialGauge after MakeParticles_SelectShiftBC after MakeParticles_SelectLapseBC
+    {
+      # no language specified
+    } "Apply symmetry conditions to lapse and shift"
+  }
+}
+
+if (shrink_by_cells > 0) {
+  schedule MakeParticles_Shrink IN CCTK_POSTINITIAL
+  {
+    lang:C
+  } "remove layer of cells close to atmosphere cells"
+  schedule MakeParticles_SelectHydroVariablesBC IN CCTK_POSTINITIAL AFTER MakeParticles_Shrink
+  {
+    OPTIONS: level
+    lang: C
+    SYNC: rho eps press vel
+    #SYNC: HydroBase::rho HydroBase::eps HydroBase::press HydroBase::vel
+  } "select boundary conditions for primitive hydro variables"
+  schedule group ApplyBCs as MakeParticles_ApplyBCs in CCTK_POSTINITIAL AFTER MakeParticles_SelectHydroVariablesBC
+  {
+    # no language specified
+  } "Apply symmetry conditions to primitives"
+}

@@ -1,0 +1,39 @@
+# Schedule definitions for thorn SubspaceNorms
+# $Header:$
+
+storage: SymmetryFactor, ScalarNorms, VectorNorms, TensorNorms, NormCounter
+storage: varinfo_scalars, groupinfo_vectors, groupinfo_tensors
+
+schedule SubspaceNorms_ParamCheck AT CCTK_PARAMCHECK
+{
+  LANG: C
+  OPTIONS: global
+} "Check parameters"
+
+schedule SubspaceNorms_Init at CCTK_BASEGRID
+{
+  lang: C
+} "Initialize Scalars and set up buffer zone information"
+
+schedule group SubspaceNorms at ANALYSIS
+{
+} "Calculate various norms in subregion of the spacetime"
+
+## Functions within group SubspaceNorms ##
+schedule ZeroNorms in SubspaceNorms before SumSubspaceNorms
+{
+  lang: C
+  OPTIONS: global
+} "Zero cumulative norm scalars before calculation."
+
+schedule SumSubspaceNorms in SubspaceNorms
+{
+  lang: C
+  OPTIONS: global loop-local
+} "Calculate the norms in a subregion of the spacetime"
+
+schedule SubspaceNorms_Output in SubspaceNorms after SumSubspaceNorms
+{
+  lang: C
+  OPTIONS: global
+} "Write norm output."

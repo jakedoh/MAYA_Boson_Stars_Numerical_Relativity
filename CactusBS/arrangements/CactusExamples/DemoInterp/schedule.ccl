@@ -1,0 +1,39 @@
+# Schedule definitions for thorn DemoInterp
+# $Header$
+
+#storage: coords3d, coords2d, coords1d
+storage: real3dvars,comp3dvars
+storage: real2dvars,comp2dvars
+storage: real1dvars,comp1dvars
+storage: coordarrays,realinterps,compinterps
+
+schedule SetUp3DGFs at INITIAL
+{
+  LANG: Fortran
+} "Set up 3D GFs to be interpolated"
+
+schedule SetUp2DGFs at INITIAL after Setup3DGFs
+{
+  LANG: Fortran
+} "Set up 2D GFs to be interpolated"
+
+schedule SetUp1DGFs at INITIAL after Setup3DGFs
+{
+  LANG: Fortran
+} "Set up 1D GFs to be interpolated"
+
+schedule DemoInterp_Interp3D at INITIAL after SetUp3DGFs
+{
+  LANG: Fortran
+} "Interpolate 3D test arrays at given coordinates"
+
+schedule DemoInterp_Interp2D at INITIAL after SetUp2DGFs
+{
+  LANG: Fortran
+} "Interpolate 2D test arrays at given coordinates"
+
+schedule DemoInterp_Interp1D at INITIAL after SetUp1DGFs
+{
+  LANG: Fortran
+} "Interpolate 1D test arrays at given coordinates"
+

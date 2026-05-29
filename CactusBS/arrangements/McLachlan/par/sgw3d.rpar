@@ -1,0 +1,447 @@
+#!/usr/bin/perl -W
+
+# foreach $order (2,4,6,8)
+foreach $order (4)
+{
+# foreach $code ("Exact", "PSU", "CCATIE", "CTGamma", "McLachlan")
+foreach $code ("McLachlan", "Carlile")
+{
+foreach $n (15, 30, 60)
+{
+$h = 1/$n;
+$h0 = $h;
+#$k = $h / 2.0;
+$R0 = int(1.0 / $h0) * $h0;
+$T = 1;
+
+# $om = 1; #/sqrt(3);
+$lambda = 1/sqrt(3);
+
+$out_every = $n/15;
+$time_every = 4;
+
+$ghost_points = $order/2+1;
+$diss_order = $order+1;
+
+if ($order == 2)
+{
+  $time_integrator = "RK2";
+  $time_integrator_scratch_levels = 0;
+  $time_integrator_steps = 2;
+}
+elsif ($order == 4)
+{
+  $time_integrator = "RK4";
+  $time_integrator_scratch_levels = 1;
+  $time_integrator_steps = 4;
+}
+elsif ($order == 6)
+{
+  $time_integrator = "RK65";
+  $time_integrator_steps = 8;
+  $time_integrator_scratch_levels = 8;
+}
+elsif ($order == 8)
+{
+  $time_integrator = "RK87";
+  $time_integrator_steps = 13;
+  $time_integrator_scratch_levels = 13;
+}
+
+################################################################################
+
+$exact_thorns = "";
+
+$exact_lines = <<exact_EOF;
+
+ADMBase::evolution_method = "exact"
+ADMBase::lapse_evolution_method = "exact"
+
+exact_EOF
+
+################################################################################
+
+$psu_thorns = "Kranc2BSSNChi GenericFD Dissipation SphericalSurface";
+
+if ($order == 2) {
+  $psu_order = "2nd";
+} elsif ($order == 4) {
+  $psu_order = "full4th";
+} elsif ($order == 6) {
+  $psu_order = "6th";
+}
+
+$psu_lines = <<psu_EOF;
+
+GenericFD::stencil_width = $ghost_points
+Kranc2BSSNChi::m = 1
+#Kranc2BSSNChi::chiEps = 0.0001
+Kranc2BSSNChi::fd_order = "${psu_order}"
+Kranc2BSSNChi::lapse_condition = "harmonic"
+Kranc2BSSNChi::shift_condition = "harmonic"
+Kranc2BSSNChi::boundary_condition = "none"
+Kranc2BSSNChi::A_group_bound   = "none"
+Kranc2BSSNChi::alpha_group_bound = "none"
+Kranc2BSSNChi::beta_group_bound = "none"
+Kranc2BSSNChi::betat_group_bound = "none"
+Kranc2BSSNChi::Gam_group_bound = "none"
+Kranc2BSSNChi::h_group_bound = "none"
+Kranc2BSSNChi::K_group_bound = "none"
+Kranc2BSSNChi::chi_group_bound = "none"
+
+Kranc2BSSNChi::recalculate_constraints = "no"
+
+Dissipation::vars = "Kranc2BSSNChi::A_group Kranc2BSSNChi::alpha_group Kranc2BSSNChi::beta_group Kranc2BSSNChi::betat_group Kranc2BSSNChi::Gam_group Kranc2BSSNChi::h_group Kranc2BSSNChi::K_group Kranc2BSSNChi::chi_group"
+Dissipation::order                      = $diss_order
+Dissipation::epsdis                     = 0.02
+
+psu_EOF
+
+
+################################################################################
+
+$ctg_thorns = "CTGBase CTGConstraints CTGEvolution CTGGauge
+CartesianCoordinates GlobalDerivative CarpetInterp2
+SummationByParts TmunuBase ADMMacros";
+
+$ctg_lines = <<ctg_EOF;
+
+Coordinates::coordinate_system          = Cartesian
+CTGBase::timelevels                     = 3
+
+ADMBase::evolution_method               = ctgamma
+ADMBase::lapse_evolution_method         = bm-harmonic
+ADMBase::shift_evolution_method         = harmonic
+CTGEvolution::bc                        = none
+CTGBase::conformal_factor_type          = "W"
+
+SummationByParts::order                          = $order
+SummationByParts::onesided_outer_boundaries      = no
+SummationByParts::onesided_interpatch_boundaries = no
+SummationByParts::sbp_1st_deriv                  = no
+SummationByParts::sbp_2nd_deriv                  = no
+SummationByParts::sbp_upwind_deriv               = no
+
+SummationByParts::use_dissipation       = yes
+SummationByParts::scale_with_h          = no #yes
+SummationByParts::dissipation_type      = "Kreiss-Oliger"
+SummationByParts::epsdis                = 0.02
+SummationByParts::vars                  = "
+  CTGBase::conformal_factor
+  CTGBase::conformal_metric
+  CTGBase::curvature_scalar
+  CTGBase::curvature_tensor
+  CTGBase::Gamma
+  ADMBase::lapse
+"
+
+ctg_EOF
+
+################################################################################
+
+$cct_thorns = "BSSN_MoL Dissipation SphericalSurface ADMMacros";
+$cct_lines = <<cct_EOF;
+
+ADMBase::evolution_method               = "ADM_BSSN"
+ADM_BSSN::timelevels                    = 3
+ADM_BSSN::stencil_size                  = 3
+ADM_BSSN::advection                     = "upwind4"
+ADM_BSSN::bound                         = "none"
+
+ADMBase::lapse_evolution_method         = "harmonic"
+ADM_BSSN::lapsesource                   = "straight"
+ADM_BSSN::harmonic_f                    = 1.0
+ADM_BSSN::force_lapse_positive          = yes
+ADM_BSSN::lapse_advection_coeff         = 1.0
+ADMMacros::spatial_order                = $order
+ADMBase::shift_evolution_method         = "harmonic"
+
+Dissipation::vars                       = "
+        ADMBASE::lapse
+        ADM_BSSN::ADM_BSSN_phi
+        ADM_BSSN::ADM_BSSN_metric
+        ADM_BSSN::ADM_BSSN_curv
+        ADM_BSSN::ADM_BSSN_K
+        ADM_BSSN::ADM_BSSN_gamma
+"
+Dissipation::order                      = $diss_order
+Dissipation::epsdis                     = 0.02
+
+cct_EOF
+
+################################################################################
+
+if ($code eq "McLachlan") {$THORN = "ML_BSSN"};
+if ($code eq "Carlile") {$THORN = "CL_BSSN"};
+
+$mcl_thorns = "${THORN} ${THORN}_Helper GenericFD TMuNuBase NewRad SphericalSurface ADMMacros";
+
+$mclachlan_lines = <<mclachlan_EOF;
+${THORN}::LapseAdvectionCoeff = 1.0
+${THORN}::ShiftAdvectionCoeff = 1.0
+${THORN}::conformalMethod     = 1 # 1 for W, 0 for phi
+mclachlan_EOF
+
+$carlile_lines = <<carlile_EOF;
+carlile_EOF
+
+if ($code eq "McLachlan") {$mcl_spec_lines = $mclachlan_lines};
+if ($code eq "Carlile") {$mcl_spec_lines = $carlile_lines};
+
+$mcl_lines = <<mcl_EOF;
+
+ADMBase::evolution_method         = "${THORN}"
+ADMBase::lapse_evolution_method   = "${THORN}"
+ADMBase::shift_evolution_method   = "${THORN}"
+ADMBase::dtlapse_evolution_method = "${THORN}"
+ADMBase::dtshift_evolution_method = "${THORN}"
+
+${THORN}::harmonicN           = 2     # good
+${THORN}::harmonicF           = 1.0   # good
+${THORN}::harmonicShift       = 1     # good
+${THORN}::ShiftGammaCoeff     = 0.0
+${THORN}::BetaDriver          = 1.0
+
+${THORN}::fdOrder             = $order
+
+${THORN}::MinimumLapse        = 1.0e-8
+
+${THORN}::my_initial_boundary_condition = "extrapolate-gammas"
+#${THORN}::my_rhs_boundary_condition     = "NewRad"
+Boundary::radpower                     = 2
+
+# ${THORN}::ML_log_confac_bound = "none"
+# ${THORN}::ML_metric_bound     = "none"
+# ${THORN}::ML_Gamma_bound      = "none"
+# ${THORN}::ML_trace_curv_bound = "none"
+# ${THORN}::ML_curv_bound       = "none"
+# ${THORN}::ML_lapse_bound      = "none"
+# ${THORN}::ML_dtlapse_bound    = "none"
+# ${THORN}::ML_shift_bound      = "none"
+# ${THORN}::ML_dtshift_bound    = "none"
+
+$mcl_spec_lines
+
+# Dissipation::order = $diss_order
+# Dissipation::vars  = "
+#         ${THORN}::ML_log_confac
+#         ${THORN}::ML_metric
+#         ${THORN}::ML_trace_curv
+#         ${THORN}::ML_curv
+#         ${THORN}::ML_Gamma
+#         ${THORN}::ML_lapse
+#         ${THORN}::ML_shift
+#         ${THORN}::ML_dtlapse
+#         ${THORN}::ML_dtshift
+# "
+# Dissipation::epsdis                     = 0.02
+
+mcl_EOF
+
+
+
+################################################################################
+
+if ($code eq "Exact")
+{
+    $code_lines = $exact_lines;
+    $code_thorns = $exact_thorns;
+    $boundary_points = 3;
+}
+elsif($code eq "PSU")
+{
+    $code_lines = $psu_lines;
+    $code_thorns = $psu_thorns;
+    $boundary_points = 3;
+}
+elsif ($code eq "CCATIE")
+{
+    $code_lines = $cct_lines;
+    $code_thorns = $cct_thorns;
+    $boundary_points = 1;
+}
+elsif ($code eq "CTGamma")
+{
+    $code_lines = $ctg_lines;
+    $code_thorns = $ctg_thorns;
+    $boundary_points = 1;
+}
+elsif ($code eq "McLachlan" || $code eq "Carlile")
+{
+    $code_lines = $mcl_lines;
+    $code_thorns = $mcl_thorns;
+    $boundary_points = 3;
+}
+else
+{
+    printf("Unknown code %s", $code);
+}
+
+$lines = <<EOF;
+
+ActiveThorns = "CoordBase SymBase Boundary NanChecker CartGrid3d Time MoL CarpetIOBasic CarpetIOScalar IOUtil Carpet CarpetLib CarpetReduce CarpetInterp CarpetSlab CarpetRegrid CarpetIOASCII ADMBase StaticConformal SpaceMask Slab CarpetIOHDF5 Periodic ShiftedGaugeWave CoordGauge ADMCoupling LoopControl TimerReport $code_thorns"
+
+$code_lines
+
+#############################################################
+# Grid
+#############################################################
+
+CoordBase::domainsize                   = minmax
+
+CoordBase::boundary_size_x_lower        = $ghost_points
+CoordBase::boundary_size_y_lower        = $ghost_points
+CoordBase::boundary_size_z_lower        = $ghost_points
+CoordBase::boundary_shiftout_x_lower    = 1
+CoordBase::boundary_shiftout_y_lower    = 1
+CoordBase::boundary_shiftout_z_lower    = 1
+
+CoordBase::boundary_size_x_upper        = $ghost_points
+CoordBase::boundary_size_y_upper        = $ghost_points
+CoordBase::boundary_size_z_upper        = $ghost_points
+CoordBase::boundary_shiftout_x_upper    = 0
+CoordBase::boundary_shiftout_y_upper    = 0
+CoordBase::boundary_shiftout_z_upper    = 0
+
+CartGrid3D::type                        = "coordbase"
+CartGrid3D::domain                      = "full"
+CartGrid3D::avoid_origin                = "no"
+
+Periodic::periodic = "yes"
+
+CoordBase::xmin                         = 0
+CoordBase::ymin                         = 0
+CoordBase::zmin                         = 0
+
+CoordBase::xmax                         = $R0
+CoordBase::ymax                         = $R0
+CoordBase::zmax                         = $R0
+
+CoordBase::dx                           = $h0
+CoordBase::dy                           = $h0
+CoordBase::dz                           = $h0
+
+#############################################################
+# CarpetRegrid
+#############################################################
+
+CarpetRegrid::refinement_levels           = 1
+CarpetRegrid::refined_regions             = "manual-coordinate-list"
+CarpetRegrid::smart_outer_boundaries      = yes
+CarpetRegrid::keep_same_grid_structure    = "yes"
+
+#############################################################
+# Carpet
+#############################################################
+
+Carpet::ghost_size                      = $ghost_points
+Carpet::domain_from_coordbase           = "yes"
+Carpet::max_refinement_levels           = 1
+Carpet::refinement_factor               = 2
+Carpet::init_3_timelevels               = "no"
+Carpet::prolongation_order_space        = 3
+Carpet::prolongation_order_time         = 2
+Carpet::use_buffer_zones          = yes
+Carpet::num_integrator_substeps         = 4
+
+#############################################################
+# CarpetLib
+#############################################################
+
+#############################################################
+# Time integration
+#############################################################
+
+Cactus::terminate                         = "time"
+Cactus::cctk_final_time                   = $T
+# Use 0.5 for RK4 and 0.25 for ICN
+Time::dtfac                           = 0.5
+MethodOfLines::ode_method             = "$time_integrator"
+MethodOfLines::MoL_Intermediate_Steps = $time_integrator_steps
+MethodOfLines::MoL_Num_Scratch_Levels = $time_integrator_scratch_levels
+
+MethodOfLines::MoL_NaN_Check          = "yes"
+MethodOfLines::initial_data_is_crap   = "no"
+
+#############################################################
+# Initial data
+#############################################################
+
+ADMBase::initial_data                = "ShiftedGaugeWave"
+ADMBase::initial_lapse               = "ShiftedGaugeWave"
+ADMBase::initial_shift               = "ShiftedGaugeWave"
+ADMBase::initial_dtlapse             = "ShiftedGaugeWave"
+ADMBase::initial_dtshift             = "ShiftedGaugeWave"
+
+ShiftedGaugeWave::amp = 0.01
+ShiftedGaugeWave::period = $lambda
+
+ShiftedGaugeWave::psi = -1.9216757376671543544
+ShiftedGaugeWave::theta = 0.66214523564555227398
+ShiftedGaugeWave::phi = 1.2199169159226388841
+
+NaNChecker::check_every     = 1 # 512
+NaNChecker::verbose         = "all"
+#NaNChecker::action_if_found = "just warn"
+NaNChecker::action_if_found = "terminate"
+NaNChecker::check_vars      = "
+CL_BSSN::beta1
+"
+
+################################################################################
+# Timers
+################################################################################
+
+Cactus::cctk_timer_output               = full
+TimerReport::out_every                  = $time_every
+Carpet::output_timers_every             = $time_every
+CarpetLib::print_timestats_every        = $time_every
+CarpetLib::print_memstats_every         = $time_every
+TimerReport::n_top_timers               = 40
+TimerReport::out_filename               = "TimerReport"
+TimerReport::output_all_timers          = yes
+
+#############################################################
+# Output
+#############################################################
+
+IO::out_dir                   = \$parfile
+IO::out_fileinfo              = "none"
+
+CarpetIOScalar::outScalar_every      = 1
+CarpetIOScalar::outScalar_reductions = "norm_inf norm1 sum norm2 minimum maximum"
+CarpetIOScalar::outScalar_vars       = "ADMBase::alp"
+
+CarpetIOBasic::outInfo_every        = 1
+CarpetIOBasic::outInfo_vars         = "ADMBase::alp"
+
+IOASCII::out1D_every          = $out_every
+IOASCII::out1D_x              = "yes"
+IOASCII::out1D_y              = "yes"
+IOASCII::out1D_z              = "yes"
+IOASCII::out1D_d              = "no"
+IOASCII::out1D_vars           = "ADMBase::metric ADMBase::curv ADMBase::lapse ADMBase::shift"
+
+IOHDF5::out_every                       = $out_every
+IOHDF5::out_vars                        = "ADMBase::metric ADMBase::curv ADMBase::lapse ADMBase::shift ${THORN}::beta1rhs ${THORN}::dbeta11rhs ${THORN}::dbeta11"
+
+CarpetIOASCII::out_precision = 19
+
+IOHDF5::out1D_every          = 1 # 15
+IOHDF5::out1D_vars           = "
+  ADMBase::gxx
+  grid::coordinates
+"
+
+
+EOF
+
+$filename = "$0";
+$filename =~ s/\.rpar/_${code}_ord${order}_${n}.par/g; 
+
+open(OUT,">$filename");
+print OUT "$lines";
+close(OUT);
+}
+}
+}

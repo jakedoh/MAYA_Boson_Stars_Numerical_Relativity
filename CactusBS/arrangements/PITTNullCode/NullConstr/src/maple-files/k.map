@@ -1,0 +1,14 @@
+Kn[0,0]:=sqrt(1+Jn[0,0]*Jbn[0,0]);
+
+for a to 4 do
+  Kn[0,a]:=(Jn[0,a]*Jbn[0,0]+Jn[0,0]*Jbn[0,a])/(2*Kn[0,0]);
+od;
+
+#for b to 4 do for c from b to 4 do
+
+for b from 1 to 4 do 
+   for c from 1 to 4 do
+  Kn[b,c]:=(Jn[0,b]*Jbn[0,c]+Jn[0,0]*Jbn[b,c]+Jn[0,c]*Jbn[0,b]
+	  +Jn[b,c]*Jbn[0,0]-2*Kn[0,b]*Kn[0,c])/(2*Kn[0,0]);
+   od;
+od;

@@ -1,0 +1,28 @@
+# Schedule definitions for thorn RNSID
+
+STORAGE: rnsid_scalars
+STORAGE: rnsid_solution
+
+schedule group RNS_InitialData in HydroBase_Initial
+{
+} "Group for scheduling Rotating Neutron Star initial data, spacetime + hydro"
+
+schedule RNS_InitGA in RNS_InitialData
+{
+  LANG: C
+  OPTIONS: GLOBAL
+} "Initialize grid scalars and grid arrays"
+
+schedule Solve_RNS IN RNS_InitialData AFTER RNS_InitGA
+{
+   LANG: C
+   OPTIONS: GLOBAL
+   SYNC: rnsid_solution
+   SYNC: rnsid_scalars
+} "Create RNS Solution, either by solving or reading in a solution"
+
+schedule Set_RNS_ID IN RNS_InitialData AFTER Solve_RNS
+{
+   LANG: C
+} "Set up the gridfunctions"
+

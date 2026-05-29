@@ -1,0 +1,152 @@
+if (CCTK_EQUALS (evolution_method, "CL_BSSN")) {
+  
+  if (timelevels == 1) {
+    STORAGE: ADMBase::metric[1]
+    STORAGE: ADMBase::curv[1]
+    STORAGE: ADMBase::lapse[1]
+    STORAGE: ADMBase::shift[1]
+    STORAGE: ADMBase::dtshift[1]
+  } else if (timelevels == 2) {
+    STORAGE: ADMBase::metric[2]
+    STORAGE: ADMBase::curv[2]
+    STORAGE: ADMBase::lapse[2]
+    STORAGE: ADMBase::shift[2]
+    STORAGE: ADMBase::dtshift[2]
+  } else if (timelevels == 3) {
+    STORAGE: ADMBase::metric[3]
+    STORAGE: ADMBase::curv[3]
+    STORAGE: ADMBase::lapse[3]
+    STORAGE: ADMBase::shift[3]
+    STORAGE: ADMBase::dtshift[3]
+  } else if (timelevels == 4) {
+    #STORAGE: ADMBase::metric[4]
+    #STORAGE: ADMBase::curv[4]
+    #STORAGE: ADMBase::lapse[4]
+    #STORAGE: ADMBase::shift[4]
+    #STORAGE: ADMBase::dtshift[4]
+    STORAGE: ADMBase::metric[3]
+    STORAGE: ADMBase::curv[3]
+    STORAGE: ADMBase::lapse[3]
+    STORAGE: ADMBase::shift[3]
+    STORAGE: ADMBase::dtshift[3]
+  }
+  
+  SCHEDULE CL_BSSN_RegisterSlicing AT startup
+  {
+    LANG: C
+    OPTIONS: meta
+  } "Register slicing"
+  
+  SCHEDULE CL_BSSN_SetGroupTags AT startup BEFORE Driver_Startup
+  {
+    LANG: C
+    OPTIONS: meta
+  } "Set checkpointing and prolongation group tags"
+  
+  SCHEDULE CL_BSSN_RegisterConstrained IN MoL_Register
+  {
+    LANG: C
+    OPTIONS: meta
+  } "Register ADMBase variables as constrained"
+  
+  
+  
+  # Why would any of these two be necessary?
+  #SCHEDULE GROUP CL_BSSN_evolCalcGroup AT postinitial AFTER MoL_PostStep
+  #{
+  #} "Calculate BSSN RHS"
+  #SCHEDULE GROUP MoL_CalcRHS AT postinitial AFTER MoL_PostStep
+  #{
+  #} "Evaluate RHS"
+  
+  SCHEDULE GROUP CL_BSSN_evolCalcGroup IN MoL_CalcRHS
+  {
+  } "Calculate BSSN RHS"
+  
+  SCHEDULE GROUP CL_BSSN_evolCalcGroup AT analysis
+  {
+    TRIGGERS: CL_BSSN::CL_log_confacrhs
+    TRIGGERS: CL_BSSN::CL_metricrhs
+    TRIGGERS: CL_BSSN::CL_Gammarhs
+    TRIGGERS: CL_BSSN::CL_trace_curvrhs
+    TRIGGERS: CL_BSSN::CL_curvrhs
+    TRIGGERS: CL_BSSN::CL_lapserhs
+    TRIGGERS: CL_BSSN::CL_shiftrhs
+    TRIGGERS: CL_BSSN::CL_dtshiftrhs
+  } "Calculate BSSN RHS"
+  
+  
+  
+  if (CCTK_EQUALS (my_initial_boundary_condition, "extrapolate-gammas"))
+  {
+    SCHEDULE CL_BSSN_ExtrapolateGammas AT initial AFTER CL_BSSN_convertFromADMBaseGamma
+    {
+      LANG: C
+      # We don't need to synchronise here because extrapolation is now filling
+      # ghost zones
+      #SYNC: CL_Gamma
+      #SYNC: CL_dtshift
+    } "Extrapolate Gammas and time derivatives of lapse and shift"
+  }
+  
+  if (CCTK_EQUALS (my_rhs_boundary_condition, "NewRad"))
+  {
+    SCHEDULE CL_BSSN_NewRad IN CL_BSSN_evolCalcGroup AFTER CL_BSSN_RHS
+    {
+      LANG: C
+      #SYNC: CL_curvrhs
+      #SYNC: CL_dtshiftrhs
+      #SYNC: CL_Gammarhs
+      #SYNC: CL_lapserhs
+      #SYNC: CL_log_confacrhs
+      #SYNC: CL_metricrhs
+      #SYNC: CL_shiftrhs
+      #SYNC: CL_trace_curvrhs
+    } "Apply NewRad boundary conditions to RHS"
+  }
+  
+  
+  
+  SCHEDULE GROUP CL_BSSN_convertToADMBaseGroup IN CL_BSSN_convertToADMBaseGroupWrapper
+  {
+    #SYNC: ADMBase::metric
+    #SYNC: ADMBase::curv
+    #SYNC: ADMBase::lapse
+    #SYNC: ADMBase::shift
+    #SYNC: ADMBase::dtshift
+  } "Calculate ADM variables"
+  
+  if (CCTK_EQUALS (calculate_ADMBase_variables_at, "MoL_PostStep"))
+  {
+    SCHEDULE GROUP CL_BSSN_convertToADMBaseGroupWrapper IN MoL_PostStep AFTER (CL_BSSN_ApplyBCs CL_BSSN_enforce) BEFORE (ADMBase_SetADMVars Whisky_PostStep)
+    {
+    } "Calculate ADM variables"
+  }
+  else if  (CCTK_EQUALS (calculate_ADMBase_variables_at, "CCTK_EVOL"))
+  {
+    SCHEDULE GROUP CL_BSSN_convertToADMBaseGroupWrapper IN MoL_PseudoEvolution BEFORE (ADMBase_SetADMVars Whisky_PostStep)
+    {
+    } "Calculate ADM variables"
+  }
+  else if  (CCTK_EQUALS (calculate_ADMBase_variables_at, "CCTK_ANALYSIS"))
+  {
+    SCHEDULE GROUP CL_BSSN_convertToADMBaseGroupWrapper AT post_recover_variables
+    {
+    } "Calculate ADM variables"
+    
+    SCHEDULE GROUP CL_BSSN_convertToADMBaseGroupWrapper AT analysis BEFORE (ADMBase_SetADMVars Whisky_PostStep)
+    {
+    } "Calculate ADM variables"
+  }
+
+  SCHEDULE CL_BSSN_SelectBCsADMBase IN CL_BSSN_convertToADMBaseGroupWrapper AFTER CL_BSSN_convertToADMBaseGroup
+  {
+    LANG: C
+    OPTIONS: level
+  } "Select boundary conditions for ADMBase variables"
+  
+  SCHEDULE GROUP ApplyBCs AS CL_BSSN_ApplyBCsADMBase IN CL_BSSN_convertToADMBaseGroupWrapper AFTER CL_BSSN_SelectBCsADMBase
+  {
+  } "Apply boundary conditions to ADMBase variables"
+  
+}

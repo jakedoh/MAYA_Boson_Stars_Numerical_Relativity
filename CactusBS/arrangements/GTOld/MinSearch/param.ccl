@@ -1,0 +1,130 @@
+shares: SphericalSurface
+USES CCTK_INT nsurfaces
+
+restricted:
+
+CCTK_REAL x0[5] "Initial x of minimum" STEERABLE=always
+{
+  *:* :: "Anywhere"
+} 0.0
+
+CCTK_REAL y0[5] "Initial y of minimum" STEERABLE=always
+{
+  *:* :: "Anywhere"
+} 0.0
+
+CCTK_REAL z0[5] "Initial z of minimum" STEERABLE=always
+{
+  *:* :: "Anywhere"
+} 0.0
+
+CCTK_INT surface_index[5] "The index of the SphericalSurface into which we write the tracker values" STEERABLE=always
+{
+    -1:* :: "negative indices are ignored"
+} -1
+
+BOOLEAN steer_positions "store location of minimum in a parameter or grid scalar" STEERABLE=recover
+{
+} "no"
+
+# Parameters and strings can be mixed in the same string
+CCTK_STRING steer_target_x[5] "name of the target object" STEERABLE=always # given as thorn::name
+{
+  ".+[:][:].+([[:space:]]+.+[:][:].*)+" :: "valid real paramters or real grid scalar names"
+  ""   :: "do nothing"
+} ""
+CCTK_STRING steer_target_y[5] "name of the target object" STEERABLE=always # given as thorn::name
+{
+  ".+[:][:].+([[:space:]]+.+[:][:].*)+" :: "valid real paramters or real grid scalar names"
+  ""   :: "do nothing"
+} ""
+CCTK_STRING steer_target_z[5] "name of the target object" STEERABLE=always # given as thorn::name
+{
+  ".+[:][:].+([[:space:]]+.+[:][:].*)+" :: "valid real paramters or real grid scalar names"
+  ""   :: "do nothing"
+} ""
+
+CCTK_REAL dist_cutoff "Max amount min is allowed to move between calls" STEERABLE=always
+{
+  (0:* :: "larger movement triggers a level 1 warning"
+} 100.0
+
+CCTK_REAL newton_gamma "NOT USED" STEERABLE=always
+{
+  *:* :: ""
+} -1.0
+
+CCTK_REAL newton_tolerance "NOT USED" STEERABLE=always
+{
+  *:* :: "Anywhere"
+} -1
+
+CCTK_INT nminima "Number of minima" STEERABLE=recover
+{
+  0:6 :: "Hard-coded limit of 6"
+} 0
+
+CCTK_INT find_every "Find the minima every so many iterations" STEERABLE=always
+{
+  0:* :: "No more often than the finest level on which the minimum is located"
+} 1
+
+CCTK_STRING var "Which variable to search for the minima" STEERABLE=always
+{
+  ".*" :: "Any Cactus variable"
+} ""
+
+# currently the maximum number of extras is hard-coded to 30
+CCTK_STRING extra_variables[5] "extra variables to output" STEERABLE=always
+{
+  ",+[:][:].+" :: "valid variable name"
+  ""           :: "ignore"
+} ""
+
+# Any interpolator should be ok.  Only thought about AEILocalInterp though
+CCTK_STRING interpolator_name "Which interpolator should I use"  STEERABLE=always
+{
+  ".+" :: "Any nonempty string"
+} "Hermite polynomial interpolation"
+
+CCTK_STRING interpolator_pars "Parameters for the interpolator" STEERABLE=always
+{
+  ".*" :: "Any string that Util_TableSetFromString() will take"
+} "order=3"
+
+CCTK_STRING coord_system "What is the coord system?" STEERABLE=always
+{
+  ".*" :: "Any smart string will do"
+} "cart3d"
+
+CCTK_INT verbose "How verbose do you want it?" STEERABLE=always
+{
+  0:* :: "0 is nothing, 1 is interesting, >1 is crazy"
+} 0
+
+CCTK_BOOLEAN track_maximum "Do not search for minima, but search for maxima" STEERABLE=always
+{
+} "no"
+
+# Currently only one minimum is allowed in this case (could be expanded to
+# search for the nminima smallest ones relatively easyly)
+CCTK_BOOLEAN find_global_minimum "Do a global search for the minimum." STEERABLE=recover
+{
+} "no"
+
+CCTK_BOOLEAN find_localized_minimum "Do a semi-global search for the minimum, looking only within dist_cutoff" STEERABLE=recover
+{
+} "yes"
+
+CCTK_STRING outfile_basename "What is the name of the output file?" STEERABLE=always
+{
+  ".*" :: "printf like string, %d is the tracker number"
+} "MinTracker%d.asc"
+
+STRING weight_variable[5] "Variable containing the weights for integration" STEERABLE=always
+{
+  "^CarpetReduce[:][:]weight$"    :: "Standard Carpet weights"
+  "^AHMask[:][:]AHmasked_weight$" :: "Mask out AHs (if found)"
+  "^.+[:][:].+$"                  :: "Any other valid variable, really"
+  "^none$"                        :: "Use all points"
+} "none"

@@ -1,0 +1,37 @@
+# Schedule definitions for thorn SphericalInfall
+# $Header:$
+
+if ( CCTK_EQUALS(initial_data,"spherical_infall") ) {
+   schedule SphericalInfall_Initial in CCTK_INITIAL
+   {
+      LANG: C
+   } "Initialize geometry and hydro variables for spherical infall"
+}
+
+if ( CCTK_EQUALS(initial_data,"bondi_infall_iso") ) {
+
+   schedule group SphericalInfall_IsoBondi in ADMBase_InitialData
+   {
+      STORAGE: Bondi_Solution
+   } "Group for setting Bondi infall in isotropic coordinates, geometry and hydro"
+
+   schedule SphericalInfall_IsoBondi_Solve in SphericalInfall_IsoBondi
+   {
+      SYNC: Bondi_Solution 
+      LANG: C
+   } "Initialize geometry and hydro variables for Bondi infall on isotropic coordinates"
+
+   schedule SphericalInfall_IsoBondi_Populate in SphericalInfall_IsoBondi after SphericalInfall_IsoBondi_Solve
+   {
+      LANG: C
+   } "Populate GFs with Bondi solution"
+
+   ## This should be replaced in later Cactus by simple write(GA) type function call ##
+   if ( bondi_output_solutions ) {
+      schedule SphericalInfall_IsoBondi_WriteSolns in SphericalInfall_IsoBondi after SphericalInfall_IsoBondi_Solve
+      {
+        LANG: C
+      } "Write out GAs"
+   }
+
+}

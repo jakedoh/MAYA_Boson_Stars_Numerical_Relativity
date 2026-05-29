@@ -1,0 +1,6 @@
+# Configuration definition for thorn GiRaFFE
+REQUIRES Boundary CartGrid3D SpaceMask
+
+PROVIDES GiRaFFE
+{
+}

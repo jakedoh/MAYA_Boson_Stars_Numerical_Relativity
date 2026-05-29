@@ -1,0 +1,96 @@
+ActiveThorns = "
+    Boundary
+    Carpet
+    CarpetIOASCII
+    CarpetIOBasic
+    CarpetLib
+    CarpetRegrid2
+    CartGrid3D
+    Cartoon2D
+    CoordBase
+    IOUtil
+    InitBase
+    MoL
+    SymBase
+"
+
+# Domain
+
+Carpet::domain_from_coordbase = yes
+CartGrid3D::type = "coordbase"
+
+CoordBase::domainsize = "minmax"
+# Note: Cannot use "numcells" here, since this leads to a division by
+# zero for the y direction
+CoordBase::spacing = "gridspacing"
+
+CoordBase::xmin = 0.0
+CoordBase::xmax = 20.0
+CoordBase::ymin = 0.0
+CoordBase::ymax = 0.0
+CoordBase::zmin = -20.0
+CoordBase::zmax = +20.0
+
+CoordBase::dx = 1.0
+CoordBase::dy = 1.0
+CoordBase::dz = 1.0
+
+# Boundaries and ghosts
+
+driver::ghost_size = 2
+CoordBase::boundary_size_x_lower = 2
+CoordBase::boundary_size_y_lower = 2
+CoordBase::boundary_size_z_lower = 2
+CoordBase::boundary_size_x_upper = 2
+CoordBase::boundary_size_y_upper = 2
+CoordBase::boundary_size_z_upper = 2
+
+CoordBase::boundary_shiftout_x_lower = 1
+CoordBase::boundary_shiftout_y_lower = 1
+CoordBase::boundary_shiftout_y_upper = 1
+
+Cartoon2D::cartoon_active = yes
+Cartoon2D::order = 3
+
+# Refined regions
+
+Carpet::prolongation_order_space = 3
+Carpet::prolongation_order_time = 2
+Carpet::use_buffer_zones = yes
+
+Carpet::max_refinement_levels = 3
+
+CarpetRegrid2::num_centres = 1
+CarpetRegrid2::num_levels_1 = 3
+CarpetRegrid2::radius_1[1] = 10.0
+CarpetRegrid2::radius_1[2] = 5.0
+
+# Initial conditions
+
+InitBase::initial_data_setup_method = "init_single_level"
+Carpet::init_each_timelevel = yes
+
+# Evolution
+
+Cactus::cctk_itlast = 0
+
+MoL::ODE_Method = "RK4"
+MoL::MoL_Intermediate_Steps = 4
+MoL::MoL_Num_Scratch_Levels = 1
+
+# Output
+
+IO::out_dir = $parfile
+IO::out_fileinfo = "none"
+
+IOBasic::outInfo_every = 1
+
+IOASCII::one_file_per_group = yes
+IOASCII::compact_format = yes
+IOASCII::output_ghost_points = no
+
+IOASCII::out1D_every = 1
+IOASCII::out1D_d = no
+IOASCII::out1D_vars = "
+    grid::coordinates
+"

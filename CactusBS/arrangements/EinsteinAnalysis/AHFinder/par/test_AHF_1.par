@@ -1,0 +1,51 @@
+!DESC "AHFinder on schwarzschild BH, mass=2, flow"
+
+# Active thorns.
+
+activethorns = "symbase localreduce staticconformal spacemask time coordgauge CartGrid3D CoordBase admbase ADMMacros Boundary ADM IDAnalyticBH PUGHInterp LocalInterp IOBasic IOUtil IOASCII PUGH PUGHSlab PUGHReduce PUGHInterp AHFinder"
+
+# Grid.
+
+grid::type   = "byspacing"
+grid::dxyz   =  0.2
+grid::domain = "octant"
+
+driver::global_nx = 11
+driver::global_ny = 11
+driver::global_nz = 11
+
+driver::ghost_size = 2
+
+cactus::cctk_itlast = 0
+
+# Initial data.
+
+admbase::initial_data = "schwarzschild"
+
+IDAnalyticBH::mass = 2.0
+
+# Evolution.
+
+admbase::evolution_method = "ADM"
+admbase::metric_type = "static conformal"
+
+adm::bound   = "flat"
+adm::verbose = "yes"
+
+# Gauge.
+
+admbase::initial_lapse = "one"
+admbase::lapse_evolution_method 	= "geodesic"
+
+# AH finder.
+
+ahfinder::ahf_active   = "yes"
+ahfinder::ahf_flow     = "yes"
+ahfinder::ahf_gaussout = "yes"
+
+# Output.
+
+IO::out_dir = "test_AHF_1"
+
+IO::out_every       = 1 
+IOASCII::out1D_vars = ""

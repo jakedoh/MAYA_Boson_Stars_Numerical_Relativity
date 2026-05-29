@@ -1,0 +1,97 @@
+ /*@@
+   @file      Content.txt
+   @date      08.04.2004
+   @author    Steve White
+   @desc 
+   Description of the Content interface
+   @enddesc 
+   @version $Header$
+ @@*/
+
+There is an interface for setting HTML page content information, which is
+accessed by including http_Content.h.  
+
+
+This provides functions
+
+int HTTP_SendString(httpRequest *request, const String* message);
+
+which sends the string message to HTTP,
+
+void HTTP_SetHeadInfo( String *header);
+
+which copies a string containing typical content of the HEAD element of
+the standard Cactus HTTPD web pages.  Particularly, it includes style
+information, but not the title of the page.
+
+void HTTP_SetDoctype( String *header);
+
+which copies a standard DOCTYPE tag into the string.  Typical use will
+be to emit this string immediately before the first HTML tag of the
+web page being generated.
+
+int HTTP_SetContentHeaderString(const cGH *cctkGH, int choice, String *mess,
+                                const String *menu);
+
+This copies standard Cactus body HTML information into the string mess.
+If choice is nonzero, the information is appropriate for a main page;
+if it is 0, the information is appropriate for non-main pages.
+If the menu argument is non-null, that string will be appended as
+HTML to the standard menus. 
+
+int HTTP_SetContentFooterString(const cGH *cctkGH, int choice, String *mess );
+
+This copies standard Cactus footer HTML into the string mess; if choice is
+nonzero, the information is appropriate for the main page.
+
+int HTTP_ContentSendFromFile(httpRequest *request, int filedes);
+
+which emits the entirety of the file referred to by file descriptor filedes
+to HTTP,
+
+int HTTP_ContentLink(const char *URL,
+                     const char *name,
+                     const char *description,
+                     int flags);
+
+which...I don't know what this does.
+
+The functions
+
+int HTTP_ContentHeader(const cGH *cctkGH, int choice, int len, char *mess,
+                const char *menu);
+int HTTP_ContentFooter(const cGH *cctkGH, int choice, int len, char *mess);
+
+are a little dangerous.  They are like the corresponding ContentHeader and
+Footer calls above, with the len attribute indicating the length of the 
+character buffer mess.
+
+------------------------------------
+Other included functions
+
+int HTTP_SendString(httpRequest *request, const String* message);
+
+
+Example:
+--------
+
+A web page is typically generated in the following sequence.  
+The HTTP connection has already been established and saved in the httpRequest
+pointer, and a String instance 'message' has been created.
+
+	0)  HTTP_SendOKHeader( httpRequest )
+	1a) HTTP_SetDoctype( message );
+	1b) HTTP_SendString( httpRequest, message );
+	2)  HTTP_Send( httpRequest, "<html><head>\n" );
+	3)  HTTP_Send( httpRequest, "<title>My Title</title>\n" );
+	4a) HTTP_HeadInfo( message );
+	4b) HTTP_SendString( httpRequest, message );
+	5)  HTTP_Send( httpRequest, "</head><body>\n" );
+	6)  HTTP_HeadInfo( httpRequest );
+	7a) HTTP_SetContentHeaderString(cctkGH, choice, message, menu);
+	7b) HTTP_SendString( httpRequest, message );
+	8)	Page content
+	9a) HTTP_SetContentFooterString(cctkGH, choice, message);
+	9b) HTTP_SendString( httpRequest, message );
+	10) HTTP_Send( httpRequest, "</body></html>\n" );
+

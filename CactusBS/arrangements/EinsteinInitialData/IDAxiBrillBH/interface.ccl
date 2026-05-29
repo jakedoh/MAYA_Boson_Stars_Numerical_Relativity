@@ -1,0 +1,22 @@
+# Interface definition for thorn IDAxiBrillBH
+# $Header$
+
+implements: idaxibrillbh
+inherits: ADMBase grid StaticConformal
+
+public:
+
+#
+# functions from StaticConformal
+#
+void FUNCTION ConfToPhysInPlace (CCTK_INT IN nx,            \
+                                 CCTK_INT IN ny,            \
+                                 CCTK_INT IN nz,            \
+                                 CCTK_REAL ARRAY IN psi,    \
+                                 CCTK_REAL ARRAY INOUT gxx, \
+                                 CCTK_REAL ARRAY INOUT gxy, \
+                                 CCTK_REAL ARRAY INOUT gxz, \
+                                 CCTK_REAL ARRAY INOUT gyy, \
+                                 CCTK_REAL ARRAY INOUT gyz, \
+                                 CCTK_REAL ARRAY INOUT gzz)
+uses function ConfToPhysInPlace

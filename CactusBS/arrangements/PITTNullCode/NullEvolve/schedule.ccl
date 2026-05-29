@@ -1,0 +1,164 @@
+# Schedule definitions for thorn NullEvolve
+# $Header$
+
+storage: NullVars::realcharfuncs[2]
+storage: NullVars::cmplxcharfuncs_basic[2] 
+storage: NullVars::null_mask
+storage: NullGrid::EG_mask NullGrid::EQ_mask NullGrid::EV_mask 
+#storage: NullSHRExtract::x_wt
+storage: eth4_mask, dissip_mask
+storage: diagtmp, aux_mask
+storage: Jrad, dxJrad
+
+if (first_order_scheme) {
+   storage: NullVars::cmplxcharfuncs_aux[2] 
+}
+
+# this thorn defines the following global groups:
+#
+# NullEvol_Initial at INITIAL
+# NullEvol_Boundary at CCTK_EVOL
+#
+# the routine NullEvol_Step comes after NullEvol_Boundary
+# 
+
+# declaration of initialization group
+
+schedule group NullEvol_Initial at PostInitial \
+   after HARMIDATA_INIT_TO_ADM \
+   after HARMIDATA_PINIT_TO_ADM \
+   after MoL_FillAllLevels \
+   after ADM_BSSN_Init
+{
+  OPTIONS: global
+} "Null Init Data"
+
+if (DEBUG_skip_evolution==0) {
+
+schedule NullEvol_InitializeArrays at initial before NullEvol_Initial
+{
+  LANG: Fortran
+} "Initialize all arrays to large values"
+
+schedule NullEvol_ResetTop at CCTK_EVOL before NullEvol_Boundary
+{
+  LANG: Fortran
+  OPTIONS: global
+} "reset top values"
+
+}
+
+schedule group NullEvol_Boundary at CCTK_EVOL \
+   after HARMEVOL_TO_ADM \
+   after MoL_Evolution 
+#   after SphericalHarmonicReconRead  
+{
+  OPTIONS: global
+} "Boundary data"
+
+
+if (DEBUG_skip_evolution==0) {
+schedule NullEvol_Step at CCTK_EVOL after NullEvol_Boundary
+{
+  LANG: Fortran
+  OPTIONS: global
+  STORAGE: distmp
+} "Evolution"
+}
+
+
+# definition of initialization group
+# Initial data (J on the 1st hypersurface)
+schedule NullEvol_InitialData in NullEvol_Initial after NullEvol_BoundaryInit
+{
+  LANG: Fortran
+  OPTIONS: global
+} "Give J on the initial null hypersurface"
+
+# Initial boundary data:
+schedule group NullEvol_BoundaryInit in NullEvol_Initial \
+  before NullEvol_InitialData before NullEvol_InitialSlice
+{
+} "Boundary data for the Characteristic data"
+
+if (DEBUG_skip_evolution==0) {
+# Hypersurface equations on initial slice (i.e., \beta, U, W, etc.) here is the problem
+schedule NullEvol_InitialSlice in NullEvol_Initial after NullEvol_BoundaryInit after NullEvol_InitialData
+{
+  LANG: Fortran
+  OPTIONS: global
+} "Construct null metric on the initial null hypersurface"
+}
+
+if(Diagnostics_Coord_x>=null_xin) {
+  schedule NullEvol_Diag in NullEvol_Initial after NullEvol_InitialSlice
+  {
+    LANG: Fortran
+    OPTIONS: global
+    STORAGE: diagtmp
+  } "diagnostics of the characteristic code"
+  schedule NullEvol_Diag at CCTK_EVOL after NullEvol_Step
+  {
+    LANG: Fortran
+    OPTIONS: global
+    STORAGE: diagtmp
+  } "diagnostics of the characteristic code"
+}
+
+# INITIALIZATION, SAME AS BOUNDARY ROUTINES:
+# Flat:
+if (CCTK_EQUALS(boundary_data,"flat"))  {
+  schedule NullEvol_Bdry_flat in NullEvol_BoundaryInit
+  {
+  LANG: Fortran
+  OPTIONS: global
+  } "Give flat boundary conditions for the null metric"
+}  
+
+# White hole horizon:
+
+if (CCTK_EQUALS(boundary_data,"whitehole"))  {
+  schedule NullEvol_Bdry_whitehole in NullEvol_BoundaryInit
+  {
+  LANG: Fortran
+  OPTIONS: global
+  } "Give white hole boundary conditions for the null metric"
+}  
+
+if (CCTK_EQUALS(boundary_data,"randomJ"))  {
+  schedule NullEvol_Bdry_randomJ in NullEvol_BoundaryInit
+  {
+  LANG: Fortran
+  OPTIONS: global
+  } "Give random J boundary conditions for the null metric"
+} 
+
+# SPECIFIC BOUNDARY ROUTINES:
+
+# Flat:
+
+if (CCTK_EQUALS(boundary_data,"flat"))  {
+  schedule NullEvol_Bdry_flat in NullEvol_Boundary
+  {
+  LANG: Fortran
+  OPTIONS: global
+  } "Give flat boundary conditions for the null metric"
+}  
+
+# White hole horizon:
+
+if (CCTK_EQUALS(boundary_data,"whitehole"))  {
+  schedule NullEvol_Bdry_whitehole in NullEvol_Boundary
+  {
+  LANG: Fortran
+  OPTIONS: global
+  } "Give white hole boundary conditions for the null metric"
+}  
+
+if (CCTK_EQUALS(boundary_data,"randomJ"))  {
+  schedule NullEvol_Bdry_randomJ in NullEvol_Boundary
+  {
+  LANG: Fortran
+  OPTIONS: global
+  } "Give random J boundary conditions for the null metric"
+} 

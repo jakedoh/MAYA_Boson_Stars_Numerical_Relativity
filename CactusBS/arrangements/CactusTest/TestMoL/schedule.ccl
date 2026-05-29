@@ -1,0 +1,42 @@
+STORAGE: evolved_gf[3] evolvedslow_gf[3] constrained_gf[3] sandr_gf[3]
+STORAGE: rhs_gf[1] rhsslow_gf[1]
+STORAGE: diff_gf[1] analytic_gf[1] diffslow_gf[1] analyticslow_gf[1]
+STORAGE: evolved_ga[3] constrained_ga[3] sandr_ga[3]
+STORAGE: rhs_ga[1]
+STORAGE: diff_ga[1] analytic_ga[1]
+
+schedule TestMoL_RegisterVars in MoL_Register
+{
+  LANG: C
+  OPTIONS: META
+} "Register evolved, rhs variables"
+
+schedule TestMoL_InitVars AT INITIAL
+{
+  LANG: C
+} "provide initial data for all variables"
+
+schedule TestMoL_RHS_GF IN MoL_CalcRHS
+{
+  LANG: C
+} "compute the RHS for the evolved grid function"
+
+schedule TestMoL_RHSSlow_GF IN MoL_CalcRHS
+{
+  LANG: C
+} "compute the RHS for the slow evolved grid function"
+
+schedule TestMoL_RHS_GA IN MoL_CalcRHS
+{
+  LANG: C
+} "compute the RHS for the evolved grid function"
+
+schedule TestMoL_Compare_GF AT ANALYSIS
+{
+  LANG: C
+} "Compare analytic and numerial result in grid function"
+
+schedule TestMoL_Compare_GA AT ANALYSIS
+{
+  LANG: C
+} "Compare analytic and numerial result in grid array"

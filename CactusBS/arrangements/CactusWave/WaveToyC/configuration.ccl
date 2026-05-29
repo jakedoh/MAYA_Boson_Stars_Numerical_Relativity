@@ -1,0 +1,4 @@
+# Configuration definition for thorn CactusWave/WaveToyC
+# $Header$
+
+REQUIRES CartGrid3D

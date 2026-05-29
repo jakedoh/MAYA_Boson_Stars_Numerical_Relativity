@@ -1,0 +1,7 @@
+# Interface definition for thorn TestFortranCrayPointers
+
+IMPLEMENTS: TestFortranCrayPointers
+
+CCTK_REAL gf TYPE=gf "Grid function"
+CCTK_REAL ga TYPE=array DIM=2 SIZE=10,10 "Grid array"
+CCTK_REAL gs TYPE=scalar "Grid scalar"

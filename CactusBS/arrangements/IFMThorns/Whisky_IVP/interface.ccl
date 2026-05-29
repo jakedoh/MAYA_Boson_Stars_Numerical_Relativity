@@ -1,0 +1,25 @@
+# Interface definition for thorn Whisky_IVP
+# $Header$
+
+implements: Whisky_IVP
+inherits: ADMBase, BAM_Elliptic, BAM_VecLap, ADMMacros, Whisky
+friend: ADMCoupling, Whisky
+
+uses include header: NaNChecker.h
+
+CCTK_REAL IVP_Functions TYPE=GF
+{
+  IVP_detg
+  IVP_trK
+  IVP_RicciScalar
+  IVP_uxx,IVP_uxy,IVP_uxz,IVP_uyy,IVP_uyz,IVP_uzz
+  IVP_rho,IVP_jx,IVP_jy,IVP_jz
+  IVP_Mtildexx,IVP_Mtildexy,IVP_Mtildexz,IVP_Mtildeyy,IVP_Mtildeyz,IVP_Mtildezz
+  IVP_Axx,IVP_Axy,IVP_Axz,IVP_Ayy,IVP_Ayz,IVP_Azz
+  IVP_Vx,IVP_Vy,IVP_Vz,
+  IVP_Vx_Source,IVP_Vy_Source,IVP_Vz_Source
+  IVP_Psi
+  IVP_Mlinear,IVP_Nsource
+  IVP_Psi5Source,IVP_Psim3Source,IVP_Psim7Source
+  IVP_Change_Psi
+} "Required variables to solve the IVP problem"

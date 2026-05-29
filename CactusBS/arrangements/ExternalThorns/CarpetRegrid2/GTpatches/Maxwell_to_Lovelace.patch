@@ -1,0 +1,392 @@
+diff -rN old-ExternalThorns/CarpetRegrid2/param.ccl new-ExternalThorns/CarpetRegrid2/param.ccl
+71a72,89
+> BOOLEAN symmetry_periodic_x "Ensure a periodicity symmetry in the x direction"
+> {
+> } no
+> 
+> BOOLEAN symmetry_periodic_y "Ensure a periodicity symmetry in the y direction"
+> {
+> } no
+> 
+> BOOLEAN symmetry_periodic_z "Ensure a periodicity symmetry in the z direction"
+> {
+> } no
+> 
+> 
+> 
+> BOOLEAN expect_symmetric_grids "Expect a grid structure that is symmetric about the origin, and abort if it is not"
+> {
+> } "no"
+> 
+diff -rN old-ExternalThorns/CarpetRegrid2/schedule.ccl new-ExternalThorns/CarpetRegrid2/schedule.ccl
+5a6,9
+> if (adaptive_refinement)
+> {
+>   STORAGE: level_mask
+> }
+diff -rN old-ExternalThorns/CarpetRegrid2/src/amr.cc new-ExternalThorns/CarpetRegrid2/src/amr.cc
+134a135
+>                   bool have_nan = false;
+141c142,146
+<                         refine = refine or level_mask[ind3d] >= rl;
+---
+>                         if (not isnan(level_mask[ind3d])) {
+>                           refine = refine or level_mask[ind3d] >= rl;
+>                         } else {
+>                           have_nan = true;
+>                         }
+147a153,155
+>                   if (have_nan) {
+>                     cout << "      *** found nan in block " << bind << " ***\n";
+>                   }
+diff -rN old-ExternalThorns/CarpetRegrid2/src/boundary.cc new-ExternalThorns/CarpetRegrid2/src/boundary.cc
+29a30,31
+>     CCTK_REAL const eps = 1.0e-10; // prevent rounding errors
+>     
+33,34c35,36
+<       ? ivect (floor (((rpos - origin) * scale                    ) / rvect(istride) + rvect(0.5))) * istride
+<       : ivect (floor (((rpos - origin) * scale - rvect(bistride/2)) / rvect(istride)             )) * istride + istride/2 + bistride/2;
+---
+>       ? ivect (floor (((rpos - origin) * scale                    ) / rvect(istride) + rvect(0.5) + rvect(eps))) * istride
+>       : ivect (floor (((rpos - origin) * scale - rvect(bistride/2)) / rvect(istride)              + rvect(eps))) * istride + istride/2 + bistride/2;
+59a62,63
+>     CCTK_REAL const eps = 1.0e-10; // prevent rounding errors
+>     
+63,64c67,68
+<       ? ivect (ceil (((rpos - origin) * scale                    ) / rvect(istride) - rvect(0.5))) * istride
+<       : ivect (ceil (((rpos - origin) * scale - rvect(bistride/2)) / rvect(istride)             )) * istride - istride/2 + bistride/2;
+---
+>       ? ivect (ceil (((rpos - origin) * scale                    ) / rvect(istride) - rvect(0.5) - rvect(eps))) * istride
+>       : ivect (ceil (((rpos - origin) * scale - rvect(bistride/2)) / rvect(istride)              - rvect(eps))) * istride - istride/2 + bistride/2;
+203c207
+< #warning "TODO: This is too strict"
+---
+>     // TODO: This is too strict
+293a298,337
+> 
+> 
+> 
+> ostream& operator<<(ostream& os, CarpetRegrid2::domain_boundary const& bnd)
+> {
+>   return
+>     os << "domain_boundary:{"
+>        << "nboundaryzones=" << bnd.nboundaryzones << ","
+>        << "is_internal=" << bnd.is_internal << ","
+>        << "is_staggered=" << bnd.is_staggered << ","
+>        << "shiftout=" << bnd.shiftout << ","
+>        << "boundary_staggering_mismatch=" << bnd.boundary_staggering_mismatch << ","
+>        << "physical_lower=" << bnd.physical_lower << ","
+>        << "physical_upper=" << bnd.physical_upper << ","
+>        << "spacing=" << bnd.spacing << ","
+>        << "exterior_lower=" << bnd.exterior_lower << ","
+>        << "exterior_upper=" << bnd.exterior_upper << ","
+>        << "origin=" << bnd.origin << ","
+>        << "scale=" << bnd.scale << ","
+>        << "physical_ilower=" << bnd.physical_ilower << ","
+>        << "physical_iupper=" << bnd.physical_iupper << "}";
+> }
+> 
+> ostream& operator<<(ostream& os, CarpetRegrid2::level_boundary const& bnd)
+> {
+>   return
+>     os << "level_boundary:{"
+>        << *static_cast<CarpetRegrid2::domain_boundary const*>(&bnd) << ","
+>        << "level_physical_lower=" << bnd.level_physical_lower << ","
+>        << "level_physical_upper=" << bnd.level_physical_upper << ","
+>        << "level_spacing=" << bnd.level_spacing << ","
+>        << "level_exterior_lower=" << bnd.level_exterior_lower << ","
+>        << "level_exterior_upper=" << bnd.level_exterior_upper << ","
+>        << "level_physical_ilower=" << bnd.level_physical_ilower << ","
+>        << "level_physical_iupper=" << bnd.level_physical_iupper << ","
+>        << "level_exterior_ilower=" << bnd.level_exterior_ilower << ","
+>        << "level_exterior_iupper=" << bnd.level_exterior_iupper << ","
+>        << "min_bnd_dist_away=" << bnd.min_bnd_dist_away << ","
+>        << "min_bnd_dist_incl=" << bnd.min_bnd_dist_incl << "}";
+> }
+diff -rN old-ExternalThorns/CarpetRegrid2/src/boundary.hh new-ExternalThorns/CarpetRegrid2/src/boundary.hh
+7a8,9
+> #include <ostream>
+> 
+125a128,132
+> ostream& operator<<(ostream& os, CarpetRegrid2::domain_boundary const& bnd);
+> ostream& operator<<(ostream& os, CarpetRegrid2::level_boundary const& bnd);
+> 
+> 
+> 
+diff -rN old-ExternalThorns/CarpetRegrid2/src/property.cc new-ExternalThorns/CarpetRegrid2/src/property.cc
+143,150c143,144
+<     ibset buffered;
+<     for (ibset::const_iterator
+<            ibb = regions.at(rl).begin(); ibb != regions.at(rl).end(); ++ ibb)
+<     {
+<       ibbox const& bb = *ibb;
+<       buffered |= bb.expand (dd.buffer_widths.at(rl));
+<     }
+<     return buffered;
+---
+>     return regions.at(rl).expand (dd.buffer_widths.at(rl) +
+>                                   dd.overlap_widths.at(rl));
+316,319c310,313
+<       // to the next coarser grid, then expand back to the current
+<       // grid, and expand by N points again. This sequence is correct
+<       // for both vertex and cell centred grids, and N is determined
+<       // by the number of buffer zones.
+---
+>       // (contract???) to the next coarser grid, then expand back to
+>       // the current grid, and expand by N points again. This sequence
+>       // is correct for both vertex and cell centred grids, and N is
+>       // determined by the number of buffer zones.
+346c340,350
+<     return regions.AT(rl) == snapped;
+---
+>     
+>     // We cannot test for equality, since the difference may be
+>     // outside of the domain (and hence irrelevant)
+>     // return regions.AT(rl) == snapped;
+>     
+>     // Test whether any part of the difference (i.e. that part of the
+>     // level that would be added by snapping) is inside the domain. If
+>     // the difference is outside, we can safely ignore it.
+>     ibbox const& baseextent = hh.baseextent(0,rl);
+>     ibset const difference = snapped - regions.AT(rl);
+>     return (difference & baseextent).empty();
+602a607,700
+>   // Make the boxes periodic in one direction
+>   //////////////////////////////////////////////////////////////////////////////
+>   
+>   template<int dir>
+>   ibset periodic<dir>::
+>   symmetrised_regions (gh const& hh, dh const& dd,
+>                        level_boundary const& bnd,
+>                        vector<ibset> const& regions, int const rl)
+>   {
+>     ibbox const& baseextent = hh.baseextent(0,rl);
+>     
+>     // We are not using level_physical_ilower and
+>     // level_physical_iupper here, because these are rounded in
+>     // opposite directions for cell centring, so that their difference
+>     // is smaller than the domain size
+>     ivect const ilower =
+>       rpos2ipos (bnd.physical_lower, bnd.origin, bnd.scale, hh, rl);
+>     ivect const iupper =
+>       rpos2ipos (bnd.physical_upper, bnd.origin, bnd.scale, hh, rl);
+>     ivect const ioffset = ivect::dir(dir) * (iupper - ilower);
+>     assert (all (ioffset % baseextent.stride() == 0));
+>     
+>     ibset symmetrised = regions.at(rl);
+>     for (ibset::const_iterator
+>            ibb = regions.at(rl).begin(); ibb != regions.at(rl).end(); ++ ibb)
+>     {
+>       ibbox const& bb = *ibb;
+>       
+>       // Shift boxes upwards and downwards by one period
+>       symmetrised |= bb.shift(+ioffset / bb.stride());
+>       symmetrised |= bb.shift(-ioffset / bb.stride());
+>     }
+>     
+>     return symmetrised;
+>   }
+>   
+>   template<int dir>
+>   bool periodic<dir>::
+>   test_impl (gh const& hh, dh const& dd,
+>              level_boundary const& bnd,
+>              vector<ibset> const& regions, int const rl)
+>   {
+>     DECLARE_CCTK_PARAMETERS;
+>     
+>     ivect const symmetry_periodic
+>       (symmetry_periodic_x, symmetry_periodic_y, symmetry_periodic_z);
+>     if (not symmetry_periodic[dir]) return true;
+>     
+>     ibset const symmetrised = symmetrised_regions (hh, dd, bnd, regions, rl);
+>     
+>     // We cannot test for equality, since the difference may be
+>     // outside of the domain (and hence irrelevant)
+>     // return regions.AT(rl) == symmetrised;
+>     
+>     // Test whether any part of the difference (i.e. that part of the
+>     // level that would be added by symmetrising) is inside the
+>     // domain. If the difference is outside, we can safely ignore it.
+>     ibbox const& baseextent = hh.baseextent(0,rl);
+>     ibset const difference = symmetrised - regions.AT(rl);
+>     return (difference & baseextent).empty();
+>   }
+>   
+>   template<int dir>
+>   void periodic<dir>::
+>   enforce_impl (gh const& hh, dh const& dd,
+>                 level_boundary const& bnd,
+>                 vector<ibset>& regions, int const rl)
+>   {
+>     DECLARE_CCTK_PARAMETERS;
+>     
+>     ivect const symmetry_periodic
+>       (symmetry_periodic_x, symmetry_periodic_y, symmetry_periodic_z);
+>     assert (symmetry_periodic[dir]);
+>     
+>     if (veryverbose) {
+>       cout << "Refinement level " << rl << ": making regions periodic in the " << "xyz"[dir] << " direction...\n";
+>     }
+>     
+>     regions.AT(rl) = symmetrised_regions (hh, dd, bnd, regions, rl);
+>     
+>     if (veryverbose) {
+>       cout << "   New regions are " << regions.at(rl) << "\n";
+>     }
+>   }
+>   
+>   
+>   
+>   template class periodic<0>;
+>   template class periodic<1>;
+>   template class periodic<2>;
+>   
+>   
+>   
+>   //////////////////////////////////////////////////////////////////////////////
+761a860,931
+>   //////////////////////////////////////////////////////////////////////////////
+>   // Ensure that this grid is in the domain, if desired
+>   //////////////////////////////////////////////////////////////////////////////
+>   
+>   ibset is_symmetric::
+>   symmetrised_regions (gh const& hh, dh const& dd, level_boundary const& bnd,
+>                        vector<ibset> const& regions, int const rl)
+>   {
+>     ibset symmetrised = regions.at(rl);
+>     for (ibset::const_iterator
+>            ibb = regions.at(rl).begin(); ibb != regions.at(rl).end(); ++ ibb)
+>     {
+>       ibbox const& bb = *ibb;
+>       
+>       ivect const ilo = bb.lower();
+>       ivect const iup = bb.upper();
+>       ivect const istr = bb.stride();
+>       
+>       // Origin
+>       rvect const axis (bnd.physical_lower[0],
+>                         bnd.physical_lower[1],
+>                         bnd.physical_lower[2]);
+>       ivect const iaxis0 = rpos2ipos (axis, bnd.origin, bnd.scale, hh, rl);
+>       assert (all (iaxis0 % istr == 0));
+>       ivect const iaxis1 = rpos2ipos1 (axis, bnd.origin, bnd.scale, hh, rl);
+>       assert (all (iaxis1 % istr == 0));
+>       ivect const offset = iaxis1 - iaxis0;
+>       assert (all (offset % istr == 0));
+>       assert (all (offset >= 0 and offset < 2*istr));
+>       assert (all ((iaxis0 + iaxis1 - offset) % (2*istr) == 0));
+>       ivect const iaxis = (iaxis0 + iaxis1 - offset) / 2;
+>       // negated (reflected) domain boundaries
+>       ivect const neg_ilo = (2*iaxis+offset) - ilo;
+>       ivect const neg_iup = (2*iaxis+offset) - iup;
+>       
+>       // Mirror
+>       ivect const new_ilo = neg_iup;
+>       ivect const new_iup = neg_ilo;
+>       ivect const new_istr (istr);
+>       
+>       ibbox const new_bb (new_ilo, new_iup, new_istr);
+>       
+>       symmetrised |= new_bb;
+>     }
+>     
+>     return symmetrised;
+>   }
+>   
+>   bool is_symmetric::
+>   test_impl (gh const& hh, dh const& dd,
+>              level_boundary const& bnd,
+>              vector<ibset> const& regions, int const rl)
+>   {
+>     DECLARE_CCTK_PARAMETERS;
+>     
+>     if (not expect_symmetric_grids) return true;
+>     
+>     ibset const symmetrised = symmetrised_regions (hh, dd, bnd, regions, rl);
+>     return regions.AT(rl) == symmetrised;
+>   }
+>   
+>   void is_symmetric::
+>   enforce_impl (gh const& hh, dh const& dd,
+>                 level_boundary const& bnd,
+>                 vector<ibset>& regions, int const rl)
+>   {
+>     // There is nothing we want to do here
+>     CCTK_WARN (CCTK_WARN_ABORT, "internal error");
+>   }
+>   
+>   
+>   
+diff -rN old-ExternalThorns/CarpetRegrid2/src/property.hh new-ExternalThorns/CarpetRegrid2/src/property.hh
+130a131,146
+>   // Make the boxes periodic in one direction
+>   template<int dir>
+>   class periodic: public property {
+>     ibset symmetrised_regions (gh const& hh, dh const& dd,
+>                                level_boundary const& bnd,
+>                                vector<ibset> const& regions, int rl);
+>     bool test_impl (gh const& hh, dh const& dd,
+>                     level_boundary const& bnd,
+>                     vector<ibset> const& regions, int rl);
+>     void enforce_impl (gh const& hh, dh const& dd,
+>                        level_boundary const& bnd,
+>                        vector<ibset>& regions, int rl);
+>   };
+>   
+>   
+>   
+157a174,188
+>   // Ensure that this grid is symmetric, if desired
+>   class is_symmetric: public property {
+>     ibset symmetrised_regions (gh const& hh, dh const& dd,
+>                                level_boundary const& bnd,
+>                                vector<ibset> const& regions, int rl);
+>     bool test_impl (gh const& hh, dh const& dd,
+>                     level_boundary const& bnd,
+>                     vector<ibset> const& regions, int rl);
+>     void enforce_impl (gh const& hh, dh const& dd,
+>                        level_boundary const& bnd,
+>                        vector<ibset>& regions, int rl);
+>   };
+>   
+>   
+>   
+diff -rN old-ExternalThorns/CarpetRegrid2/src/regrid.cc new-ExternalThorns/CarpetRegrid2/src/regrid.cc
+92c92
+<       if (any (rad < 0.0)) {
+---
+>       if (any (rad < CCTK_REAL(0))) {
+152,153c152,154
+< #warning "TODO: check this (for Carpet, and maybe also for CartGrid3D)"
+< #warning "TODO: (the check that these two are consistent should be in Carpet)"
+---
+>     // TODO: check this (for Carpet, and maybe also for CartGrid3D)
+>     // TODO: (the check that these two are consistent should be in
+>     // Carpet)
+180,181c181,182
+< #warning "think about this a bit more"
+< #warning "use this taper-checking also in Comm.cc"
+---
+>         // TODO: think about this a bit more
+>         // TODO: use this taper-checking also in Comm.cc
+334a336,338
+>     properties.push_back (new periodic<0>());
+>     properties.push_back (new periodic<1>());
+>     properties.push_back (new periodic<2>());
+339a344
+>     final_properties.push_back (new is_symmetric());
+368a374,375
+>         CCTK_VInfo (CCTK_THORNSTRING,
+>                     "Enforcing grid structure properties, iteration %d", count);
+369a377
+>         ibset const old_regions = regions.at(rl);
+381a390,392
+>         if (regions.at(rl) == old_regions) {
+>           CCTK_WARN (CCTK_WARN_ABORT, "Could not enforce grid structure properties (not making any progress); giving up");
+>         }
+383c394,395
+<           CCTK_WARN (CCTK_WARN_ABORT, "Could not enforce grid structure properties; giving up");
+---
+>           CCTK_VWarn (CCTK_WARN_ABORT, __LINE__, __FILE__, CCTK_THORNSTRING,
+>                       "Could not enforce grid structure properties after %d iterations; giving up", count);

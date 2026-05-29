@@ -1,0 +1,82 @@
+!DESC "Diagonal shocktube, RK2, Roe, TVD-Minmod, Ideal Gas"
+
+ActiveThorns = "carpet carpetreduce carpetslab LocalReduce"
+
+cactus::cctk_itlast 			= 	0
+
+driver::ghost_size			=	2
+driver::global_nx 			= 	30
+driver::global_ny 			= 	30
+driver::global_nz 			= 	30
+
+ActiveThorns = "coordbase symbase cartgrid3d boundary"
+
+grid::type 				= 	"BySpacing"
+grid::domain 				= 	"full"
+grid::dxyz 				= 	0.3
+
+ActiveThorns = "time"
+
+time::dtfac 				= 	0.25
+
+ActiveThorns = "mol nanchecker"
+
+methodoflines::ode_method 		= 	"rk2"
+methodoflines::mol_intermediate_steps	=	2
+
+
+ActiveThorns = "ADMBase StaticConformal SpaceMask CoordGauge ADMMacros ADMCoupling RNSID AEILocalInterp
+		HydroBase tmunubase whisky reconstructTVD riemannsolverroe recovermarti sphericalsurface"
+
+ADMBase::evolution_method		=	"none"
+ADMBase::initial_data                   =       "RNS"
+ADMBase::initial_shift			=	"RNS"
+ADMBase::initial_lapse			=	"RNS"
+ADMBase::metric_type			= 	"physical"
+
+HydroBase::evolution_method             =       "Scotch_HD"
+
+SpaceMask::use_mask			=	"yes"
+
+RNSID::verbose				=	"yes"
+RNSID::central_energy_density		=	0.00144384 # for rho0=1.28e-3
+RNSID::rho_atmosphere			=	1.28e-13
+RNSID::eos_Gamma			=	2
+RNSID::eos_Kappa			=	100
+RNSID::ns_search_type                   =       "Omega"
+RNSID::rns_omega_frac_of_Kepler         =       1. # MaxSpin
+RNSID::rns_oblateness			=	0.5
+RNSID::delta_oblate			=	0.01
+RNSID::nghosts				=	2
+RNSID::interpolator_name                = "Lagrange polynomial interpolation"
+RNSID::interpolator_pars		=	"order=4"
+#RNSID::rns_file = "rns_poly_static.dat"
+whisky::initial_prim2con		= "yes"
+
+ActiveThorns = "eos_base eos_idealfluid eos_polytrope"
+
+EOS_Ideal_Fluid::eos_ideal_fluid_gamma	=	1.66666666666666
+
+
+TmunuBase::stress_energy_storage = "yes"
+TmunuBase::stress_energy_at_RHS  = "yes"
+
+whisky::riemann_solver			=	"Roe"
+whisky::whisky_eos_type			=	"General"
+whisky::whisky_eos_table		=	"Ideal_Fluid"
+whisky::whisky_stencil			=	2
+whisky::recon_method			=	"tvd"
+reconstructTVD::tvd_limiter		=	"minmod"
+whisky::bound				=	"flat"
+
+ActiveThorns = "ioutil carpetioascii carpetiobasic"
+
+IO::out_fileinfo			=	"none"
+IO::out_dir 				= 	$parfile
+
+IOBasic::outInfo_every 			= 	1
+IOBasic::outInfo_vars 			= 	"HydroBase::rho"
+
+IOASCII::out1D_every 			= 	1
+IOASCII::out1D_vars 			= 	"HydroBase::rho Whisky::w_lorentz"
+

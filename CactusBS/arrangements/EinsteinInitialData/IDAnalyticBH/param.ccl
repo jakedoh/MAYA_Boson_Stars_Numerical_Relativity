@@ -1,0 +1,145 @@
+# Parameter definitions for thorn IDAnalyticBH
+# $Header$
+
+private:
+
+# Schwarzschild parameters
+# ------------------------
+REAL mass "Mass of black hole"
+{
+: :: "Not sure if it can be negative or not"
+} 2.0
+
+# Kerr parameters
+# ------------------------
+REAL a_Kerr "Angular momentum parameter of black hole"
+{
+-1:1 :: "Between +1 and -1"
+} 0.1
+
+# Multiple Misner Parameters
+# --------------------------
+REAL mu "Misner mu value"
+{
+0: :: "Non-negative"
+} 1.2
+
+INT nmax "Number of terms to include for Misner series"
+{
+0: :: "Non-negative"
+} 30
+
+INT misner_nbh "Number of Misner black holes"
+{
+ 1:10 :: "Not more than 10"
+} 1
+
+# Brill Lindquist Parameters
+# --------------------------
+INT bl_nbh "Number of Brill Lindquist black holes"
+{
+ 1:4 :: "Between one and four holes implemented"
+} 1
+REAL bl_x0_1 "x-position of 1st BL hole"
+{
+: :: "Anything"
+} 0.0
+REAL bl_y0_1 "y-position of 1st BL hole"
+{
+: :: "Anything"
+} 0.0
+REAL bl_z0_1 "z-position of 1st BL hole"
+{
+: :: "Anything"
+} 0.0
+REAL bl_M_1 "Mass of 1st BL hole"
+{
+: :: "Anything"
+} 1.0
+REAL bl_x0_2 "x-position of 2nd BL hole"
+{
+: :: "Anything"
+} 0.0
+REAL bl_y0_2 "y-position of 2nd BL hole"
+{
+: :: "Anything"
+} 0.0
+REAL bl_z0_2 "z-position of 2nd BL hole"
+{
+: :: "Anything"
+} 0.0
+REAL bl_M_2 "Mass of 2nd BL hole"
+{
+: :: "Anything"
+} 1.0
+REAL bl_x0_3 "x-position of 3nd BL hole"
+{
+: :: "Anything"
+} 0.0
+REAL bl_y0_3 "y-position of 3nd BL hole"
+{
+: :: "Anything"
+} 0.0
+REAL bl_z0_3 "z-position of 3nd BL hole"
+{
+: :: "Anything"
+} 0.0
+REAL bl_M_3 "Mass of 3rd BL hole"
+{
+: :: "Anything"
+} 1.0
+REAL bl_x0_4 "x-position of 4th BL hole"
+{
+: :: "Anything"
+} 0.0
+REAL bl_y0_4 "y-position of 4th BL hole"
+{
+: :: "Anything"
+} 0.0
+REAL bl_z0_4 "z-position of 4th BL hole"
+{
+: :: "Anything"
+} 0.0
+REAL bl_M_4 "Mass of 4th BL hole"
+{
+: :: "Anything"
+} 1.0
+
+# Common parameters
+# -----------------
+REAL epsilon "Fudge factor"
+{
+  0.0:* :: ""
+} 1.e-16
+
+
+shares: ADMBase
+
+EXTENDS KEYWORD initial_data 
+{
+  "schwarzschild"      :: "One Schwarzschild black hole"
+  "bl_bh"              :: "Brill Lindquist black holes"
+  "misner_bh"          :: "Misner black holes"
+  "multiple_misner_bh" :: "Multiple Misner black holes"
+  "kerr"	       :: "One Kerr black hole"	
+} 
+
+EXTENDS KEYWORD initial_lapse 
+{
+  "schwarzschild" :: "Set lapse to Schwarzschild"
+  "schwarz"       :: "Set lapse to Schwarzschild"
+  "cadez"         :: "Set lapse to Misner"
+  "kerr"          :: "Set lapse to Kerr"
+}
+
+EXTENDS KEYWORD initial_shift 
+{
+  "kerr" :: "Set shift to Kerr"
+}
+
+USES KEYWORD metric_type 
+
+shares: StaticConformal
+
+USES KEYWORD conformal_storage
+

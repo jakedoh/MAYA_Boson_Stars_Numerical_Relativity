@@ -1,0 +1,66 @@
+# Schedule definitions for thorn TestGlobapdReduce
+# $Header$
+
+STORAGE: real_3d int_3d real_vals int_vals weighted_real_vals weighted_int_vals real_gf[1] gf_vals[1] scalar_reduction weight_group
+
+schedule TestGlobalReduce_Initial at CCTK_INITIAL
+{
+  LANG:C
+} "Initialize the input arrays to values"
+
+schedule TestGlobalReduceC_Avg at CCTK_POSTINITIAL
+{
+  LANG: C
+} "Test out GF reduction"
+
+schedule TestGlobalReduceC_Maximum at CCTK_POSTINITIAL after TestGlobalReduceC_Avg
+{
+  LANG: C
+} "Test out maximum reduction"
+
+schedule TestGlobalReduceC_Minimum at CCTK_POSTINITIAL after TestGlobalReduceC_Maximum
+{
+  LANG: C
+} "Test out minimum reduction"
+  
+schedule TestGlobalReduceC_Sum at CCTK_POSTINITIAL after TestGlobalReduceC_Minimum
+{
+  LANG: C
+} "Test out sum reduction"
+  
+schedule TestGlobalReduceC_GF at CCTK_POSTINITIAL after TestGlobalReduceC_Sum
+{
+  LANG: C
+} "Test out GF reduction"
+
+schedule TestGlobalReduceC_Norms at CCTK_POSTINITIAL after TestGlobalReduceC_GF
+{
+  LANG: C
+} "Test out GF reduction"
+
+
+schedule TestGlobalReduceC_Scalar at CCTK_POSTINITIAL after TestGlobalReduceC_Norms
+{
+  LANG: C
+} "Test out GF reduction"
+
+schedule TestGlobalReduceC_Weighted_Avg at CCTK_POSTINITIAL after TestGlobalReduceC_Scalar
+{
+  LANG: C
+} "Test weighted global average reduction"
+
+schedule TestGlobalReduceC_Weighted_Maximum at CCTK_POSTINITIAL after TestGlobalReduceC_Weighted_Avg
+{
+  LANG: C
+} "Test weighted global maximum reduction"
+
+schedule TestGlobalReduceC_Weighted_Minimum at CCTK_POSTINITIAL after TestGlobalReduceC_Weighted_Maximum
+{
+  LANG: C
+} "Test weighted global minimum reduction"
+  
+schedule TestGlobalReduceC_Weighted_Sum at CCTK_POSTINITIAL after TestGlobalReduceC_Weighted_Minimum
+{
+  LANG: C
+} "Test weighted global Sum reduction"
+

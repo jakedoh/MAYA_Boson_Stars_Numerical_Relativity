@@ -1,0 +1,20 @@
+# Schedule definitions for thorn SphericalHarmonicDecomp
+# $Header:$
+
+if (do_test)
+{
+  SCHEDULE SphericalHarmonicDecomp_Test AT CCTK_INITIAL
+  {
+    LANG: C
+    OPTIONS: GLOBAL
+  } "test"
+}
+
+if (extract_spacetime_metric_every)
+{
+  SCHEDULE SphericalHarmonicDecomp_DumpMetric AT CCTK_POSTSTEP
+  {
+    LANG: C
+    OPTIONS: GLOBAL
+  } "extract and decompose spacetime metric"
+}

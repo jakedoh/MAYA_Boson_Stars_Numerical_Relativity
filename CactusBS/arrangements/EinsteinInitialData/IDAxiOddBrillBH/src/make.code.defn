@@ -1,0 +1,9 @@
+# Main make.code.defn file for thorn AxiOddBHWave
+# $Header$
+
+# Source files in this directory
+SRCS = IDAxiOddBrillBH.F Stab2d.F ParamCheck.c
+
+# Subdirectories containing source files
+SUBDIRS = 
+

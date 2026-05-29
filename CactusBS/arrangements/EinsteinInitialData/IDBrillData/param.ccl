@@ -1,0 +1,196 @@
+# Parameter definitions for thorn IDBrillData
+# $Header$
+
+shares: ADMBase
+
+EXTENDS KEYWORD initial_data 
+{
+   "brilldata"   :: "Brill wave initial data"
+   "brilldata2D" :: "Brill wave initial data assuming axisymmetry"
+}
+
+USES KEYWORD metric_type
+
+shares: StaticConformal
+
+USES KEYWORD conformal_storage
+
+
+private:
+
+# Parameters for elliptic solve
+
+KEYWORD solver "Which elliptic solver to use"
+{
+  "sor"    ::  "Use SOR solver"
+  "petsc"  ::  "Use PETSc solver"
+  "bam"    ::  "Use bam solver"
+} "sor"
+
+KEYWORD bound "Which boundary condition to use"
+{
+  "const" :: "constant boundary: set const_v0"
+  "robin" :: "Robin boundary: set robin_falloff, robin_inf"
+} "robin"
+
+INT robin_falloff "Fall-off of Robin BC"
+{
+  0: :: "any positive integer value"
+} 1
+
+REAL const_v0 "Value of constant BC"
+{
+  : :: "anything goes"
+} 1.0
+
+REAL robin_inf "Value at infinity of Robin BC"
+{
+  : :: "anything goes"
+} 1.0
+
+REAL thresh "How far (absolute norm) to go"
+{
+  0.0: :: "Positive number please"
+} 0.00001
+
+
+# Brill wave parameters
+
+KEYWORD q_function  "Form of function q [0,1,2]"
+{
+  "exp" :: "contains e^{-z^2} factor"
+  "eppley" :: "contains 1/(1+r^2) factor"
+  "gundlach" :: "contains e^{-r^2} factor"
+} "gundlach"
+
+# -------------------------------------------------------------
+
+REAL exp_a "Exp Brill wave: Amplitude"
+{
+  : :: "Anything"
+} 0.0
+
+INT exp_b "Exp Brill wave: used in exponent in rho: rho^(2+b)"
+{
+  : :: "Anything"
+} 2
+
+REAL exp_rho0 "Exp Brill wave: radius of torus in rho"
+{
+  0:* :: "Positive"
+} 0.0
+
+REAL exp_sigmaz "Exp Brill wave: sigma in z"
+{
+  (0:* :: "Positive"
+} 1.0
+
+# -------------------------------------------------------------
+
+REAL eppley_a "Eppley Brill wave: Amplitude"
+{
+  : :: "Anything"
+} 0.0
+
+INT eppley_b "Eppley Brill wave: used in exponent in rho: rho^b"
+{
+  : :: "Anything"
+} 2
+
+INT eppley_c "Eppley Brill wave: (r^2 - r0^2)^(c/2)"
+{  
+  : :: "Anything"
+} 2
+
+REAL eppley_r0 "Eppley Brill wave: radius of torus in r"
+{
+  0:* :: "Positive" 
+} 0.0
+
+REAL eppley_sigmarho "Eppley Brill wave: sigma in rho"
+{
+  : :: "Anything"
+} 1.0
+
+REAL eppley_sigmar "Eppley Brill wave: sigma in r"
+{
+  : :: "Anything"
+} 1.0
+
+# -------------------------------------------------------------
+
+REAL gundlach_a "Gundlach Brill wave: Amplitude"
+{
+  : :: "Anything"
+} 0.0
+
+INT gundlach_b "Gundlach Brill wave: used in exponent in rho: rho^b"
+{
+  : :: "Anything"
+} 2
+
+REAL gundlach_sigmarho "Gundlach Brill wave: sigma in rho"
+{
+  : :: "Anything"
+} 1.0
+
+REAL gundlach_r0 "Gundlach Brill wave: radius of torus in r"
+{
+  0:* :: "Positive" 
+} 0.0
+
+INT gundlach_c "Gundlach Brill wave: (r^2 - r0^2)^(c/2)"
+{  
+  : :: "Anything"
+} 2
+
+REAL gundlach_sigmar "Gundlach Brill wave: sigma in r"
+{
+  : :: "Anything"
+} 1.0
+
+# -------------------------------------------------------------
+
+# 3D Brill wave parameters
+
+REAL brill3d_d "3D Brill wave:  d rho^m cos^2(n (phi + phi0))"
+{
+  : :: "Anything"
+} 0.0
+
+REAL brill3d_e "3D Brill wave:  d rho^m cos^2(n (phi + phi0))"
+{
+  : :: "Anything"
+} 1.0
+
+REAL brill3d_m "3D Brill wave:  d rho^m cos^2(n (phi + phi0))"
+{
+  : :: "Anything"
+} 2.0
+
+REAL brill3d_n "3D Brill wave:  d rho^m cos^2(n (phi + phi0))"
+{
+  : :: "Anything"
+} 2.0
+
+REAL brill3d_phi0 "3D Brill wave:  d rho^m cos^2(n (phi + phi0))"
+{
+  : :: "Anything"
+} 0.0
+
+
+# Additional parameters
+
+REAL rhofudge "delta rho for axis fudge"
+{
+  0: :: "Positive please"
+} 0.00001
+
+INT sor_maxit "Maximum number of iterations"
+{
+0:* :: "Positive"
+} 10000
+
+BOOLEAN output_coeffs "output coefficients for elliptic solve"
+{
+} "no"

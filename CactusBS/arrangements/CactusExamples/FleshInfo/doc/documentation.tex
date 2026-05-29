@@ -1,0 +1,62 @@
+\documentclass{article}
+
+% Use the Cactus ThornGuide style file
+% (Automatically used from Cactus distribution, if you have a 
+%  thorn without the Cactus Flesh download this from the Cactus
+%  homepage at www.cactuscode.org)
+\usepackage{../../../../doc/latex/cactus}
+
+\begin{document}
+
+\title{FleshInfo}
+\author{Gabrielle Allen}
+\date{$ $Date$ $}
+
+\maketitle
+
+% Do not delete next line
+% START CACTUS THORNGUIDE
+
+\begin{abstract}
+Demonstrates obtaining information about computational infrastructure
+from the flesh
+\end{abstract}
+
+\section{Purpose}
+
+This thorn demonstrates using flesh interfaces to obtain information
+about the computational infrastructure available to a simulation. 
+In this case, the information obtained is simply reported to standard
+output. This thorn doesn't exhaust all the available information, although
+hopefully it will be expanded to show all the applicable APIs in practise.
+Notable exceptions at the moment include information about parameters, 
+scheduled functions and grid variables.
+
+\section{Reduction Operators}
+
+FleshInfo provides a list or registered reduction operators, along 
+with the thorn and implementation which registered them.
+
+\section{Interpolation Operators}
+
+FleshInfo provides a list or registered interpolation operators, along 
+with the thorn and implementation which registered them.
+
+\section{IO Methods}
+
+FleshInfo provides a list or registered IO methods, along 
+with the thorn and implementation which registered them.
+
+\section{Coordinates}
+FleshInfo reports on
+\begin{itemize}
+\item Registered coordinate systems, their dimensions and the thorn
+	and implementation which registered them
+\item For each coordinate system, a list of coordinates, their
+	directions, the computational range and the physical index range.
+\end{itemize}
+
+% Do not delete next line
+% END CACTUS THORNGUIDE
+
+\end{document}

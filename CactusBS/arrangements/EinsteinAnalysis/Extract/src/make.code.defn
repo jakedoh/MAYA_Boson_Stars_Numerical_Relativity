@@ -1,0 +1,29 @@
+# Main make.code.defn file for thorn Extract
+# $Header$
+
+# Source files in this directory
+SRCS =  D2_extract_int.F \
+	D3_extract_int.F \
+	D3_to_D2_int.F \
+	cartesian_to_spherical_int.F \
+	unphysical_to_physical_int.F \
+	ADMmass_integrand3D_int.F \
+	momentum_integrand3D_int.F\
+	spin_integrand3D_int.F\
+	met_rad_der_int.F \
+	Extract.F \
+	D3_extract.F \
+	cartesian_to_spherical.F \
+	unphysical_to_physical.F \
+	D2_extract.F \
+	met_rad_der.F \
+	D3_to_D2.F \
+	ADMmass_integrand3D.F \
+	momentum_integrand3D.F \
+	spin_integrand3D.F \
+	Advertise.c \
+        ParamCheck.c
+
+# Subdirectories containing source files
+SUBDIRS = 
+

@@ -1,0 +1,121 @@
+!DESC "distorted BH, no rotation, fixed mesh refinement evolution with carpet"
+#
+# $Id: carpet-a0.1w1b0n4_p4d4_gam0_g0.75b1.1a1p2_63b0.4.par 59 2009-09-21 19:12:59Z knarf $
+#
+# Distorted BH
+#
+# Frank Herrmann 19.Jun.2003
+#
+# Edited IH 31.Jul.2003 for Carpet.
+#
+
+ActiveThorns = "sphericalsurface symbase initbase CoordBase carpetioascii idaxibrillbh spacemask admcoupling admbase staticconformal admmacros coordgauge admanalysis mol bssn_mol admconstraints carpetinterp localinterp aeilocalinterp localreduce boundary time carpet carpetlib carpetregrid loopcontrol carpetreduce carpetslab cartgrid3d ioutil iobasic ellbase nanchecker waveextract"
+
+InitBase::initial_data_setup_method="init_all_levels"
+
+#--- grid
+driver::global_nx   = 63
+driver::global_ny   = 63
+driver::global_nz   = 33
+driver::ghost_size  = 2
+grid::type          = "byrange"
+grid::domain        = "bitant"
+grid::avoid_origin  = "no"
+grid::dxyz          = 0.4
+grid::xmin          = -12.45
+grid::xmax          = 12.35
+grid::ymin          = -12.4
+grid::ymax          = 12.4
+grid::zmin          = -0.8
+grid::zmax          = 12.0
+time::dtfac         = 0.25
+cactus::cctk_itlast = 4
+#carpet::buffer_width = 2
+carpet::max_refinement_levels    = 2
+carpetregrid::refinement_levels  = 2
+carpetregrid::refined_regions    = "manual-coordinate-list"
+carpetregrid::coordinates        = "[ [ ([-0.2,-0.2,-0.2]:[4.0,4.0,4.0]:[0.2,0.2,0.2]) ] ]"
+#carpetregrid::gridpoints         = "[ [ ([66,66,4]:[184,184,68]:[2,2,2]) ] ]"
+carpetregrid::outerbounds        = "[ [ [[0,0],[0,0],[1,0]] ] ]"
+ioascii::out1d_xline_yi          = 31
+ioascii::out1d_xline_zi          = 2
+ioascii::out1d_yline_xi          = 31
+ioascii::out1d_yline_zi          = 2
+ioascii::out1d_zline_xi          = 31
+ioascii::out1d_zline_yi          = 31
+carpet::prolongation_order_space = 3
+carpet::prolongation_order_time  = 2
+
+#--- axisymmetric brill wave+bh
+admbase::initial_data              = "axibrillbh"
+idaxibrillbh::amp                  = 0.1
+idaxibrillbh::eta0                 = 0.0
+idaxibrillbh::sigma                = 1.0
+idaxibrillbh::etamax               = 6.0
+idaxibrillbh::n                    = 4
+idaxibrillbh::ne                   = 302
+idaxibrillbh::nq                   = 54
+admbase::initial_shift             = "zero"
+admbase::evolution_method          = "adm_bssn"
+admbase::metric_type               = "static conformal"
+staticconformal::conformal_storage = "factor+derivs+2nd derivs"
+
+#--- numerics
+mol::ode_method        = "icn"
+mol::initial_data_is_crap = "yes"
+adm_bssn::bound        = "newrad"
+adm_bssn::stencil_size = 2
+adm_bssn::advection    = "upwind2"
+boundary::radpower     = 3
+
+#--- gauge
+admbase::initial_lapse          = "one"
+admbase::lapse_evolution_method = "1+log"
+adm_bssn::lapsesource           = "modified"
+adm_bssn::harmonic_f            = 2.0
+adm_bssn::force_lapse_positive  = "yes"
+adm_bssn::LapsePsiPower         = 4
+adm_bssn::AlphaDissip           = 2.0
+admbase::shift_evolution_method = "gamma0"
+adm_bssn::ShiftGammaCoeff       = 0.75
+adm_bssn::BetaDriver            = 1.1
+adm_bssn::ShiftAlpPower         = 1
+adm_bssn::ShiftPsiPower         = 2
+
+#--- waveextract
+waveextract::out_every                        = 2
+waveextract::interpolation_operator           = "Lagrange polynomial interpolation"
+waveextract::interpolation_order              = 2
+waveextract::maximum_detector_number          = 5
+waveextract::switch_output_format             = 10
+waveextract::rsch2_computation                ="average Schwarzschild metric"
+waveextract::verbose                          = 8
+waveextract::l_mode                           = 5
+waveextract::m_mode                           = 5
+waveextract::detector_radius[0]               = 7.0
+waveextract::detector_radius[1]               = 8.0
+waveextract::detector_radius[2]               = 9.0
+waveextract::detector_radius[3]               = 10.0
+waveextract::detector_radius[4]               = 10.3
+waveextract::make_interpolator_warnings_fatal = yes
+
+#--- output
+io::out_dir                             = "carpet-a0.1w1b0n4_p4d4_gam0_g0.75b1.1a1p2_63b0.4"
+io::out_fileinfo                        = "none"
+iobasic::outScalar_every                = 2
+iobasic::outScalar_vars                 = "admbase::alp admbase::metric admbase::shift admconstraints::momentum admconstraints::ham "
+iobasic::outInfo_every                  = 2
+iobasic::outInfo_vars                   = "admbase::alp admconstraints::ham"
+ioascii::out1D_every                    = 2
+ioascii::out1D_vars                     = "admbase::alp admbase::metric admbase::curv admbase::shift admconstraints::momentum admconstraints::ham "
+# ascii 2D output gets big
+#ioascii::out2D_every                    = 2
+#ioascii::out2D_vars                     = "admbase::alp admbase::metric admbase::curv admbase::shift admconstraints::momentum admconstraints::ham admconstraints::normalized_hamiltonian adm_bssn::adm_bs_phi adm_bssn::adm_bssn_metric adm_bssn::adm_bs_k adm_bssn::adm_bssn_gamma adm_bssn::adm_bssn_curv"
+
+#--- nanchecker
+nanchecker::check_every     = 2
+nanchecker::check_vars      ="admbase::alp admbase::metric admbase::curv admbase::shift"
+nanchecker::action_if_found ="terminate"
+
+
+sphericalsurface::nsurfaces = 1

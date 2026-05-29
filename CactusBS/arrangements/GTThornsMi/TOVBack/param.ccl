@@ -1,0 +1,100 @@
+# Parameter definitions for thorn TOVBack
+
+
+shares:ADMBase
+
+EXTENDS KEYWORD initial_data
+{
+  "TOVBack" :: "TOV star initial metric"
+}
+USES KEYWORD metric_type
+
+
+EXTENDS KEYWORD initial_lapse
+{
+  "TOVBack" :: "TOV star initial lapse; isotropic"
+}
+
+EXTENDS KEYWORD initial_shift
+{
+  "TOVBack" :: "TOV star initial shift"
+}
+
+private:
+REAL MyGamma "The adiabatic index"
+{
+ 0:* :: "Positive"
+} 2.0
+
+#========1D SPHERICAL GRID===============
+
+REAL rmin "r domain minimun"
+{
+  *:* :: "No restriction"
+} 1e-14
+
+REAL rmax "r domain maximun"
+{
+  *:* :: "No restriction"
+} 10.0
+
+INT Nr "number of points in the r direction" 
+{
+  *:* :: "No restriction"
+} 2500
+
+
+#==========================================
+REAL courant "courant number"
+{
+  *,* :: "No restriction"
+} 0.25
+
+REAL MyAtmosphere "myfloor"
+{ 
+*,* :: "No Restriction"  
+} 1.d-10                   
+
+REAL Tinynumber "very small number"
+{ 
+*,* :: "No Restriction"  
+} 1.d-20
+
+                     
+REAL rho0_c "density"
+{ 
+*,* :: "No Restriction"
+} 0.00128  
+
+REAL alpha_c "lapse"
+{ 
+*,* :: "No Restriction"  
+} 0.5   
+
+REAL K_poly "Polytropic Constant"
+{ 
+*,* :: "No Restriction"  
+} 100.0     
+
+
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+##PARA LA HIDRO PERO PRIMERO LA METRICA
+
+shares:HydroBase
+
+EXTENDS KEYWORD initial_hydro "TOVBack"
+{
+  "TOVBack" :: "TOV star initial hydrobase variables"
+}
+
+#!shares:GRHydro
+#!USES real rho_abs_min
+#!USES real rho_rel_min
+#!USES REAL initial_rho_abs_min
+#!USES REAL initial_rho_rel_min
+#!USES REAL initial_atmosphere_factor
+#!USES real GRHydro_rho_central
+
+
+
+

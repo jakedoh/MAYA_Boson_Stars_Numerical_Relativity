@@ -1,0 +1,162 @@
+# Parameter definitions for thorn SubspaceNorms
+# $Header:$
+
+RESTRICTED:
+CCTK_INT calc_norms_every "Calculate only every N iterations" STEERABLE=always
+{
+  0:* :: "Must be set to iterations no finer than the coarsest level encountered during integration"
+} 1 
+
+CCTK_INT calc_norms_every_vol[100] "Calculate only every N iterations"
+{
+ -1   :: "use calc_norms_every"
+  0:* :: "Must be set to iterations no finer than the coarsest level encountered during integration"
+} -1 
+
+## Variables to Norm ##
+CCTK_INT num_scalars "Number of scalar variables for which to compute the norm" STEERABLE=recover
+{
+  0:* :: "number of scalars. Must match length of specified scalar_variables"
+} 0
+
+CCTK_INT num_vectors "Number of vector variables for which to compute the norm" STEERABLE=recover
+{
+  0:* :: "number of vectors. Must match length of specified vector_variables*3"
+} 0
+
+CCTK_INT num_tensors "Number of tensor variables for which to compute the norm" STEERABLE=recover
+{
+  0:* :: "number of tensors. Must match length of specified tensor_variables*6"
+} 0
+
+STRING scalar_variables "List of variables containing scalars for creating the norm"
+{
+  ".*" :: "List of grid function names containing scalars to be normed"
+} ""
+
+STRING vector_groups "List of groups containing vectors for creating the norm"
+{
+  ".*" :: "List of grid function names containing vectors to be normed"
+} ""
+
+STRING tensor_groups "List of groups containing tensors for creating the norm"
+{
+  ".*" :: "List of grid function names containing tensors to be normed"
+} ""
+
+## Type of norm for scalars (L2 for vectors and tensors, L2 default for scalars) ##
+CCTK_INT norm_exponent[100] "Norm integrates ( scalar**norm_exponent ). Index defines location in scalar_variables" STEERABLE=always
+{
+  *:*  :: "Anything"
+} 2
+
+BOOLEAN undensitize_scalar[100] "Divide scalar by sqrt(detg), useful for integrations of conservative mhd variables" STEERABLE=always
+{
+} "no"
+
+BOOLEAN scalar_floor[100] "Impose a floor to the scalar value, useful for, e.g., ignoring atmosphere"
+{
+} "no"
+
+CCTK_REAL scalar_floor_val[100] "Minimum value of scalar value to contribute to integrand."
+{
+  *:*  :: "Anything."
+} 0
+
+STRING scalar_floor_var[100] "Variable on which to impose the scalar floor for inclusion (Default: same as scalar_variables[vol])"
+{
+  ".*" :: "List of scalar variables on which to impose a floor for inclusion of the integration quantity"
+} "HydroBase::rho"
+
+BOOLEAN density_weighted[100] "Add a factor of the density (HydroBase::rho) to the weight" STEERABLE=always
+{
+} "no"
+
+
+## Integration volume informations ##
+
+CCTK_INT intvolumes "Number of spheres to integrate within, in addition to the full grid" STEERABLE=recover
+{
+  1:100 :: "Hard-coded because size of int_wi_rad"
+} 1
+
+CCTK_REAL int_wi_rad[100] "Integrate within radius, hard-coded max at 100" STEERABLE=recover
+{
+ 0:* :: "Anything positive"
+} 0
+
+CCTK_KEYWORD centre_from[100] "What controls the centre" STEERABLE=always
+{
+  "parameter"         :: "use parameters centre_x/y/z"
+  "spherical surface" :: "use spherical surfaces"
+} "parameter"
+
+CCTK_REAL centre_x[100] "x center" STEERABLE=always
+{
+ *:* :: "any real number"
+} 0
+
+CCTK_REAL centre_y[100] "x center" STEERABLE=always
+{
+ *:* :: "any real number"
+} 0
+
+CCTK_REAL centre_z[100] "x center" STEERABLE=always
+{
+ *:* :: "any real number"
+} 0
+
+CCTK_INT surface_index[100] "Which spherical surface to use" STEERABLE=always
+{
+ -1   :: "invalid"
+ 0:*  :: "any valid surface index"
+} -1
+
+## Weight information. Currently also ignores refinement boundary zones since	 ##
+## this was aimed at calculating norms of quantities with terrible precision 	 ##
+## in those areas. Weight index corresponds to volume index			 ##
+
+STRING weight_var[100] "Variable containing the weights for integration" STEERABLE=always
+{
+ "CarpetReduce[:][:]weight"    :: "Standard Carpet weights"
+ "AHMask[:][:]AHmasked_weight" :: "Mask out AHs (if found)"
+  ".+[:][:].+"                 :: "Any other valid variable, really"
+} "AHMask::AHmasked_weight"
+
+BOOLEAN omit_all_buffers[100] "Omit all buffer regions" STEERABLE=always
+{
+} "no"
+
+## Output information ##
+
+STRING out_format "Which format for Scalar floating-point number output" STEERABLE=always
+{
+  ^(\.[1]?[0-9])?[EGefg]$ :: "output with given precision in exponential / floating point notation"
+} ".19g"
+
+BOOLEAN norm_as_output "Whether to output the norm itself or let the norm be calculated in post-processing, useful to gauge accuracy" STEERABLE=always
+{
+} "no"
+
+BOOLEAN output_ncount "Output normalizing quantity (e.g. volume)" STEERABLE=always
+{
+} "no"
+
+## Debug ##
+PRIVATE:
+BOOLEAN verbose "Debugging"
+{
+} "no"
+
+BOOLEAN debug "Debugging"
+{
+} "no"
+
+SHARES: SphericalSurface
+
+USES INT nsurfaces AS sphericalsurfaces_nsurfaces
+
+shares: IO
+
+USES STRING out_dir
+

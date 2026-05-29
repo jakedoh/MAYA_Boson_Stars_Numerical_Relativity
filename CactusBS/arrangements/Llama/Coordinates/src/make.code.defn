@@ -1,0 +1,5 @@
+SRCS = cartesian.cc interpolate.cc multipatch.cc patchsystem.cc register.cc \
+       thornburg04.cc thornburg04nc.cc param_check.cc local_to_global.cc global_to_local.cc \
+       twopatchcartesian.cc cylinderinbox.cc spherecolumn.cc cylindercolumn.cc \
+       inverse_jacobian.F90 twopatchdistorted.cc thornburg13.cc util.cc
+

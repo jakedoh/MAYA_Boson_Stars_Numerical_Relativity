@@ -1,0 +1,563 @@
+# Parameter definitions for thorn Whisky
+# $Header$
+
+shares:ADMBase
+
+USES int initial_shift ""
+{
+}
+
+USES KEYWORD metric_type ""
+{
+}
+ 
+EXTENDS KEYWORD shift_evolution_method ""
+{
+  "Comoving" :: "Set the shift so the matter is approximately comoving"
+}
+
+
+#########################################
+###  PARAMETRES SHARED FROM HydroBase ###
+#########################################
+
+shares: HydroBase
+
+USES CCTK_INT timelevels
+USES KEYWORD prolongation_type
+
+EXTENDS KEYWORD evolution_method "Hydro Evolution Method"
+{
+  "Scotch_HD"  :: "Evolve hydrodynamics with Maya Scotch"
+  "Scotch_QuasiMHD" :: "Evolve hydrodynamics with B-field in sources set in HydroBase from elsewhere"
+  "Scotch_MHD_Bvec" :: "Magneto-hydrodynamics with Maya Scotch, evolve B^i"
+  "Scotch_MHD_Avec" :: "Magneto-hydrodynamics with Maya Scotch, evolving the vector potential"
+}
+
+
+#########################################
+###  PARAMETRES SHARED FROM MoL       ###
+#########################################
+
+shares: MethodOfLines
+
+USES CCTK_INT MoL_Num_Evolved_Vars
+USES CCTK_INT MoL_Num_Constrained_Vars
+USES CCTK_INT MoL_Num_SaveAndRestore_Vars
+USES CCTK_INT MoL_Max_Evolved_Array_Size 
+USES CCTK_INT MoL_Num_ArrayEvolved_Vars
+
+shares:SpaceMask
+
+USES boolean use_mask
+
+shares: ADMMacros
+
+USES INT spatial_order
+
+restricted:
+
+CCTK_INT Whisky_MaxNumEvolvedVars "The maximum number of evolved variables used by Whisky" ACCUMULATOR-BASE=MethodofLines::MoL_Num_Evolved_Vars
+{
+  5:12		:: "dens sx sy sz tau Bnx Bny Bnz divB_psi Ax Ay Az Aphi"
+} 5
+
+CCTK_INT Whisky_MaxNumConstrainedVars "The maximum number of constrained variables used by Whisky" ACCUMULATOR-BASE=MethodofLines::MoL_Num_Constrained_Vars
+{
+  7:16		:: "A small range, depending on testing or not"
+} 8
+ 
+CCTK_INT Whisky_MaxNumSandRVars "The maximum number of save and restore variables used by Whisky" ACCUMULATOR-BASE=MethodofLines::MoL_Num_SaveAndRestore_Vars
+{
+  0:16		:: "A small range, depending on testing or not"
+} 16
+
+boolean whisky_evolve "Are we using whisky to evolve" STEERABLE=RECOVER
+{
+} "yes"
+
+keyword recon_method "Which reconstruction method to use"
+{
+   "invalid" :: "We do not provide a default reconstruction method. Please activate a reconstruction thorn."
+} "invalid"
+
+keyword method_type "Which type of method to use"
+{
+  "RSA FV"        :: "Reconstruct-Solve-Average finite volume method"
+  "Flux Split FD" :: "Finite difference using Lax-Friedrichs flux splitting"
+} "RSA FV"
+
+
+boolean check_for_trivial_rp "Do check for trivial Riemann Problem"
+{
+} "yes"
+
+keyword recon_vars "Which type of variables to reconstruct"
+{
+  "primitive" 		:: "Reconstruct the primitive variables"
+  "conservative" 	:: "Reconstruct the conserved variables"
+} "primitive"
+
+
+keyword riemann_solver "Which Riemann solver to use"
+{
+   "invalid"	:: "We do not provide a default Riemann solver. Activate proper Riemann solver thorn."
+} "invalid" 
+
+
+keyword left_eigenvectors "How to compute the left eigenvectors"
+{
+  "analytical"	:: "Analytical left eigenvectors"
+  "numerical"	:: "Numerical left eigenvectors"
+} "analytical"
+
+keyword numerical_viscosity "How to compute the numerical viscosity"
+{
+  "fast"	:: "Fast numerical viscosity"
+  "normal"	:: "Normal numerical viscosity"
+} "fast"
+
+keyword bound "Which boundary condition to use - FIXME"
+{
+  "flat"	:: "Zero order extrapolation"
+  "none"	:: "None"
+  "static"	:: "Static"
+  "scalar"	:: "Constant"
+} "none"
+
+int whisky_stencil "Width of the stencil"
+{
+  0:		:: "Must be positive"
+} 2
+
+keyword whisky_eos_type "Type of Equation of State"
+{
+  "Polytype"	:: "P = P(rho) or P = P(eps)"
+  "General"	:: "P = P(rho, eps)"
+} "General"
+
+string whisky_eos_table "Name for the Equation of State"
+{
+  .*		:: "Can be anything"
+} "Ideal_Fluid"
+
+real whisky_eps_min "Minimum value of internal energy - this is now only used in Whisky_InitData's Whisky_Only_Atmo routine"
+{
+ 0: :: "Positive"
+} 1.e-10
+
+real whisky_perc_ptol "Tolerance for primitive variable solve (percent)"
+{
+ 0: :: "Do we really want both tolerances?"
+} 1.e-8
+
+real whisky_del_ptol "Tolerance for primitive variable solve (absolute)"
+{
+  0: :: "Do we really want both tolerances?"
+} 1.e-18
+
+int whisky_polish "Number of extra iterations after root found"
+{
+  0:*		:: "Must be non negative"
+} 0
+
+###Parameters for compact fluid objects
+
+REAL whisky_rho_central "Central Density for Star"
+{
+  : :: ""
+} 1.e-5
+
+##Parameters for the atmosphere.
+
+REAL rho_abs_min "A minimum rho below which evolution is turned off (atmosphere). If negative, the relative minimum will be used instead."
+{
+  -1.0: :: ""
+} -1.0
+
+REAL rho_rel_min "A minimum relative rho (rhomin = centden * rho_rel_min) below which evolution is turned off (atmosphere). Only used if rho_abs_min < 0.0"
+{
+  0: :: ""
+} 1.e-9
+
+REAL initial_rho_abs_min "An absolute value for rho in the atmosphere. To be used by initial data routines only. Unused if negative."
+{
+  -1.0: :: ""
+} -1.0
+
+REAL initial_rho_rel_min "A relative (to the central density) value for rho in the atmosphere. To be used by initial data routines only. Unused if negative."
+{
+  -1.0: :: ""
+} -1.0
+
+REAL initial_atmosphere_factor "A relative (to the initial atmosphere) value for rho in the atmosphere. To be used by initial data routines only. Unused if negative."
+{
+  -1.0: :: ""
+} -1.0
+
+REAL rho_abs_min_after_recovery "A new absolute value for rho in the atmosphere. To be used after recovering. Unused if negative." STEERABLE=ALWAYS
+{
+  -1.0: :: ""
+} -1.0
+
+BOOLEAN wk_atmosphere "Use some of Wolfgang Kastauns atmosphere tricks"
+{
+} "no"
+
+BOOLEAN Check_Rho_Minimum "Should a check on rho < whisky_rho_min be performed and written as WARNING level 2?"
+{
+} "no"
+
+## In MHD we also handle min(tau) carefully in Con2Prim
+REAL tau_abs_min "A minimum tau below which we treat Con2Prim differently. Should be ~ 1e-10*max(tau[t=0])"
+{
+  -1.0: :: ""
+} -1.0
+
+REAL tau_rel_min "A minimum relative tau (tau_min = max(tau[t=0]) * tau_rel_min) below which we treat Con2Prim differently. Only used if tau_abs_min < 0.0"
+{
+  0: :: ""
+} 1.e-10
+
+
+#If changing EOS
+
+boolean EoS_Change "Recalculate fluid quantities if changing the EoS"
+{
+} "no"
+
+keyword EoS_Change_type "Change polytropic K or Gamma?"
+{
+  "K"     :: "Change the K"
+  "Gamma" :: "Change the Gamma"
+  "GammaKS"  :: "Change K and Gamma, Shibata et al. 2004 3-D GR Core Collapse style"
+} "Gamma"
+
+real initial_Gamma "If changing Gamma, what was the value used in the initial data routine?"
+{
+  (0.0: :: "Positive"
+} 1.3333
+
+real initial_k "If changing K, what was the value used in the initial data routine?"
+{
+  (0.0: :: "Positive"
+} 100.0
+
+#If you want to use FishEye, you need the weighted fluxes
+
+BOOLEAN use_weighted_fluxes "Weight the flux terms by the cell surface areas"
+{
+} "no"
+
+#For the comoving shift 
+  
+real comoving_factor "Factor multiplying the velocity for the comoving shift"
+{
+  0.0:2.0 :: "[0,2] is allowed, but [0,1] is probably reasonable"
+} 0.0
+
+keyword comoving_attenuate "Which attenuation method for the comoving shift"
+{
+  "sqrt" :: "Multiply by sqrt(rho/rho_max)"
+  "tanh" :: "Multiply by 1/2*(1+tanh(factor*(rho/rho_max - offset)))"
+} "tanh"
+
+keyword comoving_v_method "Which method for getting the radial velocity"
+{
+  "projected" :: "vr = x_i . v^i / r"
+  "components" :: "vr = sqrt(v_i v^i)"
+} "projected"
+
+real comoving_tanh_factor "The factor in the above tanh attenuation"
+{
+  (0.0:* :: "Any positive number"
+} 10.0
+
+real comoving_tanh_offset "The offset in the above tanh attenuation"
+{
+  0.0:1.0 :: "Only makes sense in [0,1]"
+} 0.05
+
+int set_trivial_rp_grid_function "set gf for triv. rp (only for debugging)"
+{
+  0:1 :: "0 for no (default), 1 for yes"
+} 0
+
+#Advect a tracer?
+
+boolean evolve_tracer "Should we advect tracers?"
+{
+} "no"
+
+int number_of_tracers "Number of tracer variables to be advected"
+{
+  0:* :: "positive or zero"
+} 0
+
+boolean use_min_tracer "Should there be a floor on the tracer?"
+{
+} "no"
+
+real min_tracer "The floor placed on the tracer"
+{
+  *:* :: "Anything"
+} 0.0
+
+#Track particles?
+int number_of_particles "Number of particles to track" ACCUMULATOR-BASE=MethodOfLines::MoL_Max_Evolved_Array_Size
+{
+  0:* :: "0 switches off particle tracking"
+} 0
+
+int number_of_arrays "Number of arrays to evolve" ACCUMULATOR-BASE=MethodOfLines::MoL_Num_ArrayEvolved_Vars
+{
+  0:3           :: "Either zero or three, depending on the particles"
+} 0
+
+STRING particle_interpolator "What interpolator should be used for the particles"
+{
+  ".+"          :: "A valid interpolator name"
+} "Lagrange polynomial interpolation"
+
+CCTK_INT particle_interpolation_order "What order should be used for the particle interpolation"
+{
+  1:*           :: "A valid positive interpolation order"
+} 2
+
+#Drift Correction
+
+boolean compute_DCandMaxima "Should we compute the drift correction and the maxima?" STEERABLE=ALWAYS
+{
+} "no"
+
+boolean Whisky_useFullGridForMaxima "Should we use the full grid for finding the maxima (default is x>0)?" STEERABLE=ALWAYS
+{
+} "no"
+
+boolean set_dc_centroid "Should we use the maximum density to set the DriftCorrect location?"
+{
+} "no"
+
+boolean use_coord_maxima "Should we use the coordinate maximum (yes) or weighted maximum?"
+{
+} "yes"
+
+#Finding separations
+
+int separation_npoints "Number of points along the straight line for measuring proper separation"
+{
+  1:* :: "Any positive number"
+} 100
+
+#Finding the local gradient
+
+keyword gradient_method "Which method is used to set Whisky::DiffRho?"
+{
+  "First diff"    :: "Standard first differences"
+  "Curvature"     :: "Curvature based method of Paramesh / FLASH"
+  "Rho weighted"  :: "Based on the size of rho"
+} "First diff"
+
+#Setting outflow boundaries over only some of the domain for multipatch runs
+
+BOOLEAN outflow_boundaries "Use the outflow boundary conditions?"
+{
+} "no"
+
+REAL outflowboundary_normal[3] "The normal to the plane; to the right of this outflow conditions will be set"
+{
+  *:* :: "Anything"
+} 0.0
+
+# after MoL is done with the each substep, check whether the final result is
+# valid and reset to atmosphere otherwise ?
+
+BOOLEAN whisky_check_final_updates "Check validity of each MoL substep update" STEERABLE=always
+{
+} "no"
+
+# remove NaNs unconditionally wherever we find them
+boolean whisky_clear_all_nans_everywhere "Remove any NaNs everywhere" STEERABLE=RECOVER
+{
+} "no"
+
+# before RHS and after Con2Prim, check v^i and w_lorentz for speeds larger than c?
+BOOLEAN sanity_check_speed "Check validity of v^i and w_lorentz"
+{
+} "no"
+
+# after each full Cactus step, scan the domain for atomosphere/no-atmosphere?
+CCTK_INT scan_for_atmosphere_every "Decide which points are atmosphere" STEERABLE=always
+{
+   1:* :: "Every so many iterations"
+   0:  :: "Do not scan"
+} 0
+
+# pretent atmosphere is vacuum when generating the stress-energy-tensor
+BOOLEAN atmosphere_is_vacuum "pretent atmosphere is vacuum when generating the stress-energy-tensor" STEERABLE=always
+{
+} "no"
+
+# limit the speed and location where atmosphere can turn into non-atmosphere
+BOOLEAN excision_atmosphere "Only allow cells bordering the live region to come alive"
+{
+} "no"
+
+# For evolving with punctures
+
+BOOLEAN whisky_puncture_trick "Impose limits around puncture" STEERABLE=always
+{
+} "no"
+
+CCTK_INT number_of_punctures "How many punctures" STEERABLE=always
+{
+  1:3 :: "Currently only 3 allowed"
+} 1
+
+KEYWORD puncture_center_from[3] "How to find the puncture location" STEERABLE=always
+{
+  "parameter"  ::  "use parameter puncture_center[3]"
+  "spherical surface" :: "use spherical surfaces"
+} "parameter"
+
+KEYWORD puncture_radius_from[3] "Where to find radius to use" STEERABLE=always
+{
+  "parameter"  ::  "use parameter puncture_radius[3], hard-coded if center is also from parameter"
+  "spherical surface" :: "use spherical surfaces if we also find the horizon"
+} "parameter"
+
+CCTK_REAL puncture_center_x[3] "Coordinate location of puncture" STEERABLE=always
+{
+  *:* :: "Anything"
+} 0d0
+
+CCTK_REAL puncture_center_y[3] "Coordinate location of puncture" STEERABLE=always
+{
+  *:* :: "Anything"
+} 0d0
+
+CCTK_REAL puncture_center_z[3] "Coordinate location of puncture" STEERABLE=always
+{
+  *:* :: "Anything"
+} 0d0
+
+CCTK_INT puncture_surface[3] "Surface index to find location" STEERABLE=always 
+{
+  *:* :: "Anything"
+} -1
+
+CCTK_REAL puncture_radius[3] "Radius of puncture if using parameter" STEERABLE=always 
+{
+  (0:*	::  "Positive"
+} 0.25
+
+CCTK_REAL puncture_tau_min "Minimum value of tau enforced during recovery" STEERABLE=always
+{
+  0:*   ::  "anything non negative"
+} 1d-10
+
+CCTK_REAL puncture_flimit "Fraction of maximal value for |S|^2 < flimit * tau*(tau+2*D) enforced during recovery" STEERABLE=always
+{
+  (0:1  ::  "this is a percent value"
+} 0.98
+
+# how to treat the primitives and auxiliary variables (rho,eps,pressure,vel[xyz] and w_lorentz)
+BOOLEAN sync_primitives "synchronize the primitives after the boundary calculation?" # this also controls prolongation
+{
+} "yes"
+
+# do we need an initial prim2con or do the initial data thorns set all variables
+BOOLEAN initial_prim2con "generate conservatives from primitives intially"
+{
+} "no"
+
+# I would also like to be able to set the Prolongation type of the primitives
+# to None (really None, not the Copy workaround), but this probably requires
+# some fooling around with scheduled routines in WRAGH or so to be backwards
+# compatible 
+
+# try and limit which cells can rise above atmosphere level
+BOOLEAN kill_isolated_cells "set cells surrounded by atmosphere to atmosphere"
+{
+} "no"
+
+# implement a pressure ceiling and floor as described by the UIUC group in arXiv:0812.2245v2 section III.B
+# defaults are what are described in the paper
+BOOLEAN uiuc_pressure_limit "limit pressure to be between p_min and p_max in low density regions and inside the AH" STEERABLE=recover
+{
+} "no"
+
+CCTK_REAL uiuc_press_min_fact "pressure is at least fact times the polytropic pressure at this point" STEERABLE=always
+{
+  (0:* :: "any positive value"
+} 0.5d0
+
+CCTK_REAL uiuc_press_max_fact "pressure is at most fact times the polytropic pressure at this point" STEERABLE=always
+{
+  (0:* :: "any positive value"
+} 10.d0
+
+CCTK_REAL uiuc_psi6_min "impose limit only if exp(6 phi) > psi6" STEERABLE=always
+{
+  0    :: "skips the test since always true"
+  (0:* :: "any positive value"
+} 1.0d5
+
+CCTK_REAL uiuc_rho_max_fact "impose limit only if rho < fact * rho_atm" STEERABLE=always
+{
+  (0:* :: "any positive value"
+} 100.d0
+
+# MHD parameters
+
+BOOLEAN activate_mhd "Activates MHD GFs and scheduling (Deprecated. Use HydroBase::evolution_method)"
+{
+} "no"
+
+BOOLEAN activate_quasimhd "Activates B field in hydro sources and storage (Deprecated. Use HydroBase::evolution_method)"
+{
+} "no"
+
+KEYWORD Avec_gauge "Which gauge condition to use when evolving the vector potential" 
+{
+  "algebraic"  :: "Algebraic gauge"
+  "lorenz"     :: "Lorenz gauge"
+} "lorenz"
+
+BOOLEAN monitor_divB "Save divB as a separate function for monitoring."
+{
+} "no"
+
+BOOLEAN calculate_b2_comoving "Save b2_comoving as a separate GF for monitoring" STEERABLE=RECOVER
+{
+} "no"
+
+BOOLEAN clean_divergence "Activate divergence cleaning"
+{
+} "no"
+
+CCTK_REAL divclean_ch "Speed of divB violations propagation"
+{
+  (0:* :: "1 makes sense"
+} 1.
+
+CCTK_REAL divclean_cr "Damping of divB violations. Value should depend on strength of shocks. This is Penner's and GRHydro's kappa."
+{
+  (0:* :: "Higher requires lower Courant factor. Anderson uses [1:12]"
+} 1.
+
+CCTK_REAL mhd_zeta "free parameter for extra source term in d_t B^i evolution"
+{
+  *:* :: "Anything"
+} 0.d0
+
+
+## B-field atmosphere hack ##
+
+BOOLEAN suppress_atmosphere_movement "Suppress right-hand sides by a factor exp(1-rho_atmo/rho)"
+{
+} "no"
+
+SHARES: PrimRecovery
+
+USES CCTK_REAL atmo_tolerance

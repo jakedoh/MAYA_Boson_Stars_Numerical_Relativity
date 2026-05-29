@@ -1,0 +1,5 @@
+# Configuration definition for thorn Whisky
+# $Header$
+
+REQUIRES EOS_Base EOS_Polytrope Boundary CartGrid3D SpaceMask ADMMacros Carpet
+

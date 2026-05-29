@@ -1,0 +1,18 @@
+# Make sure that EOS_Polytrope is compiled first
+
+ifneq ($(findstring Whisky/EOS_Polytrope,$(THORNS)),)
+$(CCTK_LIBDIR)$(DIRSEP)libWhisky.a : $(CCTK_LIBDIR)$(DIRSEP)libEOS_Polytrope.a
+endif
+
+# Compile rules for the utilities
+$(UTIL_DIR)$(DIRSEP)%: $(BUILD_DIR)$(DIRSEP)Whisky$(DIRSEP)%.o
+	@echo Creating $* in $(UTIL_DIR) from $<
+	if [ ! -d $(UTIL_DIR) ]; then $(MKDIR) $(MKDIRFLAGS) $(UTIL_DIR) ; fi
+	$(F90) $(CREATEEXE)$(OPTIONSEP)$@ $(DEBUG_LD) $(LDFLAGS) $(EXTRAFLAGS) $<
+
+
+$(BUILD_DIR)$(DIRSEP)Whisky$(DIRSEP)%.o: $(PACKAGE_DIR)$(DIRSEP)Scotch$(DIRSEP)Whisky$(DIRSEP)src$(DIRSEP)util$(DIRSEP)%.f90
+	@echo Compiling $<
+	if [ ! -d $(BUILD_DIR)$(DIRSEP)Whisky ]; then $(MKDIR) $(MKDIRFLAGS) $(BUILD_DIR)$(DIRSEP)Whisky ; fi
+	cd $(BUILD_DIR)$(DIRSEP)Whisky
+	$(F90) $< $(F90FLAGS) -I$(CONFIG) -I$(BINDINGS_DIR)$(DIRSEP)include -I$(FLESH_DIR)$(DIRSEP)include -I$(CCTK_HOME)$(DIRSEP)arrangements $(SYS_INC_DIRS:%=-I%) $(FCOMPILEONLY)$(OPTIONSEP)$@

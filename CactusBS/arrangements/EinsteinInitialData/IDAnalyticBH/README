@@ -1,0 +1,21 @@
+Cactus Code Thorn IDAnalyticBH
+Author(s)    : Steve Brandt
+               Carsten Gundlach
+               Joan Masso
+               Ed Seidel
+               Paul Walker
+Maintainer(s): Cactus team
+Licence      : LGPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+This thorn calculates analytic initial data for the Einstein grid functions
+(lapse, shift, metric, curv) for various black hole spacetimes:
+
+	Schwarzschild black hole
+ 	2 Misner black holes placed on the z-axis
+	n Misner black holes placed in a circle in the x-y plane
+	Brill-Lindquist data
+
+

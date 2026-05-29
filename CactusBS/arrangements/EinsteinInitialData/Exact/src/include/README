@@ -1,0 +1,32 @@
+Description of files in this directory
+======================================
+
+$Header$
+
+Scalar_CalcTmunu.inc
+	This code is included into evolution thorns via the
+	"uses include source" mechanism, to add the thorn Exact
+	contributions on to the stress-energy tensor.  Note that
+	this means this code is compiled in the context of evolution
+	thorns, *not* as part of this thorn.  As such, this code does
+	*not* have access to this thorns' private/restricted parameters;
+	to work around this we copy the parameters to protected grid
+	scalars with "___" names.
+
+Scalar_CalcTmunu_temps.inc
+	This code is included into evolution thorns via the
+	"uses include" mechanism, to declare temporary variables
+	used by the code in "Scalar_CalcTmunu.inc"
+
+param_defs.inc
+	This contains #define definitions for the various possible
+	values of decoded_exact_model ; if #defines are needed for
+	other decoded keyword/string parameters they should also
+	live here.
+
+slice_normal.inc
+	This contains a fragment of Fortran code to compute the
+	normal vector to a slice.
+
+Exact.inc
+	Misc Fortran definitions for the whole thorn.

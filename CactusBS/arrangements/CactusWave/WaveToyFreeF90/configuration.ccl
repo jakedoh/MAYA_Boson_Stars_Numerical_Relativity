@@ -1,0 +1,4 @@
+# Configuration definition for thorn CactusWave/WaveToyFreeF90
+# $Header$
+
+REQUIRES CartGrid3D

@@ -1,0 +1,50 @@
+# Interface definition for thorn NaNChecker
+# $Header$
+
+implements: NaNChecker
+
+inherits: Reduce
+
+
+
+INCLUDES HEADER: NaNCheck.h in NaNChecker.h
+
+
+
+CCTK_INT FUNCTION CheckVarsForNaN              \
+    (CCTK_POINTER_TO_CONST IN cctkGH,          \
+     CCTK_INT              IN report_max,      \
+     CCTK_STRING           IN vars,            \
+     CCTK_STRING           IN check_for,       \
+     CCTK_STRING           IN action_if_found)
+PROVIDES FUNCTION CheckVarsForNaN           \
+    WITH NaNChecker_CheckVarsForNaN_Wrapper \
+    LANGUAGE C
+
+CCTK_INT FUNCTION SetVarsToNaN        \
+    (CCTK_POINTER_TO_CONST IN cctkGH, \
+     CCTK_STRING           IN vars)
+PROVIDES FUNCTION SetVarsToNaN           \
+    WITH NaNChecker_SetVarsToNaN_Wrapper \
+    LANGUAGE C
+
+CCTK_INT FUNCTION                         \
+    GetMap                                \
+        (CCTK_POINTER_TO_CONST IN cctkGH)
+USES FUNCTION GetMap
+
+CCTK_INT FUNCTION                         \
+    GetRefinementLevel                    \
+        (CCTK_POINTER_TO_CONST IN cctkGH)
+USES FUNCTION GetRefinementLevel
+
+
+
+
+private:
+
+INT NaNmask TYPE=GF TAGS='Prolongation="None" checkpoint="no"' "Grid function mask for NaN locations"
+
+INT NaNsFound TYPE=SCALAR TAGS='checkpoint="no"' "Scalar variable counting the number of NaNs found"
+
+REAL TestGF TYPE=GF TAGS='Prolongation="None" checkpoint="no"' "Grid function to hold NaNs for testsuite"

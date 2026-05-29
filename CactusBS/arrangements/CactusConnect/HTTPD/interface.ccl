@@ -1,0 +1,16 @@
+# Interface definition for thorn HTTPD
+# $Header$
+
+Implements: HTTPD
+Inherits: Socket
+
+USES INCLUDE HEADER: SocketUtils.h
+
+INCLUDE HEADER: Auth.h in http_Auth.h
+INCLUDE HEADER: Cookies.h in http_Cookies.h
+INCLUDE HEADER: Steer.h in http_Steer.h
+INCLUDE HEADER: Content.h in http_Content.h
+
+CCTK_INT FUNCTION Send_Twitter_Msg(CCTK_STRING IN msg)
+USES FUNCTION Send_Twitter_Msg
+

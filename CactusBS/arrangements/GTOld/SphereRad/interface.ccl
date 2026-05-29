@@ -1,0 +1,6 @@
+# Interface definition for thorn SphereRad
+# $Header:$
+
+implements: sphererad
+inherits: ADMBase SphericalSurface StaticConformal ShiftTracker
+

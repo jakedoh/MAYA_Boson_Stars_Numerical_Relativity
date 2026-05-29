@@ -1,0 +1,15 @@
+# Parameter definitions for thorn WaveToyCXX
+# $Header$
+
+restricted:
+ 
+KEYWORD bound "Type of boundary condition to use"
+{
+  "none"      :: "Apply no boundary condition"
+  "flat"      :: "Flat (von Neumann, n grad phi = 0) boundary condition"
+  "static"    :: "Static (Dirichlet, dphi/dt=0) boundary condition"
+  "radiation" :: "Radiation boundary condition"
+  "robin"     :: "Robin (phi(r) = C/r) boundary condition"
+  "zero"      :: "Zero (Dirichlet, phi=0) boundary condition"
+} "none"
+

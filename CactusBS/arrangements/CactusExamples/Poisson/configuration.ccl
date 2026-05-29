@@ -1,0 +1,3 @@
+# Configuration definition for thorn Poisson
+
+REQUIRES Boundary Carpet CartGrid3D TATelliptic

@@ -1,0 +1,11 @@
+# Main make.code.defn file for thorn NullInterp
+# $Header$ 
+
+# Source files in this directory
+SRCS =	NullInterp.F90 NullInterp_Deriv.F90 NullInterp_Eth.F90 \
+	NullInterp_Interp.F90 NullInterp_InterpUtil.F90 \
+	NullInterp_ParamCheck.F90 NullInterp_TempInit.F90 \
+        NullInterp_MaskInit.F90
+
+# Subdirectories containing source files
+SUBDIRS =	

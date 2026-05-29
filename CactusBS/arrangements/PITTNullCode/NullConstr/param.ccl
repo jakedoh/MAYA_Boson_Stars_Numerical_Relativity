@@ -1,0 +1,23 @@
+# Parameter definitions for thorn NullConstr
+# $Header$
+
+shares: NullEvolve
+
+uses BOOLEAN first_order_scheme
+
+shares: NullGrid
+
+uses int N_ang_pts_inside_eq
+uses int N_ang_ev_outside_eq
+uses int N_ang_stencil_size
+uses int N_ang_ghost_pts
+uses int N_radial_pts
+
+restricted:
+
+BOOLEAN calculate_constraints  "Shall the constraints be calculated?"
+{
+} "yes"
+
+
+private:

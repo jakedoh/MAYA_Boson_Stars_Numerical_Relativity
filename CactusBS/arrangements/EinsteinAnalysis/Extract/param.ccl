@@ -1,0 +1,155 @@
+# Parameter definitions for thorn Extract
+# $Header$
+
+shares: grid
+
+USES KEYWORD domain
+
+shares: io
+
+USES STRING out_dir
+
+shares: ADMBase
+
+USES KEYWORD metric_type
+
+private:
+
+KEYWORD timecoord "Which time coordinate to use"
+{
+  "proper" :: ""
+  "coordinate" :: ""
+  "both" :: ""
+} "both"
+
+BOOLEAN all_modes "Extract: all l,m modes up to l"
+{
+} "yes"
+
+
+BOOLEAN Cauchy "Do Cauchy data extraction at given timestep"
+{
+} "no"
+
+BOOLEAN verbose "Say what is happening"
+{
+} "no"
+
+BOOLEAN doADMmass "Calculate ADM mass at extraction radii"
+{
+} "no"
+
+
+BOOLEAN do_momentum "Calculate momentum at extraction radii"
+{
+} "no"
+
+BOOLEAN do_spin "Calculate spin at extraction radii"
+{
+} "no"
+
+INT itout "How often to extract, in iterations" STEERABLE = ALWAYS
+{
+ 0:* :: ""
+} 1
+
+INT l_mode "l mode"
+{
+0:* :: ""
+} 2
+
+INT m_mode "m mode (ignore if extracting all modes"
+{
+0:* :: ""
+} 0
+
+INT Nt "Number of theta divisions"
+{
+0:* :: ""
+} 100
+
+INT Np "Number of phi divisions"
+{
+0:* :: ""
+} 100
+
+INT Cauchy_timestep "Timestep for Cauchy data extraction"
+{
+0:* :: ""
+} 0
+
+INT num_detectors "Number of detectors"
+{
+0:* :: ""
+} 0
+
+REAL detector1 "Coordinate radius of detector 1"
+{
+0:* :: ""
+} 5.0
+REAL detector2 "Coordinate radius of detector 2"
+{
+0:* :: ""
+} 5.0
+REAL detector3 "Coordinate radius of detector 3"
+{
+0:* :: ""
+} 5.0
+REAL detector4 "Coordinate radius of detector 4"
+{
+0:* :: ""
+} 5.0
+REAL detector5 "Coordinate radius of detector 5"
+{
+0:* :: ""
+} 5.0
+REAL detector6 "Coordinate radius of detector 6"
+{
+0:* :: ""
+} 5.0
+REAL detector7 "Coordinate radius of detector 7"
+{
+0:* :: ""
+} 5.0
+REAL detector8 "Coordinate radius of detector 8"
+{
+0:* :: ""
+} 5.0
+REAL detector9 "Coordinate radius of detector 9"
+{
+0:* :: ""
+} 5.0
+
+REAL origin_x "x-origin to extract about"
+{
+*:* :: ""
+} 0.0
+REAL origin_y "y-origin to extract about"
+{
+*:* :: ""
+} 0.0
+REAL origin_z "z-origin to extract about"
+{
+*:* :: ""
+} 0.0
+
+REAL Cauchy_r1 "First radius for Cauchy data extraction"
+{
+*:* :: ""
+} 1.0
+
+
+REAL Cauchy_dr "Gridspacing for Cauchy data extraction"
+{
+*:* :: ""
+} 0.2
+
+STRING interpolation_operator "Interpolation operator to use (check LocalInterp)"
+{
+  .+ :: ""
+} "uniform cartesian"
+
+INT interpolation_order "Order for interpolation" STEERABLE = ALWAYS
+{
+  1:4 :: "Choose between first and forth order interpolation"
+} 1

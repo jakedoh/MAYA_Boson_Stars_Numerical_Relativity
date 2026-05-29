@@ -1,0 +1,50 @@
+Cactus Code Thorn GiRaFFEFood
+Author(s)    : Zach Etienne <zachetie@gmail.com>
+             : Mew-Bing Wan <mbwan78@gmail.com>
+             : Maria Babiuc <babiuc@marshall.edu>
+Maintainer(s): Zach Etienne <zachetie@gmail.com>
+             : Mew-Bing Wan <mbwan78@gmail.com>
+             : Maria Babiuc <babiuc@marshall.edu>
+License      : GNU General Public License, version 2 or higher. See GPLv2
+             : for GPL version 2.0 license.
+--------------------------------------------------------------------------
+
+1. Purpose
+
+"GiRaFFEfood provides food for the GiRaFFE." 
+I.e., it is an initial data and analysis thorn for all
+code validation tests performed in the GiRaFFE code
+announcement paper: https://arxiv.org/abs/1704.00599
+
+2. Usage
+
+a) Add this thorn, along with GiRaFFE, ShiftedKerrSchild, etc.
+   to  your ThornList
+b) Compile the Einstein Toolkit (ET), generating ET executable
+c) Run the ET executable, reading in one of the parameter files
+   in the par/ directory.
+
+Here are the tests included in this thorn, and the corresponding
+   parameter files:
+
+1D tests in flat spacetime:
+1) Fast Wave:              GiRaFFEfood_1D_FastWave.par
+2) Alfven Wave:            GiRaFFEfood_1D_AlfvenWave.par
+3) Degenerate Alfven Wave: GiRaFFEfood_1D_DegenAlfvenWave.par
+4) Three Waves:            GiRaFFEfood_1D_ThreeWave.par
+5) FFE Breakdown:          GiRaFFEfood_1D_FFEBreakdown.par
+
+3D test in flat spacetime:
+1) Aligned Rotator: GiRaFFEfood_AlignedRotator.par
+
+3D tests in curved spacetime (black hole in Shifted Kerr-Schild coords):
+1) Split Monopole:       GiRaFFEfood_SplitMonopole.par
+2a) Exact Wald: Low-Res: GiRaFFEfood_ExactWald_LowRes.par
+2b) Exact Wald: Med-Res: GiRaFFEfood_ExactWald_MedRes.par
+2c) Exact Wald: Hig-Res: GiRaFFEfood_ExactWald_HigRes.par
+3) Magnetospheric Wald:  GiRaFFEfood_MagnetoWald.par
+
+ShiftedKerrSchild code AHFinderDirect validation thorn:
+   (Use this to confirm that BH spin and radius are consistent
+    with injected spin & radius.)
+1) GiRaFFEfood_ShiftedKerrSchild-AHFinderValidation.par

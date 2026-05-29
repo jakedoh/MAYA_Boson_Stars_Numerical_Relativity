@@ -1,0 +1,117 @@
+************************************************
+***** How to Add a New Model to this Thorn *****
+************************************************
+$Header: /usr/local/svn/cvs-repositories/numrelcvs/AEIThorns/Exact/doc/how_to_add_a_new_model,v 1.5 2003-05-23 16:35:44 jthorn Exp $
+
+A general note:  Please keep the sections for various models in the
+same order in all the files.  This makes it _much_ easier for people
+to navigate around in the files...
+
+
+
+To add a new model you need to modify a number of files:
+
+First, choose a character-string name for your new model, following the
+naming conventions described in  doc/documentation.tex .
+
+Then you need to modify...
+
+  doc/documentation.tex:
+	Add a section describing your new model.  Please try to give
+	references for the "big picture" of the physics, preferably to
+	gr-qc and/or well-known books.  Please also explain the physics
+	meanings of all the parameters -- users should *not* have to look
+	at your source code to figure out what a given parameter means!
+  README
+	Add a line or two giving the copyright status of your new code.
+	You can either put this in one of the existing licensing sections,
+	or create a new licensing section and add your copyright information
+	there.
+  param.ccl:
+	Add the new model's character-string name as another possible value
+	for the exact_model parameter.
+  param.ccl:
+	Add a section later in this file giving the new model's parameters.
+	(If there are no parameters this section should still be present,
+	with a comment that there are no parameters.)
+  src/include/param_defs.inc:
+	Add a #define for your new model.
+ 	(You can renumber the existing values if you need to... but if
+ 	you do, make sure you do a make your-configuration-name-realclean
+ 	and recompile not just this thorn, but also all the evolution
+ 	thorns.)
+  src/decode_pars.F77:
+	Add a case for your new model to the decode of the character-string
+	model name into the integer decoded_exact_model.
+  src/metric.F77:
+	Add a case for your new model to the decode of decoded_exact_model,
+	calling a (new) subroutine named for your new model.
+  src/metrics/your_model_name.F77 (or .F90 or .F)
+	Create a new file in this directory with a Fortran 77/90 subroutine
+	to compute the metric and the inverse metric for your new model
+	(this is the subroutine you just added a call to, in src/metric.F77).
+	It's probably easiest to start with a copy of an existing file and
+	modify it to compute your new metric -- that will help you get all
+	the "boilerplate" code right.
+	Please put a comment at the top of the file giving your name,
+	a copyright line, and the licensing status of the file (GPL, LGPL,
+	GPL-with-the-usual-Cactus-exemption-for-linking-with-non-GPL-thorns,
+	top-secret-you-can-look-at-it-but-then-we-have-to-shoot-you, whatever).
+	One additional information about the conformal factor which is passed
+	to the function: It is preset to 1.0 or 0.0 according to the fact if
+	it is wanted or not. If you want to have a physical metric, just do not
+	change it.
+  src/metrics/make.code.defn:
+	Add the new file name to the list of files to be compiled.
+
+You need to modify some additional files:
+  interface.ccl:
+	Add copies of all your model's CCTK_INT and/or CCTK_REAL parameters
+	to the Exact_pars_int and/or Exact_pars_real variable groups as
+	appropriate, changing the "__" in the parameter names to "___".  
+	If you have CCTK_COMPLEX parameters, add a corresponding variable
+	group and do the same thing.  If you have KEYWORD or STRING
+	parameters, see below.
+  src/decode_pars.F77:
+	Add a block of code for your new model to copy all the model's
+	parameters to the corresponding "___" grid scalars.
+  src/include/Scalar_CalcTmunu.inc:
+	Add a case for your new model to *add* the stress-energy tensor
+	contribution on to the variables Ttt ... Tzz.  Note that this code
+	will be compiled as part of various evolution thorns -- it doesn't
+	have access to this thorn's parameters, only to the "___" grid
+	scalars (that's why the "___" stuff is there in the first place!).
+  src/include/Scalar_CalcTmunu_temps.inc:
+	If you need temporary variables in your Scalar_CalcTmunu.inc
+	code, declare them here.
+
+If your model has a KEYWORD or STRING parameter(s) and needs to set up
+a stress-energy tensor, then because Cactus doesn't allow grid scalars
+of these data types, you need to decode these parameter(s) into integers:
+  interface.ccl
+	Add CCTK_INT parameters for the decoded integer values.
+  src/include/param_defs.inc:
+	Add a new set of #defines giving all the possible values
+	of the decoded integer(s) for your keyword/string parameter(s).
+  src/decode_pars.F77
+	Add a block of code for your new model to decode the KEYWORD
+	and/or STRING parameters into integers.  Don't forget to
+	include a CCTK_WARN(0, "...") if the code doesn't recognize
+	the string -- this helps to catch bugs where you (or someone
+	else) misspells one of the strings somewhere.
+
+Finally, please add a test suite for your new model to the test/
+directory.  (Alas, many of the existing models lack tests.  Sigh...)
+The Cactus Users' Guide has a section  "Adding a test suite" (as of
+this writing it's section B9.5) which explains how this works; basically
+you just need to create
+	test/my-test-name.par
+	test/my-test-name/output-file-1
+	test/my-test-name/output-file-2
+	test/my-test-name/output-file-3
+etc.  (The test should create the subdirectory itself, and write ASCII
+output files there.  You can do this by including IOUtil in your thorn
+list and putting
+	IO::out_dir = "my-test-name"
+	IO::parfile_write = "false"
+in your test parameter file.)

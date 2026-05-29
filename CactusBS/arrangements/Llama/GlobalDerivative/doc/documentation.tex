@@ -1,0 +1,100 @@
+\documentclass{article}
+
+% Use the Cactus ThornGuide style file
+% (Automatically used from Cactus distribution, if you have a
+%  thorn without the Cactus Flesh download this from the Cactus
+%  homepage at www.cactuscode.org)
+\usepackage{../../../../doc/latex/cactus}
+
+\begin{document}
+
+\author{Christian Reisswig \textless reisswig@aei.mpg.de\textgreater}
+\title{GlobalDerivative}
+
+\date{\today}
+
+\maketitle
+
+% START CACTUS THORNGUIDE
+
+\begin{abstract}
+This thorn is ment to provide ``global'' first and second derivatives
+by taking summation by parts (SBP) derivatives in the local grid coordinate system and transforming them
+to the global coordinate system. For this, the Jacobian and its derivatives must be
+provided as functional arguments. If no Jacobian is given, i.e. the grid variable
+pointers are NULL, the global derivatives reduce to the local derivatives.
+\end{abstract}
+
+\section{Introduction}
+
+Some thorns, e.g. those that use the Llama multipatch system, use a local grid coordinate system but the
+(tensor) quantities are represented in a global coordinate system. Since (SBP) finite differences 
+are calculated in the local grid-coordinate system, the derivative operators have to be
+transformed to the global coordinate system in order to be correctly represented in
+the global coordinate basis.
+
+By using this thorn as a provider for finite-difference derivative operators, one can
+implement a thorn by assuming one global coordinate system. By providing Jacobians
+from local to global coordinates one then ends up with a code that is valid on all
+``patches'' that are eventually defined by different local coordinates.
+
+
+We label local grid coordinates by $(x^i) = (a,b,c)$ and global coordinates by $(\hat{x}^i) = (x,y,z)$.
+The first derivatives in global coordinates are then defined by   
+\begin{equation}
+\hat{\partial}_i = \frac{\partial x^j}{\partial \hat{x}^i}\frac{\partial}{\partial x^j},
+\end{equation}
+i.e.
+\begin{eqnarray}
+\hat\partial_x &=& \frac{\partial a(x)}{\partial x}\frac{\partial}{\partial a} + \frac{\partial b(x)}{\partial x}\frac{\partial}{\partial b} + \frac{\partial c(x)}{\partial x}\frac{\partial}{\partial c}, \\
+\hat\partial_y &=& \frac{\partial a(y)}{\partial y}\frac{\partial}{\partial a} + \frac{\partial b(y)}{\partial y}\frac{\partial}{\partial b} + \frac{\partial c(y)}{\partial y}\frac{\partial}{\partial c}, \\
+\hat\partial_z &=& \frac{\partial a(z)}{\partial z}\frac{\partial}{\partial a} + \frac{\partial b(z)}{\partial z}\frac{\partial}{\partial b} + \frac{\partial c(z)}{\partial z}\frac{\partial}{\partial c}.
+\end{eqnarray}
+
+Similarly, second derivatives are calculated by
+\begin{equation}
+\hat\partial_i\hat\partial_j = \frac{\partial x_k}{\partial \hat{x}_i} \partial_k \left( \frac{\partial x_l}{\partial \hat{x}_j} \right) \partial_l + \frac{\partial x_k}{\partial \hat{x}_i} \frac{\partial x_l}{\partial \hat{x}_j} \partial_k \partial_l
+\end{equation}
+
+
+If local and global coordinate system are identical then the global derivatives reduce
+to the local derivatives.
+
+
+\section{Numerical Implementation}
+
+Similar to the SummationByParts thorn, there are subroutines that can be called to apply a global derivative to an entire grid variable.
+However, in most cases, one cannot effort to store the result of the derivative as an extra grid variable. 
+Hence, the thorn provides a number of pointwise inline functions that can be used by including the GlobalDerivative header file.
+ 
+
+% \section{Using This Thorn}
+%
+% \subsection{Obtaining This Thorn}
+%
+% \subsection{Basic Usage}
+%
+% \subsection{Special Behaviour}
+%
+% \subsection{Interaction With Other Thorns}
+%
+% \subsection{Examples}
+%
+% \subsection{Support and Feedback}
+%
+% \section{History}
+%
+% \subsection{Thorn Source Code}
+%
+% \subsection{Thorn Documentation}
+%
+% \subsection{Acknowledgements}
+
+
+% \begin{thebibliography}{9}
+%
+% \end{thebibliography}
+
+% END CACTUS THORNGUIDE
+
+\end{document}

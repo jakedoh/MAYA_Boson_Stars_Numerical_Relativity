@@ -1,0 +1,83 @@
+# Schedule definitions for thorn MatterLibs
+# $Header:$
+
+if ( fake_matter == 0 ) {
+
+   schedule MatterLibs_Startup AT CCTK_PARAMCHECK
+   {
+     LANG: C 
+   } "Create poison value for MatterLibs"
+
+   if( CCTK_EQUALS(initial_data,"Bondi") ) { 
+     #schedule MatterLibs_IsoBondi_Populate IN MatterLibs_Bondi AFTER MatterLibs_Bondi_Solve
+     schedule MatterLibs_IsoBondi_Populate IN HydroBase_Initial
+     {
+        LANG: C
+     } "Populate GFs with Bondi solution"
+   } else {
+		  schedule MatterLibs_SetPrims in Whisky_Initial
+		  {
+		    LANG: C
+		  } "Set primitives (and possibly metric) from MatterLibs"
+   }
+
+   ## Schedule TOV solutions to populate GFs directly ##
+   if(CCTK_EQUALS(initial_lapse, "tov")) {
+     schedule MatterLibs_SetLapse IN ADMBase_InitialGauge
+     {
+        LANG: C 
+     } "Set lapse from MatterLibs"
+   }
+
+   if(CCTK_EQUALS(initial_data, "tov")) {
+     schedule MatterLibs_SetMetric IN ADMBase_InitialData
+     {
+        LANG: C 
+     } "Set metric from MatterLibs"
+   }
+
+   ## Schedule Poloidal Magnetic field ##
+   if(CCTK_EQUALS(initial_Bvec,"poloidalBfield") || CCTK_EQUALS(initial_Avec,"AforPoloidalB") ) {
+     schedule MatterLibs_addPoloidalB IN Whisky_Initial AFTER MatterLibs_SetPrims
+     {
+       LANG: C
+     } "Set poloidal magnetic field given pre-set hydro primitives"
+   }
+
+    ## Bondi ID scheduling ##
+    if( CCTK_EQUALS(initial_data,"Bondi") || CCTK_EQUALS(rho_profile,"Bondi") ) {
+ 
+      schedule group MatterLibs_Bondi IN ADMBase_InitialData BEFORE (TwoPuncturesMatter,TwoPuncturesNonVac)
+      {
+      } "Group for setting Bondi infall in isotropic coordinates, geometry and hydro"
+   
+      schedule MatterLibs_Bondi_Solve IN MatterLibs_Bondi
+      {
+         LANG: C
+      } "Initialize geometry and hydro variables for Bondi infall on isotropic coordinates"
+
+      schedule MatterLibs_Bondi_Cleanup IN CCTK_INITIAL AFTER HydroBase_Initial 
+      {
+         LANG: C
+      } "Memory clean-up of Bondi solution"
+
+    }
+ 
+    ## This should be replaced in later Cactus by simple write(GA) type function call ##
+    if ( bondi_output_solutions ) {
+       schedule MatterLibs_Bondi_WriteSolns IN MatterLibs_Bondi AFTER MatterLibs_Bondi_Solve BEFORE MatterLibs_IsoBondi_Populate
+       {
+         LANG: C
+       } "Write out GAs"
+    }
+ 
+
+   if(CCTK_EQUALS(initial_data, "twopuncturesobject"))
+   {
+      schedule matterlibs_preSolveTOVs IN ADMBase_InitialData BEFORE TwoPuncturesObject
+      {
+         LANG: C
+      } "Solves TOV before TPO to prevent race conditions"
+   }
+}
+

@@ -1,0 +1,137 @@
+# Interface definition for thorn WaveExtractL
+
+implements: WaveExtractL
+
+inherits: grid admbase staticconformal io sphericalsurface
+
+uses include: carpetinterp2.hh
+
+private:
+
+INT gridsizes_group TYPE=ARRAY DIM=1 SIZE=100 DISTRIB=CONSTANT tags='checkpoint="no"'
+{
+  int_nphi, int_ntheta 
+} "gridsizes stored as variables"
+
+INT handles_group TYPE=SCALAR tags='checkpoint="no"'
+{
+  sum_handle
+} "handles for reduction operators"
+
+INT do_nothing_group TYPE=SCALAR tags='checkpoint="no"'
+{
+  do_nothing
+} "if equal to 1, then WaveExtract won't do anything (example: all detectors are out of range)"
+
+REAL sym_factor_group TYPE=SCALAR tags='checkpoint="no"'
+{
+  sym_factor
+} "symmmetry factor for integrals (depends on domain, sym_factor=2 for bitant for example)"
+
+REAL interp_metric_arrays TYPE=ARRAY DIM=2 SIZE=maxntheta,maxnphi DISTRIB=DEFAULT tags='checkpoint="no"'
+{
+  gxxi, gxyi, gxzi,
+  gyyi, gyzi, gzzi,
+  psii,
+  dx_gxxi, dy_gxxi, dz_gxxi,
+  dx_gxyi, dy_gxyi, dz_gxyi,
+  dx_gxzi, dy_gxzi, dz_gxzi,
+  dx_gyyi, dy_gyyi, dz_gyyi,
+  dx_gyzi, dy_gyzi, dz_gyzi,
+  dx_gzzi, dy_gzzi, dz_gzzi,
+  dx_psii, dy_psii, dz_psii,
+} "2D (theta,phi) Arrays for holding the metric and conformal factor and their first derivatives interpolated onto the extraction coordinate sphere"
+
+REAL surface_arrays TYPE=ARRAY DIM=2 SIZE=maxntheta,maxnphi DISTRIB=DEFAULT tags='checkpoint="no"'
+{
+  interp_x,interp_y,interp_z,
+  psi_ext_deriv,
+  ctheta, cphi, sintheta, costheta, sinphi, cosphi,
+  dr_gxxi,dr_gxyi,dr_gxzi,dr_gyyi,dr_gyzi,dr_gzzi,
+  dr_psii,
+  grr, grt, grp, gtt, gtp, gpp,
+  dr_gtt, dr_gtp, dr_gpp,
+  h1i,H2i,Gi,Ki,c1i,c2i,dGi,dKi,dc2i
+  ih1i,iH2i,iGi,iKi,ic1i,ic2i,idGi,idKi,idc2i
+} "2D (theta,phi) grid arrays for points on the sphere"
+
+
+REAL surface_integrands TYPE=ARRAY DIM=2 SIZE=maxntheta,maxnphi DISTRIB=DEFAULT tags='checkpoint="no"'
+{
+  weights,thetaweights, phiweights,
+  int_tmp1,int_tmp2,int_tmp3,int_tmp4,int_tmp5,
+  int_tmp6,int_tmp7,int_tmp8,int_tmp9,
+  int_tmp10,int_tmp11,int_tmp12,int_tmp13,int_tmp14,
+  int_tmp15,int_tmp16,int_tmp17,int_tmp18
+} "weights and temporary integrands"
+
+REAL Schwarzschild_Mass_Radius_group TYPE=SCALAR tags='checkpoint="no"'
+{
+  dtau_dt, sph_grr, sph_gtt, sph_dr_gtt, sph_gpp,
+  rsch2, rsch, drsch_dri, dri_drsch, S_factor, 
+  Schwarzschild_Mass, Schwarzschild_Radius
+} "Schwarzschild radius, mass and assorted spherical background pieces"
+
+REAL Schwarzschild_Mass_Radius_Results_group TYPE=ARRAY DIM=1 SIZE=maximum_detector_number DISTRIB=CONSTANT tags='checkpoint="no"'
+{
+  Schw_Masses, Schw_Radii
+} "contains Schwarzschild mass/radius from all detectors"
+
+REAL MoncriefQ_Results_group TYPE=ARRAY DIM=3 SIZE=maximum_detector_number,l_mode,2*m_mode+1 DISTRIB=CONSTANT tags='checkpoint="no"'
+{
+  Qodd_Re_Array,
+  Qeven_Re_Array,
+  Qodd_Im_Array,
+  Qeven_Im_Array
+} "contains Moncrief Qeven, Qodd wave indicators from all detectors"
+
+INT l_m_modes_info_group TYPE=SCALAR tags='checkpoint="no"'
+{
+  l_min, l_max, l_step,
+  m_min, m_max, m_step,
+  max_det_no_param
+} "Information about the modes used for extraction"
+
+# m_mode goes from index=1 for m=0 and then up to m_max+1
+# FIXME : imaginary part not implemented at the moment
+REAL MoncriefQ TYPE=ARRAY DIM=2 SIZE=l_mode,m_mode+1 DISTRIB=CONSTANT tags='checkpoint="no"'
+{
+  Qodd_Re,Qodd_Im,
+  Qeven_Re,Qeven_Im
+} "Moncrief Qeven, Qodd wave indicators, real & imaginary part"
+
+
+# FIXME : implement this. g00 is needed to calculate dtau_dt
+#REAL g00_group TYPE=GF
+#{
+#  g00
+#} "g00 is needed to calculate proper time. this is not implemented at the moment"
+
+REAL metric_tmp TYPE=GF tags='tensortypealias="DD_sym" checkpoint="no" prolongation="none"'
+{
+  gxx_tmp,gxy_tmp,gxz_tmp,gyy_tmp,gyz_tmp,gzz_tmp
+} "temp metric for 3d rotation"
+
+
+# Current Detector Number
+INT current_detector_group TYPE=SCALAR tags='checkpoint="no"'
+{
+  current_detector
+} "the index number of the current detector"
+
+REAL current_detector_radius_group TYPE=SCALAR tags='checkpoint="no"'
+{
+  current_detector_radius
+} "coordinate radius of the current detector"
+
+INT my_out_every_det[100] TYPE=SCALAR tags='checkpoint="no"' "output frequency"
+
+CCTK_INT FUNCTION \
+   MergerHandler_WeHaveMerger()
+USES FUNCTION MergerHandler_WeHaveMerger
+	  
+	  
+CCTK_REAL FUNCTION \
+  MergerHandler_MergerTime()
+USES FUNCTION MergerHandler_MergerTime
+

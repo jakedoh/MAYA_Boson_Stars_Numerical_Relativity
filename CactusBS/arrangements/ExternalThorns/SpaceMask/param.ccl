@@ -1,0 +1,12 @@
+# Parameter definitions for thorn SpaceMask
+# $Header: /cactusdevcvs/CactusEinstein/SpaceMask/param.ccl,v 1.3 2002/04/27 14:51:25 goodale Exp $
+
+restricted:
+
+BOOLEAN use_mask "Turn on storage for mask?"
+{
+} "no"
+
+BOOLEAN verbose "Output some diagnostic messages"
+{
+} "no"

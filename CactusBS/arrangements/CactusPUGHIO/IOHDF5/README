@@ -1,0 +1,19 @@
+Cactus Code Thorn IOHDF5
+Author(s)    : Thomas Radke
+Maintainer(s): Cactus team
+Licence      : LGPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+This thorn does output of arbitrary Cactus variables in HDF5 file format.
+
+It also provides checkpointing/recovery functionality -
+you can create HDF5 checkpoint files and recover from them.
+
+
+2. Additional information
+
+Please refer to the documentation.tex file in the doc/ subdirectory.
+
+Fore more information on HDF5 see http://hdf.ncsa.uiuc.edu/HDF5/.

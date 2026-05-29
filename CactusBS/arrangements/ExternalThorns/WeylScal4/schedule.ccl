@@ -1,0 +1,90 @@
+# file produced by user hinder, 15/11/2006
+# Produced with Mathematica Version 5.2 for Linux (June 20, 2005)
+
+# Mathematica script written by Ian Hinder and Sascha Husa
+
+# $Id$
+
+
+STORAGE: Psi4i_group[3]
+
+STORAGE: Psi4r_group[3]
+
+schedule WeylScal4_Startup at STARTUP
+{
+  LANG: C
+  
+  OPTIONS: meta
+} "create banner"
+
+schedule WeylScal4_RegisterVars in MoL_Register
+{
+  LANG: C
+  
+  OPTIONS: meta
+} "Register Variables for MoL"
+
+schedule WeylScal4_RegisterSymmetries at BASEGRID
+{
+  LANG: C
+  
+  OPTIONS: meta
+} "register symmetries"
+
+
+if (schedule_in_evol)
+{
+  schedule group calc_np at EVOL AFTER MoL_Evolution AFTER Evolved_to_ADM
+  {
+  } "Calculate the Newman-Penrose quantities"
+}
+else
+{
+  schedule group calc_np at ANALYSIS
+  {
+  } "Calculate the Newman-Penrose quantities"
+}
+
+
+if (CCTK_EQUALS(fd_order, "2nd"))
+{
+  schedule psis_calc_2nd in calc_np as weylscal4_gfs
+  {
+    LANG: C
+  } "psis_calc_2nd"
+}
+
+
+if (CCTK_EQUALS(fd_order, "4th"))
+{
+  schedule psis_calc_4th in calc_np as weylscal4_gfs
+  {
+    LANG: C
+    
+  } "psis_calc_4th"
+}
+
+schedule WeylScal4_ApplyBoundConds in calc_np after weylscal4_gfs
+{
+  LANG: C
+  OPTIONS: level
+# Carpet's scheduling.tex (page 6) says to do synchronization in level mode,
+# syncs in local mode are only supported for backwards compatibility and a
+# single component per processor
+#  SYNC: grid::coordinates
+  SYNC: Psi4i_group
+  SYNC: Psi4r_group
+} "apply boundary conditions"
+
+schedule WeylScal4_CheckBoundaries at BASEGRID
+{
+  LANG: C
+  
+  OPTIONS: meta
+} "check boundaries treatment"
+
+schedule group ApplyBCs as WeylScal4_ApplyBCs in calc_np after WeylScal4_ApplyBoundConds
+{
+  # no language specified
+  
+} "Apply boundary conditions controlled by thorn Boundary"

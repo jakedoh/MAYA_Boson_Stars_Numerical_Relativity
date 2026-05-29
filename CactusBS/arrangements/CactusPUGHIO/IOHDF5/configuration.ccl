@@ -1,0 +1,16 @@
+# Configuration definitions for thorn IOHDF5
+# $Header$
+
+REQUIRES IOHDF5Util HDF5 IOUtil PUGH
+
+OPTIONAL FlexIO
+{
+}
+
+OPTIONAL SDF
+{
+}
+
+OPTIONAL MPI
+{
+}

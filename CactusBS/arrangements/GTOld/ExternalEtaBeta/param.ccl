@@ -1,0 +1,172 @@
+# File produced by Kranc
+
+
+shares: GenericFD
+
+USES CCTK_INT assume_stress_energy_state
+
+
+shares: MethodOfLines
+
+USES CCTK_INT MoL_Num_Evolved_Vars
+USES CCTK_INT MoL_Num_ArrayEvolved_Vars
+
+restricted:
+CCTK_INT verbose "verbose" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT other_timelevels "Number of active timelevels for non-evolved grid functions" STEERABLE=RECOVER
+{
+  0:3 :: ""
+} 1
+
+restricted:
+CCTK_REAL w1 "weight in front of f(r) in denominator of BH+ contribution, w1*f(r1)^n" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL w2 "weight in front of f(r) in denominator of BH- contribution, w2*f(r2)^n" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL n "function f(r) raised to the power n, wi*f(ri)^n" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL Mplus "horizon mass of the BH at positive x position" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0.5
+
+restricted:
+CCTK_REAL Mminus "horizon mass of the BH at negative x position" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0.5
+
+restricted:
+CCTK_REAL sigma "width of the tanh wall.  Used when rescaling of exetaBeta is done via tanh" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_REAL Rcutoff "Distance from origin that the rescaled exetaBeta= 1/2 exetaBeta_BG.  Only used when rescaling" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT surfindex1 "surfindex1"
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT surfindex2 "surfindex2"
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT tile_size "Loop tile size"
+{
+  *:* :: ""
+} -1
+
+private:
+CCTK_KEYWORD rescale_etaBeta "Resale etaBeta to zero as r->infinity using either a polynomial form or hyperbolic tangent"
+{
+  "tanh" :: ""
+  "yes" :: ""
+  "no" :: ""
+} "no"
+
+private:
+CCTK_KEYWORD etaBeta_form "Form of the function in the denominator of exetaBeta"
+{
+  "polynomial" :: ""
+  "exponential" :: ""
+} "polynomial"
+
+restricted:
+CCTK_INT ExternalEtaBeta_MaxNumEvolvedVars "Number of evolved variables used by this thorn" ACCUMULATOR-BASE=MethodofLines::MoL_Num_Evolved_Vars STEERABLE=RECOVER
+{
+  0:0 :: "Number of evolved variables used by this thorn"
+} 0
+
+restricted:
+CCTK_INT ExternalEtaBeta_MaxNumArrayEvolvedVars "Number of Array evolved variables used by this thorn" ACCUMULATOR-BASE=MethodofLines::MoL_Num_ArrayEvolved_Vars STEERABLE=RECOVER
+{
+  0:0 :: "Number of Array evolved variables used by this thorn"
+} 0
+
+restricted:
+CCTK_INT timelevels "Number of active timelevels" STEERABLE=RECOVER
+{
+  0:3 :: ""
+} 3
+
+restricted:
+CCTK_INT rhs_timelevels "Number of active RHS timelevels" STEERABLE=RECOVER
+{
+  0:3 :: ""
+} 1
+
+restricted:
+CCTK_INT eta_beta_rescale_etaBeta_calc_calc_every "eta_beta_rescale_etaBeta_calc_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT eta_beta_rescale_etaBeta_tanh_calc_calc_every "eta_beta_rescale_etaBeta_tanh_calc_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT eta_beta_calc_etaBeta_poly_calc_every "eta_beta_calc_etaBeta_poly_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT eta_beta_calc_etaBeta_exp_calc_every "eta_beta_calc_etaBeta_exp_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT eta_beta_rescale_etaBeta_calc_calc_offset "eta_beta_rescale_etaBeta_calc_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT eta_beta_rescale_etaBeta_tanh_calc_calc_offset "eta_beta_rescale_etaBeta_tanh_calc_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT eta_beta_calc_etaBeta_poly_calc_offset "eta_beta_calc_etaBeta_poly_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT eta_beta_calc_etaBeta_exp_calc_offset "eta_beta_calc_etaBeta_exp_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+

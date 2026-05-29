@@ -1,0 +1,66 @@
+ActiveThorns    =       " admbase coordgauge staticconformal time pugh pughreduce pughslab ioascii ioutil iobasic  localreduce boundary ehfinder mol exact admcoupling nanchecker spacemask aeilocalinterp pughinterp cartgrid3d coordbase symbase"
+
+IOBasic::outScalar_vars =       " ehfinder::f ehfinder::eh_mask"
+IOASCII::out1D_vars     =       " ehfinder::f ehfinder::eh_mask ehfinder::eh_area ehfinder::eh_centroid_x ehfinder::eh_centroid_y ehfinder::eh_centroid_z ehfinder::eh_circ_eq ehfinder::eh_circ_pol "
+
+IOBasic::outInfo_vars   = "ehfinder::f "
+
+IO::out_dir                             = "eh_test1"
+
+driver::global_nx                       = 30
+driver::global_ny                       = 30
+driver::global_nz                       = 30
+
+time::dtfac                             = -0.25
+
+grid::type                              = "byspacing"
+
+grid::dxyz                              = 0.2
+grid::domain                            = "octant"
+
+
+pugh::ghost_size                        = 2
+
+cactus::cctk_itlast                     = 10
+
+IOBasic::outScalar_every                = 1
+IOBasic::outInfo_every                  = 1
+IOASCII::out1D_every                    = 1
+
+admbase::initial_data                   = "exact"
+admbase::initial_lapse                  = "exact"
+admbase::initial_shift                  = "exact"
+admbase::metric_type                    = "physical"
+
+exact::exact_model                      = "Kerr/Kerr-Schild"
+exact::Kerr_KerrSchild__boost_v         = 0.0
+exact::Kerr_KerrSchild__mass            = 1.0
+exact::Kerr_KerrSchild__spin            = 0.8
+
+ehfinder::eh_metric_type                = "analytic"
+ehfinder::eh_lapse_type                 = "analytic"
+ehfinder::eh_shift_type                 = "analytic"
+
+ehfinder::eh_number_level_sets          = 2
+ehfinder::EHFinder_MaxNumEvolvedVars    = 2
+
+ehfinder::initial_f[0]                  = "sphere"
+ehfinder::initial_rad[0]                = 1.5
+
+ehfinder::initial_f[1]                  = "sphere"
+ehfinder::initial_rad[1]                = 2.0
+
+ehfinder::use_inner_excision            = "yes"
+ehfinder::use_outer_excision            = "yes"
+ehfinder::upwind_type                   = "characteristic"
+ehfinder::shell_width                   = 8.0
+ehfinder::mode                          = "normal"
+
+ehfinder::re_init_int_method            = "euler"
+ehfinder::pde_differences               = "upwind2"
+ehfinder::re_initialize_every           = 10
+ehfinder::re_init_max_iter             = 400
+
+mol::ode_method                         = "icn"
+
+ehfinder::maximum_surface_number        = 1

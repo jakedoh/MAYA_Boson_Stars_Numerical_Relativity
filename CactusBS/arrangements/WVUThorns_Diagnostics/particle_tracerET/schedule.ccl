@@ -1,0 +1,58 @@
+# Schedule definitions for thorn particle_tracerET
+# $Header:$
+
+STORAGE: RK4IterationCounterVar,particle_position_arrays, velocity_consistent_with_MHD_induction_equations
+
+STORAGE: ADMBase::metric[metric_timelevels], ADMBase::curv[metric_timelevels], ADMBase::lapse[lapse_timelevels], ADMBase::shift[shift_timelevels]
+STORAGE: HydroBase::rho[timelevels],HydroBase::press[timelevels],HydroBase::eps[timelevels],HydroBase::vel[timelevels],HydroBase::Bvec[timelevels]
+
+##### INITIALIZE FILE OUTPUT STUFF #####
+SCHEDULE particle_tracerET_file_output_routine_Startup AT CCTK_INITIAL
+{
+  LANG: C
+} "Create directory for file output."
+########################################
+
+##### CONVERT TO MHD 3 VELOCITY #####
+SCHEDULE convert_to_MHD_3velocity AT CCTK_ANALYSIS BEFORE particle_tracerET
+{
+  LANG: C
+  OPTIONS: GLOBAL-EARLY,loop-local
+} "Convert to MHD 3 velocity"
+#########################################
+
+SCHEDULE GROUP particle_tracerET AT CCTK_ANALYSIS
+{
+} "Particle tracerET subroutines"
+
+##### INITIALIZE RK4 ITERATION COUNTER #####
+SCHEDULE InitializeRK4IterationCounterToOne IN particle_tracerET
+{
+  LANG: C
+  OPTIONS: GLOBAL-EARLY
+} "Initialize RK4IterationCounter variable to one"
+############################################
+
+##### INITIALIZE PARTICLE POSITIONS #####
+SCHEDULE InitializeParticlePositions IN particle_tracerET AFTER InitializeRK4IterationCounterToOne
+{
+  LANG: C
+  OPTIONS: GLOBAL-EARLY
+} "Initialize particle positions"
+#########################################
+
+##### DO ONE RK4 STEP #####
+SCHEDULE DoOneRK4StepForParticleTracerET IN particle_tracerET AFTER InitializeParticlePositions
+{
+  LANG: C
+  OPTIONS: GLOBAL-EARLY
+} "Do one RK4 step for particle tracerET"
+############################
+
+##### OUTPUT TO FILE #####
+SCHEDULE particle_tracerET_file_output IN particle_tracerET AFTER DoOneRK4StepForParticleTracerET
+{
+  LANG: C
+  OPTIONS: GLOBAL-EARLY
+} "Output particle tracerET data to disk"
+##########################

@@ -1,0 +1,7 @@
+# Schedule definitions for thorn TestTable
+# $Header$
+
+schedule TestTable_driver in CCTK_STARTUP
+	{
+	LANG: C
+	} "test key/value tables API"

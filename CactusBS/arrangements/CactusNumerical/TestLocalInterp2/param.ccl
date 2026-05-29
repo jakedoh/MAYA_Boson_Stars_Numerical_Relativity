@@ -1,0 +1,17 @@
+# Parameter definitions for thorn TestLocalInterp2
+
+PRIVATE:
+
+CCTK_INT warn_level "Warn level used to advertise failures"
+{
+  0:4 :: "A valid error level"
+} 1
+
+CCTK_REAL tolerance "Test tolerance"
+{
+    (0:* :: "Any positive value"
+} 1.0e-15
+
+BOOLEAN test_symmetric_interpolation "Test symmetry preserving property of interpolation"
+{
+} "no"

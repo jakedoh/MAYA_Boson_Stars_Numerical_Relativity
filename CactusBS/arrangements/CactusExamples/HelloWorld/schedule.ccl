@@ -1,0 +1,7 @@
+# Schedule definitions for thorn HelloWorld
+# $Header$
+
+schedule HelloWorld at CCTK_EVOL
+{
+  LANG: C
+} "Print message to screen"

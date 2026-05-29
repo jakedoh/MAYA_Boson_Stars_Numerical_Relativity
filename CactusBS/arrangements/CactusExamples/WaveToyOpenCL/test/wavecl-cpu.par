@@ -1,0 +1,65 @@
+ActiveThorns = "
+   Accelerator
+   Carpet
+   CarpetIOASCII
+   CarpetIOBasic
+   CarpetLib
+   CarpetReduce
+   CartGrid3D
+   CoordBase
+   GSL
+   IOUtil
+   InitBase
+   LoopControl
+   OpenCL
+   OpenCLRunTime
+   SymBase
+   Time
+   Vectors
+   WaveToyOpenCL
+"
+
+Cactus::cctk_itlast = 20
+
+Carpet::domain_from_coordbase   = yes
+Carpet::prolongation_order_time = 2
+
+CoordBase::domainsize = "minmax"
+CoordBase::xmin       = -0.5
+CoordBase::ymin       = -0.5
+CoordBase::zmin       = -0.5
+CoordBase::xmax       = +0.5
+CoordBase::ymax       = +0.5
+CoordBase::zmax       = +0.5
+CoordBase::dx         =  0.01
+CoordBase::dy         =  0.01
+CoordBase::dz         =  0.01
+CartGrid3D::type      = "coordbase"
+Time::dtfac           = 0.5                  
+
+#OpenCLRunTime::opencl_options     = "-g -cl-opt-disable"
+OpenCLRunTime::opencl_device_type = "CPU"
+OpenCLRunTime::memory_model       = "copy"
+OpenCLRunTime::vector_size_x      = 1 # don't vectorise
+OpenCLRunTime::unroll_size_x      = 1 # don't unroll loops
+OpenCLRunTime::unroll_size_y      = 1
+OpenCLRunTime::unroll_size_z      = 1
+OpenCLRunTime::group_size_x       = 1 # local workgroup size
+OpenCLRunTime::group_size_y       = 1
+OpenCLRunTime::group_size_z       = 1
+OpenCLRunTime::tile_size_x        = 4 # global workgroup size
+OpenCLRunTime::tile_size_y        = 4
+OpenCLRunTime::tile_size_z        = 4
+
+InitBase::initial_data_setup_method = "init_all_levels"
+
+WaveToyOpenCL::wavelength = 2.0
+
+IO::out_dir                    = $parfile
+IOBasic::outInfo_every         = 20
+IOBasic::outInfo_vars          = "WaveToyOpenCL::scalar"
+IOASCII::output_all_timelevels = no
+IOASCII::out1D_every           = 20
+IOASCII::out1D_vars            = "WaveToyOpenCL::scalar"
+IOASCII::out3D_every           = 0
+IOASCII::out3D_vars            = "WaveToyOpenCL::scalar"

@@ -1,0 +1,14 @@
+# Schedule definitions for thorn GiRaFFE_to_HydroBase
+# $Header:$
+
+SCHEDULE Convert_GiRaFFE_to_HydroBase AT CCTK_INITIAL AFTER GiRaFFE_ID_Converter
+{
+  LANG: C
+} "Convert GiRaFFE-native variables to HydroBase"
+
+SCHEDULE Convert_GiRaFFE_to_HydroBase AT CCTK_ANALYSIS BEFORE compute_bi_b2_Poyn_fluxET BEFORE particle_tracerET BEFORE VolumeIntegralGroup BEFORE convert_to_MHD_3velocity AFTER ML_BSSN_evolCalcGroup
+{
+  OPTIONS: GLOBAL-EARLY,LOOP-LOCAL
+  LANG: C
+} "Convert GiRaFFE-native variables to HydroBase"
+

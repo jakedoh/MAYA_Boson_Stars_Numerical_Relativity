@@ -1,0 +1,90 @@
+implements: TestMoL
+inherits: MethodOfLines # not really required but useful to make sure MoL is active
+
+################################################################
+### Aliased registration and type changing functions for the ###
+### standard (i.e., real) GFs.                               ###
+################################################################
+
+CCTK_INT FUNCTION MoLRegisterEvolved(CCTK_INT IN EvolvedIndex, \
+                                     CCTK_INT IN RHSIndex)
+CCTK_INT FUNCTION MoLRegisterEvolvedSlow(CCTK_INT IN EvolvedIndex, \
+                                         CCTK_INT IN RHSIndexSlow)
+
+CCTK_INT FUNCTION MoLRegisterConstrained(CCTK_INT IN ConstrainedIndex)
+CCTK_INT FUNCTION MoLRegisterSaveAndRestore(CCTK_INT IN SandRIndex)
+CCTK_INT FUNCTION MoLRegisterEvolvedGroup(CCTK_INT IN EvolvedIndex, \
+                                          CCTK_INT IN RHSIndex)
+CCTK_INT FUNCTION MoLRegisterEvolvedGroupSlow(CCTK_INT IN EvolvedIndex, \
+                                              CCTK_INT IN RHSIndexSlow)
+CCTK_INT FUNCTION MoLRegisterConstrainedGroup(CCTK_INT IN ConstrainedIndex)
+CCTK_INT FUNCTION MoLRegisterSaveAndRestoreGroup(CCTK_INT IN SandRIndex)
+CCTK_INT FUNCTION MoLChangeToEvolved(CCTK_INT IN EvolvedIndex, \
+                                     CCTK_INT IN RHSIndex)
+CCTK_INT FUNCTION MoLChangeToEvolvedSlow(CCTK_INT IN EvolvedIndex, \
+                                         CCTK_INT IN RHSIndexSlow)
+CCTK_INT FUNCTION MoLChangeToConstrained(CCTK_INT IN ConstrainedIndex)
+CCTK_INT FUNCTION MoLChangeToSaveAndRestore(CCTK_INT IN SandRIndex)
+CCTK_INT FUNCTION MoLChangeToNone(CCTK_INT IN RemoveIndex)
+CCTK_INT FUNCTION MoLQueryEvolvedRHS(CCTK_INT IN EvolvedIndex)
+CCTK_INT FUNCTION MoLNumIntegratorSubsteps()
+
+USES FUNCTION MoLRegisterEvolved
+USES FUNCTION MoLRegisterEvolvedSlow
+USES FUNCTION MoLRegisterConstrained
+USES FUNCTION MoLRegisterSaveAndRestore
+USES FUNCTION MoLRegisterEvolvedGroup
+USES FUNCTION MoLRegisterEvolvedGroupSlow
+USES FUNCTION MoLRegisterConstrainedGroup
+USES FUNCTION MoLRegisterSaveAndRestoreGroup
+USES FUNCTION MoLChangeToEvolved
+USES FUNCTION MoLChangeToEvolvedSlow
+USES FUNCTION MoLChangeToConstrained
+USES FUNCTION MoLChangeToSaveAndRestore
+USES FUNCTION MoLChangeToNone
+USES FUNCTION MoLQueryEvolvedRHS
+USES FUNCTION MoLNumIntegratorSubsteps
+
+private:
+
+CCTK_REAL evolved_gf TYPE = GF TIMELEVELS = 3 \
+        "an evolved grid function"
+CCTK_REAL rhs_gf TYPE = GF TIMELEVELS = 1 \
+        "the rhs for the evolved grid function"
+CCTK_REAL evolvedslow_gf TYPE = GF TIMELEVELS = 3 \
+        "a slow evolved grid function"
+CCTK_REAL rhsslow_gf TYPE = GF TIMELEVELS = 1 \
+        "the rhs for the slow evolved grid function"
+CCTK_REAL constrained_gf TYPE = GF TIMELEVELS = 3 \
+        "a constrained grid function"
+CCTK_REAL sandr_gf TYPE = GF TIMELEVELS = 3 \
+        "a save-and-restore grid function"
+
+CCTK_REAL diff_gf TYPE = GF TIMELEVELS = 1 \
+        "difference to analytic solution in grid function"
+CCTK_REAL analytic_gf TYPE = GF TIMELEVELS = 1 \
+        "analytic solution in grid function"
+CCTK_REAL diffslow_gf TYPE = GF TIMELEVELS = 1 \
+        "difference to analytic solution in grid function"
+CCTK_REAL analyticslow_gf TYPE = GF TIMELEVELS = 1 \
+        "analytic solution in grid function"
+
+CCTK_REAL evolved_ga TYPE = ARRAY DIM = 1 SIZE = 1 TIMELEVELS = 3 \
+        DISTRIB=constant \
+        "an evolved grid array"
+CCTK_REAL rhs_ga TYPE = ARRAY DIM = 1 SIZE = 1 TIMELEVELS = 3 \
+        DISTRIB=constant \
+        "the rhs of the evolved grid array"
+CCTK_REAL constrained_ga TYPE = ARRAY DIM = 1 SIZE = 1 TIMELEVELS = 3 \
+        DISTRIB=constant \
+        "a constrained grid array"
+CCTK_REAL sandr_ga TYPE = ARRAY DIM = 1 SIZE = 1 TIMELEVELS = 3 \
+        DISTRIB=constant \
+        "a save-and-restore grid array"
+
+CCTK_REAL diff_ga TYPE = ARRAY DIM = 1 SIZE = 1 TIMELEVELS = 3 \
+        DISTRIB=constant \
+        "difference to analytic solution in grid function"
+CCTK_REAL analytic_ga TYPE = ARRAY DIM = 1 SIZE = 1 TIMELEVELS = 3 \
+        DISTRIB=constant \
+        "analytic solution in grid function"

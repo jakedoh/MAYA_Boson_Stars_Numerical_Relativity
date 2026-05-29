@@ -1,0 +1,191 @@
+# Interface definition for thorn NullNews
+# $Header$
+
+implements: NullNews
+inherits: NullGrid NullVars NullInterp
+
+CCTK_INT FUNCTION IO_TruncateOutputFiles \
+  (CCTK_POINTER_TO_CONST IN GH)
+
+USES FUNCTION IO_TruncateOutputFiles
+
+public:
+# private:
+
+cctk_complex NewsB[2] Type=ARRAY timelevels=1 dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"Bondi News"
+
+cctk_complex News[2] Type=ARRAY timelevels=1 dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"News"
+
+cctk_complex Psi4[2] Type=ARRAY timelevels=1 dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"Psi4"
+
+cctk_complex NewsB_uBondi[2] Type=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"Bondi News at constant Bondi time"
+
+cctk_complex News_uBondi[2] Type=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"News at constant Bondi time"
+
+cctk_complex Psi4_uBondi[2] Type=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"Psi4 at constant Bondi time"
+
+
+cctk_complex linStrain[2] Type=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"linearized strain h"
+
+cctk_complex linStrain_uBondi[2] Type=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"linearized strain h at constant Bondi time"
+
+
+
+cctk_real uBondi[2] timelevels=1 Type=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"Bondi time"
+
+
+cctk_complex NewsB_past[2*max_timelevels] Type=ARRAY timelevels=1 dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"past levels of Bondi News"
+
+cctk_complex News_past[2*max_timelevels] Type=ARRAY timelevels=1 dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"past levels of News"
+
+cctk_complex Psi4_past[2*max_timelevels] Type=ARRAY timelevels=1 dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"past levels of Psi4"
+
+cctk_real uBondi_past[2*max_timelevels] timelevels=1 Type=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"past levels of Bondi time"
+
+cctk_complex linStrain_past[2*max_timelevels] Type=ARRAY timelevels=1 dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"past levels of lin. strain"
+
+
+
+cctk_real constant_uBondi TYPE=SCALAR "constant Bondi-time to which we interpolate"
+
+cctk_real time_of_news TYPE=SCALAR "time of news"
+
+cctk_real omega[2] Type=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+   omegao, omegan
+} "real omega arrays"
+
+cctk_complex JJ_l[2] Type=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+   Jo_l, Jn_l
+} "complex news arrays" 
+
+private:
+
+
+cctk_real RNewsArrs[2] Type=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+   dMdOmega, P, betao, betan, Wn,
+   redshiftB, uBondio, uBondin, deltao, deltan, circle
+} "real news arrays"
+
+cctk_complex CNewsArrs[2] Type=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+   nzeta, nzetabar, comegao, comegan,
+   Jo, Jn, cBo, cBn,
+   Qo, Qn, Uo, Un, Uyo, Uyn,
+   zEvolo, zEvoln, zEvolh,
+   sigmaJo,sigmaJn,sigmaKo,sigmaKn,sigmauo,sigmaun,sigmaro,sigmarn,
+   sigmaruo,sigmarun,sigmauuo,sigmauun,
+   Qo_l, Qn_l, Uo_l, Un_l, Uo_l_l, Un_l_l
+} "complex news arrays" 
+
+cctk_int patch_index[2] Type=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"counter"
+
+cctk_complex CmplxGA TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+
+  n_tmp1_cgfn, n_tmp1_cgfs,
+  n_tmp2_cgfn, n_tmp2_cgfs,
+  n_tmp3_cgfn, n_tmp3_cgfs
+} "Complex temp Grid Arrays"
+
+cctk_real ReGA TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+  n_tmp1_rgfn, n_tmp1_rgfs,
+  n_tmp2_rgfn, n_tmp2_rgfs
+} "real temp Grid Arrays"
+
+cctk_int StateS TYPE=SCALAR
+{
+  starting
+} "store state" 
+
+CCTK_COMPLEX YlmScri_group[2] TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+  YlmScri_2, YlmScri_1, YlmScri_0
+} "Ylm at Scri by patch"
+
+
+

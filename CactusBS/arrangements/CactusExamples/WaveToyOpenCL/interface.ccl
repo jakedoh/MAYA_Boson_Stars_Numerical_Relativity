@@ -1,0 +1,10 @@
+# Interface definition for thorn WaveToyOpenCL
+
+IMPLEMENTS: WaveToyOpenCL
+
+USES INCLUDE: OpenCLRunTime.h
+
+CCTK_REAL scalar TYPE=gf TIMELEVELS=3
+{
+  u
+} "Scalar"

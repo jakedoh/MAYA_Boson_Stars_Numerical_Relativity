@@ -1,0 +1,18 @@
+Cactus Code Thorn Coordinates
+Author(s)    : Denis Pollney
+               Christian Reisswig
+               Erik Schnetter
+               Peter Diener
+               Nils Dorband
+               many others
+Maintainer(s): Denis Pollney, Christian Reisswig
+Licence      : GPLv2+
+--------------------------------------------------------------------------
+
+1. Purpose
+
+Llama is a multipatch infrastructure for Cactus.
+
+This thorn provides definition of patch systems and coordinates.
+
+For more information see the documentation in the ThornGuide.

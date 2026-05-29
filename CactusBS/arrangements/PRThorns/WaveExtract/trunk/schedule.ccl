@@ -1,0 +1,158 @@
+# Schedule definitions for thorn WaveExtract
+# $Id: schedule.ccl 40 2008-02-14 03:32:18Z schnetter $
+
+
+# test if this makes a difference
+STORAGE: MoncriefQ
+
+
+# FIXME : 3D only for 3D corotation undoing
+STORAGE: metric_tmp
+
+if(active)
+{
+  STORAGE: sym_factor_group, handles_group, do_nothing_group
+
+  # FIXME : This could be moved where it is needed
+  STORAGE: gridsizes_group
+  STORAGE: surface_arrays
+  STORAGE: surface_integrands
+  STORAGE: interp_metric_arrays
+  STORAGE: Schwarzschild_Mass_Radius_group
+  STORAGE: MoncriefQ_Results_group, Schwarzschild_Mass_Radius_Results_group
+  STORAGE: current_detector_group,current_detector_radius_group
+  STORAGE: l_m_modes_info_group
+  STORAGE: current_detector_group
+  STORAGE: current_detector_radius_group
+
+  schedule WavExtr_ParamCheck at PARAMCHECK
+  {
+    LANG: C
+  } "Check Parameters for WaveExtract"
+
+  schedule WavExtr_Startup at STARTUP
+  {
+    LANG: C
+  } "Register WaveExtract as an IO Method"
+
+
+
+  # Initial Setup
+  schedule WavExtr_Init at BASEGRID after SpatialCoordinates
+  {
+    LANG: FORTRAN
+  } "Setup weights for integration"
+
+
+  schedule WavExtr_Setup_Detectors at BASEGRID after SpatialCoordinates
+  {
+    LANG: FORTRAN
+    OPTIONS: LEVEL
+  } "Initial setup of all detectors"
+
+
+
+  # Analysis
+  if (use_spherical_surface) {
+    schedule WaEx_Setup_SphericalSurface at BASEGRID AFTER SphericalSurface_Setup AFTER WavExtr_ResetCurrDet
+    {
+      LANG: FORTRAN
+      OPTIONS: LOCAL #GLOBAL
+    } "setup detectors from spherical surface"
+  }
+
+  schedule WavExtr_ResetCurrDet at ANALYSIS \
+           before WavExtr_CalcsAtDetector
+  {
+    LANG: C
+    OPTIONS: GLOBAL
+  } "Reset the value of the current_detector, needed for the while loop next"
+
+  # Create a new group which contains all the calculations done at 
+  # the detectors. The loop is over the detectors.
+  # FIXME : LOTS OF STORAGE SHOULD ONLY BE TURNED ON IN THIS GROUP
+  schedule group WavExtr_CalcsAtDetector \
+           while WaveExtract::current_detector \
+           at ANALYSIS after WavExtr_ResetCurrDet
+  {
+  } "Calculations done for each detector, we loop over the detectors"
+
+  schedule WavExtr_SetupSphere in WavExtr_CalcsAtDetector
+  {
+    LANG: FORTRAN
+    OPTIONS: GLOBAL
+  } "Setup sintheta, sinphi arrays"
+
+  schedule WavExtr_ProjectSphere in WavExtr_CalcsAtDetector \
+            after WavExtr_SetupSphere
+  {
+    LANG: FORTRAN
+    OPTIONS: GLOBAL
+  } "Interpolate 3D quantities into 2D grid arrays (on the sphere), project onto sphere"
+
+  schedule WavExtr_SchwarzMassRad in WavExtr_CalcsAtDetector \
+           after WavExtr_ProjectSphere
+  {
+    LANG: FORTRAN
+    OPTIONS: GLOBAL
+  } "Calculate Schwarzschild Radius and Mass and spherical background"
+
+  if (subtract_spherical_background) {
+    schedule WavExtr_SubtrSpherMetric in WavExtr_CalcsAtDetector \
+             after WavExtr_SchwarzMassRad
+    {
+      LANG: FORTRAN
+      OPTIONS: GLOBAL
+    } "Substract spherical background part of metric from metric"
+  }
+
+  schedule WavExtr_MoncriefQ in WavExtr_CalcsAtDetector \
+           after WavExtr_SubtrSpherMetric
+  {
+    LANG: FORTRAN
+    OPTIONS: GLOBAL
+  } "Compute Moncrief Qeven, Qodd from Regge Wheeler quantities"
+
+  if (maximum_detector_number < switch_output_format)
+  {
+    schedule WavExtr_WriteData in WavExtr_CalcsAtDetector \
+            after WavExtr_MoncriefQ
+    {
+      LANG: C
+      OPTIONS: GLOBAL
+    } "Write out results to disk and stdout - one file for each detector and (l,m) mode"
+    schedule WavExtr_AdjustDetector in WavExtr_CalcsAtDetector \
+            after WavExtr_WriteData
+    {
+      LANG: C
+      OPTIONS: GLOBAL
+    } "Decrease current_detector, go the the next detector"
+  }
+  else
+  {
+    schedule WavExtr_AdjustDetector in WavExtr_CalcsAtDetector \
+            after WavExtr_MoncriefQ
+    {
+      LANG: C
+      OPTIONS: GLOBAL
+    } "Decrease current_detector, go the the next detector"
+  }
+
+  schedule WavExtr_TimerInfo in WavExtr_CalcsAtDetector \
+           after WavExtr_AdjustDetector
+  {
+    LANG: C
+    OPTIONS: GLOBAL
+  } "Output Timer Info if requested"
+
+
+  if (maximum_detector_number >= switch_output_format)
+  {
+    schedule WavExtr_WriteLotsOfData after WavExtr_CalcsAtDetector \
+             at ANALYSIS
+    {
+      LANG: C
+      OPTIONS: GLOBAL
+    } "Output one file per (l,m) mode, all detectors in one file"
+  }
+}

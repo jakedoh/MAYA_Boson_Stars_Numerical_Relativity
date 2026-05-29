@@ -1,0 +1,12 @@
+CVS info   : $Header:$
+
+Cactus Code Thorn ScalarAnalysis
+Thorn Author(s)     : Yupeng Zhang <yzhang3433@gatech.edu>
+Thorn Maintainer(s) : Yupeng Zhang <yzhang3433@gatech.edu>
+--------------------------------------------------------------------------
+
+Purpose of the thorn: compute the radiated energy, angular momentum, and momentum of scalar field waves
+
+dE/dt = -r^2 \int T_{tr} d\Omega 
+
+dP^i/dt = r^2 \int T_{ir} d\Omega

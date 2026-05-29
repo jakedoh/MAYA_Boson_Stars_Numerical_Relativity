@@ -1,0 +1,179 @@
+\documentclass{article}
+
+% Use the Cactus ThornGuide style file
+% (Automatically used from Cactus distribution, if you have a 
+%  thorn without the Cactus Flesh download this from the Cactus
+%  homepage at www.cactuscode.org)
+\usepackage{../../../../doc/latex/cactus}
+
+\begin{document}
+
+\title{IDBrillData}
+\author{Carsten Gundlach, Gabrielle Allen}
+\date{$ $Date$ $}
+
+\maketitle
+
+% Do not delete next line
+% START CACTUS THORNGUIDE
+
+\begin{abstract}
+This thorn creates time symmetric initial data for Brill
+wave spacetimes.  It can create both axisymmetric data (in a 3D
+cartesian grid), as well as data with an angular dependency.
+\end{abstract}
+
+\section{Purpose}
+
+The purpose of this thorn is to create (time symmetric) initial data
+for a Brill wave spacetime.  It does so by starting from a
+three--metric of the form originally considered by Brill
+\begin{equation}
+ds^2 = \Psi^4 \left[ e^{2q} \left( d\rho^2 + dz^2 \right)
++ \rho^2 d\phi^2 \right] =\Psi^4 \hat{ds}^{2},
+\label{eqn:brillmetric}
+\end{equation}
+where $q$ is a free function subject to certain regularity and
+fall-off conditions, $\rho=\sqrt{x^2+y^2}$ and $\Psi$ is a conformal
+factor to be solved for.
+
+Thorn {\tt IDBrillData} provides three choices for the $q$ function: 
+an exponential form, ({\tt IDBrillData::q\_function = "exp"})
+\begin{equation}
+q = a \; \frac{\rho^{2+b}}{r^2} e^{-\left( \frac{z}{\sigma_z} \right)^2}
+e^{-(\rho - \rho_0)^2} \left[ 1 + d \frac{\rho^m}{1 + e \rho^m}
+\cos^2 \left( n \phi + \phi_0 \right) \right]
+\end{equation}
+a generalized form of the $q$ function first written down by Eppley
+({\tt IDBrillData::q\_function = "eppley"}) 
+\begin{equation}
+q = a \left( \frac{\rho}{\sigma_\rho} \right)^b \frac{1}{1 + \left[
+\left( r^2 - r_0^2 \right) / \sigma_r^2 \right]^{c/2}}\left[ 1 + d \frac{\rho^m}{1 + e \rho^m}
+\cos^2 \left( n \phi + \phi_0 \right) \right]
+\end{equation}
+and the (default) Gundlach $q$ function which includes the Holz form
+({\tt IDBrillData::q\_function = "gundlach"})
+\begin{equation} 
+q = a \left( \frac{\rho}{\sigma_\rho} \right)^b e^{-\left[
+\left( r^2 - r_0^2 \right) / \sigma_r^2 \right]^{c/2}} \left[ 1 + d \frac{\rho^m}{1 + e \rho^m}
+\cos^2 \left( n \phi + \phi_0 \right) \right]
+\end{equation}
+
+Substituting the metric into the Hamiltonian constraint gives an
+elliptic equation for the conformal factor $\Psi$ which is then
+numerically solved for a given function $q$:
+\begin{equation}
+\hat{\nabla} \Psi - \frac{\Psi}{8} \hat{R} = 0
+\end{equation}
+where the conformal Ricci scalar is found to be
+\begin{eqnarray}
+\hat{R} = -2 \left(e^{-2q} (\partial^2_z q + \partial^2_\rho q) + 
+\frac{1}{\rho^2} (3 (\partial_\phi q)^2 + 2 \partial_\phi q)\right)
+\end{eqnarray}
+Assuming the initial data to be time symmetric means that the momentum
+constraints are trivially satisfied.
+
+In the case of axisymmetry (that is $d=0$ in the above expressions for
+$q$), the Hamiltonian constraint can be written as an elliptic
+equation for $\Psi$ with just the flat space Laplacian,
+\begin{equation}
+\nabla_{flat} \Psi + \frac{\Psi}{4} (\partial_z^2 q + \partial_\rho^2 q) = 0
+\end{equation}
+If the initial data is chosen to be {\tt
+ADMBase::initial\_data = "brilldata2D"} then this elliptic equation
+is solved rather than the equation above.
+
+
+\section{Generating Initial Data with IDBrillData}
+
+Brill initial data is activated by choosing the {\tt CactusEinstein/ADMBase}
+parameter {\tt initial\_data} to be {\tt brilldata}, or for the case of
+axisymmetry {\tt brilldata2D} can also be used.
+
+The parameter {\tt IDBrillData::q\_function} chooses the form of the
+$q$ function to be used, defaulting to the Gundlach expression.
+
+Additional {\tt IDBrillData} parameters for each form of $q$ fix the 
+remaining freedom:
+
+\begin{itemize}
+
+\item Exponential $q$: {\tt IDBrillData::q\_function = "exp"}
+
+$(a, b,\sigma_z,\rho_0)=$ ({\tt exp\_a, exp\_b, exp\_sigmaz,exp\_rho0})
+
+\item Eppley $q$: {\tt IDBrillData::q\_function = "eppley"}
+
+$(a, b,\sigma_\rho, r_0,\sigma_r,c)=$ ({\tt eppley\_a, eppley\_b, eppley\_sigmarho, eppley\_r0, eppley\_sigmar, eppley\_c})
+
+\item Gundlach $q$: {\tt IDBrillData::q\_function = "gundlach"}
+
+$(a, b,\sigma_\rho, r_0,\sigma_r,c)=$ ({\tt gundlach\_a, gundlach\_b, gundlach\_sigmarho, gundlach\_r0, gundlach\_sigmar, gundlach\_c})
+
+\item Non-axisymmetric part for each choice of $q$
+
+$(d, m, e, n, \phi0)=$ ({\tt brill3d\_d, brill3d\_m, brill3d\_e, brill3d\_n, brill3d\_phi0})
+
+\end{itemize}
+
+Note that the default $q$ expression is
+$$
+q = {\tt gundlach\_a} \quad \rho^2 e^{-r^2} 
+$$
+
+{\tt IDBrillData} can use the elliptic solvers (type LinMetric)
+provided by {\tt CactusEinstein/EllSOR},\\ {\tt AEIThorns/BAM\_Elliptic},
+or {\tt CactusElliptic/EllPETSc} to solve the equation resulting from 
+the Hamiltonian constraint. 
+In all cases the parameter {\tt thresh} sets the threshold for the elliptic
+solve. The choice of elliptic solver is made 
+through the parameter {\tt brill\_solver}:
+
+\begin{itemize}
+  
+\item {\tt sor}: Understands the Robin boundary condition, additional 
+parameters control the maximum number of iterations ({\tt sor\_maxit}).
+  
+\item {\tt bam}: {\tt BAM\_Elliptic} does not properly implement the
+elliptic infrastructure of {\tt EllBase}, and the {\tt BAM\_Elliptic}
+parameter to use the Robin boundary condition must be set independently
+of \\{\tt IDBrillWave::brill\_bound}.
+
+\end{itemize}
+
+\section{Notes}
+
+Thorn {\tt IDBrillData} understands both the ``{\tt physical}'' and ``{\tt
+static conformal}'' {\tt metric\_type}. In the case of a conformal
+metric being chosen, the conformal factor is set to $\Psi$. Currently
+the derivatives of the conformal factor are not calculated, so that
+only {\tt staticconformal::conformal\_storage = "factor"} is
+supported.
+
+\section{References}
+
+\subsection{Specification of Brill Waves}
+
+\begin{enumerate}
+
+\item Dieter Brill, {\bf Ann. Phys.}, 7, 466, 1959.
+
+\item Ken Eppley, {\bf Sources of Gravitational Radiation}, edited by L. Smarr (Cambridge University Press, 
+Cambridge, England, 1979), p. 275.
+
+\end{enumerate}
+
+\subsection{Numerical Evolutions of Brill Waves}
+
+\begin{enumerate}
+
+\item {\it Gravitational Collapse of Gravitational Waves in 3D Numerical Relativity}, 
+ Miguel Alcubierre, Gabrielle Allen, Bernd Bruegmann, Gerd Lanfermann, Edward Seidel, Wai-Mo Suen, Malcolm Tobias,
+{\bf Phys. Rev. D61}, 041501, 2000.
+
+\end{enumerate}
+
+% Do not delete next line
+% END CACTUS THORNGUIDE
+
+\end{document}

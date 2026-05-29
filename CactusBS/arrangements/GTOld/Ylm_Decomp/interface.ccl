@@ -1,0 +1,57 @@
+# Interface definition for thorn Ylm_Decomp
+
+implements: Ylm_Decomp
+
+private:
+INT do_nothing_group TYPE=SCALAR
+{
+  do_nothing
+} "if equal to 1, then wave_extract won't do anything (example: all detectors are out of range)"
+
+INT handles_group TYPE=SCALAR
+{
+  sum_handle
+} "handles for reduction operators"
+
+
+# REAL surface_arrays TYPE=ARRAY DIM=2 SIZE=maxntheta,maxnphi DISTRIB=CONSTANT
+# {
+#   interp_x,interp_y,interp_z,
+#   ctheta, cphi, sintheta, costheta, sinphi, cosphi
+#   ctheta_max, cphi_max, sintheta_max, costheta_max, sinphi_max, cosphi_max
+# } "2D (theta,phi) grid arrays for points on the sphere"
+
+INT current_detector_group TYPE=SCALAR
+{
+  current_detector, cntheta, cnphi
+} "the index number of the current detector"
+
+REAL current_detector_radius_group TYPE=SCALAR
+{
+  current_detector_radius, dtheta, dphi
+} "coordinate radius of the current detector"
+
+INT l_m_modes_info_group TYPE=SCALAR
+{
+  l_min, l_max, l_step,
+  m_min, m_max, m_step,
+  max_det_no_param
+} "Information about the modes used for extraction"
+
+#REAL interp_arrays[max_nr_vars] TYPE=ARRAY DIM=2 SIZE=maxntheta,maxnphi DISTRIB=CONSTANT
+#REAL integrand[max_nr_vars] TYPE=ARRAY DIM=2 SIZE=maxntheta,maxnphi DISTRIB=CONSTANT
+
+INT varinfo[max_nr_vars] TYPE=SCALAR
+{
+  varindices, spwght, cmplgf, imagIndex, kick
+} "variable info - which vars to decomp"
+
+INT integer_quantities_group TYPE=SCALAR
+{
+  nrdecompvars, ylm_files_exist, first_detector_ever, first_detector_this_time, use_precomputed_trigs, use_precomputed_spwght, only_spwght_m2
+} "numerous integers"
+
+REAL temp3d_group TYPE=GF tags='tensortypealias="scalar"'
+{
+  temp3d
+} "temp 3d arrays needed for dry testing when run with cartoon. waste of storage"

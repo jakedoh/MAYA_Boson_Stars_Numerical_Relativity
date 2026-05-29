@@ -1,0 +1,10 @@
+# Schedule definitions for thorn SampleIO
+# $Header$
+
+##############################
+### Register SampleIO routines
+##############################
+schedule SampleIO_Startup at STARTUP after IOUtil_Startup
+{
+  LANG:C
+} "Startup routine"

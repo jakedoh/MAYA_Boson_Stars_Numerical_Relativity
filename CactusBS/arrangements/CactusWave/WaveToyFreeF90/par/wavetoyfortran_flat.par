@@ -1,0 +1,44 @@
+# $Id$
+#
+# /*@@
+#   @file      wavetoyfortran_flat.par
+#   @date      Sunday 24th July
+#   @author    Gabrielle Allen
+#   @desc
+#   Wavetoy parameter file demonstrating flat boundaries in Octant
+#   @enddesc
+# @@*/          
+
+ActiveThorns = "idscalarwave localreduce time wavetoyfreef90 boundary pugh pughreduce pughslab CartGrid3D CoordBase SymBase ioutil ioascii iobasic"
+ 
+time::dtfac = 0.5
+
+IDScalarWave::initial_data = "gaussian"
+IDScalarWave::sigma = 2.8
+IDScalarWave::radius = 0
+
+wavetoy::bound = "flat"
+
+grid::type = "BySpacing"
+grid::domain = "octant"
+grid::dxyz = 0.3
+
+driver::global_nx = 30
+driver::global_ny = 30
+driver::global_nz = 30
+
+cactus::cctk_itlast = 500
+
+IOBasic::outScalar_every = 10
+IOBasic::outScalar_vars = "wavetoy::phi"
+
+IOASCII::out1D_every = 10
+IOASCII::out1D_z = "no"
+IOASCII::out1D_y = "no"
+IOASCII::out1D_vars = "wavetoy::phi "
+
+IOBasic::outInfo_every = 50
+IOBasic::outInfo_vars = "wavetoy::phi"
+ 
+IO::out_dir = "wavetoyfortran_flat"
+

@@ -1,0 +1,104 @@
+
+uBondiP[0] = uBondi;
+uBondiP[1] = uBondi_p;
+uBondiP[2] = uBondi_p_p;
+uBondiP[3] = uBondi_p_p_p;
+uBondiP[4] = uBondi_p_p_p_p;
+              
+Psi4P[0] = Psi4;
+Psi4P[1] = Psi4_p;
+Psi4P[2] = Psi4_p_p;
+Psi4P[3] = Psi4_p_p_p;
+Psi4P[4] = Psi4_p_p_p_p;
+              
+NewsP[0] = News;
+NewsP[1] = News_p;
+NewsP[2] = News_p_p;
+NewsP[3] = News_p_p_p;
+NewsP[4] = News_p_p_p_p;
+
+              
+NewsBP[0] = NewsB;
+NewsBP[1] = NewsB_p;
+NewsBP[2] = NewsB_p_p;
+NewsBP[3] = NewsB_p_p_p;
+NewsBP[4] = NewsB_p_p_p_p;
+
+if (max_timelevels > 5)
+{
+uBondiP[5] = uBondi_p_p_p_p_p;
+uBondiP[6] = uBondi_p_p_p_p_p_p;
+uBondiP[7] = uBondi_p_p_p_p_p_p_p;
+uBondiP[8] = uBondi_p_p_p_p_p_p_p_p;
+uBondiP[9] = uBondi_p_p_p_p_p_p_p_p_p;
+              
+Psi4P[5] = Psi4_p_p_p_p_p;
+Psi4P[6] = Psi4_p_p_p_p_p_p;
+Psi4P[7] = Psi4_p_p_p_p_p_p_p;
+Psi4P[8] = Psi4_p_p_p_p_p_p_p_p;
+Psi4P[9] = Psi4_p_p_p_p_p_p_p_p_p;
+              
+NewsP[5] = News_p_p_p_p_p;
+NewsP[6] = News_p_p_p_p_p_p;
+NewsP[7] = News_p_p_p_p_p_p_p;
+NewsP[8] = News_p_p_p_p_p_p_p_p;
+NewsP[9] = News_p_p_p_p_p_p_p_p_p;
+
+NewsBP[5] = NewsB_p_p_p_p_p;
+NewsBP[6] = NewsB_p_p_p_p_p_p;
+NewsBP[7] = NewsB_p_p_p_p_p_p_p;
+NewsBP[8] = NewsB_p_p_p_p_p_p_p_p;
+NewsBP[9] = NewsB_p_p_p_p_p_p_p_p_p;
+}
+
+if (max_timelevels > 10)
+{
+uBondiP[10] = uBondi_p_p_p_p_p_p_p_p_p_p;
+uBondiP[11] = uBondi_p_p_p_p_p_p_p_p_p_p_p;
+uBondiP[12] = uBondi_p_p_p_p_p_p_p_p_p_p_p_p;
+uBondiP[13] = uBondi_p_p_p_p_p_p_p_p_p_p_p_p_p;
+uBondiP[14] = uBondi_p_p_p_p_p_p_p_p_p_p_p_p_p_p;
+uBondiP[15] = uBondi_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p;
+uBondiP[16] = uBondi_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p;
+uBondiP[17] = uBondi_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p;
+uBondiP[18] = uBondi_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p;
+uBondiP[19] = uBondi_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p;
+
+
+Psi4P[10] = Psi4_p_p_p_p_p_p_p_p_p_p;
+Psi4P[11] = Psi4_p_p_p_p_p_p_p_p_p_p_p;
+Psi4P[12] = Psi4_p_p_p_p_p_p_p_p_p_p_p_p;
+Psi4P[13] = Psi4_p_p_p_p_p_p_p_p_p_p_p_p_p;
+Psi4P[14] = Psi4_p_p_p_p_p_p_p_p_p_p_p_p_p_p;
+Psi4P[15] = Psi4_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p;
+Psi4P[16] = Psi4_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p;
+Psi4P[17] = Psi4_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p;
+Psi4P[18] = Psi4_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p;
+Psi4P[19] = Psi4_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p;
+
+
+NewsP[10] = News_p_p_p_p_p_p_p_p_p_p;
+NewsP[11] = News_p_p_p_p_p_p_p_p_p_p_p;
+NewsP[12] = News_p_p_p_p_p_p_p_p_p_p_p_p;
+NewsP[13] = News_p_p_p_p_p_p_p_p_p_p_p_p_p;
+NewsP[14] = News_p_p_p_p_p_p_p_p_p_p_p_p_p_p;
+NewsP[15] = News_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p;
+NewsP[16] = News_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p;
+NewsP[17] = News_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p;
+NewsP[18] = News_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p;
+NewsP[19] = News_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p;
+
+
+NewsBP[10] = NewsB_p_p_p_p_p_p_p_p_p_p;
+NewsBP[11] = NewsB_p_p_p_p_p_p_p_p_p_p_p;
+NewsBP[12] = NewsB_p_p_p_p_p_p_p_p_p_p_p_p;
+NewsBP[13] = NewsB_p_p_p_p_p_p_p_p_p_p_p_p_p;
+NewsBP[14] = NewsB_p_p_p_p_p_p_p_p_p_p_p_p_p_p;
+NewsBP[15] = NewsB_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p;
+NewsBP[16] = NewsB_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p;
+NewsBP[17] = NewsB_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p;
+NewsBP[18] = NewsB_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p;
+NewsBP[19] = NewsB_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p_p;
+
+}
+

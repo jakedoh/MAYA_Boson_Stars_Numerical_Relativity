@@ -1,0 +1,10 @@
+Cactus Code Thorn IDConstraintViolate
+Authors    : Ed Seidel, Gabrielle Allen
+CVS info   : $Header$
+--------------------------------------------------------------------------
+
+Purpose of the thorn:
+
+To set up initial data for the metric and extrinsic curvature which 
+violates the constraint equations.
+

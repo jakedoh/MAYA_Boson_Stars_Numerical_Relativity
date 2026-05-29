@@ -1,0 +1,12 @@
+Cactus Code Thorn Bremsstrahlung
+Author(s)    : Tanja Bode <tanja.bode@physics.gatech.edu>
+Maintainer(s): Tanja Bode <tanja.bode@physics.gatech.edu>
+Licence      : GPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+Calculate local non-relativistic and relativistic Bremsstrahlung 
+luminosities from a dynamic gas cloud.
+
+See documentation for units.

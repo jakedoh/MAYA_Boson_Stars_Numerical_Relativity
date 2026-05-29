@@ -1,0 +1,7 @@
+# Main make.code.defn file for thorn ReflectionSymmetry
+
+# Source files in this directory
+SRCS = apply.c interpolate.c register.c
+
+# Subdirectories containing source files
+SUBDIRS = 

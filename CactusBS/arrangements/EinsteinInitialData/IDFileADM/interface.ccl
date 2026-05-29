@@ -1,0 +1,6 @@
+# Interface definition for thorn IDFileADM
+# $Header$
+
+IMPLEMENTS: IDFileADM
+
+INHERITS: ADMBase StaticConformal IO

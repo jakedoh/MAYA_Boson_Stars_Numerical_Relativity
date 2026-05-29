@@ -1,0 +1,76 @@
+diff -r 3c50fd50bb87 Carpet/CarpetRegrid2/param.ccl
+--- a/Carpet/CarpetRegrid2/param.ccl	Mon Oct 24 08:55:33 2011 -0500
++++ b/Carpet/CarpetRegrid2/param.ccl	Wed Apr 25 13:08:45 2012 -0400
+@@ -27,7 +27,14 @@
+ {
+ } "no"
+ 
++BOOLEAN merge_only_overlapping_grids "Merges grids only if they overlap." STEERABLE=always
++{
++} "no"
+ 
++CCTK_INT merge_margin "Expands by merge_margin when merge_only_overlapping_grids checks for intersection." STEERABLE=always
++{
++  *:* :: "Default from RegridBoxes."
++} 8
+ 
+ CCTK_REAL min_fraction "Minimum fraction of required refined points that need to be present in a refined region" STEERABLE=always
+ {
+diff -r 3c50fd50bb87 Carpet/CarpetRegrid2/src/property.cc
+--- a/Carpet/CarpetRegrid2/src/property.cc	Mon Oct 24 08:55:33 2011 -0500
++++ b/Carpet/CarpetRegrid2/src/property.cc	Wed Apr 25 13:08:45 2012 -0400
+@@ -229,9 +229,53 @@
+     
+     // Would a single bbox be efficient enough?
+     // TODO: Check this also for pairs of regions
+-    if (min_fraction * combined_size <= regions_size) {
++    if (min_fraction * combined_size <= regions_size && (! merge_only_overlapping_grids) ) {
+       regions.at(rl) = combined;
+     }
++
++    // Check for combining if subregions overlap (only useful if setsize() > 1)
++    if ( merge_only_overlapping_grids && regions.at(rl).setsize() > 1  ) {
++
++       // Create vector of all sets in current rl
++       vector <ibbox> initial_subregions;
++       int num_subregions = 0;
++       for (ibset::const_iterator ibbr = regions.at(rl).begin(); ibbr != regions.at(rl).end(); ++ ibbr)
++       {
++           ibbox const& bb = *ibbr;
++           num_subregions++;
++           initial_subregions.resize(num_subregions);
++           initial_subregions.at(num_subregions-1) = bb;
++       }
++
++       // Check which, if any, intersect.
++       // For generic binary, there will be at most 3 subregions.
++       int num_in_merged=1;
++       vector <ibbox> merged_subregions(num_in_merged);
++       merged_subregions.at(0) = initial_subregions.at(0);
++       ivect const& imargin = ( merge_margin, merge_margin, merge_margin );
++       for ( int nbox=0; nbox < num_subregions; nbox++ ) {
++           ibbox bbinit = initial_subregions.at(nbox);
++           for ( int mbox=0; mbox<num_in_merged; mbox++ ) {
++               ibbox bbmerged = merged_subregions.at(mbox);
++               ibbox expinit = bbinit.expand(imargin,imargin);
++               ibbox expmerged = bbmerged.expand(imargin,imargin);
++               if ( expinit.intersects(expmerged) ) {
++                  merged_subregions.at(mbox) = bbmerged.expanded_containing(bbinit);
++               } else {
++                  num_in_merged++;
++                  merged_subregions.resize(num_in_merged);
++                  merged_subregions.at(num_in_merged-1) = bbinit;
++               }
++           }
++       }
++       ibset merged_region; 
++       for ( int mbox=0; mbox<num_in_merged; mbox++ ) {
++           merged_region |= merged_subregions.at(mbox);
++       }
++       regions.at(rl) = merged_region;
++
++    }
++  
+     
+     if (veryverbose) {
+       cout << "   New regions are " << regions.at(rl) << "\n";

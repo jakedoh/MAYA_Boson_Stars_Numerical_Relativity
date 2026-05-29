@@ -1,0 +1,161 @@
+# Schedule definitions for thorn HydroBase
+
+#######################################################################
+### We leave the storage on all the time for the variables required ###
+### by MoL. There is probably a better way of doing this.           ###
+#######################################################################
+
+if (timelevels == 3)
+{
+  STORAGE:rho[3],press[3],eps[3]
+  STORAGE:vel[3]
+  if ( !CCTK_EQUALS(initial_Bvec,"none") )
+  {
+     STORAGE:Bvec[3]
+  }
+  if ( !CCTK_EQUALS(initial_Evec,"none") )
+  {
+     STORAGE:Evec[3]
+  }
+  if ( !CCTK_EQUALS(initial_Avec,"none") )
+  {
+     STORAGE:Avec[3]
+     if ( !CCTK_EQUALS(initial_Aphi,"none") )
+     {
+        STORAGE:Aphi[3]
+     }
+  }
+}
+else if (timelevels == 2)
+{
+  STORAGE:rho[2],press[2],eps[2]
+  STORAGE:vel[2]
+  if ( !CCTK_EQUALS(initial_Bvec,"none") )
+  {
+     STORAGE:Bvec[2]
+  }
+  if ( !CCTK_EQUALS(initial_Evec,"none") )
+  {
+     STORAGE:Evec[2]
+  }
+  if ( !CCTK_EQUALS(initial_Avec,"none") )
+  {
+     STORAGE:Avec[2]
+     if ( !CCTK_EQUALS(initial_Aphi,"none") )
+     {
+        STORAGE:Aphi[2]
+     }
+  }
+}
+else if (timelevels == 1)
+{
+  STORAGE:rho[1],press[1],eps[1]
+  STORAGE:vel[1]
+  if ( !CCTK_EQUALS(initial_Bvec,"none") )
+  {
+     STORAGE:Bvec[1]
+  }
+  if ( !CCTK_EQUALS(initial_Evec,"none") )
+  {
+     STORAGE:Evec[1]
+  }
+  if ( !CCTK_EQUALS(initial_Avec,"none") )
+  {
+     STORAGE:Avec[1]
+     if ( !CCTK_EQUALS(initial_Aphi,"none") )
+     {
+        STORAGE:Aphi[1]
+     }
+  }
+}
+
+if ( timelevels > 0 )
+{
+  schedule group HydroBase_Initial AT CCTK_INITIAL after ADMBase_InitialData after ADMBase_InitialGauge after IOUtil_RecoverIDFromDatafiles before ADMBase_PostInitial before SetTmunu
+  {
+  } "HydroBase initial data group"
+  
+  ###############################
+  ### Register startup banner ###
+  ###############################
+  
+  schedule HydroBase_StartUp AT CCTK_STARTUP
+  {
+    LANG: C
+  } "Startup banner"
+  
+  schedule group HydroBase_RHS IN MoL_CalcRHS
+  {
+  } "Groups for scheduling tasks for calculating RHS of hydro variables"
+  
+  schedule group HydroBase_PostStep IN MoL_PostStep BEFORE SetTmunu
+  {
+  } "Post step tasks for hydro thorns"
+  
+  # Hydro thorns should not schedule something in this group
+  # (schedule them in HydroBase_Boundaries), but they can refer to it
+  # in order to schedule own routines before or after the boundary
+  # treatment
+  schedule group HydroBase_Do_Boundaries IN HydroBase_PostStep BEFORE HydroBase_Con2Prim
+  {
+  } "HydroBase Boundary conditions group"
+  
+  schedule group HydroBase_Do_Boundaries IN MoL_Evolution AFTER MoL_Step
+  {
+  } "HydroBase Boundary conditions group"
+  
+  schedule group HydroBase_Boundaries IN HydroBase_Do_Boundaries
+  {
+  } "Group to schedule the boundary condition functions"
+  
+  schedule group ApplyBCs AS HydroBase_ApplyBCs IN HydroBase_Do_Boundaries AFTER HydroBase_Boundaries
+  {
+  } "Apply the boundary conditions of HydroBase"
+  
+  schedule group HydroBase_Con2Prim IN HydroBase_PostStep before SetTmunu
+  {
+  } "Convert from conservative to primitive variables"
+  
+  # I am not quite sure why this has to be scheduled in CCTK_PostPostInitial (roland)
+  #schedule group HydroBase_Con2Prim AT CCTK_PostPostInitial AS Con2Prim BEFORE ADMConstraintsGroup
+  #{
+  #} "Convert from conservative to primitive variables (might be redundant)"
+  
+  schedule group HydroBase_Prim2ConInitial AT Initial AFTER HydroBase_Initial AFTER ADMBase_PostInitial
+  {
+  } "Recover the conservative variables from the primitive variables"
+  
+  # Schedule the simple initial data available through this thorn
+  if (CCTK_Equals(initial_Bvec, "zero"))
+  {
+    SCHEDULE HydroBase_Bvec_Zero in HydroBase_Initial
+    {
+      LANG: C
+    } "Set magnetic field to 0"
+  }
+  
+  if (CCTK_Equals(initial_Evec, "zero"))
+  {
+    SCHEDULE HydroBase_Evec_Zero in HydroBase_Initial
+    {
+      LANG: C
+    } "Set electric field to 0"
+  }
+
+  if (CCTK_Equals(initial_Avec, "zero"))
+  {
+    SCHEDULE HydroBase_Avec_Zero in HydroBase_Initial
+    {
+      LANG: C
+    } "Set vector potential to 0"
+  }
+
+  if (CCTK_Equals(initial_Aphi, "zero"))
+  {
+    SCHEDULE HydroBase_Aphi_Zero in HydroBase_Initial
+    {
+      LANG: C
+    } "Set scalar potential from 4-vector potential to 0"
+  }
+
+}

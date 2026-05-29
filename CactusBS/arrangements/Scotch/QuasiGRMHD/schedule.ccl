@@ -1,0 +1,6 @@
+# Schedule definitions for thorn QuasiGRMHD
+
+schedule QuasiGRMHD_ResetVelocity in HydroBase_PostStep AFTER HydroBase_Con2Prim BEFORE SetTmunu
+{
+  LANG: C
+} "Adjust velocities"

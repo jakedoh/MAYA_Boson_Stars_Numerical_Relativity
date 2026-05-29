@@ -1,0 +1,12 @@
+# Parameter definitions for thorn QuasiGRMHD
+
+shares: Whisky
+
+USES keyword whisky_eos_type
+#USES keyword activate_mhd
+
+restricted:
+CCTK_REAL B2_over_rho_threshold "value of B^2/rho at which we apply the force-free approximation" STEERABLE = ALWAYS
+{
+  0:* :: "any positive value"
+} 10

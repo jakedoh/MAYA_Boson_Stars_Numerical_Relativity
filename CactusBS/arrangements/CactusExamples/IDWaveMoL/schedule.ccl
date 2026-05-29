@@ -1,0 +1,18 @@
+# Schedule definitions for thorn IDScalarWaveMoLC
+# $Header$
+
+schedule IDWaveMoL_CheckParameters at CCTK_PARAMCHECK
+{
+  LANG: C
+} "Check parameters"
+
+schedule IDWaveMoL_InitialData at CCTK_INITIAL
+{
+  STORAGE:       wavemol::scalarevolvemol_scalar[2]
+  STORAGE:       wavemol::scalarevolvemol_vector[2]
+  LANG:          C
+  READS: grid::x, grid::y, grid::z
+  WRITES: wavemol::scalarevolvemol_scalar(everywhere),
+          wavemol::scalarevolvemol_vector(everywhere)
+} "Initial data for 3D wave equation"
+

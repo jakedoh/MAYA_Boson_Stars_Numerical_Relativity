@@ -1,0 +1,6 @@
+# Parameter definitions for thorn EllSOR
+# $Header$
+
+shares:ellbase
+
+USES KEYWORD elliptic_verbose 

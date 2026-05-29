@@ -1,0 +1,45 @@
+# Main make.code.defn file for thorn Exact
+# $Header$
+
+#
+# Source files in this directory
+# ... if adding new files, please keep this list in the same order as the
+#     metrics in this thorn's param.ccl file
+#
+SRCS = Minkowski.F			\
+       Minkowski_funny.F		\
+       Minkowski_shift.F		\
+       Minkowski_gauge_wave.F		\
+       Minkowski_shifted_gauge_wave.F	\
+       Minkowski_conf_wave.F		\
+					\
+       Schwarzschild_EF.F		\
+       Schwarzschild_PG.F		\
+       Schwarzschild_BL.F		\
+       Schwarzschild_Novikov.F	\
+       Kerr_BoyerLindquist.F		\
+       Kerr_KerrSchild.F		\
+       Kerr_KerrSchild_spherical.F	\
+       Schwarzschild_Lemaitre.F	\
+       multi_BH.F			\
+       Thorne_fakebinary.F		\
+					\
+       Lemaitre.F			\
+       de_Sitter.F			\
+       de_Sitter_Lambda.F		\
+       anti_de_Sitter_Lambda.F	\
+       Bianchi_I.F			\
+       Goedel.F			\
+       Bertotti.F			\
+       Kasner_like.F			\
+       Kasner_axisymmetric.F		\
+       Kasner_generalized.F		\
+       Gowdy_wave.F			\
+       Milne.F			\
+					\
+       boost_rotation_symmetric.F	\
+       bowl.F				\
+       constant_density_star.F
+
+# not fully implemented yet -- see Nina Jansen for details
+#      Alvi.F Alvidef.c

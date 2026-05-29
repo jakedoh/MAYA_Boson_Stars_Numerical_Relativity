@@ -1,0 +1,7 @@
+# Schedule definitions for thorn TimerInfo
+# $Header$
+
+schedule TimerInfo at CCTK_POSTSTEP
+{
+  LANG: C
+} "Print Information from Cactus Timers"

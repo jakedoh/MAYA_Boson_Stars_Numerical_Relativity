@@ -1,0 +1,7 @@
+# Main make.code.defn file for thorn Geodesics
+
+# Source files in this directory
+SRCS = GeodesicsRegVars.cc GeodesicsInit.cc GeodesicsFlag.cc GeodesicsCalcRHS.cc  GeodesicsIO.cc GeodesicsCalcRHSEM.cc GeodesicsInject.cc #GeodesicsTmunu.cc #GeodesicsCheckRef.cc
+
+# Subdirectories containing source files
+SUBDIRS = 

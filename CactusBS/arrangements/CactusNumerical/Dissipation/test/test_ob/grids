@@ -1,0 +1,18 @@
+# grid structure
+# format: map reflevel component mglevel   processor bounding-box is-outer-boundary
+
+iteration 0
+maps 1
+0 mglevels 1
+0 0 reflevels 1
+0 0 0 components 1
+0 0 0 0   0 ([0,0,0]:[128,128,66]:[2,2,2]/[0,0,0]:[64,64,33]/[65,65,34]/143650) [[1,1,1],[1,1,1]]
+
+iteration 0
+maps 1
+0 mglevels 1
+0 0 reflevels 2
+0 0 0 components 1
+0 0 0 0   0 ([0,0,0]:[128,128,66]:[2,2,2]/[0,0,0]:[64,64,33]/[65,65,34]/143650) [[1,1,1],[1,1,1]]
+0 0 1 components 1
+0 0 1 0   0 ([44,44,2]:[84,84,24]:[1,1,1]/[44,44,2]:[84,84,24]/[41,41,23]/38663) [[0,0,1],[0,0,0]]

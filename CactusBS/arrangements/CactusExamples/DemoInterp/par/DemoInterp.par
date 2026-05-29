@@ -1,0 +1,17 @@
+!DESC "Test interpolation"
+
+ActiveThorns = "DemoInterp LocalInterp PUGHInterp PUGHSlab PUGH IOUtil IOASCII CartGrid3D CoordBase SymBase"
+
+Cactus::cctk_itlast = 0
+Cactus::allow_mixeddim_gfs = "yes"
+
+DemoInterp::interpolation_order = 2
+
+Driver::global_nsize = 10
+
+DemoInterp::interp_radius = 0.3
+DemoInterp::arrsize = 10
+
+IO::out_every = 1
+IO::out_dir = "DemoInterp"
+IOASCII::out1D_vars = "DemoInterp::compinterps DemoInterp::realinterps DemoInterp::realgf3 DemoInterp::compgf3 DemoInterp::realgf2 DemoInterp::compgf2 DemoInterp::realgf1 DemoInterp::compgf1"

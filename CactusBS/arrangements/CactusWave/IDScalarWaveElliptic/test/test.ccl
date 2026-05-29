@@ -1,0 +1,5 @@
+# fix the relative and absolute tolerances to 1e-5
+
+ABSTOL 1e-6
+RELTOL 1e-6
+

@@ -1,0 +1,9 @@
+# Interface definition for thorn Noise
+# $Header$
+
+IMPLEMENTS: Noise
+
+INHERITS: grid
+
+uses include header: Symmetry.h
+

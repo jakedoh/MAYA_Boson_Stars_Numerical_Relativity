@@ -1,0 +1,10 @@
+Cactus Code Thorn ReadInterpolate
+Author(s)    : Roland Haas <rhaas@caltech.edu>
+Maintainer(s): Roland Haas <rhaas@caltech.edu>
+Licence      : GPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+A FileReader like thorn that uses InterolateLocalUniform to interpolate the
+data read in onto the new grid.

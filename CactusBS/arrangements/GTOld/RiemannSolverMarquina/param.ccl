@@ -1,0 +1,36 @@
+# Parameter definitions for thorn RiemannSolverMarquina
+# $Header:$
+
+boolean speed_limiter "take (unphysical) measures to ensure that g_{ij}*v^i*v^j<speed_limit at the faces"
+{
+} "no"
+
+real speed_limit "speed_limiter enforces this maximum speed at the faces"
+{
+  0:1 :: "any physical speed, c = 1"
+} 1.
+
+boolean polytropic_atmosphere "use polytropic EOS for cells that are almost atmosphere"
+{
+} "no"
+
+boolean enforce_no_atmosphere_flux "kill fluxes between dead cells and/or atmosphere cells"
+{
+} "no"
+
+SHARES: Whisky
+
+USES CCTK_INT whisky_stencil
+USES KEYWORD whisky_eos_type
+USES CCTK_BOOLEAN evolve_tracer
+USES CCTK_KEYWORD numerical_viscosity
+USES CCTK_KEYWORD left_eigenvectors
+
+EXTENDS keyword riemann_solver
+{
+  "Marquina"	:: "Marquina flux"
+}
+
+SHARES: PrimRecovery
+
+USES CCTK_REAL atmo_tolerance

@@ -1,0 +1,173 @@
+# Interface definition for thorn AHFinder
+# $Header$
+
+
+implements: AHFinder
+inherits: ADMBase StaticConformal SpaceMask Grid IO ADMMacros
+
+SUBROUTINE SetDriftCorrectPosition ( CCTK_POINTER_TO_CONST IN GH_Pointer, \
+                                     CCTK_REAL IN x, \
+                                     CCTK_REAL IN y, \
+                                     CCTK_REAL IN z )
+
+USES FUNCTION SetDriftCorrectPosition
+
+SUBROUTINE ConfToPhysInPlace (CCTK_INT IN nx,            \
+                              CCTK_INT IN ny,            \
+                              CCTK_INT IN nz,            \
+                              CCTK_REAL ARRAY IN psi,    \
+                              CCTK_REAL ARRAY INOUT gxx, \
+                              CCTK_REAL ARRAY INOUT gxy, \
+                              CCTK_REAL ARRAY INOUT gxz, \
+                              CCTK_REAL ARRAY INOUT gyy, \
+                              CCTK_REAL ARRAY INOUT gyz, \
+                              CCTK_REAL ARRAY INOUT gzz)
+
+USES FUNCTION ConfToPhysInPlace
+
+SUBROUTINE PhysToConfInPlace (CCTK_INT IN nx,            \
+                              CCTK_INT IN ny,            \
+                              CCTK_INT IN nz,            \
+                              CCTK_REAL ARRAY IN psi,    \
+                              CCTK_REAL ARRAY INOUT gxx, \
+                              CCTK_REAL ARRAY INOUT gxy, \
+                              CCTK_REAL ARRAY INOUT gxz, \
+                              CCTK_REAL ARRAY INOUT gyy, \
+                              CCTK_REAL ARRAY INOUT gyz, \
+                              CCTK_REAL ARRAY INOUT gzz)
+
+USES FUNCTION PhysToConfInPlace
+
+################################
+###   PUBLIC GRID FUNCTIONS  ###
+################################
+
+public:
+
+real ahfindergrid type=GF
+{
+ahfgrid
+} "Horizon function"
+
+real ahfinderexp type=GF
+{
+ahf_exp
+} "Expansion"
+
+real ahfmask type=GF
+{
+ahmask
+} "Grid function for masking"
+
+
+######################################
+###   PUBLIC SCALARS FOR EXCISION  ###
+######################################
+
+real hole1_bounds type=SCALAR
+{
+dhole1_xmin,
+dhole1_ymin,
+dhole1_zmin,
+dhole1_xmax,
+dhole1_ymax,
+dhole1_zmax
+} "Bounds of excision box for hole 1"
+
+real hole2_bounds type=SCALAR
+{
+dhole2_xmin,
+dhole2_ymin,
+dhole2_zmin,
+dhole2_xmax,
+dhole2_ymax,
+dhole2_zmax
+} "Bounds of excision box for hole 2"
+
+real hole3_bounds type=SCALAR
+{
+dhole3_xmin,
+dhole3_ymin,
+dhole3_zmin,
+dhole3_xmax,
+dhole3_ymax,
+dhole3_zmax
+} "Bounds of excision box for hole 3"
+
+
+###################
+###   PRIVATE   ###
+###################
+
+private:
+
+int triggergroup type=SCALAR
+{
+triggervar
+} "For triggering output"
+
+real ahfgradient type=GF
+{
+ahfgradx,
+ahfgrady,
+ahfgradz,
+ahfgradn
+} "Grid functions for gradients"
+
+real ahfinder_gauss type=GF
+{
+ahfgauss
+} "Grid function for gaussian curvature calculation"
+
+real find3grid type=GF
+{
+ahfgrid3,
+ahf_exp3
+} "Grid functions to use in find3 algorithm"
+
+real ahf_centroid type=SCALAR
+{
+  ahf_centroid_x,
+  ahf_centroid_y,
+  ahf_centroid_z
+} "Centroid of one of the horizons"
+
+int drift_check type=SCALAR
+{
+  drift_first
+} "For checking if its the first drift correction"
+
+#######################################
+###  SCALARS AND ARRAYS FOR OUTPUT  ###
+#######################################
+
+REAL out_scalars TYPE=SCALAR
+{
+  out_mass,
+  out_radius,
+  out_area,
+  out_perimeter,
+  out_meridian1,
+  out_meridian2,
+  out_asymx,
+  out_asymy,
+  out_asymz,
+  out_centerx,
+  out_centery,
+  out_centerz
+} "Output of scalar variables"
+
+REAL out_1d_legen TYPE=ARRAY DISTRIB=CONSTANT DIM=1 SIZE=ahf_lmax
+{
+  out_c0
+} "Output of c0 coefficients"
+
+REAL out_2d_legen TYPE=ARRAY DISTRIB=CONSTANT DIM=2 SIZE=ahf_lmax,ahf_lmax
+{
+  out_cc,out_cs
+} "Output of cc and cs coefficients"
+
+REAL ahfinder_gaussian TYPE=ARRAY DISTRIB=CONSTANT DIM=2 SIZE=ahf_ntheta+1,ahf_nphi+1
+{
+  gaussian
+} "Gaussian Curvature"

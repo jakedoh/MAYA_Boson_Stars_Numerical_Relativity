@@ -1,0 +1,17 @@
+# Schedule definitions for thorn TOVBack
+
+
+if (CCTK_Equals(initial_data,"TOVBack"))
+{
+schedule initial_tov in HydroBase_Initial
+{
+
+  LANG: Fortran
+  SYNC:ADMBase::metric,ADMBase::curv,ADMBase::lapse,ADMBase::shift
+  SYNC: rho
+  SYNC: press
+  SYNC: eps
+  SYNC: vel
+  SYNC: w_lorentz
+} "Initial data of a TOV Star"
+}

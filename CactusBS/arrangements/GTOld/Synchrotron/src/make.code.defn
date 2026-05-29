@@ -1,0 +1,8 @@
+# Main make.code.defn file for thorn Synchrotron
+# $Header:$
+
+# Source files in this directory
+SRCS = CalcSynchro.c ParamCheck.c
+
+# Subdirectories containing source files
+SUBDIRS = 

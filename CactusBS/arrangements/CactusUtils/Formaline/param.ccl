@@ -1,0 +1,182 @@
+# Parameter definitions for thorn Formaline
+
+
+
+# Global parameters
+
+BOOLEAN verbose "Produce screen output" STEERABLE=always
+{
+} no
+
+
+
+# Parameters for collecting metadata
+
+BOOLEAN collect_metadata "Collect metadata and output it in various ways" STEERABLE=always
+{
+} yes
+
+REAL update_interval "Update interval for the meta information (in seconds)" STEERABLE=always
+{
+  0:* :: ""
+} 3600.0
+
+INT publish_level "Importance level for meta data to be published via the Publish API" STEERABLE=always
+{
+  0:10 :: "the lower the level the more important the meta data to be published"
+} 1
+
+INT timeout "Timeout for sending meta information to a server (in seconds)" STEERABLE=always
+{
+  1:* :: "a positive value"
+} 10
+
+INT metadata_lifetime "Lifetime of meta information sent to a server (in hours)" STEERABLE=always
+{
+  0   :: "zero to store the metadata forever"
+  1:* :: "a positive value to limit the lifetime to so many hours"
+} 100
+
+STRING steered_parameters_log_exclusion_list "Parameters for which runtime changes should not be logged" STEERABLE=always
+{
+  "" :: "whitespace-separated list of parameter names"
+} "CarpetRegrid::coordinates"
+
+INT nr_of_parameter_changes_to_be_logged "number of parameter changes to be logged" STEERABLE=always
+{
+  -1: :: "log all changes"
+   0: :: "no logs please"
+   1:*:: "log this many changes for a given parameter, then stop logging"
+} -1
+
+
+
+# Parameters for creating files containing the build and job ids
+
+BOOLEAN create_id_files "Create files from the build and job ids"
+{
+} yes
+
+
+
+# Parameters for announcing meta information to the portal
+
+BOOLEAN announce_to_portal "Announce meta information to the portal" STEERABLE=always
+{
+} no
+
+STRING portal_hostname[5] "Portal host name" STEERABLE=always
+{
+  "" :: ""
+} ""
+
+INT portal_port[5] "Portal port" STEERABLE=always
+{
+  1:65535 :: ""
+} 9296
+
+STRING portal_username "User name on the portal" STEERABLE=always
+{
+  "" :: ""
+} ""
+
+
+
+# Parameters for storing as RDF
+
+BOOLEAN send_as_rdf "Send meta as RDF to a server" STEERABLE=always
+{
+} no
+
+STRING rdf_hostname[5] "RDF server host name" STEERABLE=always
+{
+  "" :: ""
+} ""
+
+INT rdf_port[5] "RDF server port" STEERABLE=always
+{
+  1:65535 :: ""
+} 9296
+
+
+
+# Parameters for storing meta information in a file
+
+BOOLEAN store_into_file "Store meta information in a file" STEERABLE=always
+{
+} yes
+
+BOOLEAN store_into_json_file "Store meta information in a file in JSON format" STEERABLE=always
+{
+} yes
+
+STRING storage_filename "File name for meta information" STEERABLE=always
+{
+  "" :: ""
+} "formaline-jar.txt"
+
+STRING storage_json_filename "File name for meta information in JSON format" STEERABLE=always
+{
+  "" :: ""
+} "formaline-jar.json"
+
+
+
+# Parameters for relaying to remote servers
+
+BOOLEAN use_relay_host "Use a relay host for connecting to the portal" STEERABLE=always
+{
+} yes
+
+STRING relay_host "Relay host for connecting to the portal" STEERABLE=always
+{
+  ".+" :: "host name"
+  ""   :: "try to determine a relay host automatically"
+} ""
+
+
+
+# Parameters for storing the source tree in the executable
+
+BOOLEAN output_source "Output a tarball with the cactus source tree" STEERABLE=recover
+{
+} yes
+
+STRING output_source_subdirectory "Subdirectory, relative to IO::out_dir, for the Cactus source tarballs" STEERABLE=recover
+{
+  "" :: ""
+} "cactus-source"
+
+
+
+# Parameters for outputting Cactus variables
+
+STRING out_vars "Cactus variables that should be output" STEERABLE=always
+{
+  "" :: "space separated list of groups or variables"
+} ""
+
+STRING out_reductions "Reduction operators that should be applied to the output variables" STEERABLE=always
+{
+  "" :: "space separated list of reduction operators"
+} "minimum maximum norm1 norm2 norm_inf sum"
+
+
+
+# Parameters for outputting Cactus warnings and info messages
+
+INT max_warn_level "Only output warnings with at most this level of severity"
+{
+  -1:* :: ""
+} -1
+
+BOOLEAN output_info "Output info messages?"
+{
+} "no"
+
+
+
+SHARES: IO
+
+USES STRING  out_dir
+USES KEYWORD out_save_parameters

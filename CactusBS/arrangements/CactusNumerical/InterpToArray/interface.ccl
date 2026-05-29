@@ -1,0 +1,28 @@
+# Interface definition for thorn InterpToArray
+
+IMPLEMENTS: InterpToArray
+
+CCTK_INT FUNCTION                                      \
+    InterpGridArrays                                   \
+        (CCTK_POINTER_TO_CONST IN cctkGH,              \
+         CCTK_INT              IN N_dims,              \
+         CCTK_INT              IN order,               \
+         CCTK_INT              IN N_interp_points,     \
+         CCTK_POINTER_TO_CONST IN interp_coords,       \
+         CCTK_INT              IN N_input_arrays,      \
+         CCTK_INT        ARRAY IN input_array_indices, \
+         CCTK_INT              IN N_output_arrays,     \
+         CCTK_POINTER          IN output_arrays)
+USES FUNCTION InterpGridArrays
+
+PUBLIC:
+
+REAL scalars[nscalars] TYPE=scalar
+
+REAL arrays1d[narrays1d] TYPE=array DIM=1 DISTRIB=constant SIZE=array1d_npoints_i
+REAL arrays2d[narrays2d] TYPE=array DIM=2 DISTRIB=constant SIZE=array2d_npoints_i,array2d_npoints_j
+REAL arrays3d[narrays3d] TYPE=array DIM=3 DISTRIB=constant SIZE=array3d_npoints_i,array3d_npoints_j,array3d_npoints_k
+
+REAL parrays1d[nparrays1d] TYPE=array DIM=1 DISTRIB=default SIZE=parray1d_npoints_i GHOSTSIZE=nghosts
+REAL parrays2d[nparrays2d] TYPE=array DIM=2 DISTRIB=default SIZE=parray2d_npoints_i,parray2d_npoints_j GHOSTSIZE=nghosts,nghosts
+REAL parrays3d[nparrays3d] TYPE=array DIM=3 DISTRIB=default SIZE=parray3d_npoints_i,parray3d_npoints_j,parray3d_npoints_k GHOSTSIZE=nghosts,nghosts,nghosts

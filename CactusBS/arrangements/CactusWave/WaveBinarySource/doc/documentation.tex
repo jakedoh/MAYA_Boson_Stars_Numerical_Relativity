@@ -1,0 +1,73 @@
+% If you are using CVS use this line to give version information
+% $Header$
+
+\documentclass{article}
+
+% Use the Cactus ThornGuide style file
+% (Automatically used from Cactus distribution, if you have a 
+%  thorn without the Cactus Flesh download this from the Cactus
+%  homepage at www.cactuscode.org)
+\usepackage{../../../../doc/latex/cactus}
+
+\begin{document}
+
+% The author of the documentation
+\author{Gabrielle Allen} 
+
+% The title of the document (not necessarily the name of the Thorn)
+\title{Orbiting Scalar Charges}
+
+% the date your document was last changed, if your document is in CVS, 
+% please us:
+\date{$ $Date$ $}
+
+
+\maketitle
+
+% Do not delete next line
+% START CACTUS THORNGUIDE
+
+% Add all definitions used in this documentation here 
+%   \def\mydef etc
+
+% Add an abstract for this thorn's documentation
+\begin{abstract}
+
+\end{abstract}
+
+% The following sections are suggestive only.
+% Remove them or add your own.
+
+\section{Introduction}
+
+This thorn provides a source term to the scalar field evolution
+for two rotating binary charges.
+
+
+\section{Physical System}
+
+The 3D scalar wave equation with a source term $\rho(t,x,y,z)$ is written
+$$
+\nabla \phi = 4 \pi \rho
+$$
+
+Each scalar source with charge $Q$ and radius $R$ contributes 
+$$
+\rho = \frac{3Q}{4\pi R^3}
+$$
+
+\section{Numerical Implementation}
+
+The only involved part of this thorn arise in working out where the
+sources are located (if at all) on each local grid for a multiprocessor
+run. The source terms are not numerically evolved, but are calculated 
+exactly, based on the physical time and their orbital velocity.
+
+A routine is scheduled to run {\it after} the homogeneous equation
+for the scalar field has been evolved, and simply updates the value
+of the scalar field by adding on the source contribution.
+
+% Do not delete next line
+% END CACTUS THORNGUIDE
+
+\end{document}

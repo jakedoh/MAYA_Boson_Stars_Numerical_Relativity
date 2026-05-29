@@ -1,0 +1,190 @@
+#------------------------------------------------------------------------------
+# A parfile to do CCE with sperical harmonic coefficients of the Cauchy metric
+# from a file.
+#
+#------------------------------------------------------------------------------
+
+ActiveThorns = "SymBase CoordBase CartGrid3D IOASCII IOBasic IOUtil Pugh PughReduce PughSlab PUGHInterp Time"
+ActiveThorns = "Fortran MoL SpaceMask LocalReduce"
+ActiveThorns = "ADMBase"
+ActiveThorns = "Boundary"
+ActiveThorns = "AEILocalInterp NullDecomp NullGrid NullInterp NullVars NullEvolve NullNews NullSHRExtract SphericalHarmonicReconGen"
+ActiveThorns = "NaNChecker"
+ActiveThorns = "IOHDF5 IOHDF5Util"
+
+#------------------------------------------------------------------------------
+
+driver::global_nx = 22 
+driver::global_ny = 22
+driver::global_nz = 22 
+driver::ghost_size = 3 
+
+grid::xyzmin = -5
+grid::xyzmax = +5
+grid::type = "byrange"
+
+cactus::terminate         = time
+cactus::cctk_initial_time = 962.5
+cactus::cctk_final_time   = 963
+cactus::cctk_itlast       = 1
+time::timestep_method     = given
+time::timestep            = 0.5
+
+#------------------------------------------------------------------------------
+NullEvolve::boundary_data      = "SHRE"
+NullEvolve::dissip_J           = 0.0
+NullEvolve::first_order_scheme = yes
+NullEvolve::initial_J_data     = "vanishing_J"
+
+NullSHRExtract::cr    = 158 # the non-compactified worldtube radius
+NullSHRExtract::mass  = 1.0
+NullSHRExtract::l_max = 4
+
+
+#Interpolation
+#-----------------------------------------
+NullInterp::interpolation_order = 4
+NullInterp::stereo_patch_type   = "circle"
+NullInterp::deriv_accuracy      = 4
+
+# Null Grid
+#-----------------------------------------
+NullGrid::null_rwt     = 158
+NullGrid::null_xin     = 0.48
+NullGrid::N_radial_pts = 101
+NullGrid::N_ang_pts_inside_eq = 41
+NullGrid::N_ang_stencil_size  = 4
+NullGrid::N_ang_ev_outside_eq = 2
+NullGrid::N_ang_ghost_pts     = 4
+#------------------------------------------------------------------------------
+
+NullDecomp::l_max     = 4
+NullDecomp::use_rsYlm = no
+NullNews::write_spherical_harmonics = yes
+Nullnews::interp_to_constant_uBondi = no
+NullNews::max_timelevels       = 50
+NullNews::use_linearized_omega = yes
+NullNews::first_order_scheme   = no
+
+IO::out_dir = $parfile
+IO::out_fileinfo  = "none"
+
+IOBasic::outInfo_every        = -1
+IOBasic::outScalar_every      = -1
+IOASCII::out1D_every          = -1
+IOASCII::out2D_every          = -1
+
+IOBasic::outInfo_vars    = "NullNews::NewsB"
+IOBasic::outScalar_style = "gnuplot"
+IOBasic::outScalar_vars  = "NullVars::jcn[0] NullVars::jcn[20] NullNews::NewsB NullNews::News NullNews::uBondi NullVars::bcn[0] NullVars::bcn[20] NullVars::ucn[0] NullVars::ucn[20] NullVars::wcn[0] NullVars::wcn[20]"
+
+#------------------------------------------------------------------------------
+
+ADMBase::initial_shift = "zero"
+
+#------------------------------------------------------------------------------
+
+NaNChecker::action_if_found = "terminate"
+NaNChecker::check_every     = 1
+NaNChecker::check_vars      = "all"
+NaNChecker::report_max      = 1
+
+
+#-----------------------------------------------------------------------------
+# SpEC dat input
+
+SphericalHarmonicReconGen::sphere_number = 0 # sphere number counting from 0
+SphericalHarmonicReconGen::time_derivative_in_file = yes
+SphericalHarmonicReconGen::time_fd_order    = 4
+SphericalHarmonicReconGen::time_interpolate = no
+SphericalHarmonicReconGen::verbose          = yes
+SphericalHarmonicReconGen::cached_timesteps = 20
+SphericalHarmonicReconGen::lmaxInFile       = 4
+
+SphericalHarmonicReconGen::path   = "../../../arrangements/PITTNullCode/SphericalHarmonicReconGen/test/"
+SphericalHarmonicReconGen::format = DAT
+
+SphericalHarmonicReconGen::file_lapse[0] = "CceR0158m_Lapse.dat"
+SphericalHarmonicReconGen::file_shiftx[0]= "CceR0158m_Shift.dat"
+SphericalHarmonicReconGen::file_shifty[0]= "CceR0158m_Shift.dat"
+SphericalHarmonicReconGen::file_shiftz[0]= "CceR0158m_Shift.dat"
+SphericalHarmonicReconGen::file_gxx[0]  = "CceR0158m_g.dat"
+SphericalHarmonicReconGen::file_gxy[0]  = "CceR0158m_g.dat"
+SphericalHarmonicReconGen::file_gxz[0]  = "CceR0158m_g.dat"
+SphericalHarmonicReconGen::file_gyy[0]  = "CceR0158m_g.dat"
+SphericalHarmonicReconGen::file_gyz[0]  = "CceR0158m_g.dat"
+SphericalHarmonicReconGen::file_gzz[0]  = "CceR0158m_g.dat"
+
+SphericalHarmonicReconGen::file_lapse[1] = "CceR0158m_DrLapse.dat"
+SphericalHarmonicReconGen::file_shiftx[1]= "CceR0158m_DrShift.dat"
+SphericalHarmonicReconGen::file_shifty[1]= "CceR0158m_DrShift.dat"
+SphericalHarmonicReconGen::file_shiftz[1]= "CceR0158m_DrShift.dat"
+SphericalHarmonicReconGen::file_gxx[1]  = "CceR0158m_Drg.dat"
+SphericalHarmonicReconGen::file_gxy[1]  = "CceR0158m_Drg.dat"
+SphericalHarmonicReconGen::file_gxz[1]  = "CceR0158m_Drg.dat"
+SphericalHarmonicReconGen::file_gyy[1]  = "CceR0158m_Drg.dat"
+SphericalHarmonicReconGen::file_gyz[1]  = "CceR0158m_Drg.dat"
+SphericalHarmonicReconGen::file_gzz[1]  = "CceR0158m_Drg.dat"
+
+SphericalHarmonicReconGen::file_lapse[2] = "CceR0158m_DtLapse.dat"
+SphericalHarmonicReconGen::file_shiftx[2]= "CceR0158m_DtShift.dat"
+SphericalHarmonicReconGen::file_shifty[2]= "CceR0158m_DtShift.dat"
+SphericalHarmonicReconGen::file_shiftz[2]= "CceR0158m_DtShift.dat"
+SphericalHarmonicReconGen::file_gxx[2]  = "CceR0158m_Dtg.dat"
+SphericalHarmonicReconGen::file_gxy[2]  = "CceR0158m_Dtg.dat"
+SphericalHarmonicReconGen::file_gxz[2]  = "CceR0158m_Dtg.dat"
+SphericalHarmonicReconGen::file_gyy[2]  = "CceR0158m_Dtg.dat"
+SphericalHarmonicReconGen::file_gyz[2]  = "CceR0158m_Dtg.dat"
+SphericalHarmonicReconGen::file_gzz[2]  = "CceR0158m_Dtg.dat"
+
+
+# columns counting from 1
+SphericalHarmonicReconGen::column_time = 1
+SphericalHarmonicReconGen::column_lmax = 2
+SphericalHarmonicReconGen::column_data = 3
+
+SphericalHarmonicReconGen::column_lapse[0] = 0
+SphericalHarmonicReconGen::column_shiftx[0] = 0
+SphericalHarmonicReconGen::column_shifty[0] = 1
+SphericalHarmonicReconGen::column_shiftz[0] = 2
+SphericalHarmonicReconGen::column_gxx[0] = 0
+SphericalHarmonicReconGen::column_gxy[0] = 1
+SphericalHarmonicReconGen::column_gxz[0] = 2
+SphericalHarmonicReconGen::column_gyy[0] = 3
+SphericalHarmonicReconGen::column_gyz[0] = 4
+SphericalHarmonicReconGen::column_gzz[0] = 5
+
+# radial derivatives
+SphericalHarmonicReconGen::column_lapse[1] = 0
+SphericalHarmonicReconGen::column_shiftx[1] = 0
+SphericalHarmonicReconGen::column_shifty[1] = 1
+SphericalHarmonicReconGen::column_shiftz[1] = 2
+SphericalHarmonicReconGen::column_gxx[1] = 0
+SphericalHarmonicReconGen::column_gxy[1] = 1
+SphericalHarmonicReconGen::column_gxz[1] = 2
+SphericalHarmonicReconGen::column_gyy[1] = 3
+SphericalHarmonicReconGen::column_gyz[1] = 4
+SphericalHarmonicReconGen::column_gzz[1] = 5
+
+# time derivatives
+SphericalHarmonicReconGen::column_lapse[2] = 0
+SphericalHarmonicReconGen::column_shiftx[2] = 0
+SphericalHarmonicReconGen::column_shifty[2] = 1
+SphericalHarmonicReconGen::column_shiftz[2] = 2
+SphericalHarmonicReconGen::column_gxx[2] = 0
+SphericalHarmonicReconGen::column_gxy[2] = 1
+SphericalHarmonicReconGen::column_gxz[2] = 2
+SphericalHarmonicReconGen::column_gyy[2] = 3
+SphericalHarmonicReconGen::column_gyz[2] = 4
+SphericalHarmonicReconGen::column_gzz[2] = 5
+
+
+### Checkpointing
+
+IOHDF5::checkpoint     = no
+IO::checkpoint_ID      = yes
+IO::recover            = autoprobe
+IO::checkpoint_every   = 256
+IO::out_proc_every     = 2
+IO::checkpoint_keep    = 3
+IO::checkpoint_dir     = $parfile

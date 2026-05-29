@@ -1,0 +1,368 @@
+# Parameter definitions for thorn WaveExtractL
+
+shares: grid
+
+USES KEYWORD domain
+USES KEYWORD bitant_plane
+USES KEYWORD quadrant_direction
+
+shares: admbase
+
+USES KEYWORD metric_type
+
+private:
+
+BOOLEAN active "Should we run at all?" STEERABLE=always
+{
+} "yes"
+
+INT start_iteration "First iteration when we should be called" STEERABLE=always
+{
+  *:* :: ""
+} 0
+
+INT start_time "First time when we should be called" STEERABLE=always
+{
+  *:* :: ""
+} -1
+
+
+BOOLEAN calc_when_necessary "Start calculation at T = R_detector - 50 and stop after T_merger+Ringdown_margin+R_detector"
+{
+} no
+
+
+REAL ringdown_margin "The expected length of ringdown. If calc_when_necessary=yes, then T_merger+ringdown_margin+R_detector is the time when calculations are switched off"
+{
+  0:* :: "Any positive number"
+} 150.0
+
+
+INT out_every "At which iterations should we be called" STEERABLE=always
+{
+  *:* :: "negative means set via out_every_det"
+} 1
+
+INT out_every_det[100] "At which iterations should this detector be evaluated" STEERABLE=always
+{
+  *:* :: ""
+} 1
+
+
+INT verbose "how verbose should the output be?" STEERABLE=always
+{
+  0:10 :: "higher number means more output"
+} 1
+
+
+# The origin around which we extract, usually (0,0,0)
+REAL origin_x "origin in x direction" STEERABLE=always
+{
+  *:* :: ""
+} 0
+
+REAL origin_y "origin in y direction" STEERABLE=always
+{
+  *:* :: ""
+} 0
+
+REAL origin_z "origin in z direction" STEERABLE=always
+{
+  *:* :: ""
+} 0
+
+
+# Wave Mode choices
+# We have 2 different ways to choose modes:
+#   1) choose all modes up to l_mode,m_mode
+#   2) choose a specific mode. only this l_mode,m_mode will be extracted
+KEYWORD mode_type "Which type of mode extraction do we have" STEERABLE=always
+{
+  "all modes"     :: "Extract all modes up to (l_mode, m_mode)."
+  "specific mode" :: "Select one specific (l_mode, m_mode) mode"
+} "all modes"
+
+INT l_mode "all modes: Up to which l mode to calculate/ spefic mode: which l mode to extract" STEERABLE=always
+{
+  2:* :: "Positive Please, note that l=0,1 are gauge dependent and not implemented"
+} 2
+
+INT m_mode "all modes: Up to which m mode to calculate/ specific mode: which m mode to extract " STEERABLE=always
+{
+  0:* :: "Positive Please"
+} 0
+
+# How many points in theta, phi direction
+INT maxntheta "how many points in theta direction at most" STEERABLE=recover
+{
+  0:* :: "Positive Please - even or odd depends on integration scheme used"
+} 100
+
+INT maxnphi "how many points in phi direction at most" STEERABLE=recover
+{
+  0:* :: "Positive Please - even or odd depends on integration scheme used"
+} 100
+
+INT ntheta[100] "how many points in theta direction" STEERABLE=recover
+{
+  0:* :: "Positive Please - even or odd depends on integration scheme used"
+} 0
+
+INT nphi[100] "how many points in phi direction" STEERABLE=recover
+{
+  0:* :: "Positive Please - even or odd depends on integration scheme used"
+} 0
+
+BOOLEAN subtract_spherical_background "Subtract spherical background before calculation of Extraction quantities" STEERABLE=always
+{
+} "yes"
+
+
+# The interpolator
+STRING interpolation_operator "What interpolator should be used to interpolate onto the surface" STEERABLE=always
+{
+  ".+" :: "A valid interpolator name, see Thorn AEILocalInterp"
+} "Hermite polynomial interpolation"
+
+INT interpolation_order "interpolation order for projection onto the sphere" STEERABLE=always
+{
+  1:* :: "Positive Please"
+} 2
+
+INT interpolation_stencil "interpolation stencil, this is needed to work out how far out you can place the detectors. It depends on the interpolator and the interpolation order used." STEERABLE=always
+{
+  1:* :: "Positive Please"
+} 4
+
+
+
+KEYWORD integration_method "which method to use for the integration" STEERABLE=always
+{
+  "Gauss" :: "error is O(1/e^N)"
+  "extended midpoint rule" :: "weight is one for all points, error is O(1/N^2)"
+  "open extended" :: "weight is 23/12,13/12,4/3,2/4,...0,27/12, error O(1/N^4)"
+} "Gauss"
+
+
+# The detector setup
+INT maximum_detector_number "How many detectors do you want. NOTE: This also fixes the number of detectors in Cauchy mode!" STEERABLE=recover
+{
+  0:100 :: "Positive Please, less than hard limit FIXME"
+} 9
+
+# FIXME : this 100 should become more dynamic, increase if you want more detectors
+REAL detector_radius[100] "Coordinate radius of detectors" STEERABLE=always
+{
+  0:* :: "maximum radius is checked at runtime, detector should be in the grid"
+} 0
+
+
+BOOLEAN check_rmax "Whether to check for rmax or not (must be set to no for Llama"
+{
+} no
+
+
+# Note that the old extract used "average Schwarzschild metric".
+KEYWORD rsch2_computation "How to calculate (Schwarzschild_Radius)^2" STEERABLE=always
+{
+  "aerial radius" :: "calculate invariant aerial radius: r^2=int(sqrt(gtt*gpp-gtp^2))"
+  "average Schwarzschild metric" :: "assume Schwarzschild coordinates: r^2=int(1/2 (gtt+gpp/sin^2(theta))"
+  "Schwarzschild gtt" :: "assume Schwarzschild coordinates: r^2=int(gtt)"
+  "Schwarzschild gpp" :: "assume Schwarzschild coordinates: r^2=int(gpp/sin^2(theta))"
+} "aerial radius"
+
+KEYWORD drsch_dri_computation "How to calculate dr_Schwarzschild/dr_isotropic" STEERABLE=always
+{
+  "average dr_gtt dr_gpp" :: "average using drsch_dri=int(1/2(dr_gtt+dr_gpp/sin^2(theta)))"
+  "dr_gtt" :: "drsch_dri=int(dr_gtt)"
+  "dr_gpp" :: "drsch_dri=int(dr_gpp/sin^2(theta))"
+} "average dr_gtt dr_gpp"
+
+
+
+# Possibly change the metric w.r.t which we extract
+# FIXME : this 100 should become more dynamic, increase if you want more detectors
+STRING detector_metric[100] "Metric w.r.t which we extract" STEERABLE=always
+{
+  ".*" :: "Any group with storage on. Must be in order xx,xy,xz,yy,yz,zz"
+} "admbase::metric"
+
+BOOLEAN use_conformal_factor[100] "Do we use the conformal factor (if possible) with this metric?" STEERABLE=always
+{
+} "yes"
+
+
+
+# There are 2 different ways to specify detector locations:
+#   1) Place maximum_number_detectors evenly spaced in a specified range
+#   2) Give specific detector locations using the detector_radius[] array.
+#
+# 
+# Note that in "Cauchy extraction" we only extract the Moncrief Q values, not it's 
+# derivatives. So it is not really a Cauchy extraction.
+KEYWORD detection_mode "Give Specific locations or let the code place the detectors" STEERABLE=always
+{
+  "Cauchy extraction"  :: "a lot of detectors in some specified range"
+  "specific detectors" :: "give some values"
+} "specific detectors"
+
+
+# There are 2 ways to specify the range of detectors:
+#  1) give the actual start/end coordinate locations
+#  2) give start/stop as factor of the grid, ie 0.0-1.0 of the grid
+REAL Cauchy_radius_start_coord "where to start Cauchy line in coordinates"
+{
+  -2:* :: "-2 means deactive (ie use percentage), -1 means start from first grid point"
+} -2
+
+REAL Cauchy_radius_end_coord "where to end Cauchy line in coordinates"
+{
+  -2:* :: "-2 means deactive (ie use percentage), -1 means go up to maximum"
+} -2
+
+REAL Cauchy_radius_start_factor "where to start Cauchy line as factor of grid size"
+{
+  -1:1 :: "-1 means deactive (ie use coordinate), 0 means first grid point"
+} 0
+
+REAL Cauchy_radius_end_factor "where to end Cauchy line as factor of grid size"
+{
+  -1:1 :: "-1 means deactive (ie use coordinate), 1 means go up to maximum"
+} 1
+
+# usually you want the code to figure this out for itself
+REAL Cauchy_radius_dr "seperation of 2 detectors for the extraction"
+{
+  -1:* :: "-1 means: let the code figure it out"
+} -1
+
+BOOLEAN cauchy_radius_extreme "use min. radius along axis, dr=dx"
+{
+} 0
+
+
+BOOLEAN Cauchy_time_ID "compute initial data (ID) for dt_Zerilli?"
+{
+} 0
+
+
+
+
+# CARTOON
+
+BOOLEAN cartoon "use cartoon"
+{
+} "no"
+
+REAL cartoon_grid_acc "accuracy to use for dx=dy=dz check"
+{
+  0:: ""
+} 1e-2
+
+
+# Observers
+BOOLEAN observers "do we use the observer thorn"
+{
+} "no"
+
+# COROTATION
+REAL rotation_omega "omega from driftcorrect"
+{
+  : :: ""
+} 0.0
+
+BOOLEAN corotate "do we corotate? give omega if so"
+{
+} "no"
+
+BOOLEAN phicorotate "undo corotation on phi itself"
+{
+} "no"
+
+
+BOOLEAN corotate3d "do we corotate in 3D (easy slow way)? give omega if so"
+{
+} "no"
+
+
+
+
+# IO STUFF
+# When one uses a lot of detectors and a lot of modes in the extraction, then one gets a 
+# lot of output files. In order to make it more managable you can switch the output format.
+# If you have more detectors than this parameter, all detector results for a given (l,m)
+# mode will be placed in the same file, column seperation for each detector.
+INT switch_output_format "How many output files do you suffer in your directory, when you have more detectors than this number, the file format is switched" STEERABLE = RECOVER
+{
+ 1:* :: "positive"
+} 10
+
+STRING out_dir "Output directory for Extract's files, overrides IO::out_dir" STEERABLE = RECOVER
+{
+  ".+" :: "A valid directory name"
+  "^$" :: "An empty string to choose the default from IO::out_dir"
+} ""
+
+KEYWORD out_style "Which style for Scalar output"
+{
+  "gnuplot" :: "1D output readable by gnuplot"
+  "xgraph"  :: "1D output readable by xgraph"
+} "gnuplot"
+
+STRING out_format "Which format for Scalar floating-point number output" STEERABLE = ALWAYS
+{
+  ^(\.[1]?[0-9])?[EGefg]$ :: "output with given precision in exponential / floating point notation"
+} ".13f"
+
+
+# timing statistics
+BOOLEAN write_timer_info "write timing information to stdout" STEERABLE = ALWAYS
+{
+} "no"
+
+# SphericalSurface
+INT surface_index[100] "surface that contains extraction sphere"
+{
+  -1: :: ""
+} -1
+
+BOOLEAN use_spherical_surface "use spherical surface thorn provided spheres"
+{
+} "no"
+
+BOOLEAN make_interpolator_warnings_fatal "Report interpolator warnings as level-0 error messages (and abort the run) ?"
+{
+} "no"
+
+
+
+
+#############################################################################
+### import IOUtil parameters
+#############################################################################
+shares: IO
+
+USES STRING out_dir AS io_out_dir
+USES INT out_every AS io_out_every
+USES BOOLEAN new_filename_scheme
+USES KEYWORD out_fileinfo
+
+
+# import SphericalSurface parameters.
+SHARES: SphericalSurface
+
+USES INT nsurfaces
+
+USES INT maxntheta AS sfpar_maxntheta
+USES INT maxnphi AS sfpar_maxnphi
+
+#USES INT ntheta AS sfpar_ntheta
+#USES INT nphi   AS sfpar_nphi
+
+USES INT nghoststheta
+USES INT nghostsphi
+
+USES BOOLEAN symmetric_x
+USES BOOLEAN symmetric_y
+USES BOOLEAN symmetric_z
+

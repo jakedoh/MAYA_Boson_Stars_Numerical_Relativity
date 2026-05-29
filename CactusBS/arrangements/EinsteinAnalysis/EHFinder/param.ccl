@@ -1,0 +1,345 @@
+# Parameter definitions for thorn EHFinder
+# $Header$
+
+private:
+
+INT eh_number_level_sets "How many level set functions should we evolve"
+{
+  1:10        :: "Between 1 and 10"
+} 1
+ 
+KEYWORD eh_metric_type "Do we use numerical or analytic metric information"
+{
+  "numerical" :: "Read in metric from numerical data"
+  "analytic"  :: "Use external analytic metric"
+} "numerical"
+ 
+KEYWORD eh_lapse_type "Do we use numerical or analytic metric information"
+{
+  "numerical" :: "Read in metric from numerical data"
+  "analytic"  :: "Use external analytic metric"
+} "numerical"
+
+KEYWORD eh_shift_type "Do we use numerical or analytic metric information"
+{
+  "numerical" :: "Read in metric from numerical data"
+  "analytic"  :: "Use external analytic metric"
+} "numerical"
+
+KEYWORD file_type "Are the timesteps in separate files or in one file?"
+{
+  "one_file" :: "All timesteps are in the same file"
+  "sep_time_files" :: "Timesteps are in separete files"
+} "one_file"
+
+BOOLEAN read_conformal_factor_once "Should the conformal factor only be read once"
+{
+} "yes"
+
+BOOLEAN cheat "Should we cheat and evolve using the last data set for a while?"
+{
+} "no"
+
+CCTK_INT cheat_iterations "For how many iterations should we cheat"
+{
+0:*            :: "If you really want to cheat this should be positive"
+} 0
+
+KEYWORD initial_f[10] "Initial surface choice"
+{
+  "sphere"     :: "spherical surface"
+  "ellipsoid"  :: "ellipsoidal surface"
+  "cassini"    :: "ovaloid of cassini"
+} "sphere"
+
+REAL initial_rad[10] "Initial radius of surface"
+{
+0.0:            :: "Positive please"
+} 1.0
+
+REAL initial_a[10] "Initial a coefficient of ellipsoid"
+{
+0.0:            :: "Positive please"
+} 1.0
+
+REAL initial_b[10] "Initial b coefficient of ellipsoid"
+{
+0.0:            :: "Positive please"
+} 1.0
+
+REAL initial_c[10] "Initial c coefficient of ellipsoid"
+{
+0.0:            :: "Positive please"
+} 1.0
+
+REAL rotation_alpha[10] "Rotation angle around z-axis of ellipsoid"
+{
+*:*              :: "Everything is possible"
+} 0.0
+
+REAL rotation_beta[10] "Rotation angle around y-axis of ellipsoid"
+{
+*:*              :: "Everything is possible"
+} 0.0
+
+REAL rotation_gamma[10] "Rotation angle around x-axis of ellipsoid"
+{
+*:*              :: "Everything is possible"
+} 0.0
+
+REAL translate_x[10] "Translation in x-direction"
+{
+*:*              :: "Everything is possible"
+} 0.0
+
+REAL translate_y[10] "Translation in y-direction"
+{
+*:*              :: "Everything is possible"
+} 0.0
+
+REAL translate_z[10] "Translation in z-direction"
+{
+*:*              :: "Everything is possible"
+} 0.0
+
+REAL cas_a[10] "Initial a coefficient of ovaloid of cassini"
+{
+:                :: "Any number (negative and positive are equivalent)"
+} 2.0
+
+REAL cas_b[10] "Initial b coefficient of ovaloid of cassini"
+{
+:                :: "Any number (negative and positive are equivalent)"
+} 2.05
+
+REAL shell_width "Width of the evolution region in units of the grid spacing"
+{
+0.0:            :: "Positive please"
+} 7.0
+
+BOOLEAN use_inner_excision "Should inner excision be used?"
+{
+} "yes"
+
+BOOLEAN use_outer_excision "Should outer excision be used?"
+{
+} "yes"
+
+KEYWORD mode "Mode of operation"
+{
+  "normal"  :: "Find event horizons"
+  "analysis" :: "Provide storage for f without evolving"
+  "generator" :: "Provide storage for f and initialize without evolving"
+} "normal"
+
+KEYWORD upwind_type "Type of upwinding used in evolving the ehfinder equations"
+{
+  "intrinsic" :: "Use the values of f itself to determine upwind direction"
+  "shift"     :: "Use the shift to determine upwind direction"
+  "characteristic" :: "Use characteristic information"
+} "characteristic"
+
+KEYWORD surface_direction "Should we track outward or inward moving surfaces"
+{
+  "outward" :: "Track outward moving surfaces. Use for event horizon finding."
+  "inward"  :: "Track inward moving surfaces."
+} "outward"
+
+BOOLEAN re_init_verbose "Should re-initialization be verbose?"
+{
+} "no"
+
+BOOLEAN re_init_undo "Should re-initialization be undone at pinch-off"
+{
+} "yes"
+
+KEYWORD re_init_int_method "Integration method used in re-initialization"
+{
+  "euler"  :: "Standard euler scheme"
+  "rk2"    :: "Second order Runge-Kutta scheme"
+} "euler"
+
+INT re_init_max_iter "maximum number of iterations in the re-initialization"
+{
+0:        :: "Positive please"
+} 800
+
+KEYWORD pde_differences "Type of finite diffencing used in pde re-initialization"
+{
+  "centered" :: "Use 2nd order centered differences except at the boundaries"
+  "upwind"   :: "Use 1st order upwinded differences everywhere"
+  "upwind2"  :: "Use 2nd order upwinded differences everywhere"
+} "upwind2"
+
+INT re_initialize_every "How often to re-initialize the level set function"
+{
+0:               :: "If 0 don't re-initialize"
+} 10
+
+INT last_iteration_number "The starting iteration number for the EH_Finder (last iteration number of the simulation)"
+{
+0:              :: "Positive please"
+} 0
+
+INT saved_iteration_every "How often was the numerical data saved"
+{
+1:               :: "Positive please"
+} 1
+
+INT ntheta "Number of points in the theta direction when finding points on the surface"
+{
+1:*:2            :: "Positive and odd please"
+} 51
+
+INT nphi "Number of points in the phi direction when finding points on the surface"
+{
+1:*:2            :: "Positive and odd please"
+} 51
+
+INT n_array_ghosts "Number of ghost points in the surface grid array"
+{
+1:               :: "Positive please"
+} 1
+
+INT maximum_surface_number "The maximum number of surfaces expected in the data"
+{
+  1:*            :: "Positive please"
+} 1
+
+BOOLEAN use_user_center "Should the user prescribed center be used"
+{
+} "no"
+
+CCTK_REAL center_x "The x-coordinate of the center"
+{
+  *:*            :: "Anything"
+} 0.0
+
+CCTK_REAL center_y "The y-coordinate of the center"
+{
+  *:*            :: "Anything"
+} 0.0
+
+CCTK_REAL center_z "The z-coordinate of the center"
+{
+  *:*            :: "Anything"
+} 0.0
+
+BOOLEAN evolve_generators "Should the generators be evolved"
+{
+} "no"
+
+CCTK_INT number_of_generators "How many generators should be evolved"
+{
+  1:*            :: "Postive please"
+} 1
+
+CCTK_INT number_of_generators_theta "How many generators in the theta direction"
+{
+  1:*           :: "Positive please"
+} 1
+
+CCTK_INT number_of_generators_phi "How many generators in the phi direction"
+{
+  1:*           :: "Positive please"
+} 1
+
+KEYWORD generator_distribution "What initial distribution should be used"
+{
+  "line"	:: "Put the generators on a line in the xz-plane"
+  "2D array"    :: "Put the generators on a surface with spherical topology"
+} "line"
+
+STRING surface_interpolator "What interpolator should be used to locate the surface"
+{
+  ".+"          :: "A valid interpolator name"
+} "Hermite polynomial interpolation"
+
+CCTK_INT surface_interpolation_order "What order should be used for the surface interpoation"
+{
+  1:*           :: "A valid positive interpolation order"
+} 2
+
+STRING area_interpolator "What interpolator should be used for the area"
+{
+  ".+"          :: "A valid interpolator name"
+} "Lagrange polynomial interpolation"
+
+CCTK_INT area_interpolation_order "What order should be used for the area interpoation"
+{
+  1:*           :: "A valid positive interpolation order"
+} 3
+
+KEYWORD area_calculation_method "How should the areas be calculated"
+{
+  "standard"    :: "Using a angular coordinate system on the surface"
+  "isosurface"  :: "Using an isosurface triangulation"
+} "standard"
+
+STRING generator_interpolator "What interpolator should be used for the generators"
+{
+  ".+"          :: "A valid interpolator name"
+} "Lagrange polynomial interpolation"
+
+CCTK_INT generator_interpolation_order "What order should be used for the generator interpoation"
+{
+  1:*           :: "A valid positive interpolation order"
+} 3
+
+KEYWORD generator_tracking_method "What method should be used for tracking the generators"
+{
+  "interpolate_before" :: "Interpolate first, then calculate"
+  "interpolate_after"  :: "Calculate first, then interpolate"
+} "interpolate_before"
+
+shares: grid
+
+USES KEYWORD domain
+USES KEYWORD quadrant_direction
+USES KEYWORD bitant_plane
+
+shares: admbase
+
+USES KEYWORD metric_type
+
+EXTENDS KEYWORD initial_data
+{
+  "read from file" :: "Read in metric from a file"
+}
+
+EXTENDS KEYWORD initial_lapse
+{
+  "read from file" :: "Read in lapse from a file"
+}
+
+EXTENDS KEYWORD initial_shift
+{
+  "read from file" :: "Read in shift from a file"
+}
+
+shares: spacemask
+
+USES BOOLEAN use_mask
+
+shares: MethodOfLines
+
+USES CCTK_INT MoL_Num_Evolved_Vars
+USES CCTK_INT MoL_Max_Evolved_Array_Size
+USES CCTK_INT MoL_Num_ArrayEvolved_Vars
+
+restricted:
+
+CCTK_INT EHFinder_MaxNumEvolvedVars "The maximum number of evolved variables used by EHFinder" ACCUMULATOR-BASE=MethodOfLines::MoL_Num_Evolved_Vars
+{
+  1:10		:: "Only evolve the level set functions"
+} 1
+
+CCTK_INT EHFinder_Max_Evolved_Array_Size "The maximum size of evolved grid arrays used by EHFinder" ACCUMULATOR-BASE=MethodOfLines::MoL_Max_Evolved_Array_Size
+{
+  1:*		:: "The size of the generator grid arrays"
+} 1
+
+CCTK_INT EHFinder_Num_ArrayEvolved_Vars "The maximum number of evolved grid arrays used by EHFinder" ACCUMULATOR-BASE=MethodOfLines::MoL_Num_ArrayEvolved_Vars
+{
+  0:30		:: "Should be exactly zero or a multiple of three"
+} 3

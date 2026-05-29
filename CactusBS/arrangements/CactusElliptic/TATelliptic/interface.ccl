@@ -1,0 +1,5 @@
+# Interface definition for thorn TATelliptic
+
+IMPLEMENTS: TATelliptic
+
+INCLUDE HEADER: TATelliptic.h IN TATelliptic.h

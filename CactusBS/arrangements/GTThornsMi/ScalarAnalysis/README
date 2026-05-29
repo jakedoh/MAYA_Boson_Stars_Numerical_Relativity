@@ -1,0 +1,9 @@
+CVS info   : $Header:$
+
+Cactus Code Thorn ScalarAnalysis
+Thorn Author(s)     : Frank Herrmann <herrmann@gravity.psu.edu>
+Thorn Maintainer(s) : Frank Herrmann <herrmann@gravity.psu.edu>
+--------------------------------------------------------------------------
+
+Purpose of the thorn: compute the radiated energy, angular momentum, and momentum of scalar field waves
+

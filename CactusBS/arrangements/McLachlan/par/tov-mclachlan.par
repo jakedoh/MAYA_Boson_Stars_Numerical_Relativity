@@ -1,0 +1,415 @@
+Cactus::cctk_run_title = "Tolman-Oppenheimer-Volkoff"
+
+Cactus::cctk_full_warnings         = yes
+Cactus::highlight_warning_messages = no
+
+Cactus::terminate       = "time"
+Cactus::cctk_final_time = 1500.0
+
+
+
+ActiveThorns = "IOUtil"
+
+IO::out_dir = $parfile
+
+
+
+ActiveThorns = "TerminationTrigger"
+
+TerminationTrigger::max_walltime          =  0.0   # hours
+TerminationTrigger::on_remaining_walltime = 15.0   # minutes
+
+TerminationTrigger::termination_from_file   = yes
+TerminationTrigger::create_termination_file = yes
+TerminationTrigger::termination_file        = "../TERMINATE"
+
+
+
+ActiveThorns = "AEILocalInterp"
+
+ActiveThorns = "Constants"
+
+ActiveThorns = "Fortran"
+
+ActiveThorns = "GSL"
+
+ActiveThorns = "GenericFD"
+
+ActiveThorns = "HDF5"
+
+ActiveThorns = "LoopControl"
+
+
+
+ActiveThorns = "InitBase"
+
+
+
+ActiveThorns = "Carpet CarpetLib CarpetInterp CarpetReduce"
+
+Carpet::verbose           = no
+Carpet::veryverbose       = no
+Carpet::schedule_barriers = no
+Carpet::storage_verbose   = no
+Carpet::timers_verbose    = no
+CarpetLib::output_bboxes  = no
+
+Carpet::domain_from_coordbase = yes
+Carpet::max_refinement_levels = 10
+
+driver::ghost_size       = 3
+Carpet::use_buffer_zones = yes
+
+Carpet::prolongation_order_space = 5
+Carpet::prolongation_order_time  = 2
+
+Carpet::convergence_level = 0
+
+Carpet::init_fill_timelevels = yes
+
+Carpet::poison_new_timelevels = yes
+CarpetLib::poison_new_memory  = yes
+
+Carpet::output_timers_every      = 5120
+CarpetLib::print_timestats_every = 5120
+CarpetLib::print_memstats_every  = 5120
+
+
+
+ActiveThorns = "NaNChecker"
+
+NaNChecker::check_every     = 1 # 512
+NaNChecker::verbose         = "all"
+NaNChecker::action_if_found = "just warn"
+NaNChecker::check_vars      = "
+        ML_BSSN_M::ML_log_confac
+        ML_BSSN_M::ML_metric
+        ML_BSSN_M::ML_trace_curv
+        ML_BSSN_M::ML_curv
+        ML_BSSN_M::ML_Gamma
+        ML_BSSN_M::ML_lapse
+        ML_BSSN_M::ML_shift
+        ML_BSSN_M::ML_dtlapse
+        ML_BSSN_M::ML_dtshift
+        Whisky::dens
+        Whisky::tau
+        Whisky::scon
+        ADMBase::metric
+        ADMBase::curv
+        ADMBase::lapse
+        ADMBase::shift
+        ADMBase::dtlapse
+        ADMBase::dtshift
+        HydroBase::rho
+        HydroBase::press
+        HydroBase::eps
+        HydroBase::vel
+"
+
+
+
+ActiveThorns = "Boundary CartGrid3D CoordBase ReflectionSymmetry SymBase"
+
+CoordBase::domainsize = "minmax"
+
+CoordBase::xmin =     0.00
+CoordBase::ymin =     0.00
+CoordBase::zmin =     0.00
+CoordBase::xmax = +1800.00
+CoordBase::ymax = +1800.00
+CoordBase::zmax = +1800.00
+CoordBase::dx   =    30.00
+CoordBase::dy   =    30.00
+CoordBase::dz   =    30.00
+
+CoordBase::boundary_size_x_lower     = 3
+CoordBase::boundary_size_y_lower     = 3
+CoordBase::boundary_size_z_lower     = 3
+CoordBase::boundary_size_x_upper     = 3
+CoordBase::boundary_size_y_upper     = 3
+CoordBase::boundary_size_z_upper     = 3
+
+CoordBase::boundary_shiftout_x_lower = 1
+CoordBase::boundary_shiftout_y_lower = 1
+CoordBase::boundary_shiftout_z_lower = 1
+
+CartGrid3D::type = "coordbase"
+
+ReflectionSymmetry::reflection_x   = yes
+ReflectionSymmetry::reflection_y   = yes
+ReflectionSymmetry::reflection_z   = yes
+ReflectionSymmetry::avoid_origin_x = no
+ReflectionSymmetry::avoid_origin_y = no
+ReflectionSymmetry::avoid_origin_z = no
+
+
+
+ActiveThorns = "SphericalSurface"
+
+
+
+ActiveThorns = "CarpetRegrid2"
+
+CarpetRegrid2::regrid_every            = 0
+CarpetRegrid2::freeze_unaligned_levels = yes
+CarpetRegrid2::symmetry_rotating90     = yes
+CarpetRegrid2::verbose                 = yes
+
+CarpetRegrid2::num_centres = 1
+
+CarpetRegrid2::num_levels_1 = 4
+CarpetRegrid2::radius_1[1]  = 900.0
+CarpetRegrid2::radius_1[2]  = 450.0
+CarpetRegrid2::radius_1[3]  = 225.0
+
+
+
+ActiveThorns = "MoL Time"
+
+MoL::ODE_Method             = "RK3"
+MoL::MoL_Intermediate_Steps = 3
+MoL::MoL_Num_Scratch_Levels = 2
+
+Time::dtfac = 0.25
+
+
+
+ActiveThorns = "ADMBase ADMCoupling ADMMacros CoordGauge HydroBase SpaceMask StaticConformal TmunuBase"
+
+ADMMacros::spatial_order = 4
+
+HydroBase::timelevels        = 3
+HydroBase::prolongation_type = "ENO"
+
+TmunuBase::stress_energy_storage = yes
+TmunuBase::stress_energy_at_RHS  = yes
+TmunuBase::timelevels            = 1
+TmunuBase::prolongation_type     = "none"
+
+SpaceMask::use_mask = yes
+
+
+
+ActiveThorns = "EOS_Base EOS_Polytrope"
+
+EOS_Polytrope::eos_gamma = 1.3333333333
+EOS_Polytrope::eos_k     = 0.4640517
+
+
+
+ActiveThorns = "ML_BSSN_M ML_BSSN_M_Helper NewRad"
+
+ADMBase::evolution_method         = "ML_BSSN_M"
+ADMBase::lapse_evolution_method   = "ML_BSSN_M"
+ADMBase::shift_evolution_method   = "ML_BSSN_M"
+ADMBase::dtlapse_evolution_method = "ML_BSSN_M"
+ADMBase::dtshift_evolution_method = "ML_BSSN_M"
+
+ML_BSSN_M::timelevels = 3
+
+ML_BSSN_M::harmonicN           = 1      # 1+log
+ML_BSSN_M::harmonicF           = 2.0    # 1+log
+ML_BSSN_M::ShiftGammaCoeff     = 0.75
+ML_BSSN_M::AlphaDriver         = 0.0
+ML_BSSN_M::BetaDriver          = 1.0
+ML_BSSN_M::LapseAdvectionCoeff = 1.0
+ML_BSSN_M::ShiftAdvectionCoeff = 1.0
+
+ML_BSSN_M::MinimumLapse        = 1.0e-8
+
+ML_BSSN_M::my_initial_boundary_condition = "extrapolate-gammas"
+ML_BSSN_M::my_rhs_boundary_condition     = "NewRad"
+Boundary::radpower                     = 2
+
+ML_BSSN_M::ML_log_confac_bound = "none"
+ML_BSSN_M::ML_metric_bound     = "none"
+ML_BSSN_M::ML_Gamma_bound      = "none"
+ML_BSSN_M::ML_trace_curv_bound = "none"
+ML_BSSN_M::ML_curv_bound       = "none"
+ML_BSSN_M::ML_lapse_bound      = "none"
+ML_BSSN_M::ML_dtlapse_bound    = "none"
+ML_BSSN_M::ML_shift_bound      = "none"
+ML_BSSN_M::ML_dtshift_bound    = "none"
+
+
+
+ActiveThorns = "Whisky"
+
+HydroBase::evolution_method = "whisky"
+
+Whisky::riemann_solver            = "Marquina"
+Whisky::whisky_eos_type           = "Polytype"
+Whisky::whisky_eos_table          = "2D_Polytrope"
+Whisky::recon_method              = "ppm"
+Whisky::whisky_stencil            = 3
+Whisky::bound                     = "none"
+Whisky::rho_abs_min               = 1.e-12
+Whisky::initial_atmosphere_factor = 0.999
+
+Whisky::ppm_detect        = no
+Whisky::ppm_epsilon       = 0.0
+Whisky::ppm_omega1        = 0.52
+Whisky::ppm_omega2        = 0.0
+Whisky::ppm_epsilon_shock = 0.1
+Whisky::ppm_eta1          = 5.0
+Whisky::ppm_k0            = 0.2
+
+
+
+ActiveThorns = "Whisky_Init_Data Whisky_TOVSolverC"
+
+ADMBase::initial_data    = "tov"
+ADMBase::initial_lapse   = "tov"
+ADMBase::initial_shift   = "tov"
+ADMBase::initial_dtlapse = "zero"
+ADMBase::initial_dtshift = "zero"
+
+WhiskyTOVSolver::TOV_Rho_Central[0] = 1.61930347e-08
+WhiskyTOVSolver::TOV_Gamma[0]       = 1.3333333333
+WhiskyTOVSolver::TOV_K[0]           = 0.4640517
+WhiskyTOVSolver::TOV_Combine_Method = "maximum"
+WhiskyTOVSolver::TOV_Num_Radial     = 200000
+WhiskyTOVSolver::TOV_dr[0]          = 0.05
+
+
+
+ActiveThorns = "Dissipation"
+
+Dissipation::order = 5
+Dissipation::vars  = "
+        ML_BSSN_M::ML_log_confac
+        ML_BSSN_M::ML_metric
+        ML_BSSN_M::ML_trace_curv
+        ML_BSSN_M::ML_curv
+        ML_BSSN_M::ML_Gamma
+        ML_BSSN_M::ML_lapse
+        ML_BSSN_M::ML_shift
+        ML_BSSN_M::ML_dtlapse
+        ML_BSSN_M::ML_dtshift
+"
+
+
+
+ActiveThorns = "ADMConstraints"
+
+ADMConstraints::constraints_persist    = yes
+ADMConstraints::constraints_timelevels = 3
+
+
+
+ActiveThorns = "CarpetIOBasic"
+
+IOBasic::outInfo_every      = 1280
+IOBasic::outInfo_reductions = "norm2"
+IOBasic::outInfo_vars       = "
+        Carpet::physical_time_per_hour
+        ADMConstraints::ham
+        HydroBase::rho
+"
+
+
+
+ActiveThorns = "CarpetIOScalar"
+
+IOScalar::one_file_per_group = yes
+
+IOScalar::outScalar_every = 1280
+IOScalar::outScalar_vars  = "
+        CarpetReduce::weight
+        ADMBase::metric
+        ADMBase::curv
+        ADMBase::lapse
+        ADMBase::shift
+        ADMBase::dtlapse
+        ADMBase::dtshift
+        HydroBase::rho
+        HydroBase::press
+        HydroBase::eps
+        HydroBase::vel
+        ADMConstraints::hamiltonian
+        ADMConstraints::momentum
+"
+
+
+
+ActiveThorns = "CarpetIOASCII"
+
+IOASCII::one_file_per_group = yes
+
+IOASCII::output_symmetry_points = no
+IOASCII::out3D_ghosts           = no
+
+IOASCII::out0D_every = 1280
+IOASCII::out0D_vars  = "
+        Carpet::timing
+        CarpetReduce::weight
+        ADMBase::metric
+        ADMBase::curv
+        ADMBase::lapse
+        ADMBase::shift
+        ADMBase::dtlapse
+        ADMBase::dtshift
+        HydroBase::rho
+        HydroBase::press
+        HydroBase::eps
+        HydroBase::vel
+        ADMConstraints::hamiltonian
+        ADMConstraints::momentum
+"
+
+IOASCII::out1D_every = 1280
+IOASCII::out1D_vars  = "
+        CarpetReduce::weight
+        ADMBase::metric
+        ADMBase::curv
+        ADMBase::lapse
+        ADMBase::shift
+        ADMBase::dtlapse
+        ADMBase::dtshift
+        HydroBase::rho
+        HydroBase::press
+        HydroBase::eps
+        HydroBase::vel
+        ADMConstraints::hamiltonian
+        ADMConstraints::momentum
+"
+
+
+
+Activethorns = "CarpetIOHDF5"
+
+IOHDF5::out_every              = 5120
+IOHDF5::one_file_per_group     = yes
+IOHDF5::output_symmetry_points = no
+IOHDF5::out3D_ghosts           = no
+IOHDF5::compression_level      = 1
+IOHDF5::use_checksums          = yes
+IOHDF5::out_vars               = "
+        CarpetReduce::weight
+        ADMBase::lapse
+        HydroBase::rho
+        ADMConstraints::hamiltonian
+"
+
+#IOHDF5::checkpoint                  = yes
+#IO::checkpoint_dir                  = $parfile
+#IO::checkpoint_ID                   = yes
+#IO::checkpoint_every_walltime_hours = 6.0
+#IO::checkpoint_on_terminate         = yes
+#
+#IO::recover     = "autoprobe"
+#IO::recover_dir = $parfile
+
+
+
+ActiveThorns = "Formaline"
+
+
+
+ActiveThorns = "TimerReport"
+
+TimerReport::out_every                  = 5120
+TimerReport::out_filename               = "TimerReport"
+TimerReport::output_all_timers_together = yes
+TimerReport::output_all_timers_readable = yes
+TimerReport::n_top_timers               = 20

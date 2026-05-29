@@ -1,0 +1,8 @@
+# Configuration definition for thorn NullSHRExtract
+# $Header:$
+
+PROVIDES NullSHRExtraction
+{
+}
+
+REQUIRES THORNS: Fortran NullEvolve NullInterp NullGrid NullDecomp

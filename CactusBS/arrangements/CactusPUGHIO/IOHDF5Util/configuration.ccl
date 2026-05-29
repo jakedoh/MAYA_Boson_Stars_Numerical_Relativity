@@ -1,0 +1,14 @@
+# Configuration definitions for thorn IOHDF5Util
+# $Header$
+
+PROVIDES IOHDF5Util
+{
+  SCRIPT
+  LANG
+}
+
+REQUIRES PUGH IOUtil HDF5
+
+OPTIONAL MPI
+{
+}

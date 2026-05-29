@@ -1,0 +1,28 @@
+# Parameter definitions for thorn IDConstraintViolate
+# $Header$
+
+shares: ADMBase
+
+uses KEYWORD metric_type 
+
+extends KEYWORD initial_data
+{
+  "constraint violating gaussian" :: "Constraint violating Gaussian"
+}
+
+private:
+
+REAL radius "The radial position of the Gaussian wave"
+{
+  0:* :: "Positive"
+} 0.0
+
+REAL sigma "The sigma for the Gaussian wave"
+{
+  (0:* :: "Positive"
+} 0.1
+
+REAL amplitude "The amplitude of the waves"
+{
+  *:* :: "No restriction"
+} 0.001

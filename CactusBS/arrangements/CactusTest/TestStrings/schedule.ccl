@@ -1,0 +1,7 @@
+# Schedule definitions for thorn TestStrings
+# $Header$
+
+schedule PrintThoseFortranStrings at INITIAL
+{
+  LANG: Fortran
+} "Print 1,2 and 3 strings from Fortran source code"

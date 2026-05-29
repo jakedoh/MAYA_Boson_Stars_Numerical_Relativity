@@ -1,0 +1,69 @@
+Cactus Code Thorn OpenCL
+Author(s)    : Erik Schnetter
+Maintainer(s): Cactus team
+Licence      : GPL, public domain
+--------------------------------------------------------------------------
+
+1. Purpose
+
+Configure with OpenCL; see <http://www.khronos.org/opencl/>.
+
+
+
+From the web site:
+
+OpenCL - The open standard for parallel programming of heterogeneous
+systems
+
+OpenCL(TM) is the first open, royalty-free standard for
+cross-platform, parallel programming of modern processors found in
+personal computers, servers and handheld/embedded devices. OpenCL
+(Open Computing Language) greatly improves speed and responsiveness
+for a wide spectrum of applications in numerous market categories from
+gaming and entertainment to scientific and medical software.
+
+
+
+2. Available implementations
+
+There seem to be four OpenCL implementations available at this time.
+Unfortunately, they each have their drawbacks:
+
+- AMD: Available at
+  <http://developer.amd.com/zones/openclzone/pages/default.aspx>. This
+  supports both CPUs and ATI GPUs. Unfortunately, the OpenCL compiler
+  seems to produce code with a low quality.
+
+- Apple: Included with the operating system, available by default.
+  This supports both CPU and GPU. The compiler is based on LLVM.
+  Unfortunately, there seem to be serious bugs -- for example, I can't
+  get the cos function to provide correct results.
+
+- FreeOCL: Open source, available at
+  <https://code.google.com/p/freeocl/>. This is a stand-alone
+  implementation for CPUs only.
+
+- Intel: Available at
+  <http://software.intel.com/en-us/articles/opencl-sdk/>. This
+  supports only (Intel?) CPUs. The compiler is based on LLVM, and the
+  implementation is also based on Intel's TBB (Threading Building
+  Blocks).
+
+- Nvidia: Available at <http://developer.nvidia.com/opencl>, included
+  in their CUDA distribution. This supports only GPUs.
+
+- pocl: Open source, available at <https://launchpad.net/pocl>. This
+  OpenCL implementation is based on LLVM.
+
+In addition, Wikipedia <http://en.wikipedia.org/wiki/OpenCL> lists two
+IBM implementations for their Power processor and for Intel compatible
+CPUs, respectively. The latter may be identical with or similar to
+AMD's implementation.
+
+
+
+3. Disassembling OpenCL code
+
+Intel:
+
+env PATH=$PATH:/usr/local/intel_ocl_sdk_1.5_x64/usr/lib64/OpenCL/vendors/intel CLASSPATH=/usr/local/intel_ocl_sdk_1.5_x64/usr/lib64/OpenCL/vendors/intel LD_LIBRARY_PATH=/usr/local/intel_ocl_sdk_1.5_x64/usr/lib64/OpenCL/vendors/intel /usr/local/intel_ocl_sdk_1.5_x64/usr/bin/ioc -input=mk-mclachlan-cl-rhs/ML_BSSN_CL_InitRHS.cl -asm=ML_BSSN_CL_InitRHS.cl.s

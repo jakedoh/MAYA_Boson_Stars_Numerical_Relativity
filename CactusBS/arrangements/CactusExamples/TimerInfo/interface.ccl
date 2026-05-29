@@ -1,0 +1,4 @@
+# Interface definition for thorn TimerInfo
+# $Header$
+
+implements: timerinfo

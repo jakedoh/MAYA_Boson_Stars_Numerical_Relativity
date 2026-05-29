@@ -1,0 +1,25 @@
+# Schedule definitions for thorn Hydro_InitExcision
+
+#########################################
+### Sets up the excision mask         ###
+#########################################
+schedule Hydro_InitExcisionMask AT CCTK_Initial AFTER MaskOne
+{
+   LANG: C
+} "Sets up the excision mask"
+
+schedule Hydro_InitExcisionMask AT CCTK_POST_RECOVER_VARIABLES AFTER MaskOne
+{
+   LANG: C
+} "Sets up the excision mask"
+
+schedule Hydro_InitExcisionMask AT POSTREGRID AFTER MaskOne
+{
+   LANG: C
+} "Sets up the excision mask"
+
+schedule Hydro_InitExcisionMask_poststep AT POSTSTEP BEFORE setup_epsdis
+{
+   LANG: C
+} "Sets up the excision mask"
+

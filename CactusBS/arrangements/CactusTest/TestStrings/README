@@ -1,0 +1,13 @@
+Cactus Code Thorn TestStrings
+Author(s)    : Cactus team
+Maintainer(s): Cactus team
+Licence      : LGPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+Test use of strings in Cactus. At the moment:
+
+1) Calling C routines from Fortran with 1, 2 and 3 strings in the
+   argument list.
+

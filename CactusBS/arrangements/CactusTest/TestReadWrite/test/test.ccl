@@ -1,0 +1,2 @@
+# the array size tests depend on processor decomposition for distrib=default
+NPROCS 1

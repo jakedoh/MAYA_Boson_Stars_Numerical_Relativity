@@ -1,0 +1,41 @@
+# Parameter definitions for thorn BruteForce
+
+private:
+
+REAL M_total "The Total Mass of the binary"
+{
+ 0:* :: "Positive"
+} 1.0
+
+
+REAL Final_Mass "BBH final mass"
+{
+ 0:1 :: "Positive"
+} 0.9
+
+
+REAL Final_Spin  "BBH final mass"
+{
+ -1:1 :: "Positive"
+} 0.0
+
+REAL precision  "BBH final mass"
+{
+ -1:1 :: "Positive"
+} 0.0001
+
+restricted:
+ 
+KEYWORD bound "Type of boundary condition to use"
+{
+  "none"      :: "Apply no boundary condition"
+  "flat"      :: "Flat (von Neumann, n grad phi = 0) boundary condition"
+  "static"    :: "Static (Dirichlet, dphi/dt=0) boundary condition"
+  "radiation" :: "Radiation boundary condition"
+  "robin"     :: "Robin (phi(r) = C/r) boundary condition"
+  "zero"      :: "Zero (Dirichlet, phi=0) boundary condition"
+} "none"
+
+
+
+ 

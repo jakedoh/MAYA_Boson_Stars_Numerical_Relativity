@@ -1,0 +1,13 @@
+# Parameter definitions for thorn SoundSpeed
+# $Header:$
+
+BOOLEAN verbose "Any extra output?"
+{
+} "no"
+
+STRING eos_handle_var "name of grid scalar holding eos handle to use" STEERABLE=always
+{
+  "^Whisky[:][:]whisky_eos_handle$"  :: "default Whisky eos"
+  "^GRHydro[:][:]GRHydro_eos_handle$" :: "default GRHydro eos"
+  ".+[:][:].+"                :: "any valid name of an CCTK_INT scalar"
+} "Whisky::whisky_eos_handle"

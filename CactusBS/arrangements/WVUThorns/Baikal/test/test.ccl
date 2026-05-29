@@ -1,0 +1,4 @@
+TEST magnetizedTOV-Baikal
+{ 
+  RELTOL 1e-11
+} 

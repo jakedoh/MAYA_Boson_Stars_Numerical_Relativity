@@ -1,0 +1,100 @@
+# Schedule definitions for thorn Geodesics
+
+STORAGE: geo_pos[2], geo_u[2]
+STORAGE: geo_pos_rhs, geo_u_rhs
+STORAGE: geo_iu, geo_flags, geo_props
+
+if(CCTK_Equals(calc_sync,"yes")) {
+  STORAGE: geo_synchro
+}
+#if(CCTK_Equals(geo_tmunu,"yes")) {
+#  STORAGE: geo_g
+#}
+if(CCTK_Equals(em_output,"yes")) {
+  STORAGE: geo_em
+}
+#if(CCTK_Equals(current_output,"yes")){
+#  STORAGE: geo_current
+#}
+#if(CCTK_Equals(geo_test,"yes")) {
+#  STORAGE: geo_test
+#}
+if(CCTK_Equals(geo_moltest,"yes")) {
+  STORAGE: geo_tg[2], geo_t_rhsg
+}
+
+SCHEDULE Geodesics_Init at CCTK_INITIAL
+{
+    LANG: C
+    OPTIONS: GLOBAL 
+} "Initialize and flag geodesics"
+
+if(CCTK_Equals(exact,"no")) {
+  SCHEDULE Geodesics_RegVars in MoL_Register
+  {
+    LANG: C
+    OPTIONS: META
+  } "Register variables for MoL"
+  if(CCTK_IsThornActive("EMevoPlasmaChi")) {
+    SCHEDULE Geodesics_CalcRHSEM in MoL_CalcRHS 
+    {
+      LANG: C
+      OPTIONS: LEVEL 
+    } "Perform RHS calculations w/ E&M"
+  } else {
+    SCHEDULE Geodesics_CalcRHS in MoL_CalcRHS #after bssn_shift
+    {
+      LANG: C
+      OPTIONS: LEVEL
+    } "Perform RHS calculations w/o E&M"
+  }
+}
+#if(CCTK_Equals(exact,"yes")) {
+#  SCHEDULE Geodesics_UpdateLHS at CCTK_POSTSTEP  
+#  {
+#    LANG: C
+#    OPTIONS: GLOBAL
+#    SYNC: geo
+#  } "Update geodesics"
+#}
+
+#if(CCTK_Equals(geo_tmunu,"yes")) {
+#  SCHEDULE Geodesics_Tmunu in AddToTmunu 
+#  {
+#    LANG: C
+#    OPTIONS: GLOBAL loop-local
+#  } "Add to tmunu"
+#}
+
+SCHEDULE Geodesics_Flag at CCTK_ANALYSIS
+{
+  LANG: C
+  OPTIONS: GLOBAL
+} "Flag inactive geodesics"
+
+#SCHEDULE Geodesics_Analysis at CCTK_ANALYSIS after Geodesics_Flag
+#{
+#    LANG: C
+#    OPTIONS: GLOBAL
+#} "Calculate some stuff for output"
+
+if(CCTK_Equals(geo_inject,"yes")) {
+  SCHEDULE Geodesics_Inject at CCTK_ANALYSIS
+  {
+      LANG: C
+      OPTIONS: GLOBAL
+  } "Inject new particles"
+}
+
+SCHEDULE Geodesics_InitOutput at CCTK_ANALYSIS after Geodesics_Analysis
+{
+    LANG: C
+    OPTIONS: GLOBAL
+} "Output xmdv header information"
+
+SCHEDULE Geodesics_Output at CCTK_ANALYSIS after Geodesics_InitOutput
+{
+    LANG: C
+    OPTIONS: GLOBAL
+} "Output data for each particle"
+

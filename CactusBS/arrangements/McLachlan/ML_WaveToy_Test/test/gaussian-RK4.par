@@ -1,0 +1,80 @@
+# gaussian-RK4.par
+# Evolve the scalar wave equation with the RK4 integrator
+
+ActiveThorns = "
+   Boundary
+   Carpet
+   CarpetIOASCII
+   CarpetIOBasic
+   CarpetIOScalar
+   CarpetLib
+   CarpetReduce
+   CartGrid3D
+   CoordBase
+   GenericFD
+   IOUtil
+   LoopControl
+   ML_WaveToy
+   MoL
+   SymBase
+   Time
+"
+
+
+
+Carpet::domain_from_coordbase = yes
+CartGrid3D::type              = "coordbase"
+
+CoordBase::domainsize = "minmax"
+CoordBase::spacing    = "numcells"
+CoordBase::xmin       = -5.0
+CoordBase::ymin       = -5.0
+CoordBase::zmin       = -5.0
+CoordBase::xmax       = +5.0
+CoordBase::ymax       = +5.0
+CoordBase::zmax       = +5.0
+CoordBase::ncells_x   = 50
+CoordBase::ncells_y   = 50
+CoordBase::ncells_z   = 50
+
+CoordBase::boundary_size_x_lower = 2
+CoordBase::boundary_size_y_lower = 2
+CoordBase::boundary_size_z_lower = 2
+CoordBase::boundary_size_x_upper = 2
+CoordBase::boundary_size_y_upper = 2
+CoordBase::boundary_size_z_upper = 2
+Carpet::ghost_size               = 2
+
+
+
+Cactus::cctk_itlast = 10
+
+MoL::ODE_method             = "RK4"
+MoL::MoL_Intermediate_Steps = 4
+MoL::MoL_Num_Scratch_Levels = 1
+
+Time::dtfac = 0.5
+
+
+
+ML_WaveToy::initial_data = "Gaussian"
+ML_WaveToy::WT_u_bound   = "newrad"
+ML_WaveToy::WT_rho_bound = "newrad"
+
+
+
+IO::out_dir      = $parfile
+IO::out_fileinfo = "none"
+
+IOBasic::outInfo_every = 1
+IOBasic::outInfo_vars  = "ML_WaveToy::u"
+
+IOScalar::outScalar_reductions = "norm1 norm2 minimum maximum norm_inf"
+IOScalar::outScalar_every      = 1
+IOScalar::outScalar_vars       = "ML_WaveToy::WT_u"
+
+IOASCII::out1D_every = 1
+IOASCII::out1D_vars  = "ML_WaveToy::WT_u ML_WaveToy::WT_rho ML_WaveToy::WT_eps"
+
+CarpetIOASCII::compact_format = yes
+CarpetIOASCII::output_ghost_points = no

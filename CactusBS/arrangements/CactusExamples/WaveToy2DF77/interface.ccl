@@ -1,0 +1,68 @@
+# Interface definition for thorn WaveToy2DF77
+# $Header$
+
+implements: wavetoy2d
+inherits: boundary 
+
+private:
+
+cctk_real evolve2d dim=2 type=GF Timelevels=3
+{
+  phi
+} "The evolved scalar field"
+
+cctk_real initial dim=2 type=GF
+{
+  timederiv
+} "For initial data"
+
+cctk_real coords2d dim=2 type=GF
+{
+  x,
+  y
+} "The 2D x and y coordinates"
+
+cctk_real dummy dim=2 type=GF
+{
+  phi_temp
+} "Just for creating initial data"
+
+CCTK_INT FUNCTION Coord_SystemRegister   \
+  (CCTK_POINTER_TO_CONST IN GH,          \
+   CCTK_INT IN dim,                      \
+   CCTK_STRING IN systemname)
+
+REQUIRES FUNCTION Coord_SystemRegister
+
+CCTK_INT FUNCTION Coord_SystemHandle  \
+  (CCTK_POINTER_TO_CONST IN GH,       \
+   CCTK_STRING IN systemname)
+
+REQUIRES FUNCTION Coord_SystemHandle
+
+CCTK_INT FUNCTION Coord_CoordRegister  \
+  (CCTK_POINTER_TO_CONST IN GH,        \
+   CCTK_INT IN systemhandle,           \
+   CCTK_INT IN direction,              \
+   CCTK_STRING IN coordname)
+
+REQUIRES FUNCTION Coord_CoordRegister
+
+CCTK_INT FUNCTION Coord_CoordHandle    \
+  (CCTK_POINTER_TO_CONST IN GH,        \
+   CCTK_STRING IN coordname,           \
+   CCTK_STRING IN systemname)
+
+REQUIRES FUNCTION Coord_CoordHandle
+
+CCTK_INT FUNCTION Coord_GroupSystem  \
+  (CCTK_POINTER_TO_CONST IN GH,      \
+   CCTK_STRING IN groupname)
+
+REQUIRES FUNCTION Coord_GroupSystem
+
+CCTK_INT FUNCTION Coord_SetDefaultSystem  \
+  (CCTK_POINTER_TO_CONST IN GH,           \
+   CCTK_STRING IN systemname)
+
+REQUIRES FUNCTION Coord_SetDefaultSystem

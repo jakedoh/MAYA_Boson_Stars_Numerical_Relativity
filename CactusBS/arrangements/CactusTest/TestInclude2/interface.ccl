@@ -1,0 +1,14 @@
+# Interface definition for thorn Include2
+# $Header$
+
+implements: include2
+
+INCLUDES HEADER: IncludeHeader2In1.h in IncludeHeader1.h
+INCLUDES HEADER: IncludeHeader2In2.h in IncludeHeader2.h
+
+INCLUDES SOURCE: IncludeSource2In1.h in IncludeSource1.h
+INCLUDES SOURCE: IncludeSource2In2.h in IncludeSource2.h
+
+USES INCLUDE SOURCE: IncludeSource2.h
+USES INCLUDE HEADER: IncludeHeader2.h
+

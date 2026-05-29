@@ -1,0 +1,17 @@
+# Schedule definitions for thorn TestTimers
+# $Header$
+
+schedule TimeIt_Startup at CCTK_STARTUP
+{
+  LANG: C
+} "Set up Timers"
+
+schedule TimeIt_ShutDown at CCTK_TERMINATE
+{
+  LANG: C
+} "Shut down Timers"
+
+schedule TimeIt at CCTK_EVOL
+{
+  LANG: C
+} "Test out Cactus Timers"

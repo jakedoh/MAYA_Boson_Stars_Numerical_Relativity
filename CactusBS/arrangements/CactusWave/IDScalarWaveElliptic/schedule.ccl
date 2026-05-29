@@ -1,0 +1,8 @@
+# Schedule definitions for thorn IDScalarWaveElliptic
+# $Header$
+
+schedule UniformCharge in WaveToy_InitialData
+{
+  STORAGE:       wavetoy::scalarevolve[3],ellcoeffs,outvars
+  LANG:          Fortran
+} "Initial data (Uniform Charge) for 3D wave equation"

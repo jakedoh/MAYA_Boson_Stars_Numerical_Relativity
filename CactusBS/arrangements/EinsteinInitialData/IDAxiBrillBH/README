@@ -1,0 +1,12 @@
+Cactus Code Thorn IDAxiBrillBH
+Author(s)    : Steve Brandt
+               Paul Walker
+               Ryoji Takahashi
+Maintainer(s): Cactus team
+Licence      : LGPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+This thorn calculates initial data for a black hole distorted by an
+even parity perturbation.

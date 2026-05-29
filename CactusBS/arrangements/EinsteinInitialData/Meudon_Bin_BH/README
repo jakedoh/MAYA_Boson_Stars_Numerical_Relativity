@@ -1,0 +1,12 @@
+Cactus Code Thorn ID_Bin_BH
+Author(s)    : Erik Schnetter <schnetter@cct.lsu.edu>
+Maintainer(s): Erik Schnetter <schnetter@cct.lsu.edu>
+Licence      : GPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+Import LORENE Bin_BH binary black hole initial data.
+
+This thorn is one of three closely related thorns ID_Bin_BH,
+ID_Bin_NS, and ID_Mag_NS which all import LORENE initial data.

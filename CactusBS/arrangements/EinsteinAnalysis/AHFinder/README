@@ -1,0 +1,391 @@
+Cactus Code Thorn AHFinder
+Author(s)    : Miguel Alcubierre
+Maintainer(s): Cactus team
+Licence      : LGPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+This thorn looks for apparent horizons (AH) in 3D.  An AH is defined
+as a surface where the expansion of outgoing null geodesics is zero.
+
+NOTE:  THIS FILE IS SOMEWHAT OUT OF DATE.  I WILL UPDATE IT WHEN
+I HAVE MORE TIME.  PLEASE LOOK AT THE FILE `MinimumAHF_param.h'
+FOR A MORE UP TO DATA DESCRIPTION OF THE PARAMETERS.
+
+
+BRIEF DESCRIPTION
+-----------------
+
+This thorn looks for apparent horizons (AH) in 3D using two
+different algorithms.  In the default mode, it uses a minimization
+algorithm.  It can also use a flow algorithm if one sets the
+parameter "ahf_flow" equal to "yes":
+
+ahf_flow = "yes"
+
+The minimization algorithm is VERY slow if one has a lot of terms
+in the spherical harmonics expansion (see below), but it is quite
+fast for a small number of terms.
+
+The thorn is activated by adding the following line to the parameter
+file:
+
+ahfinder::ahf_active      = "yes"
+
+Also, one needs to tell the routine how often we want to
+look for AH by using the parameter `mahf_findevery' (its
+default value is 1).
+
+The routine defines the grid function `mahfgrid' as:
+
+ahfgrid  =  r  -  f(theta,phi)
+
+So that the surface being considered corresponds to the zero level of
+`mahfgrid'.  The function f(theta,phi) is expanded in spherical
+harmonics Y(l,m).  Notice, however, that I DO NOT use the standard
+normalization factor:
+
+sqrt( (2l + 1) (l - m)! / 4 pi (l + m)! )
+
+I use instead:
+
+sqrt( 2l + 1 )                           m = 0
+
+sqrt( 2 (2l + 1) (l - m)! / (l + m)! )   m != 0
+
+Notice first that I leave out the 4*pi.  This is because I want Y(0,0)
+to be the real radius of a sphere.  Also, for M non-zero I have an
+extra sqrt(2).  I need this because I use a real basis with sines and
+cosines instead of complex exponentials.
+
+
+The minimization algorithm has three main modes of operation:
+
+* Default mode: In the default mode, the routine tries to
+find a minimum of the integral of the square of the expansion.
+At an AH, this integral should be zero, and for any other
+surface it will be positive.  One must remember that the
+routine can easily end up in a local minimum that is not
+a horizon.  To try to prevent this, the routine first
+looks through a subset of the parameter space to try
+to find a good guess for the global minimum.  This, of
+course can fail.
+
+* Area minimization mode:  This mode is activated by
+setting the parameter:
+
+mahf_minarea = "yes"
+
+In this mode, the routine looks for a local minimum of the surface
+area.  For time-symmetric data (and only then), such a minimum will
+correspond to an AH.
+
+* Trapped surface finding mode:  This mode is activated by
+setting the parameter:
+
+mahf_trapped_surface = "yes"
+
+In this mode, the routine looks for a local minimum of the integral of
+the square of the quantity (expansion + trapped_surface_delta).  If
+trapped_surface_delta is positive, then the routine will try to find a
+surface whose expansion is -(trapped_surface_delta) everywhere on the
+surface.  One can monitor the number of interpolated points that have
+a negative expansion by setting veryverbose = "yes", which indicates
+whether or not a trapped surface has truly been found.
+
+OUTPUT
+------
+
+The routine controls its own output.  It produces output of 2 grid
+functions (mahfgrid, mahf_exp) on its own (so please don't add them to
+the Cactus output).  The reason for this is that the finder might be
+called at times that have nothing to do with when Cactus wants to do
+output.
+
+The grid function `mahfgrid' was described above.  The grid function
+`mahf_exp' is the expansion of outgoing photons on the level sets of
+`mahfgrid'.
+
+The finder also produces a series of data files:
+
+1) "mahf_coeff.alm"
+
+This file contains the coefficients of the spherical
+harmonics expansion of the surface found.  Notice
+that the finder almost always finds a surface, but this
+might not be a horizon, so be careful.
+
+The format in which these coefficients are saved is the following:
+
+* Lines beginning with # are comments. These include the time
+  at which the finder was called, and a line stating if the
+  surface found is a horizon or not.
+
+* Empty lines indicate different calls to the finder (used when
+  the finder is called many times during an evolution).
+
+* The coefficients are saved using a loop of the form:
+
+  do l=1,lmax
+     do m=-l,l
+        write(*,*) a(l,m),l,m
+     end do
+  end do
+
+  Notice that because our functions are real, I use an expansion
+  in sines and cosines and I really only consider positive values
+  of m. On output my convention is that coefficients with positive
+  m represent the terms:
+
+  P_(l,m) cos(m theta)
+
+  and coefficients with negative m represent the terms:
+
+  P_(l,m) sin(m theta)
+
+2) "mahf.gauss"
+
+  This file contains a map of the gaussian curvature on the surface.
+  The format of this file might still change in the near future.
+  I need to talk to Werner about this.
+
+* Lines beginning with # are comments.
+
+* The data is written is a loop:
+ 
+  do i=0,ntheta-1
+     do j=0,nphi-1
+        write gaussian(i,j)
+     end do
+  end do
+ 
+  theta and phi are subdivided uniformly
+  (according to grid type) in the intervals:
+ 
+  octant:    theta=[0,pi/2]  phi=[0,pi/2]
+  quadrant:  theta=[0,pi]    phi=[0,pi/2]
+  full:      theta=[0,pi]    phi=[0,2 pi]
+
+3) "mahf_area.tl"
+
+   Area of the surface for each time the finder was called.
+   Again, remember that the surface might not be a horizon.
+
+4) "mahf_mass.tl"
+
+   Mass of the surface for each time the finder was called.
+   This is defined as:
+
+   M = sqrt(A/(16 pi))
+
+   Again, remember that the surface might not be a horizon.
+
+5) "mahf_circ_eq.tl"
+
+   Equatorial circumference of the surface.
+   Again, remember that the surface might not be a horizon.
+
+6) "mahf_meri_p1.tl"
+
+   Length of meridian of surface for phi=0.
+   Again, remember that the surface might not be a horizon.
+
+7) "mahf_meri_p2.tl"
+
+   Length of meridian of surface surface for phi=pi/2.
+   Again, remember that the surface might not be a horizon.
+
+8) "mahf_logfile"
+
+   Log file for the last time the horizon was called.  The
+   reason why only the last call is here is that this file
+   is very long.
+
+
+PARAMETERS
+----------
+
+Other parameters for the thorn are (see also file MinimumAHF_param.h):
+
+
+STRINGS:
+
+mahf_logfile     = [yes,no]      Write a log file.  If yes, the
+                                 thorn produces the file "mahf_logfile".
+                                 (default = "no")
+
+mahf_verbose     = [yes,no]      Write messages to screen.
+                                 (default = "yes")
+
+mahf_veryverbose = [yes,no]      Write lots of messages to the screen,
+                                 essentially the whole log file.
+                                 (default = "no")
+
+mahf_guessverbose = [yes,no]     Write a little info for each trial point
+                                 calculated in the guess process.
+                                 (default = "no")
+
+mahf_2Doutput    = [yes,no]      2D output of grid functions?
+                                 (default = "no")
+
+mahf_3Doutput    = [yes,no]      3D output of grid functions?
+                                 (default = "no")
+
+mahf_mask        = [yes,no]      Use mask for definite horizons?
+                                 (default = "no")
+
+mahf_weakmask    = [yes,no]      Use mask for possible horizons?
+                                 (default = "no")
+
+mahf_phi         = [yes,no]      Expand in phi.  It is useful to switch
+                                 this off if one knows in advance that
+                                 the horizon is really axisymmetric.
+                                 (default = "yes")
+
+mahf_offset      = [yes,no]      Is the center offset from origin?
+                                 (default = "no")
+
+mahf_wander      = [yes,no]      Do we allow the center to wander?
+                                 (default = "no")
+
+mahf_refx        = [yes,no]      Do we have reflection symmetry x -> -x?
+                                 (default = "no")
+
+mahf_refy        = [yes,no]      Do we have reflection symmetry y -> -y?
+                                 (default = "no")
+
+mahf_refz        = [yes,no]      Do we have reflection symmetry z -> -z?
+                                 (default = "no")
+
+mahf_octant      = [yes,no,high] Does the surface have octant symmetry?
+                                 The "high" option forces also reflection
+                                 symmetry across the x-y diagonal.
+                                 (default = "no")
+
+mahf_areamap     = [yes,no]      Construct an area map?.
+                                 (default = "no")
+
+mahf_sloppyguess = [yes,no]      This considers only spheres for the
+                                 initial guess. It is much faster.
+                                 (default = "no")
+
+mahf_guessold    = [yes,no]      Use horizon found in previous call as
+                                 initial guess?  Only relevant for
+                                 evolutions.
+                                 (default = "no")
+
+mahf_inner       = [yes,no]      Tries to look for inner horizon instead.
+                                 (default = "no")
+
+mahf_guess_absmin = [yes,no]     Use the absolute minimum of the surface
+                                 integral of the square of the expansion
+                                 as the place to start the minimization
+                                 process.  This is useful if you have
+                                 a very dynamical spacetime, with possibly
+                                 many local minima and you don't have any
+                                 idea where (or even if) you have an AH.
+                                 (default = "no")
+
+mahf_manual_guess = [yes,no]     Use a manually specified guess, via. the
+                                 parameters mahf_l0_guess, mahf_l2_guess,
+                                 etc. (works only in octant mode right now)
+                                 (default = "no")
+
+INTEGERS:
+
+mahf_findafter                   After how many timesteps start looking
+                                 for horizons (default 0).
+
+mahf_findevery                   How often to look for horizons (iterations).
+                                 (default 1)
+
+mahf_maxiter                     Maximum number of iterations of
+                                 Powell's minimization algorithm.
+                                 (default 10)
+
+mahf_flowiter                    Maximum number of iterations for flow
+                                 (default 200)
+
+mahf_lmax (<20)                  Number of terms in theta expansion
+                                 (default 2)
+
+mahf_ntheta                      Number of subdivisions in theta for
+                                 surface integrals (default 200).
+
+mahf_nphi                        Number of subdivisions in phi for
+                                 surface integrals (default 200).
+
+mahf_nn0                         Number of subdivisions of c0(0) for
+                                 initial guess (default 10)
+
+mahf_nn2                         Number of subdivisions of c0(2) for
+                                 initial guess (default 10)
+
+
+REALS:
+
+mahf_findaftertime               After what time start looking for horizons.
+                                 A non-zero value of this parameter overrides
+                                 the paramter `mahf_findafter' above.
+                                 (default 0.0)
+
+mahf_r0                          Radius of initial sphere (0 forces largest
+                                 possible sphere)
+                                 (default 0.0)
+
+mahf_xc                          x coordinate of center of expansion
+                                 (default 0.0)
+
+mahf_yc                          y coordinate of center of expansion
+                                 (default 0.0)
+
+mahf_zc                          z coordinate of center of expansion
+                                 (default 0.0)
+
+mahf_tol                         Fractional tolerance for minimization
+                                 algorithm.  If we decrease by less than
+                                 this in one iteration we are done.
+                                 (default = 0.1)
+
+trapped_surface_delta            In 'mahf_trapped_surface' mode, this 
+                                 determines the expansion of the surface
+                                 that one is looking for. Notice that a
+                                 positive value of 'mahf_trapped_surface'
+                                 will cause the finder to look for a 
+                                 surface with expansion equal to MINUS
+                                 this value everywhere.
+                                 (default = 0.0)
+
+mahf_flowa                       Alpha parameter for flow (default 0.01).
+
+mahf_flowb                       Beta parameter for flow (default 0.01).
+
+mahf_flowh                       Weight of H flow (default 0.0).
+
+mahf_flowc                       Weight of C flow (default 1.0).
+
+mahf_flown                       Weight of N flow (default 0.0).
+
+mahf_flowtol                     Tolerance for flow (default 0.0001).
+
+mahf_maskshrink                  Shrink factor for mask (default 0.9).
+
+
+IMPORTANT:  Notice that the symmetry parameters refer to the surface
+itself, and not to the grid.
+
+
+2. Dependencies of the thorn
+
+This thorn additionally requires thorns:  GenericAHF, util.
+For testing purposes, one also needs:     analyticBH, exact.
+
+
+3. Thorn distribution
+
+This thorn is available to everyone.
+
+
+4. Additional information
+

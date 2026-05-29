@@ -1,0 +1,26 @@
+ C2P2C test: initial values.
+    conservative variables: 
+    dens:    1.29047362000000     
+    sx  :   0.166666658000000     
+    sy  :   0.166666658000000     
+    sz  :   0.166666658000000     
+    tau :   0.484123939000000     
+    eps :   1.000000000000000E-006  (For initial guess) 
+ C2P2C test: getting the associated primitive variables.
+ C2P2C test: the primitive variables are
+    primitive variables: 
+    rho   :    1.27963712617393     
+    velx  :   7.466387990370477E-002
+    vely  :   7.466387990370477E-002
+    velz  :   7.466387990370477E-002
+    press :   0.457628494815483     
+    eps   :   0.357623646153325     
+    W     :    1.00846841155545     
+ C2P2C test: converting back to conserved variables.
+ C2P2C test: the conserved variables are
+    conservative variables: 
+    dens:    1.29047362000000     
+    sx  :   0.166666658000000     
+    sy  :   0.166666658000000     
+    sz  :   0.166666658000000     
+    tau :   0.484123939000000     

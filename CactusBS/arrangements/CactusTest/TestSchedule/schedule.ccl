@@ -1,0 +1,97 @@
+# Schedule definitions for thorn TestSchedule
+# $Header$
+
+schedule TestSchedule_CCTK_STARTUP at CCTK_STARTUP
+{
+  LANG:C
+} "Test to see if function is placed in schedule and run at CCTK_STARTUP"
+
+schedule TestSchedule_CCTK_RECOVER_PARAMETERS at CCTK_RECOVER_PARAMETERS
+{
+  LANG:C
+} "Test to see if function is placed in schedule and run at CCTK_RECOVER_PARAMETERS"
+
+schedule TestSchedule_CCTK_WRAGH at CCTK_WRAGH
+{
+  LANG:C
+} "Test to see if function is placed in schedule and run at CCTK_WRAGH"
+
+schedule TestSchedule_CCTK_PARAMCHECK at CCTK_PARAMCHECK
+{
+  LANG:C
+} "Test to see if function is placed in schedule and run at CCTK_PARAMCHECK"
+
+schedule TestSchedule_CCTK_BASEGRID at CCTK_BASEGRID
+{
+  LANG:C
+} "Test to see if function is placed in schedule and run at CCTK_BASEGRID"
+
+schedule TestSchedule_CCTK_INITIAL at CCTK_INITIAL
+{
+  LANG:C
+} "Test to see if function is placed in schedule and run at CCTK_INITIAL"
+
+schedule TestSchedule_CCTK_POSTINITIAL at CCTK_POSTINITIAL
+{
+  LANG:C
+} "Test to see if function is placed in schedule and run at CCTK_POSTINITIAL"
+
+schedule TestSchedule_CCTK_RECOVER_VARIABLES at CCTK_RECOVER_VARIABLES
+{
+  LANG:C
+} "Test to see if function is placed in schedule and run at CCTK_RECOVER_VARIABLES"
+
+schedule TestSchedule_CCTK_POST_RECOVER_VARIABLES at CCTK_POST_RECOVER_VARIABLES
+{
+  LANG:C
+} "Test to see if function is placed in schedule and run at CCTK_POST_RECOVER_VARIABLES"
+
+schedule TestSchedule_CCTK_CPINITIAL at CCTK_CPINITIAL
+{
+  LANG:C
+} "Test to see if function is placed in schedule and run at CCTK_CPINITIAL"
+
+schedule TestSchedule_CCTK_CHECKPOINT at CCTK_CHECKPOINT
+{
+  LANG:C
+} "Test to see if function is placed in schedule and run at CCTK_CHECKPOINT"
+
+schedule TestSchedule_CCTK_PRESTEP at CCTK_PRESTEP
+{
+  LANG:C
+} "Test to see if function is placed in schedule and run at CCTK_PRESTEP"
+
+schedule TestSchedule_CCTK_EVOL at CCTK_EVOL
+{
+  LANG:C
+} "Test to see if function is placed in schedule and run at CCTK_EVOL"
+
+schedule TestSchedule_CCTK_POSTSTEP at CCTK_POSTSTEP
+{
+  LANG:C
+} "Test to see if function is placed in schedule and run at CCTK_POSTSTEP"
+
+schedule TestSchedule_CCTK_POSTRESTRICT at CCTK_POSTRESTRICT
+{
+  LANG:C
+} "Test to see if function is placed in schedule and run at CCTK_POSTRESTRICT"
+
+schedule TestSchedule_CCTK_POSTREGRID at CCTK_POSTREGRID
+{
+  LANG:C
+} "Test to see if function is placed in schedule and run at CCTK_POSTREGRID"
+
+schedule TestSchedule_CCTK_ANALYSIS at CCTK_ANALYSIS
+{
+  LANG:C
+} "Test to see if function is placed in schedule and run at CCTK_ANALYSIS"
+
+schedule TestSchedule_CCTK_TERMINATE at CCTK_TERMINATE
+{
+  LANG:C
+} "Test to see if function is placed in schedule and run at CCTK_TERMINATE"
+
+schedule TestSchedule_CCTK_SHUTDOWN at CCTK_SHUTDOWN
+{
+  LANG:C
+} "Test to see if function is placed in schedule and run at CCTK_SHUTDOWN"

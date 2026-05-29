@@ -1,0 +1,5 @@
+# -*-Makefile-*-
+# Sub-makefile for thorn IDBrillData
+
+SRCS = brilldata.F setupbrilldata2D.F setupbrilldata3D.F \
+       brillq.F phif.F finishbrilldata.F Startup.c ParamCheck.c

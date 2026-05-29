@@ -1,0 +1,60 @@
+# Schedule definitions for thorn TOVSolver
+
+schedule TOV_C_ParamCheck AT PARAMCHECK
+{
+  LANG: C
+  OPTIONS: GLOBAL
+} "Check parameters"
+
+schedule TOV_C_AllocateMemory AT WRAGH
+{
+  LANG: C
+  OPTIONS: GLOBAL
+} "Allocate memory for TOVSolver_C"
+
+if (!TOV_fake_evolution)
+{
+  schedule TOV_C_FreeMemory AT POSTPOSTINITIAL
+  {
+    LANG: C
+    OPTIONS: GLOBAL
+  } "Free memory from TOVSolver_C"
+}
+
+schedule GROUP TOV_Initial_Data AT Initial after ADMBase_InitialData after Whisky_ExcisionMask after Whisky_EOSHandle after Whisky_Rho_Minima_Setup after Whisky_SetupMask after Whisky_SetupDescriptors after Hydrobase_Initial before ADMBase_PostInitial before SetTmunu
+{
+#  STORAGE: TOV_Scalars
+#  STORAGE: TOV_Arrays
+  SYNC:ADMBase::metric,ADMBase::curv,ADMBase::lapse,ADMBase::shift
+  SYNC: rho, press, eps, vel
+  SYNC: Whisky::whisky_cons_scalar_var
+  SYNC: Whisky::whisky_cons_vector_var
+} "Group for the TOV initial data"
+
+schedule TOV_C_Integrate_RHS IN TOV_Initial_Data
+{
+  LANG: C
+  OPTIONS: GLOBAL
+} "Integrate the 1d equations for the TOV star"
+
+if (CCTK_Equals(initial_data, "tov") || (TOV_Use_Old_Initial_Data > 0) ||
+    TOV_Enforce_Interpolation)
+{
+  schedule TOV_C_Exact IN TOV_Initial_Data AFTER TOV_C_Integrate_RHS
+  {
+    LANG: C
+  } "Set up the 3d quantities for the TOV star"
+}
+
+if (TOV_fake_evolution)
+{
+  schedule TOV_Prepare_Fake_Evolution AFTER TOV_C_Exact
+  {
+    LANG: C
+  } "prepare for fake evolution"
+  schedule TOV_C_Exact IN MoL_PostStep AFTER Whisky_PostStep
+  {
+    LANG: C
+  } "use fake evolution"
+}
+

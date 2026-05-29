@@ -1,0 +1,20 @@
+# Main make.code.defn file for thorn RecoverMHD
+# $Header:$
+
+# Source files in this directory
+SRCS = RecoverMHD.cc \
+       RecoverMHD_Init.cc \
+       RecoverMHD_Utils.cc \
+       RecoverTest.cc \
+       Pointwise.cc \
+       Solve_SysEqns.cc \
+       AToBfield.cc
+
+#       Solve_WPressSysEqns.cc \
+#       Solve_hv2SysEqns.cc \
+#       Solve_hW2SysEqns.cc \
+#       Solve_HDSys.cc \
+#       Solve_hv2.cc \
+
+# Subdirectories containing source files
+SUBDIRS = 

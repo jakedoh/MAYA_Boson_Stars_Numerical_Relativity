@@ -1,0 +1,13 @@
+# make.configuration.defn for IOHDF5
+# $Header$
+
+# add the recombiner and the IEEEIO converter to the Cactus utitlity tools
+ALL_UTILS += hdf5_recombiner hdf5_convert_from_carpetiohdf5
+
+ifneq ($(strip $(HAVE_FLEXIO)), )
+  ALL_UTILS += hdf5_convert_from_ieeeio
+endif
+
+ifneq ($(strip $(HAVE_SDF)), )
+  ALL_UTILS += hdf5_convert_from_sdf
+endif

@@ -1,0 +1,4 @@
+# Configuration definition for thorn CactusEinstein/IDBrillData
+# $Header$
+
+REQUIRES CartGrid3D

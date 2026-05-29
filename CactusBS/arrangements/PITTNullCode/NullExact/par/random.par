@@ -1,0 +1,63 @@
+#------------------------------------------------------------------------------
+# Boosted BH testbed "run" analytically by the Abigel code
+# WARNING: THIS PARAM FILE IS NOT READY FOR USE.
+#------------------------------------------------------------------------------
+
+ActiveThorns = "Fortran SymBase CoordBase CartGrid3D IOASCII IOBasic IOUtil Pugh PughReduce PughSlab PUGHInterp Time"
+ActiveThorns = "AEILocalInterp NullGrid NullInterp NullVars NullEvolve NullExact NullNews NullDecomp"
+ActiveThorns = "NaNChecker"
+
+cactus::cctk_initial_time		= 0
+cactus::cctk_final_time			= 1
+cactus::terminate			= "time"
+Time::timestep_method                   = "given"
+
+IO::out_dir				= $.
+
+IOBasic::outInfo_reductions		= "norm_inf"
+IOBasic::outScalar_reductions		= "norm_inf"
+
+IOBasic::outInfo_vars  = "NullVars::ucn[10] NullExact::ucn_e[10] nullexact::newsb_e nullexact::ubondi_e"
+
+#------------------------------------------------------------------------------
+
+NullEvolve::initial_J_data = "exact"
+NullEvolve::boundary_data = "exact"
+
+nullexact::testbed_ID = 2  # i.e., linearized
+nullexact::amplitude = 1.e-8
+nullexact::l_in_Ylm =2 #At present, must be 2 or 3
+nullexact::m_in_Ylm=0
+nullexact::Constant_C1r=3.e-6
+nullexact::Constant_C1i=0
+nullexact::Constant_C2r=1.e-6
+nullexact::Constant_C2i=0
+nullexact::omm=1
+nullexact::beta0r=0
+nullexact::beta0i=0
+
+#------------------------------------------------------------------------------
+
+#------------------------------------------------------------------------------
+
+NullGrid::null_rwt = 9
+NullGrid::null_xin = 0.4
+
+
+IOBasic::outInfo_every			= 1
+IOBasic::outScalar_every		= 1
+IOASCII::out2D_vars                     = "NullVars::ucn[10] NullExact::ucn_e[10] nullexact::newsb_e nullexact::ubondi_e"
+IOASCII::out2D_every			= 10
+
+Time::timestep     = 0.025
+
+NullGrid::null_np = 45
+NullGrid::null_nq = 45
+NullGrid::null_nx = 41
+
+NullEvolve::first_order_scheme = "no"
+
+# NaNChecker::action_if_found = "terminate"
+# NaNChecker::check_every = 1
+# NaNChecker::check_vars = "nullvars::realcharfuncs"
+# NaNChecker::report_max = 1

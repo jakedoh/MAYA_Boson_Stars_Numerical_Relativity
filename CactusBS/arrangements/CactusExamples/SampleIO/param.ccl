@@ -1,0 +1,44 @@
+# Parameter definitions for thorn SampleIO
+# $Header$
+
+##############################################
+### Declare all SampleIO parameters as private
+### (not shared by other thorns)
+##############################################
+private:
+
+INT out_every "How often to do SampleIO output, overrides IO::out_every" STEERABLE = ALWAYS
+{
+   1:* :: "Every so many iterations"
+   0:  :: "Disable SampleIO output"
+  -1:  :: "Choose the default from IO::out_every"
+} -1
+
+STRING out_vars "Variables to output by SampleIO" STEERABLE = ALWAYS
+{
+  ".+" :: "Space-separated list of fully qualified variable/group names"
+  "^$" :: "An empty string to output nothing"
+} ""
+
+INT point_x "x-index (starting from 0) locating the array element to output" STEERABLE = ALWAYS
+{
+  0:* :: "An index between [0, nx)"
+} 0
+INT point_y "y-index (starting from 0) locating the array element to output" STEERABLE = ALWAYS
+{
+  0:* :: "An index between [0, ny)"
+} 0
+INT point_z "z-index (starting from 0) locating the array element to output" STEERABLE = ALWAYS
+{
+  0:* :: "An index between [0, nz)"
+} 0
+
+
+####################################################
+### Import generic parameters from implementation IO
+####################################################
+shares: IO
+
+USES INT out_every AS io_out_every
+USES KEYWORD verbose
+USES BOOLEAN strict_io_parameter_check

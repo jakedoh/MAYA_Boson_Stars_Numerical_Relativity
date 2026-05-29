@@ -1,0 +1,5 @@
+# Module dependencies for thorn EOS_Hybrid
+
+EOS_Hybrid.F.o:			EOS_Hybrid_Scalars.F.o
+EOS_Hybrid_Analysis.F.o:	EOS_Hybrid_Scalars.F.o
+EOS_Hybrid_Startup.F.o:		EOS_Hybrid_Scalars.F.o

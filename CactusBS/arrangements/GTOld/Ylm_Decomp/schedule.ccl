@@ -1,0 +1,38 @@
+# Schedule definitions for thorn Ylm_Decomp
+
+STORAGE: varinfo, do_nothing_group, current_detector_group, current_detector_radius_group,handles_group, l_m_modes_info_group, integer_quantities_group, temp3d_group
+
+schedule Ylm_ParamCheck at PARAMCHECK
+{
+  LANG: C
+} "Check Parameters for Ylm_Decomp"
+
+schedule Ylm_Init at BASEGRID
+{
+  LANG: FORTRAN
+  OPTIONS: global
+} "setup weights - global is key for allocation of storage"
+
+schedule Ylm_Init_tempGF at BASEGRID
+{
+  LANG: FORTRAN
+} "setup temp gfs"
+
+schedule Ylm_Setup_Detectors at INITIAL
+{
+  LANG: FORTRAN
+} "setup detectors"
+
+
+
+schedule Ylm_Setup_Vars at ANALYSIS after (compute_psi,calc_np)
+{
+  LANG: C
+  OPTIONS: global
+} "check spinweight and setup the vars info"
+
+schedule Ylm_loop_over_detectors at ANALYSIS after Ylm_Setup_Vars
+{
+  LANG: Fortran
+  OPTIONS: global
+} "loop over detectors manually"

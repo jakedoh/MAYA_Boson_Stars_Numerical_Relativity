@@ -1,0 +1,9 @@
+# Configuration definition for thorn SwitchGrids
+
+OPTIONAL Carpet
+{
+}
+
+OPTIONAL RegridBoxes
+{
+}

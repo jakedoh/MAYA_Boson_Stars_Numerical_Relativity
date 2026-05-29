@@ -1,0 +1,68 @@
+# Parameter definitions for thorn GiRaFFEfood
+
+shares: GiRaFFE
+
+USES REAL GAMMA_SPEED_LIMIT
+
+shares: ShiftedKerrSchild
+USES REAL KerrSchild_radial_shift
+USES REAL BH_mass
+USES REAL BH_spin
+
+restricted:
+
+KEYWORD test_case "Select the test case to be set as initial condition"
+{
+  "FastWave"        :: "Fast 1D force free wave travelling in Minkowski background"
+  "AlfvenWave"      :: "Alfven 2D force free wave" 
+  "DegenAlfvenWave" :: "Degenerate Alfven 2D force free wave" 
+  "ThreeAlfvenWave" :: "Three Alfven 2D force free waves"
+  "FFEBreakdown"    :: "Force free breakdown 2D test"
+  "SplitMonopole"   :: "Bandford-Znajek Split Monopole Test"
+  "ExactWald"       :: "Exact Wald Electrovacuum Solution"
+  "MagnetoWald"    :: "Magnetic Wald Force Free Solution"
+  "AlignedRotator"  :: "Aligned Rotator Solution"
+} "FastWave"
+
+
+REAL wave_speed "What is the wave speed relative to the grid frame?"
+{
+ -1.0:1.0 :: "Anything between -1 and +1"
+} -0.5 
+
+REAL split_C "The constant for the split monopole solution"
+{
+  *:* ::  "Anything?"
+} 1.0
+
+REAL Wald_B0 "The constant for the exact Wald solution"
+{
+  *:* ::  "Anything?"
+} 1.0
+
+BOOLEAN drop_fr_SplitM "Should we drop f(r) and f'(r) for the Split Monopole solution?"
+{
+} "yes" #Makes Split Monopole 1st order accurate, consistent with the papers. Otherwise the exact solution diverges! 
+
+INT Compute_Exact_Every "How often do we compute difference between exact and numerical (delAi quantities)?"
+{
+ -1:* :: "-1 = disabled"
+} 1
+
+# ALIGNED ROTATOR PARAMETERS
+REAL B_p_aligned_rotator "The magnitude of the poloidal magnetic field in the aligned rotator test." STEERABLE=ALWAYS
+{
+  *:* :: "any real"
+} 1e-5
+
+REAL Omega_aligned_rotator "The angular velocity for the aligned rotator solution test." STEERABLE=ALWAYS
+{
+  *:0) :: "any negative value"
+  (0:* :: "any positive value"
+} 1e3  # the default = an arbitrary but crazy value that can be set to any value other than zero, as R_NS_aligned_rotator/Omega_aligned_rotator cannot result in a division by zero.
+
+REAL R_NS_aligned_rotator "The radius of the so-called neutron star (NS) set by hand for the aligned rotator solution test." STEERABLE=ALWAYS
+{
+  -1.  :: "disable the conservative-to-primitive solver modification"
+  (0:* :: "any positive value"
+}  -1.

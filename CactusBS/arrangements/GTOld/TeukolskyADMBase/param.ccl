@@ -1,0 +1,81 @@
+private:
+KEYWORD ffshape "That's the function F(u=t+-r) of Teukolsky's paper"
+{
+  "eppley"     :: "Eppley packet: u^npow*exp(-(npow/sigma)^2), npow=1 for unmodified eppley"
+} "eppley"
+
+BOOLEAN norm_packet "Should the packet be normalized?"
+{
+} "no"
+
+CCTK_INT npow "Order of the (possibly) modified Eppley packet"
+{
+  1:*          :: "Npow=1 is regular eppley packet"
+} 1
+
+BOOLEAN zbef "Zero the Teukolsky Wave addition within a circle of radius t+-rad0 "
+{
+} "no"
+
+CCTK_REAL texprad "Radius up through which to use the Taylor Expansion of the coefficients A[t,r], B[t,r], C[t,r]"
+{
+  0:1 :: "Should be much *less* than one"
+} 0.1
+
+KEYWORD wave_dir "Which direction should the wave be going?"
+{
+  "ingoing"    :: "Ingoing wave: F(t+r)"
+  "outgoing"   :: "Outgoing wave: F(t-r)"
+  "timesym"    :: "Superposition of above: coeff -> coeff_in - coeff_out"
+} "timesym"
+
+CCTK_INT mm   "azimuthal quantum number of mode"
+{
+  -2:2         :: "Quadrupole wave with even parity is defined for m = -2...2"
+} 0
+
+BOOLEAN even  "Parity of wave; true for even, false for odd"
+{
+} "yes"
+
+CCTK_REAL rad0 "Wave center radius (allows an initial pulse away from the center)"
+{
+  0:*          :: "Radii are positive"
+} 0
+
+CCTK_REAL amp "Amplitude of wave"
+{
+  *:*          :: "any value is possible, but amp should be small (linear!)"
+} 1.0d-05
+
+CCTK_REAL sigma "Width of initial pulse"
+{
+  0:*          :: "only a positive value really makes sense"
+} 1
+
+BOOLEAN make_exact "Should we write exact soln to ADMBase vars every step?"
+{
+} "no"
+
+BOOLEAN addtomet  "Do you want to add TW to the current metric or set it completely?"
+{
+} "yes"
+
+BOOLEAN schedule_in_evol "schedule in EVOL instead of POSTSTEP to more closely simulate an evolution thorn"
+{
+} "no"
+
+# the stepsize used is always CCTK_DELTA_SPACE(1)
+BOOLEAN add_noise "add some random noise scaled with the stepsize to the data"
+{
+} "no"
+
+CCTK_REAL noise_scale "relative scale of the random noise"
+{
+  0:* :: "any positive value, should be small however"
+} 1e-3
+
+CCTK_REAL noise_power "convergence rate of the simulated noise (dx**power)"
+{
+  *:* :: "only positive powers would seem to make sense"
+} 2

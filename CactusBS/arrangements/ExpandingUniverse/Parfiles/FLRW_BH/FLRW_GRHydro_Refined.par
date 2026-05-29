@@ -1,0 +1,273 @@
+
+ActiveThorns="GenericFD CoordBase SymBase Boundary NaNChecker CartGrid3d Time MoL CarpetIOBasic CarpetIOScalar IOUtil Carpet CarpetLib Vectors CarpetReduce CarpetInterp CarpetSlab  CarpetIOASCII ADMBase ADMMacros StaticConformal  SphericalSurface  AEILocalInterp SpaceMask  Slab CarpetIOHDF5 CarpetRegrid2 Dissipation InitBase ReflectionSymmetry LoopControl GSL Formaline"
+ActiveThorns="HDF5 MPI Timers HDF5 CycleClock EOS_Polytrope hwloc EOS_Base zlib" 
+ActiveThorns="ADMCoupling"
+ActiveThorns="HydroBase"
+ActiveThorns="TmunuBase"
+ActiveThorns="GRHydro"
+ActiveThorns="Kranc2BSSNChiMatter"
+ActiveThorns="FLRWBackground"
+ActiveThorns="EOS_Omni EOS_IdealFluid"
+ActiveThorns="PeriodicCarpet"
+
+#############################################################
+# Grid
+#############################################################
+
+CartGrid3D::type                        = "coordbase"
+CartGrid3D::domain                      = "full" 
+CartGrid3D::avoid_origin                = "no"
+
+CoordBase::domainsize                   = minmax
+CoordBase::xmin                         = -10
+CoordBase::ymin                         = -10
+CoordBase::zmin                         = -10
+CoordBase::xmax                         = 10
+CoordBase::ymax                         = 10
+CoordBase::zmax                         = 10
+CoordBase::dx                           = 0.5
+CoordBase::dy                           = 0.5
+CoordBase::dz                           = 0.5
+CoordBase::boundary_size_x_lower        = 4
+CoordBase::boundary_size_y_lower        = 4
+CoordBase::boundary_size_z_lower        = 4
+CoordBase::boundary_shiftout_x_lower    = 0
+CoordBase::boundary_shiftout_y_lower    = 0
+CoordBase::boundary_shiftout_z_lower    = 0
+CoordBase::boundary_size_x_upper        = 4
+CoordBase::boundary_size_y_upper        = 4
+CoordBase::boundary_size_z_upper        = 4
+CoordBase::boundary_shiftout_x_upper    = 0
+CoordBase::boundary_shiftout_y_upper    = 0
+CoordBase::boundary_shiftout_z_upper    = 0
+
+#############################################################
+# Symmetries
+#############################################################
+
+ReflectionSymmetry::reflection_x        = "no"
+ReflectionSymmetry::reflection_y        = "no"
+ReflectionSymmetry::reflection_z        = "no"
+ReflectionSymmetry::avoid_origin_x      = "no"
+ReflectionSymmetry::avoid_origin_y      = "no"
+ReflectionSymmetry::avoid_origin_z      = "no"
+
+
+PeriodicCarpet::periodic   = "yes"
+
+#############################################################
+# Run statistics
+#############################################################
+
+#TimerReport::out_every       = 64
+#TimerReport::out_filename    = "TimerReport"
+
+#############################################################
+# CarpetRegrid2
+#############################################################
+
+CarpetRegrid2::num_centres     = 1
+CarpetRegrid2::regrid_every          = 0
+CarpetRegrid2::freeze_unaligned_levels = "yes" 
+CarpetRegrid2::freeze_unaligned_parent_levels = "yes" 
+Carpet::grid_coordinates_filename = "grid.asc" 
+CarpetRegrid2::min_distance = 0
+CarpetRegrid2::min_fraction = 0.4
+CarpetRegrid2::verbose               = "no"
+#CarpetRegrid2::symmetry_rotating180   = "yes"
+
+#CarpetRegrid2::symmetry_periodic_x = "yes"
+#CarpetRegrid2::symmetry_periodic_y = "yes"
+#CarpetRegrid2::symmetry_periodic_z = "yes"
+
+CarpetRegrid2::num_levels_1  =  2
+CarpetRegrid2::position_x_1  =  0
+CarpetRegrid2::position_y_1  =  0
+CarpetRegrid2::position_z_1  =  0
+
+CarpetRegrid2::radius_1[1]  =  10/2
+
+#############################################################
+# SphericalSurface
+#############################################################
+
+SphericalSurface::nsurfaces  = 6
+SphericalSurface::maxntheta  = 120
+SphericalSurface::maxnphi    = 40
+
+#############################################################
+# Carpet
+#############################################################
+
+Carpet::ghost_size                      = 4
+Carpet::domain_from_coordbase           = "yes"
+Carpet::max_refinement_levels           = 9
+Carpet::prolongation_order_space        = 5
+Carpet::prolongation_order_time         = 2
+Carpet::use_buffer_zones                = "yes"
+Carpet::verbose                         = "no"
+Carpet::output_timers_every             = 64
+
+Carpet::poison_new_timelevels           = "yes"
+Carpet::check_for_poison                = "no"
+Carpet::poison_value                    = 113
+
+Carpet::print_timestats_every           = 0
+Carpet::init_fill_timelevels            = "yes"
+Carpet::use_tapered_grids               = "no"
+
+SpaceMask::use_mask = "yes"
+
+#############################################################
+# CarpetLib
+#############################################################
+
+CarpetLib::poison_new_memory            = "yes"
+CarpetLib::poison_value                 = 114
+
+#############################################################
+# Time integration
+#############################################################
+
+Cactus::terminate                     = "any"
+Cactus::max_runtime                   = 1380
+Cactus::cctk_initial_time             = 1
+Cactus::cctk_final_time               = 200
+Cactus::cctk_itlast                   = 10000000
+Cactus::cctk_timer_output             = "full"
+Cactus::highlight_warning_messages    = "no"
+
+Time::dtfac                           = 0.015625
+
+MethodOfLines::ode_method             = "RK4"
+MethodOfLines::MoL_NaN_Check          = "no"
+MethodOfLines::MoL_Intermediate_Steps = 4
+MethodOfLines::MoL_Num_Scratch_Levels = 1
+
+#############################################################
+# Initial data
+#############################################################
+
+ADMBase::initial_data = "FLRWBackground"
+ADMBase::initial_lapse = "FLRWBackground"
+ADMBase::initial_shift = "FLRWBackground"
+HydroBase::initial_hydro = "FLRWBackground"
+
+ADMBase::evolution_method = "Kranc2BSSNChiMatter"
+ADMBase::lapse_evolution_method = "Kranc2BSSNChiMatter"
+ADMBase::shift_evolution_method = "Kranc2BSSNChiMatter"
+ADMBase::dtlapse_evolution_method = "Kranc2BSSNChiMatter"
+ADMBase::dtshift_evolution_method = "Kranc2BSSNChiMatter"
+HydroBase::evolution_method = "GRHydro"
+HydroBase::timelevels = 3
+
+TmunuBase::stress_energy_storage = "yes"
+TmunuBase::stress_energy_at_RHS = "yes"
+TmunuBase::timelevels = 3
+TmunuBase::prolongation_type = "none"
+
+FLRWBackground::t0 = 1
+FLRWBackground::a0 = 1
+FLRWBackground::H0 = 1
+FLRWBackground::K_intrinsic = 100
+FLRWBackground::boundary_condition       = "none"
+
+
+#############################################################
+# Evolution system
+#############################################################
+
+Kranc2BSSNChiMatter::m                        = 1
+Kranc2BSSNChiMatter::lapseAdvection           = 1
+Kranc2BSSNChiMatter::gammaDriverLambda        = 0
+Kranc2BSSNChiMatter::betaDotAlphaFactor       = 0.75
+Kranc2BSSNChiMatter::etaBeta                  = 2
+Kranc2BSSNChiMatter::chiBeta                  = 1
+Kranc2BSSNChiMatter::gammaDriverLapsePower    = 0
+Kranc2BSSNChiMatter::nasaAdvection            = 1
+Kranc2BSSNChiMatter::newNASAAdvection         = 1
+Kranc2BSSNChiMatter::betatAdvection           = 1
+Kranc2BSSNChiMatter::chiEps                   = 0.0001
+#Kranc2BSSNChiMatter::verbose                  = 0
+Kranc2BSSNChiMatter::fd_order                 = "full4th"
+Kranc2BSSNChiMatter::lapse_condition          = "FLRW"
+Kranc2BSSNChiMatter::shift_condition          = "constant"
+Kranc2BSSNChiMatter::boundary_condition       = "none"
+
+Kranc2BSSNChiMatter::Ro                       = -100
+
+# These specify that no built-in CactusBase/Boundary boundary
+# condition is to be applied. These parameters must be present or the
+# Cactus symmetry boundary condition will not be applied. 
+Kranc2BSSNChiMatter::A_group_bound      = "none"
+Kranc2BSSNChiMatter::alpha_group_bound  = "none"
+Kranc2BSSNChiMatter::beta_group_bound   = "none"
+Kranc2BSSNChiMatter::betat_group_bound  = "none"
+Kranc2BSSNChiMatter::Gam_group_bound    = "none"
+Kranc2BSSNChiMatter::h_group_bound      = "none"
+Kranc2BSSNChiMatter::K_group_bound      = "none"
+Kranc2BSSNChiMatter::chi_group_bound    = "none"
+
+GRHydro::riemann_solver = "Marquina"
+
+GRHydro::GRHydro_eos_type = "General"
+GRHydro::GRHydro_eos_table = "Ideal_Fluid"
+
+EOS_Omni::poly_gamma = 2
+EOS_Omni::poly_k = 1
+EOS_Omni::gl_gamma = 1.33333333333333333333333
+
+
+GRHydro::GRHydro_stencil = 3
+GRHydro::bound = "none"
+GRHydro::rho_abs_min = 1.e-15
+GRHydro::recon_method = "ppm"
+GRHydro::sync_conserved_only = no
+GRHydro::verbose = "no"
+
+#############################################################
+# Dissipation
+#############################################################
+
+Dissipation::order                 = 5
+Dissipation::epsdis                = 0.0
+Dissipation::epsdis_for_level[0]         = 0.5
+Dissipation::epsdis_for_level[1]         = 0.5
+Dissipation::epsdis_for_level[2]         = 0.5
+Dissipation::epsdis_for_level[3]         = 0.5
+Dissipation::epsdis_for_level[4]         = 0.1
+Dissipation::epsdis_for_level[5]         = 0.1
+Dissipation::epsdis_for_level[6]         = 0.1
+Dissipation::epsdis_for_level[7]         = 0.1
+Dissipation::epsdis_for_level[8]         = 0.1
+Dissipation::vars                  = "Kranc2BSSNChiMatter::A_group Kranc2BSSNChiMatter::alpha_group Kranc2BSSNChiMatter::beta_group Kranc2BSSNChiMatter::betat_group Kranc2BSSNChiMatter::Gam_group Kranc2BSSNChiMatter::h_group Kranc2BSSNChiMatter::K_group Kranc2BSSNChiMatter::chi_group"
+
+
+#############################################################
+# Output
+#############################################################
+
+IO::out_dir                          = $parfile
+#IO::out_fileinfo                     = "all"
+
+CarpetIOBasic::outInfo_every         = 1
+CarpetIOBasic::outInfo_vars          = "Kranc2BSSNChiMatter::alpha HydroBase::rho HydroBase::press HydroBase::eps"
+CarpetIOBasic::real_max              = 1e6
+CarpetIOBasic::int_width             = 12
+
+CarpetIOScalar::outScalar_every      = 64
+CarpetIOScalar::outScalar_reductions = "norm2 minimum"
+CarpetIOScalar::outScalar_vars       = "Kranc2BSSNChiMatter::scalarconstraints Kranc2BSSNChiMatter::alpha  Kranc2BSSNChiMatter::chi Hydrobase::rho HydroBase::press HydroBase::eps HydroBase::vel HydroBase::w_lorentz"
+
+CarpetIOASCII::out1D_every           = 16
+CarpetIOASCII::out1D_x               = "yes"
+CarpetIOASCII::out1D_y               = "yes"
+CarpetIOASCII::out1D_z               = "yes"
+CarpetIOASCII::out1D_vars            = "Kranc2BSSNChiMatter::h11 ADMBase::gxx Kranc2BSSNChiMatter::alpha Kranc2BSSNChiMatter::beta1 ADMBase::betax Kranc2BSSNChiMatter::bssnham Kranc2BSSNChiMatter::A11 Kranc2BSSNChiMatter::K Kranc2BSSNChiMatter::chi Kranc2BSSNChiMatter::Gam1 Kranc2BSSNChiMatter::chirhs HydroBase::rho TmunuBase::eTtt TmunuBase::eTtx TmunuBase::eTxx HydroBase::press HydroBase::eps HydroBase::vel HydroBase::w_lorentz"
+CarpetIOASCII::out_precision         = 19
+
+#############################################################
+# Checkpoint and recovery
+#############################################################
+
+

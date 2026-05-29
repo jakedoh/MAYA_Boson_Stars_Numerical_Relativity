@@ -1,0 +1,12 @@
+# Schedule definitions for thorn Seed_Magnetic_Fields_Privt
+
+STORAGE: HydroBase::rho[1],HydroBase::press[1],HydroBase::eps[1],HydroBase::vel[1],HydroBase::Bvec[1],HydroBase::Avec[1],HydroBase::Aphi[1]
+
+#STORAGE: IllinoisGRMHD::em_Ax[3],IllinoisGRMHD::em_Ay[3],IllinoisGRMHD::em_Az[3],IllinoisGRMHD::em_psi6phi[3] 
+#STORAGE: IllinoisGRMHD::grmhd_primitives_allbutBi
+
+
+SCHEDULE Seed_Magnetic_Fields_Privt after Meudon_Bin_NS_initialise BEFORE IllinoisGRMHD_ID_Converter IN HydroBase_Initial
+{
+  LANG: C
+} "Set up binary neutron star seed magnetic fields."

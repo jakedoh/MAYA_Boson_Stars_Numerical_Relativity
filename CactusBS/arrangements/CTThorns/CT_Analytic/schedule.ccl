@@ -1,0 +1,305 @@
+# File produced by Kranc
+
+STORAGE: CT_testinipsi[other_timelevels]
+
+STORAGE: CT_testinixx[other_timelevels]
+
+STORAGE: CT_testinixy[other_timelevels]
+
+STORAGE: CT_testinixz[other_timelevels]
+
+STORAGE: CT_epsi[other_timelevels]
+
+STORAGE: CT_elaplacian[other_timelevels]
+
+STORAGE: CT_testcxx[other_timelevels]
+
+STORAGE: CT_testcxy[other_timelevels]
+
+STORAGE: CT_testcxz[other_timelevels]
+
+STORAGE: CT_testcyy[other_timelevels]
+
+STORAGE: CT_testcyz[other_timelevels]
+
+STORAGE: CT_testczz[other_timelevels]
+
+STORAGE: CT_testcx[other_timelevels]
+
+STORAGE: CT_testcy[other_timelevels]
+
+STORAGE: CT_testcz[other_timelevels]
+
+STORAGE: CT_testc0[other_timelevels]
+
+STORAGE: CT_testc1[other_timelevels]
+
+STORAGE: CT_testc2[other_timelevels]
+
+STORAGE: CT_testc3[other_timelevels]
+
+STORAGE: CT_testc4[other_timelevels]
+
+STORAGE: CT_testa0[other_timelevels]
+
+STORAGE: CT_testa1[other_timelevels]
+
+STORAGE: CT_testa2[other_timelevels]
+
+STORAGE: CT_testa3[other_timelevels]
+
+STORAGE: CT_testa4[other_timelevels]
+
+STORAGE: CT_testW[other_timelevels]
+
+STORAGE: CT_testK[other_timelevels]
+
+STORAGE: CT_testdxK[other_timelevels]
+
+STORAGE: CT_testdyK[other_timelevels]
+
+STORAGE: CT_testdzK[other_timelevels]
+
+STORAGE: CT_testXx[other_timelevels]
+
+STORAGE: CT_testXy[other_timelevels]
+
+STORAGE: CT_testXz[other_timelevels]
+
+STORAGE: CT_testZ[other_timelevels]
+
+STORAGE: CT_testAxx[other_timelevels]
+
+STORAGE: CT_testAxy[other_timelevels]
+
+STORAGE: CT_testAxz[other_timelevels]
+
+STORAGE: CT_testAyy[other_timelevels]
+
+STORAGE: CT_testAyz[other_timelevels]
+
+STORAGE: CT_testAzz[other_timelevels]
+schedule CT_Analytic_Startup at STARTUP
+{
+  LANG: C
+  OPTIONS: meta
+} "create banner"
+
+schedule CT_Analytic_RegisterSymmetries in SymmetryRegister
+{
+  LANG: C
+  OPTIONS: meta
+} "register symmetries"
+
+if (CCTK_EQUALS(free_data, "Poisson"))
+{
+  schedule CT_Analytic_Poisson_Calc AT CCTK_INITIAL before CT_MultiLevel
+  {
+    LANG: C
+    READS: grid::r(Everywhere)
+    WRITES: CT_Analytic::epsi(Everywhere)
+    WRITES: CT_Analytic::testc0(Everywhere)
+    WRITES: CT_Analytic::testc1(Everywhere)
+    WRITES: CT_Analytic::testc2(Everywhere)
+    WRITES: CT_Analytic::testc3(Everywhere)
+    WRITES: CT_Analytic::testc4(Everywhere)
+    WRITES: CT_Analytic::testcx(Everywhere)
+    WRITES: CT_Analytic::testcxx(Everywhere)
+    WRITES: CT_Analytic::testcxy(Everywhere)
+    WRITES: CT_Analytic::testcxz(Everywhere)
+    WRITES: CT_Analytic::testcy(Everywhere)
+    WRITES: CT_Analytic::testcyy(Everywhere)
+    WRITES: CT_Analytic::testcyz(Everywhere)
+    WRITES: CT_Analytic::testcz(Everywhere)
+    WRITES: CT_Analytic::testczz(Everywhere)
+    WRITES: CT_Analytic::testinipsi(Everywhere)
+    WRITES: CT_Analytic::testK(Everywhere)
+    WRITES: CT_Analytic::testW(Everywhere)
+    WRITES: CT_Analytic::testXx(Everywhere)
+    WRITES: CT_Analytic::testXy(Everywhere)
+    WRITES: CT_Analytic::testXz(Everywhere)
+    WRITES: CT_Analytic::testZ(Everywhere)
+  } "CT_Analytic_Poisson_Calc"
+}
+
+if (CCTK_EQUALS(free_data, "exact"))
+{
+  schedule CT_Analytic_Exact_Calc AT CCTK_INITIAL before CT_MultiLevel
+  {
+    LANG: C
+    READS: grid::x(Everywhere)
+    READS: grid::y(Everywhere)
+    READS: grid::z(Everywhere)
+    WRITES: CT_Analytic::elaplacian(Everywhere)
+    WRITES: CT_Analytic::epsi(Everywhere)
+    WRITES: CT_Analytic::testc0(Everywhere)
+    WRITES: CT_Analytic::testc1(Everywhere)
+    WRITES: CT_Analytic::testc2(Everywhere)
+    WRITES: CT_Analytic::testc3(Everywhere)
+    WRITES: CT_Analytic::testc4(Everywhere)
+    WRITES: CT_Analytic::testcx(Everywhere)
+    WRITES: CT_Analytic::testcxx(Everywhere)
+    WRITES: CT_Analytic::testcxy(Everywhere)
+    WRITES: CT_Analytic::testcxz(Everywhere)
+    WRITES: CT_Analytic::testcy(Everywhere)
+    WRITES: CT_Analytic::testcyy(Everywhere)
+    WRITES: CT_Analytic::testcyz(Everywhere)
+    WRITES: CT_Analytic::testcz(Everywhere)
+    WRITES: CT_Analytic::testczz(Everywhere)
+    WRITES: CT_Analytic::testinipsi(Everywhere)
+  } "CT_Analytic_Exact_Calc"
+}
+
+if (CCTK_EQUALS(free_data, "Expanding BH lattice"))
+{
+  schedule CT_Analytic_ExpandingLattice_Calc AT CCTK_INITIAL before CT_MultiLevel
+  {
+    LANG: C
+    READS: grid::x(Everywhere)
+    READS: grid::y(Everywhere)
+    READS: grid::z(Everywhere)
+    READS: grid::r(Everywhere)
+    WRITES: CT_Analytic::epsi(Everywhere)
+    WRITES: CT_Analytic::testa0(Everywhere)
+    WRITES: CT_Analytic::testc0(Everywhere)
+    WRITES: CT_Analytic::testc1(Everywhere)
+    WRITES: CT_Analytic::testc2(Everywhere)
+    WRITES: CT_Analytic::testc3(Everywhere)
+    WRITES: CT_Analytic::testcxx(Everywhere)
+    WRITES: CT_Analytic::testcyy(Everywhere)
+    WRITES: CT_Analytic::testczz(Everywhere)
+    WRITES: CT_Analytic::testdxK(Everywhere)
+    WRITES: CT_Analytic::testdyK(Everywhere)
+    WRITES: CT_Analytic::testdzK(Everywhere)
+    WRITES: CT_Analytic::testinipsi(Everywhere)
+    WRITES: CT_Analytic::testK(Everywhere)
+    WRITES: CT_Analytic::testW(Everywhere)
+    WRITES: CT_Analytic::testXx(Everywhere)
+    WRITES: CT_Analytic::testXy(Everywhere)
+    WRITES: CT_Analytic::testXz(Everywhere)
+  } "CT_Analytic_ExpandingLattice_Calc"
+}
+
+if (CCTK_EQUALS(free_data, "Bowen-York"))
+{
+  schedule CT_Analytic_BY_Calc AT CCTK_INITIAL before CT_MultiLevel
+  {
+    LANG: C
+    READS: grid::x(Everywhere)
+    READS: grid::y(Everywhere)
+    READS: grid::z(Everywhere)
+    WRITES: CT_Analytic::epsi(Everywhere)
+    WRITES: CT_Analytic::testa0(Everywhere)
+    WRITES: CT_Analytic::testa1(Everywhere)
+    WRITES: CT_Analytic::testAxx(Everywhere)
+    WRITES: CT_Analytic::testAxy(Everywhere)
+    WRITES: CT_Analytic::testAxz(Everywhere)
+    WRITES: CT_Analytic::testAyy(Everywhere)
+    WRITES: CT_Analytic::testAyz(Everywhere)
+    WRITES: CT_Analytic::testAzz(Everywhere)
+    WRITES: CT_Analytic::testcxx(Everywhere)
+    WRITES: CT_Analytic::testcyy(Everywhere)
+    WRITES: CT_Analytic::testczz(Everywhere)
+    WRITES: CT_Analytic::testdxK(Everywhere)
+    WRITES: CT_Analytic::testdyK(Everywhere)
+    WRITES: CT_Analytic::testdzK(Everywhere)
+    WRITES: CT_Analytic::testinipsi(Everywhere)
+    WRITES: CT_Analytic::testK(Everywhere)
+    WRITES: CT_Analytic::testXx(Everywhere)
+    WRITES: CT_Analytic::testXy(Everywhere)
+    WRITES: CT_Analytic::testXz(Everywhere)
+    WRITES: CT_Analytic::testZ(Everywhere)
+  } "CT_Analytic_BY_Calc"
+}
+
+if (CCTK_EQUALS(free_data, "Lump"))
+{
+  schedule CT_Analytic_Lump_Calc AT CCTK_INITIAL before CT_MultiLevel
+  {
+    LANG: C
+    READS: grid::x(Everywhere)
+    READS: grid::y(Everywhere)
+    READS: grid::z(Everywhere)
+    WRITES: CT_Analytic::elaplacian(Everywhere)
+    WRITES: CT_Analytic::epsi(Everywhere)
+    WRITES: CT_Analytic::testa0(Everywhere)
+    WRITES: CT_Analytic::testc0(Everywhere)
+    WRITES: CT_Analytic::testc1(Everywhere)
+    WRITES: CT_Analytic::testc2(Everywhere)
+    WRITES: CT_Analytic::testc3(Everywhere)
+    WRITES: CT_Analytic::testc4(Everywhere)
+    WRITES: CT_Analytic::testcx(Everywhere)
+    WRITES: CT_Analytic::testcxx(Everywhere)
+    WRITES: CT_Analytic::testcxy(Everywhere)
+    WRITES: CT_Analytic::testcxz(Everywhere)
+    WRITES: CT_Analytic::testcy(Everywhere)
+    WRITES: CT_Analytic::testcyy(Everywhere)
+    WRITES: CT_Analytic::testcyz(Everywhere)
+    WRITES: CT_Analytic::testcz(Everywhere)
+    WRITES: CT_Analytic::testczz(Everywhere)
+    WRITES: CT_Analytic::testdxK(Everywhere)
+    WRITES: CT_Analytic::testdyK(Everywhere)
+    WRITES: CT_Analytic::testdzK(Everywhere)
+    WRITES: CT_Analytic::testinipsi(Everywhere)
+    WRITES: CT_Analytic::testinixx(Everywhere)
+    WRITES: CT_Analytic::testinixy(Everywhere)
+    WRITES: CT_Analytic::testinixz(Everywhere)
+    WRITES: CT_Analytic::testK(Everywhere)
+    WRITES: CT_Analytic::testXx(Everywhere)
+    WRITES: CT_Analytic::testXy(Everywhere)
+    WRITES: CT_Analytic::testXz(Everywhere)
+  } "CT_Analytic_Lump_Calc"
+}
+
+if (CCTK_EQUALS(free_data, "exact"))
+{
+  schedule CT_Analytic_ExactBoundary AT CCTK_INITIAL before CT_MultiLevel after CT_Analytic_Calc
+  {
+    LANG: C
+    SYNC: CT_testinipsi
+    READS: grid::x(Everywhere)
+    READS: grid::y(Everywhere)
+    READS: grid::z(Everywhere)
+    WRITES: CT_Analytic::testinipsi(Boundary)
+  } "CT_Analytic_ExactBoundary"
+}
+
+if (CCTK_EQUALS(free_data, "Lump"))
+{
+  schedule CT_Analytic_LumpBoundary AT CCTK_INITIAL before CT_MultiLevel after CT_Analytic_Calc
+  {
+    LANG: C
+    SYNC: CT_testinipsi
+    SYNC: CT_testinixx
+    SYNC: CT_testinixy
+    SYNC: CT_testinixz
+    READS: grid::x(Everywhere)
+    READS: grid::y(Everywhere)
+    READS: grid::z(Everywhere)
+    WRITES: CT_Analytic::testinipsi(Boundary)
+    WRITES: CT_Analytic::testinixx(Boundary)
+    WRITES: CT_Analytic::testinixy(Boundary)
+    WRITES: CT_Analytic::testinixz(Boundary)
+  } "CT_Analytic_LumpBoundary"
+}
+
+schedule CT_Analytic_SelectBoundConds in MoL_PostStep
+{
+  LANG: C
+  OPTIONS: level
+} "select boundary conditions"
+
+schedule CT_Analytic_CheckBoundaries at BASEGRID
+{
+  LANG: C
+  OPTIONS: meta
+} "check boundaries treatment"
+
+schedule CT_Analytic_RegisterVars in MoL_Register
+{
+  LANG: C
+  OPTIONS: meta
+} "Register Variables for MoL"
+schedule group ApplyBCs as CT_Analytic_ApplyBCs in MoL_PostStep after CT_Analytic_SelectBoundConds
+{
+} "Apply boundary conditions controlled by thorn Boundary"

@@ -1,0 +1,36 @@
+# Parameter definitions for thorn Periodic
+
+BOOLEAN verbose "Produce screen output while applying boundary conditions"
+{
+} "no"
+
+BOOLEAN periodic "Periodic boundary conditions"
+{
+} "no"
+
+BOOLEAN periodic_x "Periodic boundary conditions in x-direction"
+{
+} "no"
+
+BOOLEAN periodic_y "Periodic boundary conditions in y-direction"
+{
+} "no"
+
+BOOLEAN periodic_z "Periodic boundary conditions in z-direction"
+{
+} "no"
+
+
+
+BOOLEAN poison_boundaries "Fill the symmetry boundary with a poison value before the symmetry is applied" STEERABLE=always
+{
+} "no"
+
+CCTK_INT poison_value "Integer value (0..255) used to poison new timelevels (with memset)" STEERABLE=always
+{
+  0:255 :: "Must fit into a byte.  Use 0 for zero, 255 for nan, and e.g. 113 for a large value."
+} 254
+
+BOOLEAN check_boundaries "Check the boundaries for poison" STEERABLE=always
+{
+} "no"

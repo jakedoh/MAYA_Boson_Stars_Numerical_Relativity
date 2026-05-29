@@ -1,0 +1,34 @@
+# Schedule definitions for thorn Whisky_IVP
+# $Header$
+
+if (Solve_Whisky_IVP)
+{
+
+  schedule IVP_ParamCheck AT ParamCheck
+  {
+    LANG: Fortran
+  } "Parameter checking for IVP"
+
+  if (Whisky_IVP_testdata)
+  {
+    
+     schedule IVP_TestData IN Whisky_Initial
+     {
+       LANG: Fortran
+     } "Set up simple test data for the IVP solver"
+
+  }
+
+  schedule Whisky_IVP AT Initial AFTER (TOV_Initial_Data Whisky_Initial) BEFORE ADMBase_PostInitial
+  {
+    STORAGE: IVP_Functions
+    LANG: Fortran
+    SYNC: ADMBase::metric
+    SYNC: ADMBase::curv
+    SYNC: whisky_prim_scalar_var
+    SYNC: whisky_prim_vector_var
+    SYNC: Whisky::whisky_cons_scalar_var
+    SYNC: Whisky::whisky_cons_vector_var
+  } "Solve the IVP given the fluid data"
+
+}

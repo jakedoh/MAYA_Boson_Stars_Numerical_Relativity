@@ -1,0 +1,12 @@
+Cactus Code Thorn HTTPDExtra
+Author(s)    : Gabrielle Allen
+               Tom Goodale
+               Thomas Radke
+Maintainer(s): Cactus team
+Licence      : LGPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+This thorn registers additional HTML pages with the web server provided by
+thorn HTTPD.

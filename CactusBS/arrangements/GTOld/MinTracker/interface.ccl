@@ -1,0 +1,47 @@
+
+implements: mintracker
+inherits: sphericalsurface
+inherits: grid
+
+public:
+CCTK_REAL minimum[nminima] type=SCALAR
+{
+  min_x
+  min_y
+  min_z
+} "The location of the minima"
+
+CCTK_REAL minimum_v[nminima] type=SCALAR
+{
+  min_vx
+  min_vy
+  min_vz
+} "The velocity of the minima"
+
+CCTK_REAL minimum_r[nminima] type=SCALAR
+{
+  min_r
+} "The distance of the minimum from the coordinate origin"
+
+CCTK_REAL minimum_est[nminima] type=SCALAR
+{
+  min_est_x
+  min_est_y
+  min_est_z
+} "The estimated location of the minima"
+
+
+CCTK_REAL minimum_last_t_g[nminima] type=SCALAR
+{
+  min_last_t
+} "The coordinate time at which the minimum was last found"
+
+CCTK_INT min_found_g[nminima] type=SCALAR
+{
+  min_found
+} "Whether this minimum has been found"
+
+CCTK_INT vel_found_g[nminima] type=SCALAR
+{
+  vel_found
+} "Whether a velocity has been found"

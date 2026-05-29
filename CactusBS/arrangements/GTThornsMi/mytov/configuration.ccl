@@ -1,0 +1,8 @@
+# Configuration definitions for thorn MyTov
+
+
+REQUIRES THORNS: Boundary CartGrid3D SpaceMask
+
+
+
+

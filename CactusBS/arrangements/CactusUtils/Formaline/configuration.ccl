@@ -1,0 +1,9 @@
+# Configuration definition for thorn Formaline
+
+OPTIONAL MPI
+{
+}
+
+OPTIONAL PTHREADS
+{
+}

@@ -1,0 +1,1858 @@
+# File produced by Kranc
+
+
+shares: ADMBase
+
+
+EXTENDS CCTK_KEYWORD evolution_method "Extend ADMBase evolution method"
+{
+  "Kranc2BSSNChi" :: ""
+} 
+
+
+EXTENDS CCTK_KEYWORD lapse_evolution_method "Extend ADMBase lapse evolution method"
+{
+  "Kranc2BSSNChi" :: ""
+} 
+
+
+EXTENDS CCTK_KEYWORD shift_evolution_method "Extend ADMBase shift evolution method"
+{
+  "Kranc2BSSNChi" :: ""
+} 
+
+
+EXTENDS CCTK_KEYWORD dtlapse_evolution_method "d_t(alpha) evolution"
+{
+  "Kranc2BSSNChi" :: ""
+} 
+
+
+EXTENDS CCTK_KEYWORD dtshift_evolution_method "d^2_t(shift) evolution"
+{
+  "Kranc2BSSNChi" :: ""
+} 
+
+
+
+shares: GenericFD
+
+USES CCTK_INT assume_stress_energy_state
+
+
+shares: MethodOfLines
+
+USES CCTK_INT MoL_Num_Evolved_Vars
+USES CCTK_INT MoL_Num_ArrayEvolved_Vars
+
+restricted:
+CCTK_INT verbose "verbose" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT other_timelevels "Number of active timelevels for non-evolved grid functions" STEERABLE=RECOVER
+{
+  0:3 :: ""
+} 1
+
+restricted:
+CCTK_REAL m "Factor of momentum constraint added to Gam evolution. See Beyer and Sarbach 2010. (DEPRECATED -- Hard-coded to 1)" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_REAL lapseAdvection "Gauge Parameter, All Lapse: dt_alp ~ lapseAdvection*( beta^i d_i(alp) ) + ..." STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL harmonicf "Gauge Parameter, 1+log lapse: d_t alp = - harmonicf*alp*K + ... " STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 2
+
+restricted:
+CCTK_REAL gammaDriverLambda "Gauge Parameter, NASA/Mueller Shifts: dt_beta^i ~ alp^gammaDriverLambda * betat^i + ..." STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_REAL betaDotAlphaFactor "Gauge Parameter, NASA/Mueller Shifts: dt_beta^i = betaDotAlphaFactor*( alp^gammaDriverLambda betat^i ) + ..." STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0.75
+
+restricted:
+CCTK_REAL newNASAAdvection "Gauge Parameter, NASA/Mueller Shifts: dt_beta^i = newNASAAdvection*( beta^j d_j(beta^i) )" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL etaBeta "Gauge Parameter, NASA/Mueller Shifts: dt_betat^i ~ etaBeta*betat^i + ..." STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL chiBeta "Gauge Parameter, NASA/Mueller Shifts: dt_betat^i ~ alp^(gammaDriverLapsePower)*chiBeta*d_t(Gam^i) + ..." STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL gammaDriverLapsePower "Gauge Parameter, NASA/Mueller Shifts: dt_betat^i ~ alp^(gammaDriverLapsePower)*chiBeta*d_t(Gam^i) + ..." STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL NASAAdvection "Gauge Parameter, NASA/Mueller Shifts: dt_betat^i ~ NASAAdvection*( beta^j*d_j(Gam^i) ) + ..." STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL betatAdvection "Gauge Parameter: NASA/Mueller Shifts: dt_betat^i = betatAdvection*( beta^j d_j(betat^i) ) + ..." STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL addYoTerm "Add the Yo term to the evolution of Gam. Required for BBH run stability!" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_REAL ShiftA "Gauge Parameter, Mueller shift: muellerBottom ~ (1-chi^(ShiftA/2))^ShiftB" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_REAL Ro "Gauge Parameter, FLRW Lapse" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 10
+
+restricted:
+CCTK_REAL sigma "Gauge Parameter, FLRW Lapse" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 10
+
+restricted:
+CCTK_REAL ShiftB "Gauge Parameter, Mueller shift: muellerBottom ~ (1-chi^(ShiftA/2))^ShiftB" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 2
+
+restricted:
+CCTK_REAL a0 "FLRW parameter, Expansion of the universe at the start of the simulation" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_REAL H0 "FLRW parameter, Hubble parameter at the start of the simulation" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_REAL t0 "FLRW parameter, time of the start of the simulation" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_REAL chiEps "Minimum chi allowed in most denominators." STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL chiUniversalCutoff "Minimum value for chi enforced after updates" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} -1
+
+restricted:
+CCTK_INT constraintsfdorder "Finite-differencing order used in calculating the BSSN constraints -- only used when recalculate_constraints =/= no." STEERABLE=RECOVER
+{
+  2 :: ""
+  4 :: ""
+  6 :: ""
+} 4
+
+restricted:
+CCTK_INT cvtimelevels "Number of timelevels for constraint GFs (only valid after ET_2011_10 branches)." STEERABLE=RECOVER
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT tile_size "Loop tile size"
+{
+  *:* :: ""
+} -1
+
+private:
+CCTK_KEYWORD lapse_condition "Lapse evolution method" STEERABLE=RECOVER
+{
+  "1 + log" :: ""
+  "1 + log 2ndcentred" :: ""
+  "1 + log full4th" :: ""
+  "1 + log 4thcentred" :: ""
+  "constant" :: ""
+  "harmonic" :: ""
+  "exact" :: ""
+  "1 + log 6thcentred" :: ""
+  "1 + log 6th" :: ""
+  "FLRW" :: ""
+  "FLRW2" :: ""
+  "FLRW3" :: ""
+} "constant"
+
+private:
+CCTK_KEYWORD shift_condition "Shift evolution method" STEERABLE=RECOVER
+{
+  "constant" :: ""
+  "NASA" :: ""
+  "NASA4th" :: ""
+  "NASAfull4th" :: ""
+  "NASA6th" :: ""
+  "NASA2ndcentred" :: ""
+  "NASA4thcentred" :: ""
+  "exact" :: ""
+  "Mueller2nd" :: ""
+  "Muellerfull4th" :: ""
+  "Mueller6th" :: ""
+  "Mueller4thcentred" :: ""
+  "Mueller2ndcentred" :: ""
+  "Mueller6thcentred" :: ""
+} "constant"
+
+private:
+CCTK_KEYWORD fd_order "Finite differencing scheme order" STEERABLE=RECOVER
+{
+  "2nd" :: ""
+  "2ndcentred" :: ""
+  "full4th" :: ""
+  "4thcentred" :: ""
+  "6thcentred" :: ""
+  "6th" :: ""
+} "2nd"
+
+private:
+CCTK_KEYWORD boundary_condition "My boundary conditions" STEERABLE=RECOVER
+{
+  "none" :: ""
+  "radiative" :: ""
+  "FLRWRadiative" :: ""
+  "FLRW" :: ""
+  "FLRWConformal" :: ""
+  "FLRWConformalRadiative" :: ""
+} "radiative"
+
+private:
+CCTK_KEYWORD algebraic_constraint_projection "Enforce algebraic constraints: chiUniversalCutoff and tracelessness of A_ij" STEERABLE=RECOVER
+{
+  "none" :: ""
+  "psu" :: ""
+  "psuboundary" :: ""
+} "psu"
+
+private:
+CCTK_KEYWORD recalculate_constraints "Recalculate the constraints from BSSN variables. Choose between vacuum or matter. FD order given by parameter constraintsfdorder." STEERABLE=RECOVER
+{
+  "vacuum" :: ""
+  "matter" :: ""
+  "no" :: ""
+} "no"
+
+private:
+CCTK_KEYWORD update_admbase_variables "When to update the ADMBase variables from the BSSN variables" STEERABLE=RECOVER
+{
+  "always" :: ""
+  "never" :: ""
+} "always"
+
+restricted:
+CCTK_INT Kranc2BSSNChi_MaxNumEvolvedVars "Number of evolved variables used by this thorn" ACCUMULATOR-BASE=MethodofLines::MoL_Num_Evolved_Vars STEERABLE=RECOVER
+{
+  24:24 :: "Number of evolved variables used by this thorn"
+} 24
+
+restricted:
+CCTK_INT Kranc2BSSNChi_MaxNumArrayEvolvedVars "Number of Array evolved variables used by this thorn" ACCUMULATOR-BASE=MethodofLines::MoL_Num_ArrayEvolved_Vars STEERABLE=RECOVER
+{
+  0:0 :: "Number of Array evolved variables used by this thorn"
+} 0
+
+restricted:
+CCTK_INT timelevels "Number of active timelevels" STEERABLE=RECOVER
+{
+  0:3 :: ""
+} 3
+
+restricted:
+CCTK_INT rhs_timelevels "Number of active RHS timelevels" STEERABLE=RECOVER
+{
+  0:3 :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_init_gfs_calc_every "bssnchi_init_gfs_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_init_constraints_gfs_calc_every "bssnchi_init_constraints_gfs_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_adm_to_evolved_calc_every "bssnchi_adm_to_evolved_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_calc_evolved_gammas_2nd_calc_every "bssnchi_calc_evolved_gammas_2nd_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_calc_evolved_gammas_full4th_calc_every "bssnchi_calc_evolved_gammas_full4th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_calc_evolved_gammas_4thcentred_calc_every "bssnchi_calc_evolved_gammas_4thcentred_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_calc_evolved_gammas_6thcentred_calc_every "bssnchi_calc_evolved_gammas_6thcentred_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_calc_evolved_gammas_6th_calc_every "bssnchi_calc_evolved_gammas_6th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_calc_evolved_bound_gammas_calc_every "bssnchi_calc_evolved_bound_gammas_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_evolve_metric_2nd_calc_every "bssnchi_evolve_metric_2nd_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_evolve_metric_full4th_calc_every "bssnchi_evolve_metric_full4th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_evolve_metric_2ndcentred_calc_every "bssnchi_evolve_metric_2ndcentred_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_evolve_metric_4thcentred_calc_every "bssnchi_evolve_metric_4thcentred_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_evolve_metric_6thcentred_calc_every "bssnchi_evolve_metric_6thcentred_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_evolve_metric_6th_calc_every "bssnchi_evolve_metric_6th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_evolve_nonmetric_2nd_calc_every "bssnchi_evolve_nonmetric_2nd_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_evolve_nonmetric_full4th_calc_every "bssnchi_evolve_nonmetric_full4th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_evolve_nonmetric_2ndcentred_calc_every "bssnchi_evolve_nonmetric_2ndcentred_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_evolve_nonmetric_4thcentred_calc_every "bssnchi_evolve_nonmetric_4thcentred_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_evolve_nonmetric_6thcentred_calc_every "bssnchi_evolve_nonmetric_6thcentred_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_evolve_nonmetric_6th_calc_every "bssnchi_evolve_nonmetric_6th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_project_constraints_psu_calc_every "bssnchi_project_constraints_psu_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_project_constraints_psu_boundary_calc_every "bssnchi_project_constraints_psu_boundary_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_boundary_calc_every "bssnchi_boundary_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_boundaryFLRW_calc_every "bssnchi_boundaryFLRW_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_boundaryFLRWConformal_calc_every "bssnchi_boundaryFLRWConformal_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_boundaryFLRWRadiative_calc_every "bssnchi_boundaryFLRWRadiative_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_boundaryFLRWRadiativeConformal_calc_every "bssnchi_boundaryFLRWRadiativeConformal_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_one_plus_log_lapse_calc_every "bssnchi_one_plus_log_lapse_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_one_plus_log_lapse_full4th_calc_every "bssnchi_one_plus_log_lapse_full4th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_one_plus_log_lapse_2ndcentred_calc_every "bssnchi_one_plus_log_lapse_2ndcentred_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_one_plus_log_lapse_4thcentred_calc_every "bssnchi_one_plus_log_lapse_4thcentred_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_one_plus_log_lapse_6thcentred_calc_every "bssnchi_one_plus_log_lapse_6thcentred_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_one_plus_log_lapse_6th_calc_every "bssnchi_one_plus_log_lapse_6th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_harmonic_lapse_calc_every "bssnchi_harmonic_lapse_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_exact_lapse_calc_every "bssnchi_exact_lapse_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_FLRW_lapse_calc_every "bssnchi_FLRW_lapse_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_FLRW_lapse2_calc_every "bssnchi_FLRW_lapse2_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_FLRW_lapse3_calc_every "bssnchi_FLRW_lapse3_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_exact_shift_calc_every "bssnchi_exact_shift_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_calc_constraints_vacuum_calc_every "bssnchi_calc_constraints_vacuum_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_nasa_shift_2nd_calc_every "bssnchi_nasa_shift_2nd_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_nasa_shift_full4th_calc_every "bssnchi_nasa_shift_full4th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_nasa_shift_2ndcentred_calc_every "bssnchi_nasa_shift_2ndcentred_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_nasa_shift_4thcentred_calc_every "bssnchi_nasa_shift_4thcentred_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_nasa_shift_6thcentred_calc_every "bssnchi_nasa_shift_6thcentred_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_nasa_shift_6th_calc_every "bssnchi_nasa_shift_6th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_mueller_shift_2nd_calc_every "bssnchi_mueller_shift_2nd_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_evolved_to_adm_calc_every "bssnchi_evolved_to_adm_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchi_init_gfs_calc_offset "bssnchi_init_gfs_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_init_constraints_gfs_calc_offset "bssnchi_init_constraints_gfs_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_adm_to_evolved_calc_offset "bssnchi_adm_to_evolved_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_calc_evolved_gammas_2nd_calc_offset "bssnchi_calc_evolved_gammas_2nd_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_calc_evolved_gammas_full4th_calc_offset "bssnchi_calc_evolved_gammas_full4th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_calc_evolved_gammas_4thcentred_calc_offset "bssnchi_calc_evolved_gammas_4thcentred_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_calc_evolved_gammas_6thcentred_calc_offset "bssnchi_calc_evolved_gammas_6thcentred_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_calc_evolved_gammas_6th_calc_offset "bssnchi_calc_evolved_gammas_6th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_calc_evolved_bound_gammas_calc_offset "bssnchi_calc_evolved_bound_gammas_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_evolve_metric_2nd_calc_offset "bssnchi_evolve_metric_2nd_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_evolve_metric_full4th_calc_offset "bssnchi_evolve_metric_full4th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_evolve_metric_2ndcentred_calc_offset "bssnchi_evolve_metric_2ndcentred_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_evolve_metric_4thcentred_calc_offset "bssnchi_evolve_metric_4thcentred_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_evolve_metric_6thcentred_calc_offset "bssnchi_evolve_metric_6thcentred_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_evolve_metric_6th_calc_offset "bssnchi_evolve_metric_6th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_evolve_nonmetric_2nd_calc_offset "bssnchi_evolve_nonmetric_2nd_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_evolve_nonmetric_full4th_calc_offset "bssnchi_evolve_nonmetric_full4th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_evolve_nonmetric_2ndcentred_calc_offset "bssnchi_evolve_nonmetric_2ndcentred_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_evolve_nonmetric_4thcentred_calc_offset "bssnchi_evolve_nonmetric_4thcentred_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_evolve_nonmetric_6thcentred_calc_offset "bssnchi_evolve_nonmetric_6thcentred_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_evolve_nonmetric_6th_calc_offset "bssnchi_evolve_nonmetric_6th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_project_constraints_psu_calc_offset "bssnchi_project_constraints_psu_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_project_constraints_psu_boundary_calc_offset "bssnchi_project_constraints_psu_boundary_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_boundary_calc_offset "bssnchi_boundary_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_boundaryFLRW_calc_offset "bssnchi_boundaryFLRW_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_boundaryFLRWConformal_calc_offset "bssnchi_boundaryFLRWConformal_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_boundaryFLRWRadiative_calc_offset "bssnchi_boundaryFLRWRadiative_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_boundaryFLRWRadiativeConformal_calc_offset "bssnchi_boundaryFLRWRadiativeConformal_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_one_plus_log_lapse_calc_offset "bssnchi_one_plus_log_lapse_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_one_plus_log_lapse_full4th_calc_offset "bssnchi_one_plus_log_lapse_full4th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_one_plus_log_lapse_2ndcentred_calc_offset "bssnchi_one_plus_log_lapse_2ndcentred_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_one_plus_log_lapse_4thcentred_calc_offset "bssnchi_one_plus_log_lapse_4thcentred_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_one_plus_log_lapse_6thcentred_calc_offset "bssnchi_one_plus_log_lapse_6thcentred_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_one_plus_log_lapse_6th_calc_offset "bssnchi_one_plus_log_lapse_6th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_harmonic_lapse_calc_offset "bssnchi_harmonic_lapse_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_exact_lapse_calc_offset "bssnchi_exact_lapse_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_FLRW_lapse_calc_offset "bssnchi_FLRW_lapse_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_FLRW_lapse2_calc_offset "bssnchi_FLRW_lapse2_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_FLRW_lapse3_calc_offset "bssnchi_FLRW_lapse3_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_exact_shift_calc_offset "bssnchi_exact_shift_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_calc_constraints_vacuum_calc_offset "bssnchi_calc_constraints_vacuum_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_nasa_shift_2nd_calc_offset "bssnchi_nasa_shift_2nd_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_nasa_shift_full4th_calc_offset "bssnchi_nasa_shift_full4th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_nasa_shift_2ndcentred_calc_offset "bssnchi_nasa_shift_2ndcentred_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_nasa_shift_4thcentred_calc_offset "bssnchi_nasa_shift_4thcentred_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_nasa_shift_6thcentred_calc_offset "bssnchi_nasa_shift_6thcentred_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_nasa_shift_6th_calc_offset "bssnchi_nasa_shift_6th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_mueller_shift_2nd_calc_offset "bssnchi_mueller_shift_2nd_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchi_evolved_to_adm_calc_offset "bssnchi_evolved_to_adm_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+private:
+CCTK_KEYWORD h11_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "skip"
+
+private:
+CCTK_KEYWORD h21_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "skip"
+
+private:
+CCTK_KEYWORD h31_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "skip"
+
+private:
+CCTK_KEYWORD h22_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "skip"
+
+private:
+CCTK_KEYWORD h32_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "skip"
+
+private:
+CCTK_KEYWORD h33_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "skip"
+
+private:
+CCTK_KEYWORD A11_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "skip"
+
+private:
+CCTK_KEYWORD A21_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "skip"
+
+private:
+CCTK_KEYWORD A31_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "skip"
+
+private:
+CCTK_KEYWORD A22_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "skip"
+
+private:
+CCTK_KEYWORD A32_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "skip"
+
+private:
+CCTK_KEYWORD A33_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "skip"
+
+private:
+CCTK_KEYWORD chi_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "skip"
+
+private:
+CCTK_KEYWORD K_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "skip"
+
+private:
+CCTK_KEYWORD Gam1_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "skip"
+
+private:
+CCTK_KEYWORD Gam2_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "skip"
+
+private:
+CCTK_KEYWORD Gam3_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "skip"
+
+private:
+CCTK_KEYWORD alpha_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "skip"
+
+private:
+CCTK_KEYWORD beta1_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "skip"
+
+private:
+CCTK_KEYWORD beta2_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "skip"
+
+private:
+CCTK_KEYWORD beta3_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "skip"
+
+private:
+CCTK_KEYWORD betat1_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "skip"
+
+private:
+CCTK_KEYWORD betat2_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "skip"
+
+private:
+CCTK_KEYWORD betat3_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "skip"
+
+private:
+CCTK_KEYWORD h_group_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "none"
+
+private:
+CCTK_KEYWORD A_group_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "none"
+
+private:
+CCTK_KEYWORD chi_group_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "none"
+
+private:
+CCTK_KEYWORD K_group_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "none"
+
+private:
+CCTK_KEYWORD Gam_group_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "none"
+
+private:
+CCTK_KEYWORD alpha_group_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "none"
+
+private:
+CCTK_KEYWORD beta_group_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "none"
+
+private:
+CCTK_KEYWORD betat_group_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "none"
+
+private:
+CCTK_REAL h11_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL h21_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL h31_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL h22_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL h32_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL h33_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL A11_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL A21_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL A31_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL A22_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL A32_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL A33_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL chi_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL K_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL Gam1_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL Gam2_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL Gam3_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL alpha_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL beta1_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL beta2_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL beta3_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL betat1_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL betat2_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL betat3_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL h_group_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL A_group_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL chi_group_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL K_group_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL Gam_group_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL alpha_group_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL beta_group_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL betat_group_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL h11_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL h21_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL h31_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL h22_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL h32_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL h33_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL A11_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL A21_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL A31_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL A22_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL A32_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL A33_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL chi_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL K_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL Gam1_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL Gam2_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL Gam3_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL alpha_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL beta1_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL beta2_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL beta3_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL betat1_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL betat2_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL betat3_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL h_group_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL A_group_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL chi_group_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL K_group_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL Gam_group_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL alpha_group_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL beta_group_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL betat_group_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL h11_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+
+private:
+CCTK_REAL h21_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+
+private:
+CCTK_REAL h31_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+
+private:
+CCTK_REAL h22_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+
+private:
+CCTK_REAL h32_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+
+private:
+CCTK_REAL h33_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+
+private:
+CCTK_REAL A11_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+
+private:
+CCTK_REAL A21_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+
+private:
+CCTK_REAL A31_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+
+private:
+CCTK_REAL A22_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+
+private:
+CCTK_REAL A32_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+
+private:
+CCTK_REAL A33_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+
+private:
+CCTK_REAL chi_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+
+private:
+CCTK_REAL K_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+
+private:
+CCTK_REAL Gam1_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+
+private:
+CCTK_REAL Gam2_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+
+private:
+CCTK_REAL Gam3_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+
+private:
+CCTK_REAL alpha_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+
+private:
+CCTK_REAL beta1_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+
+private:
+CCTK_REAL beta2_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+
+private:
+CCTK_REAL beta3_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+
+private:
+CCTK_REAL betat1_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+
+private:
+CCTK_REAL betat2_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+
+private:
+CCTK_REAL betat3_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+
+private:
+CCTK_REAL h_group_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+
+private:
+CCTK_REAL A_group_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+
+private:
+CCTK_REAL chi_group_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+
+private:
+CCTK_REAL K_group_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+
+private:
+CCTK_REAL Gam_group_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+
+private:
+CCTK_REAL alpha_group_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+
+private:
+CCTK_REAL beta_group_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+
+private:
+CCTK_REAL betat_group_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+

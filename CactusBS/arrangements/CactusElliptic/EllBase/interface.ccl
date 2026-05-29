@@ -1,0 +1,6 @@
+# Interface definition for thorn EllBase
+# $Header$
+implements: ellbase
+
+INCLUDES HEADER: EllBase.h in EllBase.h
+INCLUDES HEADER: Ell_DBstructure.h in Ell_DBstructure.h

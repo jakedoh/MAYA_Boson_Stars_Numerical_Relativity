@@ -1,0 +1,35 @@
+\setlength{\unitlength}{4144sp}%
+%
+\begingroup\makeatletter\ifx\SetFigFont\undefined%
+\gdef\SetFigFont#1#2#3#4#5{%
+  \reset@font\fontsize{#1}{#2pt}%
+  \fontfamily{#3}\fontseries{#4}\fontshape{#5}%
+  \selectfont}%
+\fi\endgroup%
+\begin{picture}(2124,1888)(1039,-3455)
+\thinlines
+{\color[rgb]{0,0,0}\put(1081,-3121){\vector( 0, 1){1440}}
+\put(1081,-3121){\vector( 1, 0){2070}}
+}%
+\thicklines
+{\color[rgb]{0,0,0}\put(1306,-2041){\line( 1, 0){765}}
+}%
+\thinlines
+{\color[rgb]{0,0,0}\put(2071,-3121){\line( 0,-1){135}}
+}%
+{\color[rgb]{0,0,0}\multiput(2071,-2041)(0.00000,-113.68421){10}{\line( 0,-1){ 56.842}}
+}%
+\thicklines
+{\color[rgb]{0,0,0}\put(2071,-2671){\line( 1, 0){720}}
+}%
+\put(1846,-3391){\makebox(0,0)[lb]{\smash{{\SetFigFont{12}{14.4}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$x=0$}%
+}}}}
+\put(1126,-1726){\makebox(0,0)[lb]{\smash{{\SetFigFont{12}{14.4}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$u_0(x)$}%
+}}}}
+\put(2971,-3346){\makebox(0,0)[lb]{\smash{{\SetFigFont{12}{14.4}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$x$}%
+}}}}
+\put(1666,-1951){\makebox(0,0)[b]{\smash{{\SetFigFont{12}{14.4}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$u_L$}%
+}}}}
+\put(2431,-2581){\makebox(0,0)[b]{\smash{{\SetFigFont{12}{14.4}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$u_R$}%
+}}}}
+\end{picture}%

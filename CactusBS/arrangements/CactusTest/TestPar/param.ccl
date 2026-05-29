@@ -1,0 +1,79 @@
+# Parameter definitions for thorn TestPar
+
+STRING string1 ""
+{
+  ".*" :: "Any string"
+} ""
+
+STRING string2 ""
+{
+  ".*" :: "Any string"
+} ""
+
+STRING string3 ""
+{
+  ".*" :: "Any string"
+} ""
+
+STRING string4 ""
+{
+  ".*" :: "Any string"
+} ""
+
+STRING string5 ""
+{
+  ".*" :: "Any string"
+} ""
+
+STRING string6 ""
+{
+  ".*" :: "Any string"
+} ""
+
+STRING string7 ""
+{
+  ".*" :: "Any string"
+} ""
+
+STRING string8 ""
+{
+  ".*" :: "Any string"
+} ""
+
+STRING string9 ""
+{
+  ".*" :: "Any string"
+} ""
+
+STRING out_dir "Where to write output"
+{
+  ".*" :: "Any valid path"
+} ""
+
+INT int1[10] ""
+{
+  *:* :: "Any integer"
+} 12
+
+INT int2[10] ""
+{
+  *:* :: "Any integer"
+} 1
+
+REAL real1[10] ""
+{
+  *:* :: "Any number"
+} 42.d0
+
+REAL real2[10] ""
+{
+  *:* :: "Any number"
+} 23
+
+BOOLEAN bool1[10] ""
+{
+} yes
+
+BOOLEAN bool2[10] ""
+{
+} 0

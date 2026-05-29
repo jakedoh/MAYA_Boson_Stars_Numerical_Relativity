@@ -1,0 +1,86 @@
+# Parameter definitions for thorn MakeParticles
+
+INT verbose "how much output" STEERABLE=always
+{
+  0:* :: ""
+} 1
+
+REAL rho_min "ignore any cells with density less than this" STEERABLE=always
+{
+  0:* :: "Whisky::rho_min is a good guess for this"
+} 0.0
+
+INT calc_every "only generate particles every so often" STEERABLE=always
+{
+  0:0  :: "never"
+  1:*  :: "every this many iterations, for consistent result make sure this includes the coarsest interesting level"
+} 1
+
+STRING weight_variable "Variable containing the weights for integration" STEERABLE=always
+{
+  "^CarpetReduce[:][:]weight$"    :: "Standard Carpet weights"
+  "^AHMask[:][:]AHmasked_weight$" :: "Mask out AHs (if found)"
+  ".+[:][:].+"                    :: "Any other valid variable, really"
+} "AHMask::AHmasked_weight"
+
+# NB: This *will* most likely change in the future. Do *not* depend on this
+# parameter being around or having the same meaning in the future. In
+# particular the default will likely change.
+KEYWORD information "what to output" STEERABLE=always
+{
+  "fallback time" :: "data required to compute the fallback time"
+  "luminosity"    :: "data required to compute luminosity and opacity"
+  "sph particles" :: "data used as initial data for an sph computation"
+  "everything"    :: "metric,gauge,primitives,weight,edge"
+} "luminosity"
+
+STRING particle_subdir "Subdirectory for storing particle files." STEERABLE=always
+{
+  "."  :: "Not in a subdirectory"
+  ".+" :: "Anything"
+} "Particles"
+
+BOOLEAN binary_output "Output in binary instead of ascii" STEERABLE=always
+{
+} "yes"
+
+# used in schedule.ccl
+STRING read_particles_from_file "put hydro data from particle file onto grid" STEERABLE=recover
+{
+  ".*" :: "any valid path, if filename contains .file_0 it looks for further files to read"
+  ""   :: "do not read anything"
+} ""
+
+# used in schedule.ccl
+INT shrink_by_cells "remove cells that are wihtin shrink_by_cells of an atmosphere cell" STEERABLE=recover
+{
+  0:0 :: "do nothing"
+  1:* :: "remove this many cells"
+} 0
+
+REAL shrink_threshold "only consider cells whose density is less than this for shrinking" STEERABLE=always
+{
+  0:* :: "any non-negative value"
+} 0.0e0
+
+shares: IO
+
+USES STRING out_dir
+
+shares: ADMBase
+
+EXTENDS KEYWORD initial_lapse 
+{
+  "particles" :: "fill in lapse from particles"
+}
+
+EXTENDS KEYWORD initial_shift 
+{
+  "particles" :: "fill in shift from particles"
+}
+
+EXTENDS KEYWORD initial_data 
+{
+  "particles" :: "fill in metric from particles"
+}
+

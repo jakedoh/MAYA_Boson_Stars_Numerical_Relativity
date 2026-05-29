@@ -1,0 +1,17 @@
+# Schedule definitions for thorn IDScalarWave
+# $Header$
+
+schedule IDScalarWave_CheckParameters at CCTK_PARAMCHECK
+{
+  LANG: Fortran
+} "Check parameters"
+
+schedule group WaveToy_InitialData at CCTK_INITIAL
+{
+} "Execute initial data for wavetoy"
+
+schedule IDScalarWave_InitialData in WaveToy_InitialData
+{
+  STORAGE:       wavetoy::scalarevolve[3]
+  LANG:          Fortran
+} "Initial data for 3D wave equation"

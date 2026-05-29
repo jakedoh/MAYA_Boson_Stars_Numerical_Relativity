@@ -1,0 +1,148 @@
+# Parameter definitions for thorn NoExcision
+# $Header$
+
+BOOLEAN verbose "Produce some screen output"
+{
+} "no"
+
+KEYWORD method "Method to use"
+{
+  "old" :: "Use old method"
+  "new" :: "Use new method"
+} "old"
+
+
+INT num_regions "Number of no-excision regions"
+{
+  0:10 :: ""
+} 0
+
+BOOLEAN overwrite_geometry[10] "Set the geometry to Minkowski"
+{
+} "yes"
+
+REAL Minkowski_scale[10] "Scaling factor for Minkowski"
+{
+  (*:*) :: "Choose 1 for true Minkowski"
+} 1.0
+
+
+
+BOOLEAN overwrite_lapse[10] "Set the lapse to one"
+{
+} "yes"
+
+REAL lapse_scale[10] "Scaling factor for lapse"
+{
+  (*:*) :: "Choose 1 for geodesic slicing, 0 to halt evolution"
+} 1.0
+
+
+
+BOOLEAN overwrite_shift[10] "Set the shift to zero"
+{
+} "yes"
+
+
+
+REAL centre_x[10] "x-coordinate of the centre of the region"
+{
+  (*:*) :: ""
+} 0.0
+
+REAL centre_y[10] "y-coordinate of the centre of the region"
+{
+  (*:*) :: ""
+} 0.0
+
+REAL centre_z[10] "z-coordinate of the centre of the region"
+{
+  (*:*) :: ""
+} 0.0
+
+KEYWORD region_shape[10] "Shape of the region"
+{
+  "sphere"    :: "use radius"
+  "ellipsoid" :: "use radius_x, radius_y, and radius_z"
+  "surface"   :: "use a spherical surface shape"
+} "sphere"
+
+REAL radius[10] "Radius of the region"
+{
+  0.0:*) :: ""
+} 1.0
+
+REAL radius_x[10] "x-radius of the region"
+{
+  0.0:*) :: ""
+} 1.0
+
+REAL radius_y[10] "y-radius of the region"
+{
+  0.0:*) :: ""
+} 1.0
+
+REAL radius_z[10] "z-radius of the region"
+{
+  0.0:*) :: ""
+} 1.0
+
+INT surface_index[10] "Spherical surface index"
+{
+  0:* :: "must be an index of a spherical surface"
+} 0
+
+
+
+BOOLEAN reduce_rhs[10] "Reduce RHS"
+{
+} "no"
+
+REAL reduction_factor[10] "Reduction factor for RHS (0=complete, 1=no reduction)"
+{
+  *:* :: ""
+} 0.0
+
+
+
+KEYWORD smoothing_function[10] "Smoothing function"
+{
+  "linear" :: "linear ramp"
+  "spline" :: "cubic spline ramp"
+  "cosine" :: "cosine ramp"
+} "linear"
+
+REAL smoothing_zone_width[10] "Relative width of smoothing zone inside the region"
+{
+  0.0:1.0 :: ""
+} 0.0
+
+INT smoothing_iterations "Smoothing iterations"
+{
+  0:* :: ""
+} 10
+
+REAL smoothing_factor "Initial moothing factor"
+{
+  (0:2) :: ""
+} 1.2
+
+
+
+BOOLEAN smooth_regions "Smooth overwritten regions?"
+{
+} "no"
+
+INT smoothing_order "Order of the derivatives used for CG smoothing"
+{
+  2:6:2 :: ""
+} 6
+
+REAL smoothing_eps "CG smoothing stop criteria"
+{
+  (0.0:* :: ""
+} 1e-6
+
+BOOLEAN use_user_regions "Use user defined regions for the smoothing regions"
+{
+} "no"

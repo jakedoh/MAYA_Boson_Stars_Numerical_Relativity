@@ -1,0 +1,23 @@
+# Main make.configuration.deps file for thorn Meudon_Bin_NS
+
+MEUDONBINNS_BUILD_DIR = $(BUILD_DIR)/Meudon_Bin_NS
+MEUDONBINNS_SRC_DIR   = $(PACKAGE_DIR)/PRThorns/Meudon_Bin_NS/src/util
+MEUDONBINNS_CXXFLAGS  = -DCCODE $(CXXFLAGS)
+
+MEUDONBINNS_CXXFLAGS += -I$(CONFIG) -I$(BINDINGS_DIR)/include -I$(FLESH_DIR)/include -I$(PACKAGE_DIR) $(LORENE_INC_DIRS:%=-I%)
+MEUDONBINNS_LDFLAGS = $(MEUDONBINNS_CXXFLAGS) $(DEBUG_LD) $(LDFLAGS) $(EXTRAFLAGS) $(GENERAL_LIBRARIES)
+
+# general linking rule
+$(UTIL_DIR)/%: $(MEUDONBINNS_BUILD_DIR)/%.o
+	@echo Creating $* in $(UTIL_DIR) from $<
+	-$(MKDIR) $(MKDIRFLAGS) $(UTIL_DIR)
+	$(LD) $< $(MEUDONBINNS_LDFLAGS) -o $@
+
+# general compile rule
+
+$(MEUDONBINNS_BUILD_DIR)/%.o: $(MEUDONBINNS_SRC_DIR)/%.cc
+	@echo Compiling $<
+	-$(MKDIR) $(MKDIRFLAGS) $(MEUDONBINNS_BUILD_DIR)
+	$(CXX) $< $(MEUDONBINNS_CXXFLAGS) -DTHORN_IS_Meudon_Bin_NS -c -o $@
+
+

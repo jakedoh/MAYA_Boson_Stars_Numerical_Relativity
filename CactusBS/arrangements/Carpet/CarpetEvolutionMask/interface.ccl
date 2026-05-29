@@ -1,0 +1,26 @@
+# Interface definition for thorn CarpetEvolutionMask
+
+IMPLEMENTS: CarpetEvolutionMask
+
+
+
+CCTK_INT FUNCTION MoLQueryEvolvedRHS (CCTK_INT IN EvolvedIndex)
+REQUIRES FUNCTION MoLQueryEvolvedRHS
+
+
+
+USES INCLUDE HEADER: dist.hh
+USES INCLUDE HEADER: vect.hh
+
+USES INCLUDE HEADER: carpet.hh
+
+
+
+PUBLIC:
+
+CCTK_REAL evolution_mask TYPE=gf TAGS='prolongation="none" InterpNumTimelevels=1' "mask function"
+
+# value key:
+# 0 - grid point is not in buffer region
+# 1 - grid point is in buffer region
+CCTK_INT buffer_mask TYPE=gf TAGS='prolongation="none" InterpNumTimelevels=1' "buffer mask function"

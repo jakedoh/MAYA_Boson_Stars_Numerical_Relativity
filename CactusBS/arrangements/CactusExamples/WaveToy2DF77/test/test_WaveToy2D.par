@@ -1,0 +1,32 @@
+
+!DESC "2D Scalar Wave Equation"
+
+ActiveThorns = "boundary coordbase symbase ioutil iobasic ioascii pugh pughreduce pughslab time wavetoy2df77 localreduce"
+
+driver::global_nx         = 101
+driver::global_ny         = 101
+
+cactus::cctk_itlast        = 10
+
+wavetoy2d::sigma          = 0.05
+wavetoy2d::bound          = "zero"
+
+time::dtfac               = 0.7
+
+io::out_dir                = "test_WaveToy2D"
+io::out_fileinfo          = "none"
+ 
+ioascii::out1D_every      = 5
+ioascii::out1D_xline_y    = 0.5
+ioascii::out1D_yline_x    = 0.5
+ioascii::out1D_vars       = "wavetoy2df77::phi"
+
+IOBasic::outScalar_reductions = "norm1 norm2 minimum maximum norm_inf"
+iobasic::outinfo_every    = 2
+iobasic::outinfo_vars     = "wavetoy2df77::phi"
+
+iobasic::outScalar_every  = 1
+iobasic::outScalar_vars   = "wavetoy2df77::phi"
+
+# do not use the new scheme for names of output files
+IO::new_filename_scheme = "no"

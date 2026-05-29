@@ -1,0 +1,111 @@
+# Parameter definitions for thorn Fluid_Wind
+
+
+shares:ADMBase
+
+
+EXTENDS KEYWORD initial_data
+{
+  "fluid_wind" :: "my TOV star metric"
+}
+USES KEYWORD metric_type
+
+
+EXTENDS KEYWORD initial_lapse
+{
+  "fluid_wind" :: "fluid wind initial lapse; isotropic"
+}
+
+EXTENDS KEYWORD initial_shift
+{
+  "fluid_wind" :: "fluid wind  initial shift"
+}
+
+private:
+REAL mygamma "The adiabatic index"
+{
+ 0:* :: "Positive"
+} 1.333333
+
+
+REAL rho_ini_cons "Initial constant density"
+{
+  *:* :: "No restriction"
+} 1.d-6
+
+REAL v_inf_x "x velocity component at infinity"
+{
+  *:* :: "No restriction"
+} -0.3
+
+REAL v_inf_y "y velocity component at infinity"
+{
+  *:* :: "No restriction"
+} 0.0
+
+REAL v_inf_z "z velocity component at infinity"
+{
+  *:* :: "No restriction"
+} 0.0
+
+
+KEYWORD parallel "Direction of the Wind"
+{
+"yes" :: " parallel to the spin direction"
+"no"  :: "not parallel respect to the spin direction"
+} "no"
+
+REAL C_s "Speed of sound NOT NECESSARY FOR NOW"
+{
+  *:* :: "No restriction"
+} 0.1
+
+REAL Mach_number "mach number of the wind domain maximun NOT NECESSARY FOR NOW"
+{
+  *:* :: "No restriction"
+} 5.0
+
+
+REAL A_b "Magnetig Field Strength"
+{
+ *:* :: "No Restriction"
+} 0.00001
+
+REAL my_a "black hole spin NOT NECESSARY"
+{
+  *:* :: "No restricition"
+} 0.0
+
+Real B_0 "amplitude of the magnetic field"
+{
+ *:* :: "No restriction"
+} 0.0
+
+Real my_M "mass of the black Hole NOT NECESSARY"
+{
+ *:* :: "No restriction"
+} 1.0
+
+#==========================================
+                          
+shares:HydroBase
+
+EXTENDS KEYWORD initial_hydro "fluid_Wind"
+{
+  "fluid_wind" :: "michel solution star initial hydrobase variables"
+} 
+
+EXTENDS KEYWORD initial_Bvec "Initial magnetic field configuration"
+{
+  "penner" :: "magnetic configuration penner MNRAS 414,1467-1482"
+  "poloidal_field" :: "Poloidal magnetic configuration"
+  "constant_field" :: "Constant field aligned with spin direction"
+}
+
+
+
+
+
+
+
+

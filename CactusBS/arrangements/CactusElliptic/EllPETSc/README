@@ -1,0 +1,11 @@
+Cactus Code Thorn EllPETSc
+Author(s)    : Cactus team
+Maintainer(s): Cactus team
+Licence      : LGPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+This thorn shows how PETSc can be used with the EllBase Elliptic 
+solver interface. 
+

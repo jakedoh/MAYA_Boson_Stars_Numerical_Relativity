@@ -1,0 +1,674 @@
+
+# rl    dx              Resolution     
+# 0     2.56		M/0.390625		409.6
+# 1     1.28		M/0.78125		204.8
+# 2     0.64		M/1.5625		102.4
+# 3     0.32		M/3.125		25.6
+# 4     0.16		M/6.25		12.8
+# 5     0.08		M/12.5		3.2
+# 6     0.04		M/25		1.6
+# 7     0.02		M/50		0.8
+# 8     0.01		M/100		0.4
+# 9     0.005		M/200		0.2
+# 10    0.0025         M/400              0.1
+# dt = 0.00125
+
+ActiveThorns = "
+Kranc2BSSNChiMatter_flrw
+TwopuncturesMatterzyp_flrw
+GenericFD 
+CoordBase 
+SymBase 
+Boundary 
+NanChecker 
+CartGrid3d 
+Time 
+MoL 
+CarpetIOBasic 
+CarpetIOScalar 
+IOUtil 
+Carpet 
+CarpetLib 
+Vectors 
+CarpetReduce 
+CarpetInterp 
+CarpetSlab  
+CarpetIOASCII 
+ADMBase  
+StaticConformal  
+SphericalSurface  
+AEILocalInterp 
+SpaceMask  
+Slab 
+CarpetIOHDF5  
+CarpetRegrid2 
+CarpetTracker 
+WeylScal4 
+#TimerReport 
+#RunStats 
+Dissipation 
+InitBase 
+ReflectionSymmetry 
+#IHSpin 
+SphereIntegrate 
+#AHFinderDirect 
+GSL 
+LoopControl 
+Formaline 
+Multipole 
+#Ylm_Decomp
+SystemTopology
+TmunuBase
+ADMMacros
+ADMCoupling
+EvolveScalarFields_flrw
+IDScalarFieldzyp_flrw
+#MinTracker
+#scalarAnalysis
+#Matter_EJP
+AHMask
+#QuasiLocalMeasures
+hwloc
+ExternalEtaBeta
+"
+
+#############################################################
+# Grid
+#############################################################
+
+CartGrid3D::type                        = "coordbase"
+CartGrid3D::domain                      = "full"
+CartGrid3D::avoid_origin                = "no"
+
+CoordBase::domainsize                   = minmax
+
+CoordBase::xmin                         = -30
+CoordBase::ymin                         = -30
+CoordBase::zmin                         = -30
+CoordBase::xmax                         = 30
+CoordBase::ymax                         = 30
+CoordBase::zmax                         = 30
+
+#CoordBase::dx                           = 9.92 #1/25
+#CoordBase::dy                           = 9.92
+#CoordBase::dz                           = 9.92 
+
+CoordBase::dx                           = 0.5
+CoordBase::dy                           = 0.5
+CoordBase::dz                           = 0.5
+
+#CoordBase::dx                           = 1.5872 #1/32
+#CoordBase::dy                           = 1.5872
+#CoordBase::dz                           = 1.5872
+
+CoordBase::boundary_size_x_lower        = 4
+CoordBase::boundary_size_y_lower        = 4
+CoordBase::boundary_size_z_lower        = 4
+
+CoordBase::boundary_shiftout_x_lower    = 0
+CoordBase::boundary_shiftout_y_lower    = 0
+CoordBase::boundary_shiftout_z_lower    = 0
+
+CoordBase::boundary_size_x_upper        = 4
+CoordBase::boundary_size_y_upper        = 4
+CoordBase::boundary_size_z_upper        = 4
+
+CoordBase::boundary_shiftout_x_upper    = 0
+CoordBase::boundary_shiftout_y_upper    = 0
+CoordBase::boundary_shiftout_z_upper    = 0
+
+
+#############################################################
+# Symmetries
+#############################################################
+
+ReflectionSymmetry::reflection_x        = "no"
+ReflectionSymmetry::reflection_y        = "no"
+ReflectionSymmetry::reflection_z        = "no"
+ReflectionSymmetry::avoid_origin_x      = "no"
+ReflectionSymmetry::avoid_origin_y      = "no"
+ReflectionSymmetry::avoid_origin_z      = "no"
+PeriodicCarpet::periodic   = "yes"
+#RotatingSymmetry180::poison_boundaries  = "yes"
+ActiveThorns="PeriodicCarpet"
+#############################################################
+# Run statistics
+#############################################################
+
+#RunStats::calc_every         = 4096
+#RunStats::output_mem_every   = 4096
+#TimerReport::out_every       = 4096
+#TimerReport::out_filename    = "#TimerReport"
+
+#############################################################
+# CarpetRegrid
+#############################################################
+
+
+#############################################################
+# CarpetRegrid2/CarpetTracker
+#############################################################
+
+CarpetRegrid2::num_centres     = 1
+CarpetRegrid2::regrid_every          = 0
+
+CarpetInterp::tree_search = "yes"
+CarpetInterp::check_tree_search = "no"
+
+CarpetRegrid2::freeze_unaligned_levels = "no" 
+CarpetRegrid2::freeze_unaligned_parent_levels = "no" 
+
+Carpet::grid_coordinates_filename = "grid.asc" 
+CarpetRegrid2::min_distance = 0
+CarpetRegrid2::min_fraction = 0.4
+CarpetRegrid2::verbose               = "yes"
+CarpetRegrid2::symmetry_rotating180   = "no"
+
+CarpetRegrid2::num_levels_1  =  1
+CarpetTracker::surface     [0] = 0
+CarpetRegrid2::position_x_1  =  1
+CarpetRegrid2::position_y_1  =  0
+CarpetRegrid2::position_z_1  =  0
+#CarpetRegrid2::radius_1[1]  =  158.72
+CarpetRegrid2::radius_1[1]  =  20.0
+#CarpetRegrid2::radius_1[3]  =  9.92
+#CarpetRegrid2::radius_1[4]  =  4.96
+#CarpetRegrid2::radius_1[5]  =  2.48
+#CarpetRegrid2::radius_1[6]  =  1.24
+#CarpetRegrid2::radius_1[7]  =  0.62
+
+
+#############################################################
+# Carpet
+#############################################################
+
+Carpet::ghost_size                      = 4
+Carpet::domain_from_coordbase           = "yes"
+Carpet::max_refinement_levels           = 8
+Carpet::refinement_factor               = 2
+Carpet::prolongation_order_space        = 5
+Carpet::prolongation_order_time         = 2
+Carpet::use_buffer_zones                = "yes"
+Carpet::verbose                         = "no"
+Carpet::time_refinement_factors         = "[1,1,1,2,4,8,16,32]"
+Carpet::output_timers_every             = 0
+Carpet::poison_new_timelevels           = "yes"
+Carpet::check_for_poison                = "no"
+Carpet::poison_value                    = 113
+Carpet::print_timestats_every           = 0
+Carpet::init_fill_timelevels            = "yes"
+Carpet::use_tapered_grids               = "no"
+#Carpet::enable_all_storage		= "yes"
+
+#############################################################
+# CarpetLib
+#############################################################
+
+CarpetLib::poison_new_memory            = "yes"
+CarpetLib::poison_value                 = 114
+
+#############################################################
+# Time integration
+#############################################################
+
+Cactus::terminate                     = "time"
+Cactus::max_runtime                   = 80000
+Cactus::cctk_final_time               = 50
+Cactus::cctk_itlast                   = 100000000
+Cactus::cctk_timer_output             = "full"
+Cactus::highlight_warning_messages    = "no"
+
+Time::timestep_method                 = "given"
+Time::timestep                          = 0.25
+#Time::dtfac                           = 0.2
+
+MethodOfLines::ode_method             = "RK4"
+MethodOfLines::MoL_NaN_Check          = "no"
+MethodOfLines::MoL_Intermediate_Steps = 4
+MethodOfLines::MoL_Num_Scratch_Levels = 1
+
+#############################################################
+# Initial data
+#############################################################
+
+ADMBase::initial_data = "TwopuncturesMatterzyp"
+ADMBase::initial_lapse = "utb"
+ADMBase::initial_shift = "zero"
+
+ADMBase::metric_timelevels = 3
+ADMBase::lapse_timelevels = 3
+ADMBase::shift_timelevels = 3
+
+ADMBase::evolution_method = "kranc2bssnchimatter"
+ADMBase::lapse_evolution_method = "kranc2bssnchimatter"
+ADMBase::shift_evolution_method = "kranc2bssnchimatter"
+ADMBase::dtlapse_evolution_method = "kranc2bssnchimatter"
+ADMBase::dtshift_evolution_method = "kranc2bssnchimatter"
+
+# Uncomment these for fast but very inaccurate initial data
+TwopuncturesMatterzyp::npoints_A = 32
+TwopuncturesMatterzyp::npoints_B = 32
+TwopuncturesMatterzyp::npoints_phi = 16
+
+TwopuncturesMatterzyp::par_b          =  2
+TwopuncturesMatterzyp::move_origin_x  =  2
+TwopuncturesMatterzyp::par_m_plus     =  0.0
+TwopuncturesMatterzyp::par_m_minus    =  0.0
+
+# P_-^i
+TwopuncturesMatterzyp::par_P_minus[0]    = 0.0
+TwopuncturesMatterzyp::par_P_minus[1]    = 0.0
+TwopuncturesMatterzyp::par_P_minus[2]    = 0
+
+# P_+^i
+TwopuncturesMatterzyp::par_P_plus[0]     = -0.0
+TwopuncturesMatterzyp::par_P_plus[1]     = 0.0
+TwopuncturesMatterzyp::par_P_plus[2]     = 0
+
+# S_-^i
+TwopuncturesMatterzyp::par_s_minus[0]    = 0
+TwopuncturesMatterzyp::par_s_minus[1]    = 0
+TwopuncturesMatterzyp::par_s_minus[2]    = 0
+
+# S_+^i
+TwopuncturesMatterzyp::par_s_plus[0]     = 0
+TwopuncturesMatterzyp::par_s_plus[1]     = 0
+TwopuncturesMatterzyp::par_s_plus[2]     = 0
+
+#TwopuncturesMatterzyp::grid_setup_method = "evaluation"
+TwopuncturesMatterzyp::epsilon = 0
+TwopuncturesMatterzyp::verbose        = "yes"
+TwopuncturesMatterzyp::keep_u_around  = "yes"
+#TwopuncturesMatterzyp::epsilon = 1.0e-10
+TwopuncturesMatterzyp::scalar_field = "no"
+
+twopuncturesmatterzyp::a0     = 1
+twopuncturesmatterzyp::H0 = 1
+
+twopuncturesmatterzyp::cv_amp[0]     = 1
+twopuncturesmatterzyp::cv_sigma[0]     = 1
+twopuncturesmatterzyp::add_cvK     = "no"
+
+
+#############################################################
+# Initial data of matter ( scalar field  )
+# Gaussian
+#############################################################
+
+IDScalarFieldzyp::field_type     = "Bubbles"
+IDScalarFieldzyp::scalar_profile = "constant"
+IDScalarFieldzyp::potential_type      = "phiFourth"#" inflation" 
+EvolveScalarFields::potential_type    = "phiFourth" # "inflation" # 
+TwoPuncturesmatterzyp::potential_type       = "Fourth"
+
+IDScalarFieldzyp::vanishinitialphi = "yes"
+IDScalarFieldzyp::vanishinitialpi = "yes"
+IDScalarFieldzyp::num_clouds = 1
+#IDScalarFieldzyp::controlmasspositiveornegative   = 1
+EvolveScalarFields::controlmasspositiveornegative = 1
+
+EvolveScalarFields::phia_bound = "none"
+
+IDScalarFieldzyp::phi0a[0] = 2.5
+IDScalarFieldzyp::pi0a[0] = 0.0
+twopuncturesmatterzyp::m0     = 1e-2
+twopuncturesmatterzyp::lamda0     = 1e-4
+twopuncturesmatterzyp::Ksign     = 1.0
+
+IDScalarFieldzyp::lambdaphia = 1e-4
+##match the initial lambda
+EvolveScalarFields::lambdaphia = 1e-4
+EvolveScalarFields::phiamass = 1e-2
+
+
+#############################################################
+#############################################################
+
+
+
+IDScalarFieldzyp::potential = "no"
+ 
+IDScalarFieldzyp::gcouple = 0
+IDScalarFieldzyp::STcouplea = 0
+IDScalarFieldzyp::STcoupleb = 0
+IDScalarFieldzyp::lambdaphib = 0
+IDScalarFieldzyp::lambdaphian =0
+IDScalarFieldzyp::lambdaphibn =0
+
+EvolveScalarFields::gcouple = 0
+#EvolveScalarFields::STcouplea = 0
+#EvolveScalarFields::STcoupleb = 0
+EvolveScalarFields::lambdaphib = 0
+EvolveScalarFields::lambdaphian =0
+EvolveScalarFields::lambdaphibn =0
+
+IDScalarFieldzyp::phiav = 0.0
+IDScalarFieldzyp::phibv = 0
+EvolveScalarFields::phiav = 0.00
+EvolveScalarFields::phibv = 0
+
+TwopuncturesMatterzyp::STcouplea     = 0
+TwopuncturesMatterzyp::STcoupleb     = 0
+
+
+
+EvolveScalarFields::phibmass = 0
+IDScalarFieldzyp::phibmass = 0
+
+
+#EvolveScalarFields::STplankmass = 0.199471140200716338970
+IDScalarFieldzyp::STplankmass     = 0.199471140200716338970
+TwopuncturesMatterzyp::STplankmass     = 0.199471140200716338970
+#############################################################
+# Storage
+#############################################################
+
+TwopuncturesMatterzyp::scalarPhia = "EvolveScalarFields::phia"
+TwopuncturesMatterzyp::scalarPia = "EvolveScalarFields::pia"
+TwopuncturesMatterzyp::scalarPhib = "EvolveScalarFields::phib"
+TwopuncturesMatterzyp::scalarPib = "EvolveScalarFields::pib"
+
+SpaceMask::use_mask       = "yes"
+
+##############################################################
+# Matter Evolution system and Initial data of matter ( scalar field  )
+##############################################################
+
+Kranc2BSSNChiMatter::couple_matter = "yes"
+TmunuBase::timelevels           = 3
+TmunuBase::stress_energy_storage    = "yes"
+TmunuBase::stress_energy_at_RHS     = "yes" #order_time
+
+# ScalarTensor
+
+EvolveScalarFields::phiaBG               = 0
+EvolveScalarFields::fd_order            = "6th" # "full4th" # 
+EvolveScalarFields::boundary_condition  = "none" # "none" #
+#EvolveScalarFields::calculate_rho       = "yes"
+
+EvolveScalarFields::phia_group_bound   = "skip"
+EvolveScalarFields::pia_group_bound    = "skip"
+EvolveScalarFields::phib_group_bound   = "skip"
+EvolveScalarFields::pib_group_bound    = "skip"
+
+#############################################################
+# NaNChecker
+#############################################################
+
+NaNChecker::check_every         = 1
+NaNChecker::check_vars          = "kranc2bssnchimatter::chi EvolveScalarFields::pia EvolveScalarFields::phia EvolveScalarFields::pib EvolveScalarFields::phib"
+NaNChecker::action_if_found    = "terminate"
+NaNChecker::check_after         = 2
+
+#############################################################
+# Evolution system
+#############################################################
+
+kranc2bssnchimatter::m                        = 1
+kranc2bssnchimatter::lapseAdvection           = 1
+kranc2bssnchimatter::gammaDriverLambda        = 0
+kranc2bssnchimatter::betaDotAlphaFactor       = 0.75
+kranc2bssnchimatter::etaBeta                  = 2.0
+kranc2bssnchimatter::chiBeta                  = 1
+kranc2bssnchimatter::gammaDriverLapsePower    = 0
+kranc2bssnchimatter::nasaAdvection            = 1
+kranc2bssnchimatter::newNASAAdvection         = 1
+kranc2bssnchimatter::betatAdvection           = 1
+kranc2bssnchimatter::chiEps                   = 0.000001
+kranc2bssnchimatter::verbose                  = 0
+kranc2bssnchimatter::fd_order                 = "6th"
+kranc2bssnchimatter::lapse_condition          = "1 + log full6thFLRW"
+kranc2bssnchimatter::shift_condition          = "NASA6th"
+kranc2bssnchimatter::boundary_condition       = "radiative"
+kranc2bssnchimatter::recalculate_constraints  = "matter"
+kranc2bssnchimatter::flrwcf  = 1.0
+#############################################################
+# #ExternalEtaBeta
+#############################################################
+
+#ExternalEtaBeta::n                      = 1
+#ExternalEtaBeta::w1                     = 12
+#ExternalEtaBeta::w2                     = 12
+#ExternalEtaBeta::Mplus                  = 0.75
+#ExternalEtaBeta::Mminus                 = 0.25
+#ExternalEtaBeta::surfindex1             = 0
+#ExternalEtaBeta::surfindex2             = 1
+#ExternalEtaBeta::etaBeta_form           = "polynomial"
+#ExternalEtaBeta::rescale_etaBeta        = "tanh"
+#ExternalEtaBeta::Rcutoff                = 150
+#ExternalEtaBeta::sigma			= 15
+
+# These specify that no built-in CactusBase/Boundary boundary
+# condition is to be applied. These parameters must be present or the
+# Cactus symmetry boundary condition will not be applied. 
+kranc2bssnchimatter::A_group_bound      = "none"
+kranc2bssnchimatter::alpha_group_bound  = "none"
+kranc2bssnchimatter::beta_group_bound   = "none"
+kranc2bssnchimatter::betat_group_bound  = "none"
+kranc2bssnchimatter::Gam_group_bound    = "none"
+kranc2bssnchimatter::h_group_bound      = "none"
+kranc2bssnchimatter::K_group_bound      = "none"
+kranc2bssnchimatter::chi_group_bound    = "none"
+
+#############################################################
+# Dissipation
+#############################################################
+
+Dissipation::order                 = 7
+Dissipation::epsdis                = 0.0
+Dissipation::epsdis_for_level[0]         = 0.5
+Dissipation::epsdis_for_level[1]         = 0.5
+Dissipation::epsdis_for_level[2]         = 0.5
+Dissipation::epsdis_for_level[3]         = 0.5
+Dissipation::epsdis_for_level[4]         = 0.1
+Dissipation::epsdis_for_level[5]         = 0.1
+Dissipation::epsdis_for_level[6]         = 0.1
+Dissipation::epsdis_for_level[7]         = 0.1
+Dissipation::epsdis_for_level[8]         = 0.1
+Dissipation::epsdis_for_level[9]         = 0.1
+Dissipation::epsdis_for_level[10]         = 0.1
+Dissipation::vars                  = "   kranc2bssnchimatter::A_group
+                                         kranc2bssnchimatter::alpha_group
+                                         kranc2bssnchimatter::beta_group
+                                         kranc2bssnchimatter::betat_group
+                                         kranc2bssnchimatter::Gam_group
+                                         kranc2bssnchimatter::h_group
+                                         kranc2bssnchimatter::K_group
+                                         kranc2bssnchimatter::chi_group
+			              EvolveScalarFields::phia_group 
+				     EvolveScalarFields::pia_group 
+				     EvolveScalarFields::phib_group 
+				     EvolveScalarFields::pib_group"
+
+#############################################################
+# Wave extraction
+#############################################################
+
+Multipole::nradii          = 1
+Multipole::radius[0]       = 20
+Multipole::out_every       = 64
+Multipole::variables    = "
+					WeylScal4::Psi4r{sw=-2 cmplx='WeylScal4::Psi4i' name='psi4'}
+					EvolveScalarFields::phia{sw=0 name='phia'}
+"
+Multipole::verbose         = "no"
+Multipole::l_max           = 8
+Multipole::interpolator_name = "Lagrange polynomial interpolation"
+Multipole::interpolator_pars = "order=4"
+Multipole::ntheta            = 100
+Multipole::nphi              = 200
+
+Multipole::output_hdf5  = no
+Multipole::output_ascii = yes
+
+#WeylScal4::offset                    = 1e-8
+#WeylScal4::fd_order                  = "4th"
+#WeylScal4::verbose                   = 0
+
+#############################################################
+#############################################################
+
+#############################################################
+# scalarAnalysis
+#############################################################
+
+
+#############################################################
+#############################################################
+
+
+#############################################################
+# SphericalSurface
+#############################################################
+
+SphericalSurface::nsurfaces  = 6
+SphericalSurface::maxntheta  = 66
+SphericalSurface::maxnphi    = 124
+
+SphericalSurface::ntheta[0]    = 41
+SphericalSurface::nphi[0]      = 80
+
+SphericalSurface::ntheta[1]    = 41
+SphericalSurface::nphi[1]      = 80
+
+
+SphericalSurface::ntheta[2]    = 41
+SphericalSurface::nphi[2]      = 80
+
+SphericalSurface::ntheta[3]    = 41
+SphericalSurface::nphi[3]      = 80
+
+SphericalSurface::ntheta[4]    = 41
+SphericalSurface::nphi[4]      = 80
+
+SphericalSurface::ntheta[5]    = 41
+SphericalSurface::nphi[5]      = 80
+
+#############################################################
+# AHFinderDirect
+#############################################################
+
+
+#############################################################
+##QuasiLocalMeasures
+#############################################################
+#QuasiLocalMeasures::verbose              = yes
+#QuasiLocalMeasures::interpolator         = "Lagrange polynomial interpolation"
+#QuasiLocalMeasures::interpolator_options = "order=4"
+#QuasiLocalMeasures::spatial_order        = 4
+
+#QuasiLocalMeasures::num_surfaces     = 6
+#QuasiLocalMeasures::surface_index[0] = 0
+#QuasiLocalMeasures::surface_index[1] = 1
+#QuasiLocalMeasures::surface_index[2] = 2
+#QuasiLocalMeasures::surface_index[3] = 3
+#QuasiLocalMeasures::surface_index[4] = 4
+#QuasiLocalMeasures::surface_index[5] = 5
+
+#############################################################
+# Output
+#############################################################
+
+IO::out_dir                          = "/media/miguel/localdata/simulations/2022_inflation/$parfile"
+IO::out_fileinfo                     = "all"
+
+CarpetIOBasic::outInfo_every         = 32
+CarpetIOBasic::outInfo_vars          = "
+					kranc2bssnchimatter::chi
+					kranc2bssnchimatter::alpha  
+					Carpet::physical_time_per_hour
+					EvolveScalarFields::phia
+					EvolveScalarFields::pia
+	"
+CarpetIOBasic::real_max              = 1e6
+CarpetIOBasic::int_width             = 32
+
+CarpetIOScalar::outScalar_every      = 1
+#CarpetIOScalar::outScalar_reductions = " minimum maximum norm2" #
+CarpetIOScalar::outScalar_vars       = "
+#					ADMBase::gxx
+					kranc2bssnchimatter::beta1 
+					kranc2bssnchimatter::scalarconstraints 
+					EvolveScalarFields::phia 
+					EvolveScalarFields::pia 
+					EvolveScalarFields::rhoE
+					kranc2bssnchimatter::alpha 
+					kranc2bssnchimatter::chi   
+					kranc2bssnchimatter::K
+					WeylScal4::Psi4r
+					ADMBase::curv
+                                        ADMBase::metric
+	"
+
+CarpetIOASCII::out1D_every           = 1
+IOASCII::out1D_d                     = yes
+CarpetIOASCII::out1D_x               = "yes"
+CarpetIOASCII::out1D_y               = "no"
+CarpetIOASCII::out1D_z               = "no"
+CarpetIOASCII::out1D_vars            = "
+					kranc2bssnchimatter::scalarconstraints 
+					EvolveScalarFields::phia 
+					EvolveScalarFields::pia 
+					EvolveScalarFields::rhoE
+					TmunuBase::stress_energy_scalar
+					kranc2bssnchimatter::alpha 
+					kranc2bssnchimatter::chi   
+					kranc2bssnchimatter::K
+					ADMBase::curv
+					ADMBase::metric
+					ADMBase::alp
+					WeylScal4::Psi4r
+ "
+
+CarpetIOASCII::out_precision         = 19
+
+###   Output ( HDF5 )
+
+CarpetIOHDF5::out1D_every           = 1024
+CarpetIOHDF5::out1D_d               = no
+CarpetIOHDF5::out1D_vars            = "
+					kranc2bssnchimatter::scalarconstraints 
+					EvolveScalarFields::phia 
+					EvolveScalarFields::pia  
+					EvolveScalarFields::rhoE
+					TmunuBase::stress_energy_scalar
+					kranc2bssnchimatter::alpha 
+					kranc2bssnchimatter::chi   
+					kranc2bssnchimatter::K
+					WeylScal4::Psi4r 
+	"
+CarpetIOHDF5::out1D_y              = "no"
+CarpetIOHDF5::out1D_z              = "no"
+
+CarpetIOHDF5::out2D_every           = 2048
+CarpetIOHDF5::out2D_vars            = "
+					kranc2bssnchimatter::scalarconstraints 
+					EvolveScalarFields::phia 
+					EvolveScalarFields::pia 
+					EvolveScalarFields::rhoE
+					kranc2bssnchimatter::alpha 
+					kranc2bssnchimatter::chi   
+					kranc2bssnchimatter::K
+					WeylScal4::Psi4r
+"
+CarpetIOHDF5::out2D_xz              = "no"
+CarpetIOHDF5::out2D_yz              = "no"
+#############################################################
+# Checkpoint and recovery
+#############################################################
+
+CarpetIOHDF5::checkpoint	= "no" #yes"
+
+IO::checkpoint_ID		= "yes"
+IO::recover			= "autoprobe"
+IO::checkpoint_every		= 240000
+IO::checkpoint_keep		= 2
+IO::checkpoint_dir		= "./CHECKPOINT"
+IO::recover_dir			= "./CHECKPOINT"
+
+#Carpet::regrid_during_recovery	= "no"
+
+CarpetIOHDF5::use_grid_structure_from_checkpoint	= "yes"
+CarpetIOHDF5::open_one_input_file_at_a_time		= "yes"
+CarpetIOHDF5::use_checksums				= "yes"
+

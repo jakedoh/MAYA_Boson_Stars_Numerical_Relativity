@@ -1,0 +1,45 @@
+# file produced by user hinder, 15/11/2006
+# Produced with Mathematica Version 5.2 for Linux (June 20, 2005)
+
+# Mathematica script written by Ian Hinder and Sascha Husa
+
+# $Id$
+
+implements: WeylScal4
+
+inherits:   admbase Grid GenericFD Boundary
+
+
+
+USES INCLUDE: GenericFD.h
+USES INCLUDE: Symmetry.h
+USES INCLUDE: sbp_calc_coeffs.h
+USES INCLUDE: Boundary.h
+USES INCLUDE: carpet.hh
+
+CCTK_INT FUNCTION MoLRegisterEvolved(CCTK_INT IN EvolvedIndex, CCTK_INT IN RHSIndex)
+USES FUNCTION MoLRegisterEvolved
+
+CCTK_INT FUNCTION MoLRegisterConstrained(CCTK_INT IN ConstrainedIndex)
+USES FUNCTION MoLRegisterConstrained
+
+SUBROUTINE Diff_coeff(CCTK_POINTER_TO_CONST IN cctkGH, CCTK_INT IN dir, CCTK_INT IN nsize, CCTK_INT OUT ARRAY imin, CCTK_INT OUT ARRAY imax, CCTK_REAL OUT ARRAY q, CCTK_INT IN table_handle)
+USES FUNCTION Diff_coeff
+
+CCTK_INT FUNCTION Boundary_SelectGroupForBC(CCTK_POINTER_TO_CONST IN GH, CCTK_INT IN faces, CCTK_INT IN boundary_width, CCTK_INT IN table_handle, CCTK_STRING IN group_name, CCTK_STRING IN bc_name)
+USES FUNCTION Boundary_SelectGroupForBC
+
+CCTK_INT FUNCTION Boundary_SelectVarForBC(CCTK_POINTER_TO_CONST IN GH, CCTK_INT IN faces, CCTK_INT IN boundary_width, CCTK_INT IN table_handle, CCTK_STRING IN var_name, CCTK_STRING IN bc_name)
+USES FUNCTION Boundary_SelectVarForBC
+
+public:
+CCTK_REAL Psi4i_group type=GF timelevels=3 tags='tensortypealias="ManualCartesian" tensorweight=1.0000000000000000000 cartesianreflectionparities="---"'
+{
+  Psi4i
+} "Psi4i_group"
+
+public:
+CCTK_REAL Psi4r_group type=GF timelevels=3 tags='tensortypealias="ManualCartesian" tensorweight=1.0000000000000000000 cartesianreflectionparities="+++"'
+{
+  Psi4r
+} "Psi4r_group"

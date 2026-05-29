@@ -1,0 +1,9 @@
+Cactus Code Thorn DemoInterp
+Author(s)    : Thomas Radke
+Maintainer(s): Cactus team
+Licence      : LGPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+This thorn demonstrates the use of the Cactus interpolation API.

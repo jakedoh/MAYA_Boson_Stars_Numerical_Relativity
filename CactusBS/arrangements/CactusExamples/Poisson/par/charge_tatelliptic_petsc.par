@@ -1,0 +1,71 @@
+ActiveThorns = "
+        Boundary
+        Carpet
+        CarpetIOASCII
+        CarpetIOBasic
+        CarpetIOScalar
+        CarpetLib
+        CarpetReduce
+        CartGrid3D
+        CoordBase
+        IOUtil
+        Poisson
+        SymBase
+        TATPETSc
+        TATelliptic
+        Time
+"
+
+Cactus::cctk_full_warnings = yes
+Cactus::cctk_timer_output  = "full"
+
+Cactus::cctk_itlast = 0
+
+Carpet::domain_from_coordbase = yes
+CartGrid3D::type              = "coordbase"
+
+CoordBase::domainsize = "minmax"
+CoordBase::xmin       = -10.0
+CoordBase::ymin       = -10.0
+CoordBase::zmin       = -10.0
+CoordBase::xmax       = +10.0
+CoordBase::ymax       = +10.0
+CoordBase::zmax       = +10.0
+CoordBase::dx         =   0.5
+CoordBase::dy         =   0.5
+CoordBase::dz         =   0.5
+
+Poisson::solver = "TATPETSc"
+
+TATPETSc::verbose = yes
+TATPETSc::options = "
+        -snes_atol 1e-8
+        -snes_stol 1e-8
+        -snes_monitor
+        -ksp_monitor
+"
+
+IO::out_dir             = $parfile
+IO::out_group_separator = "-"
+
+IOBasic::outInfo_every = 1
+IOBasic::outInfo_vars  = "
+        Poisson::phi
+        Poisson::res
+"
+
+IOScalar::one_file_per_group  = yes
+IOScalar::outScalar_every     = 1
+IOScalar::outScalar_vars      = "
+        Poisson::potential
+        Poisson::residual
+"
+
+IOASCII::one_file_per_group  = yes
+IOASCII::compact_format      = yes
+IOASCII::output_ghost_points = no
+IOASCII::out1D_every         = 1
+IOASCII::out1D_vars          = "
+        Poisson::potential
+        Poisson::residual
+"

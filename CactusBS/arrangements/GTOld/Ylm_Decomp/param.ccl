@@ -1,0 +1,296 @@
+# Parameter definitions for thorn Ylm_Decomp
+
+private:
+
+INT start_iteration "First iteration when we should be called" STEERABLE=always
+{
+  *:* :: ""
+} 0
+
+BOOLEAN interpolate_for_rmax "find rmax by interpolation" STEERABLE=always
+{
+} "no"
+
+INT out_offset "offset for output DEPRECATED" STEERABLE=always
+{
+  *:* :: ""
+} 0
+
+REAL start_time "First time when we should be called" STEERABLE=always
+{
+  *:* :: ""
+} -1
+
+INT out_every "At which iterations should we be called" STEERABLE=always
+{
+  1:* :: ""
+} 1
+
+INT out_every_det[100] "At which iterations should we be called - detector specific to get rid of time interpolation trouble - by default gets set to out_every" STEERABLE=always
+{
+  -1:* :: ""
+} -1
+
+INT l_mode "all modes: Up to which l mode to calculate/ spefic mode: which l mode to extract" STEERABLE=always
+{
+  2:* :: "Positive Please, note that l=0,1 are gauge dependent and not implemented"
+} 2
+
+INT m_mode "all modes: Up to which m mode to calculate/ specific mode: which m mode to extract " STEERABLE=always
+{
+  0:* :: "Positive Please"
+} 2
+
+INT lmin "minimum l (allows range in the case of all modes)" STEERABLE=always
+{
+  -1:* :: "Positive Please, note that l=0,1 are gauge dependent and not implemented"
+} -1
+
+INT lmax "maximum l (allows range in the case of all modes)" STEERABLE=always
+{
+  -1:* :: "Positive Please, note that l=0,1 are gauge dependent and not implemented"
+} -1
+
+KEYWORD l_even_odd "l modes which are even,odd or all (default)" STEERABLE=always
+{
+  "all"     :: "all l modes"
+  "even"    :: "only even l modes"
+  "odd"     :: "only odd l modes"
+} "all"
+
+INT mmin "minimum m (allows range in the case of all modes)" STEERABLE=always
+{
+  -2048:* :: "Positive Please, note that l=0,1 are gauge dependent and not implemented"
+} -2048
+
+INT mmax "maximum m (allows range in the case of all modes)" STEERABLE=always
+{
+  -2048:* :: "Positive Please, note that l=0,1 are gauge dependent and not implemented"
+} -2048
+
+KEYWORD m_even_odd "m modes which are even,odd or all (default)" STEERABLE=always
+{
+  "all"     :: "all m modes"
+  "even"    :: "only even m modes"
+  "odd"     :: "only odd m modes"
+} "all"
+
+INT verbose "verbosity of output"
+{
+  0:9 :: "higher number means more verbose output"
+} 1
+
+# The origin around which we extract, usually (0,0,0)
+REAL origin_x "origin in x direction" STEERABLE=always
+{
+  *:* :: ""
+} 0
+
+REAL origin_y "origin in y direction" STEERABLE=always
+{
+  *:* :: ""
+} 0
+
+REAL origin_z "origin in z direction" STEERABLE=always
+{
+  *:* :: ""
+} 0
+
+KEYWORD mode_type "Which type of mode extraction do we have" STEERABLE=always
+{
+  "all modes"     :: "Extract all modes up to (l_mode, m_mode)."
+  "specific mode" :: "Select one specific (l_mode, m_mode) mode"
+} "all modes"
+
+
+
+# How many points in theta, phi direction
+INT maxntheta "how many points in theta direction - this parameter sets how many points you can have at most. Note that the interpolator will be called with this, so making this very large for just one detector can get very expensive!" STEERABLE=always
+{
+  0:* :: "Positive Please - even or odd depends on integration scheme used"
+} 100
+
+INT maxnphi "how many points in phi direction" STEERABLE=always
+{
+  0:* :: "Positive Please - even or odd depends on integration scheme used"
+} 200
+
+
+INT ntheta "same as maxntheta, if both are set, then ntheta wins" STEERABLE=always
+{
+  -1:* :: ""
+} -1
+
+INT nphi "same as maxnphi, if both are set, then nphi wins" STEERABLE=always
+{
+  -1:* :: ""
+} -1
+
+
+# The interpolator
+STRING interpolation_operator "What interpolator should be used to interpolate onto the surface" STEERABLE=always
+{
+  ".+" :: "A valid interpolator name, see Thorn AEILocalInterp"
+} "Hermite polynomial interpolation"
+
+INT interpolation_order "interpolation order for projection onto the sphere" STEERABLE=always
+{
+  1:* :: "Positive Please"
+} 2
+
+INT interpolation_stencil "interpolation stencil, this is needed to work out how far out you can place the detectors. It depends on the interpolator and the interpolation order used." STEERABLE=always
+{
+  1:* :: "Positive Please"
+} 4
+
+# The detector setup
+INT number_of_detectors "How many detectors do you want. NOTE: This also fixes the number of detectors in Cauchy mode!" STEERABLE=always
+{
+  0:1000 :: "Positive Please, less than hard limit FIXME"
+} 9
+# FIXME : this 1000 should become more dynamic, increase if you want more detectors
+REAL detector_radius[100] "Coordinate radius of detectors" STEERABLE=always
+{
+  0:* :: "maximum radius is checked at runtime, detector should be in the grid"
+} 0
+
+INT ntheta_det[100] "ntheta per detector" STEERABLE=always
+{
+  -1:* :: "pos"
+} -1
+
+INT nphi_det[100] "nphi per detector" STEERABLE=always
+{
+  -1:* :: "pos"
+} -1
+
+
+# There are 2 different ways to specify detector locations:
+#   1) Place maximum_number_detectors evenly spaced in a specified range
+#   2) Give specific detector locations using the detector_radius[] array.
+#
+# 
+# Note that in "Cauchy extraction" we only extract the Moncrief Q values, 
+# not it s derivatives. So it is not really a Cauchy extraction.
+KEYWORD detection_mode "Give Specific locations or let the code place the detectors" STEERABLE=always
+{
+  "Cauchy extraction"  :: "a lot of detectors in some specified range"
+  "specific detectors" :: "give some values"
+} "specific detectors"
+
+
+# There are 2 ways to specify the range of detectors:
+#  1) give the actual start/end coordinate locations
+#  2) give start/stop as factor of the grid, ie 0.0-1.0 of the grid
+REAL Cauchy_radius_start_coord "where to start Cauchy line in coordinates"
+{
+  -2:* :: "-2 means deactive (ie use percentage), -1 means start from first grid point"
+} -2
+
+REAL Cauchy_radius_end_coord "where to end Cauchy line in coordinates"
+{
+  -2:* :: "-2 means deactive (ie use percentage), -1 means go up to maximum"
+} -2
+
+REAL Cauchy_radius_start_factor "where to start Cauchy line as factor of grid size"
+{
+  -1:1 :: "-1 means deactive (ie use coordinate), 0 means first grid point"
+} 0
+
+REAL Cauchy_radius_end_factor "where to end Cauchy line as factor of grid size"
+{
+  -1:1 :: "-1 means deactive (ie use coordinate), 1 means go up to maximum"
+} 1
+
+# usually you want the code to figure this out for itself
+REAL Cauchy_radius_dr "seperation of 2 detectors for the extraction"
+{
+  -1:* :: "-1 means: let the code figure it out"
+} -1
+
+INT max_nr_vars "maximum number of variables to Ylm decompose - changes the size of a 3D array, so don't make it too large"
+{
+  0:* :: "pos"
+} 10
+
+
+# IO STUFF
+BOOLEAN write_single_file_per_mode "write a single file per mode containing all the detectors"
+{
+} "no"
+
+BOOLEAN name_detector_by_radius "naming scheme like Ylm..._r30.00.asc"
+{
+} "yes"
+
+
+
+KEYWORD out_style "Which style for Scalar output"
+{
+  "gnuplot" :: "1D output readable by gnuplot"
+  "xgraph"  :: "1D output readable by xgraph"
+} "gnuplot"
+
+STRING out_format "Which format for Scalar floating-point number output" STEERABLE = ALWAYS
+{
+  ^(\.[1]?[0-9])?[EGefg]$ :: "output with given precision in exponential / float ing point notation"
+} ".19g"
+
+BOOLEAN output_2d_surface "write out 2D surface quantities"
+{
+} "no"
+
+BOOLEAN output_2d_spherical_harmonics "write out 2D spherical harmonics at iteration 0"
+{ 
+} "no" 
+
+
+
+# timing statistics
+BOOLEAN write_timer_info "write timing information to stdout" STEERABLE = ALWAYS
+{
+} "no"
+
+STRING gridfunctions "Set of grid functions to Ylm decompose"
+{
+  ".*" :: "List of grid function names, with options indicating the spin weight : var[spnwght=0]"
+} ""
+
+# do the interpolation and integration in parallel in NProcs chunks?
+# currently requires a separate file per detector ie. does not work with
+# write_single_file_per_mode==yes due to IO happening in parallel.
+BOOLEAN distribute_spheres "Distribute work across all processors on a per sphere basis"
+{
+} "no"
+
+#############################################################################
+### import IOUtil parameters
+#############################################################################
+shares: IO
+
+USES STRING out_dir
+USES INT out_every AS io_out_every
+USES BOOLEAN new_filename_scheme
+
+EXTENDS KEYWORD out_fileinfo
+{
+  "axis labels" :: "add axis labels information to output files"
+}
+
+
+
+# SphericalSurface
+SHARES: SphericalSurface
+
+USES INT nsurfaces
+
+USES INT maxntheta AS sf_maxntheta
+USES INT maxnphi AS sf_maxnphi
+
+USES INT ntheta AS sf_thorn_ntheta
+USES INT nphi   AS sf_thorn_nphi
+
+USES BOOLEAN symmetric_x
+USES BOOLEAN symmetric_y
+USES BOOLEAN symmetric_z
+

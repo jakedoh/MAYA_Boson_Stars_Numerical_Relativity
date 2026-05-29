@@ -1,0 +1,13 @@
+Cactus Code Thorn SampleBoundary
+Author(s)    : Carsten Gundlach
+               David Rideout
+Maintainer(s): Cactus team
+Licence      : LGPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+This thorn provides a simple example of how to create and register a
+physical boundary condition.  It implements a linear extrapolation
+boundary condition in three dimensions.  
+

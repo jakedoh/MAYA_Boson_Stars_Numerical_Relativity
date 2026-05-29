@@ -1,0 +1,27 @@
+
+!DESC "2D Wave Equation"
+
+ActiveThorns = "CoordBase localreduce SymBase boundary ioutil iobasic ioascii pugh pughslab pughreduce time wavetoy2df77"
+
+driver::global_nx         = 101
+driver::global_ny         = 101
+
+cactus::cctk_itlast       = 100
+
+wavetoy2d::sigma          = 0.05
+
+time::dtfac               = 0.7
+
+IO::out_dir                = "WaveToy2D"
+
+iobasic::outscalar_every = 10
+iobasic::outscalar_vars  = "wavetoy2df77::phi"
+
+iobasic::outinfo_every   = 10
+iobasic::outinfo_vars    = "wavetoy2df77::phi"
+
+ioascii::out1D_every      = 5
+ioascii::out1D_xline_y    = 0.5
+ioascii::out1D_yline_x    = 0.5
+ioascii::out1D_vars       = "wavetoy2df77::phi"
+

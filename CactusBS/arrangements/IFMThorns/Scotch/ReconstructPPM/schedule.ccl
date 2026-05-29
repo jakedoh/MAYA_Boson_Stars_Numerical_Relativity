@@ -1,0 +1,60 @@
+# Schedule definitions for thorn ReconstructPPM
+# $Header:$
+
+if(CCTK_Equals(recon_method, "ppm")) {
+
+if (mppm_debug_eigenvalues)
+{
+  STORAGE: mppm_eigenvalues
+}
+
+SCHEDULE ReconstructPPM_ParamCheck AT PARAMCHECK
+{
+  LANG: Fortran
+} "Check parameters"
+
+SCHEDULE PPM_Scalar_Setup IN MoL_PreStep
+{
+  LANG: Fortran
+} "Set up scalars for efficiency"
+
+if (test_ppm_unroll) {
+STORAGE: ppm_unroll_diff
+    if ( CCTK_EQUALS(evolution_method,"Scotch_MHD_Bvec") || CCTK_EQUALS(evolution_method,"Scotch_MHD_Avec") ) {
+       STORAGE: ppm_unroll_diff_mhd
+    }
+    if ( clean_divergence ) {
+       STORAGE: ppm_unroll_diff_divclean
+    }
+}
+
+if (CCTK_Equals(whisky_eos_type,"General")) {
+
+    if (!ppm_unroll) {
+        SCHEDULE ReconstructPPM IN FluxTerms AS Reconstruct
+        {
+          LANG: Fortran
+        } "Reconstruct gridfunctions at the cell boundaries"
+    } else {
+        SCHEDULE FastReconstructPPM IN FluxTerms AS Reconstruct
+        {
+          LANG: Fortran
+        } "Reconstruct gridfunctions at the cell boundaries (Unrolled)"
+    }
+
+} else if (CCTK_Equals(whisky_eos_type,"Polytype") ) {
+
+    if (!ppm_unroll) {
+        SCHEDULE PPM_Polytype IN FluxTerms AS Reconstruct
+        {
+          LANG: Fortran
+        } "Reconstruct gridfunctions at the cell boundaries (Polytype)"
+    } else {
+        SCHEDULE FastPPM_Polytype IN FluxTerms AS Reconstruct
+        {
+          LANG: Fortran
+        } "Reconstruct gridfunctions at the cell boundaries (Polytype, Unrolled)"
+    }
+
+}
+}

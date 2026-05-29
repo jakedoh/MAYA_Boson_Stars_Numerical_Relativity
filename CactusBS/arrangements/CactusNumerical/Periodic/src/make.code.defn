@@ -1,0 +1,8 @@
+# Main make.code.defn file for thorn Periodic
+
+# Source files in this directory
+SRCS = periodic.c
+
+# Subdirectories containing source files
+SUBDIRS = 
+

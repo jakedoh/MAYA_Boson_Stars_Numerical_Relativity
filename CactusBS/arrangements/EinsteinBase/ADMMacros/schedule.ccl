@@ -1,0 +1,11 @@
+# Schedule definitions for thorn ADMMacros
+# $Header$
+
+STORAGE: local_spatial_order
+
+schedule ADMMacros_SetLocalSpatialOrder AT BASEGRID
+{
+  LANG: C
+  WRITES: ADMMACROS::local_spatial_order(everywhere)
+} "Initialize the local_spatial_order"
+

@@ -1,0 +1,46 @@
+
+STORAGE: minimum,minimum_v,minimum_r,minimum_est,minimum_last_t_g, min_found_g, vel_found_g
+
+# This is not called on recovery as by then the information is in grid
+# scalars.
+
+schedule MinTracker_SetupOutputFiles at CCTK_BASEGRID
+{
+  OPTIONS: GLOBAL
+  LANG: C
+} "Initialize MinTracker output files"
+
+schedule MinTracker_SetSphericalSurface at CCTK_BASEGRID after SphericalSurface_Setup
+{
+  OPTIONS: GLOBAL
+  LANG: C
+} "Set the SphericalSurface from the grid variables"
+
+schedule MinTracker_Init at CCTK_INITIAL
+{
+  OPTIONS: GLOBAL
+  LANG: C
+} "Set MinTracker grid scalars from parameters"
+
+# schedule MinTracker_FindProcessorMinimum at CCTK_POSTSTEP before SphericalSurface_HasBeenSet
+# {
+#   LANG: C
+# } "Find each minimum on this processor"
+
+# schedule MinTracker_CollectMinima at CCTK_EVOL after MinTracker_FindProcessorMinimum
+# {
+#   LANG: C
+#   OPTIONS: GLOBAL
+# } "Collect minima from all processors"
+
+schedule MinTracker_InterpolateMinimum at CCTK_POSTSTEP before SphericalSurface_HasBeenSet
+{
+  LANG: C
+  OPTIONS: GLOBAL
+} "Find each minimum using interpolator and Newton's method"
+
+schedule MinTracker_Output at CCTK_ANALYSIS 
+{
+  LANG: C
+  OPTIONS: GLOBAL
+} "Output the location of each minimum"

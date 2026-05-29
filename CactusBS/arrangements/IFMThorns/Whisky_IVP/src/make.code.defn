@@ -1,0 +1,14 @@
+# Main make.code.defn file for thorn Whisky_IVP
+# $Header$
+
+# Source files in this directory
+SRCS = 	BAM_Calls.c \
+  IVP_DebugOutput.c \
+	IVP_ParamCheck.F90 \
+	IVP_TestData.F90 \
+	Solve_IVP_Step.F90 \
+	Whisky_IVP.F90
+
+# Subdirectories containing source files
+SUBDIRS = 
+

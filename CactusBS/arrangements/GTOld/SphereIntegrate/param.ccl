@@ -1,0 +1,9 @@
+# Parameter definitions for thorn SphereIntegrate
+# $Header:$
+
+
+CCTK_INT verbose "verbosity"
+{
+  0:10 :: "0 is nothing, 10 a lot"
+} 0
+

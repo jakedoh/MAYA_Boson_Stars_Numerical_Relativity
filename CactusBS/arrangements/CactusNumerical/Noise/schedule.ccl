@@ -1,0 +1,21 @@
+# Schedule definitions for thorn Noise
+# $Header$
+
+if (apply_id_noise) {
+  SCHEDULE id_noise AT CCTK_INITIAL AFTER (ADMBase_InitialData ADMBase_InitialGauge HydroBase_Initial) BEFORE (ADMBase_PostInitial HydroBase_Prim2ConInitial)
+  {
+    LANG: C
+  } "Add noise to initial data"
+}
+
+if (apply_bc_noise) {
+  SCHEDULE bc_noise AT CCTK_POSTSTEP
+  {
+     LANG: C
+  } "Add noise to boundary condition"
+
+  SCHEDULE bc_noise AT CCTK_POSTRESTRICT
+  {
+     LANG: C
+  } "Add noise to boundary condition"
+}

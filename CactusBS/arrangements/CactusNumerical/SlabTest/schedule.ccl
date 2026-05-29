@@ -1,0 +1,10 @@
+# Schedule definitions for thorn SlabTest
+# $Header$
+
+STORAGE: success
+
+SCHEDULE SlabTest_Test AT initial
+{
+  LANG: C
+  STORAGE: gfs a1s a2s a3s igfs
+} "Test Slab transfer routines"

@@ -1,0 +1,120 @@
+# Distorted BH
+#
+# Frank Herrmann 19.Jun.2003
+#
+# runs with 128_0.2 essentially forever
+# used in the BH Spectroscopy paper by seidel, allen, carmada
+# could be used with cartoon
+
+ActiveThorns = "wave_extract idaxibrillbh spacemask admcoupling admbase staticconformal admmacros coordgauge admanalysis mol bssn_mol admconstraints pughinterp aeilocalinterp localinterp boundary time pugh pughreduce pughslab cartgrid3d ioascii ioutil iobasic ellbase nanchecker "
+#ActiveThorns = "fisheye iohdf5 iohdf5util wave_extract idaxibrillbh spacemask httpd httpdextra socket admcoupling admbase staticconformal admmacros coordgauge admanalysis mol bssn_mol admconstraints pughinterp aeilocalinterp localinterp boundary time pugh pughreduce pughslab cartgrid3d ioascii ioutil iobasic ellbase nanchecker "
+
+#--- httpd
+HTTPD::port = 7035
+
+#--- grid
+driver::global_nx   = 64
+driver::global_ny   = 64
+driver::global_nz   = 32
+driver::ghost_size  = 2
+grid::type          = "byspacing"
+grid::domain        = "bitant"
+grid::dxyz          = 0.27
+time::dtfac         = 0.25
+cactus::cctk_itlast = 10000
+
+#--- fisheye
+fisheye::fisheye_active                 = "yes"
+fisheye::fisheye_finitedifference       = "yes"
+fisheye::fisheye_type                   = "transition"
+adm_bssn::fisheye_scale                 = 3.0  #de-resolution for boundary
+fisheye::fisheye_tr_a                   = 3.0  #de-resolution again
+fisheye::fisheye_tr_s                   = 0.8  #width
+fisheye::fisheye_tr_r0                  = 5.0  #center 
+
+#--- axisymmetric brill wave+bh
+admbase::initial_data              = "axibrillbh"
+idaxibrillbh::amp                  = 0.1
+idaxibrillbh::eta0                 = 0.0
+idaxibrillbh::sigma                = 1.0
+idaxibrillbh::etamax               = 6.0
+idaxibrillbh::n                    = 4
+idaxibrillbh::ne                   = 302
+idaxibrillbh::nq                   = 54
+admbase::initial_shift             = "zero"
+admbase::evolution_method          = "adm_bssn"
+admbase::metric_type               = "static conformal"
+staticconformal::conformal_storage = "factor+derivs+2nd derivs"
+
+#--- numerics
+mol::ode_method        = "icn"
+adm_bssn::ICN_itnum    = 3
+adm_bssn::bound        = "newrad"
+adm_bssn::stencil_size = 2
+adm_bssn::advection    = "upwind2"
+boundary::radpower     = 3
+
+#--- gauge
+admbase::initial_lapse          = "one"
+admbase::lapse_evolution_method = "1+log"
+adm_bssn::lapsesource           = "modified"
+adm_bssn::harmonic_f            = 2.0
+
+adm_bssn::LapsePsiPower         = 4
+adm_bssn::AlphaDissip           = 2.0
+
+adm_bssn::force_lapse_positive  = "yes"
+
+admbase::shift_evolution_method = "gamma0"
+
+adm_bssn::ShiftGammaCoeff       = 0.75
+adm_bssn::BetaDriver            = 1.1
+adm_bssn::ShiftAlpPower         = 1
+adm_bssn::ShiftPsiPower         = 2
+
+#--- wave_extract
+wave_extract::interpolation_order = 2
+wave_extract::interpolation_operator = "Lagrange polynomial interpolation"
+wave_extract::start_iteration         = 0
+wave_extract::out_every               = 1
+wave_extract::rsch2_computation       ="average Schwarzschild metric"
+wave_extract::mode_type               = "all modes"
+wave_extract::l_mode                  = 5
+wave_extract::m_mode                  = 0
+wave_extract::maximum_detector_number = 5
+wave_extract::detector_radius[0]      = 1.0
+wave_extract::detector_radius[1]      = 9.0
+wave_extract::detector_radius[2]      = 10.0
+wave_extract::detector_radius[3]      = 10.5
+wave_extract::detector_radius[4]      = 10.9
+
+
+#--- output
+io::out_dir                              = "a0.1w1b0n4_p4d4_gam0_g0.75b1.1a1p2_f513_128b0.27-WE"
+iobasic::outScalar_every                = 6
+iobasic::outScalar_vars                 = "admbase::alp admbase::metric admbase::shift admconstraints::momentum admconstraints::ham admconstraints::normalized_hamiltonian"
+iobasic::outInfo_every                  = 1
+iobasic::outInfo_vars                   = "admbase::alp admconstraints::ham"
+ioascii::out1D_every                    = 10
+ioascii::out1D_vars                     = "admbase::alp admbase::metric admbase::shift admconstraints::momentum admconstraints::ham admconstraints::normalized_hamiltonian"
+iohdf5::out_every                       = 20
+io::out_downsample_x                    = 4
+io::out_downsample_y                    = 4
+io::out_downsample_z                    = 4
+io::out_single_precision                = "yes"
+iohdf5::out_vars = "admbase::metric staticconformal::psi[out_every=1000000] admbase::lapse admbase::shift admconstraints::hamiltonian admconstraints::normalized_hamiltonian admconstraints::momentum"
+
+#--- checkpoint
+iohdf5::checkpoint                      = "no"
+io::recover                             = "no"
+io::checkpoint_every                    = 1000
+io::checkpoint_dir                      = "a0.1w1b0n4_p4d4_gam0_g0.75b1.1a1p2_f513_128b0.27-WE"
+
+#--- nanchecker
+nanchecker::check_every     =10
+nanchecker::check_vars      ="admbase::metric admbase::curv"
+nanchecker::action_if_found ="terminate"
+
+#--- timing
+pugh::timer_output        = "yes"
+cactus::cctk_timer_output = "FULL"

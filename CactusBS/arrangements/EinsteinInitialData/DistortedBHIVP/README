@@ -1,0 +1,8 @@
+Cactus Code Thorn DistortedBHIVP
+Authors    : Ryoji Takahashi 
+CVS info   : $Header$
+--------------------------------------------------------------------------
+
+This thorn does calculates initial data for a black hole distorted
+by a non-axisymmetric even parity perturbation 
+

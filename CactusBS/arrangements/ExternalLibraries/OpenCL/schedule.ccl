@@ -1,0 +1,6 @@
+# Schedule definitions for thorn OpenCL
+schedule OpenCL_PrintInfo AT WRAGH
+{
+  LANG: C
+} "Print OpenCL System Information"
+

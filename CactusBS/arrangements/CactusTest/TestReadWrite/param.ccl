@@ -1,0 +1,21 @@
+# Parameter definitions for thorn TestReadWrite
+
+CCTK_INT rad_param "The param used for rad1, rad2, rad3"
+{
+  0:42 :: ""
+} 1
+
+CCTK_INT radx "The x size"
+{
+  1:42 :: ""
+} 2
+
+CCTK_INT rady "The y size"
+{
+  1:42 :: ""
+} 3
+
+CCTK_INT radz "The z size"
+{
+  1:42 :: ""
+} 4

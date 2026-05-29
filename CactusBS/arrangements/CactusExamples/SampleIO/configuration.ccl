@@ -1,0 +1,5 @@
+# Configuration definition for thorn SampleIO
+# $Header$
+
+# names of the capabilities that this thorn requires
+Requires IOUtil

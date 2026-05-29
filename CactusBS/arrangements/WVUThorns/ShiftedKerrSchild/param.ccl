@@ -1,0 +1,36 @@
+# Parameter definitions for thorn ShiftedKerrSchild
+
+shares: ADMBase
+
+# right now we only support the "physical metric type"
+USES KEYWORD metric_type
+
+EXTENDS KEYWORD initial_data 
+{
+  "ShiftedKerrSchild" :: "Initial data from ShiftedKerrSchild solution"
+}
+EXTENDS KEYWORD initial_lapse
+{
+  "ShiftedKerrSchild" :: "Initial lapse from ShiftedKerrSchild solution"
+}
+EXTENDS KEYWORD initial_shift
+{
+  "ShiftedKerrSchild" :: "Initial shift from ShiftedKerrSchild solution"
+}
+
+restricted:
+
+REAL KerrSchild_radial_shift "Radial shift for Kerr Schild initial data. Actual shift = KerrSchild_radial_shift*BH_mass"
+{
+  0.0:* ::  "Positive"
+} 0.0
+
+REAL BH_mass "The mass of the black hole. Let's keep this at 1!"
+{
+  0.0:* ::  "Positive"
+} 1.0
+
+REAL BH_spin "The z-axis *dimensionless* spin of the black hole"
+{
+  -1.0:1.0 ::  "Anything between -1 and +1"
+} 0.0

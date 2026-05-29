@@ -1,0 +1,160 @@
+# Parameter definitions for thorn Bremsstrahlung
+# $Header:$
+
+CCTK_INT calc_bs_every "Calculate every N iterations" STEERABLE=always
+{
+  0:* :: "If you want integration, this should be no more than coarsest level covering int region"
+} 1
+
+CCTK_INT calc_bs_every_vol[100] "Calculate only every N iterations" STEERABLE=always
+{
+ -1   :: "use calc_bs_every"
+  0:* :: "Must be set to iterations no finer than the coarsest level encountered during integration"
+} -1 
+
+## Physics ##
+
+CCTK_REAL temperature_fac "ratio of electron to proton temps T_e / T_p" STEERABLE=always
+{
+ (0:* :: "Anything positive"  
+} 1
+
+CCTK_REAL eos_gamma "Repeat adiabatic index here.  Necessary for relativistic brehms calc" STEERABLE=always
+{
+  *:*  :: "Must equal adiabatic index"
+} 2
+
+## Units ##
+##	In most cases, using code units to consider the Bremsstrahlung will be problematic.  			##
+##	When using programs, like VisIt, that use float for reading, the shear powers of 10 (e.g., 10^70)  	##
+##	in the unit conversion can be too much to handle.  Therefore we introduce a fudge.			##
+##      All of these are steerable upon recovery only because they affect EmissFact which is computed in Init
+
+CCTK_BOOLEAN do_cgs_units "Choose cgs units, otherwise uses the unitsfudge parameter" STEERABLE=recover
+{
+} "yes"
+
+CCTK_REAL unitsfudge "You might consider a reasonable power of 10 here to avoid issues with large unit conversions (for PPiG, this should be at least 1e40. Ideal 1e70.)" STEERABLE=recover
+{
+  (0:* :: "Anything positive"
+} 1
+
+CCTK_REAL Msys_SolarMasses "System mass in solar masses" STEERABLE=recover
+{
+  (0:* :: "Positive"
+} 1e7
+
+CCTK_INT Z_gas "Atomic number of gas (Default: Hydrogen)" STEERABLE=recover
+{
+  1:* :: "Positive"
+} 1
+
+CCTK_REAL gaunt_factor "Frequency-averaged velocity-averaged Gaunt factorSystem mass in solar masses" STEERABLE=recover
+{
+  (0:* :: "Rybicki and Lightman suggest 1.1 - 1.5."
+} 1.2
+
+CCTK_REAL gas_massunit "Unit mass for converting hydro rho to number density." STEERABLE=recover
+{
+  (0:* :: "Positive"
+} 1.67262e-24
+
+## Integration ##
+# steerable on recovery only because it is used in schedule.ccl
+BOOLEAN intbrems "Trigger integration" STEERABLE=recover
+{
+} "yes"
+
+# steerable on recovery only because it is used in schedule.ccl
+CCTK_INT intvolumes "Number of volumes to integrate over" STEERABLE=recover
+{
+  0:100 :: "Hard-coded to 100"
+} 0
+
+# steerable on recovery only because it shows up in the file headers
+CCTK_REAL int_wi_rad[100] "Radius within which we integrate" STEERABLE=recover
+{
+  *:* :: "Postive if you want to get any volume"
+} -1
+
+CCTK_REAL rho_min "Atmospheric density" STEERABLE=always
+{
+ 0:*   :: "Should equal Whisky's atmosphere"
+} 0
+
+CCTK_KEYWORD centre_from[100] "What controls the centre" STEERABLE=always
+{
+  "parameter"         :: "use parameters centre_x/y/z"
+  "spherical surface" :: "use spherical surfaces"
+} "parameter"
+
+CCTK_REAL centre_x[100] "x center" STEERABLE=always
+{
+ *:* :: "any real number"
+} 0
+
+CCTK_REAL centre_y[100] "x center" STEERABLE=always
+{
+ *:* :: "any real number"
+} 0
+
+CCTK_REAL centre_z[100] "x center" STEERABLE=always
+{
+ *:* :: "any real number"
+} 0
+
+CCTK_INT surface_index[100] "Which spherical surface to use" STEERABLE=always
+{
+ -1   :: "invalid"
+ 0:*  :: "any valid surface index"
+} -1
+
+STRING weight_var[100] "Variable containing the weights for integration" STEERABLE=always
+{
+# "CarpetReduce\:\:weight"  :: "Standard Carpet weights"
+# "AHMask::AHmasked_weight" :: "Mask out AHs (if found)"
+  ".+" 			    :: "Any other valid variable, really"
+} "AHMask::AHmasked_weight"
+
+## Doppler Shift ##
+CCTK_INT num_obs_angles "Number of observers for boosting" STEERABLE=recover
+{
+  1:10      :: "At least one required at the moment, 10 max"
+} 1
+
+CCTK_REAL obs_angles[10] "Observer angle above the xy-plane"
+{
+  *:*	   :: "Angle (radians) rotates observer in yz-plane from -y hat. Avoid the poles at the moment."
+} 0
+
+BOOLEAN doppler "Trigger Doppler Calculation (OBSOLETE)" STEERABLE=always
+{
+} "yes"
+
+STRING grid_symmetries "We need to know which symmetries are active" STEERABLE=recover
+{
+  ".+"     :: "Some combination of x/y/z for reflections and r for rotating180 (e.g. z, zr, xyz, yz, ...). Other characters are ignored."
+} " "
+
+STRING out_format "Which format for Scalar floating-point number output" STEERABLE=always
+{
+  ^(\.[1]?[0-9])?[EGefg]$ :: "output with given precision in exponential / floating point notation"
+} ".19g"
+
+## Debug ##
+BOOLEAN verbose "Debugging" STEERABLE=always
+{
+} "no"
+
+BOOLEAN debug "Override GFs" STEERABLE=always
+{
+} "no"
+
+shares: IO
+
+USES STRING out_dir
+
+SHARES: SphericalSurface
+
+USES INT nsurfaces AS sphericalsurfaces_nsurfaces
+

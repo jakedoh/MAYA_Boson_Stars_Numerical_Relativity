@@ -1,0 +1,18 @@
+# wavetoyf77.par - minimal wavetoy evolution
+# $Id$
+#
+# /*@@
+#   @file      wavetoyf77.par
+#   @date      Sunday 24th July
+#   @author    Gabrielle Allen
+#   @desc
+#   Wavetoy parameter file demonstrating minimal evolution
+#   @enddesc
+# @@*/          
+
+ActiveThorns = "pughslab boundary idscalarwave time wavetoyf77 pugh pughreduce CartGrid3D CoordBase SymBase ioutil ioascii"
+
+time::dtfac = 0.5
+pugh::info = "load"
+IOASCII::out1D_vars = "wavetoy::phi"
+

@@ -1,0 +1,12 @@
+
+private:
+
+CCTK_INT calc_every "at which iterations should the statistics be calculated and output" STEERABLE=always
+{
+ 0:* :: "whatever"
+} 1
+
+CCTK_INT output_mem_every "at which iterations should the memory statistics be output" STEERABLE=always
+{
+ 0:* :: "whatever"
+} 1

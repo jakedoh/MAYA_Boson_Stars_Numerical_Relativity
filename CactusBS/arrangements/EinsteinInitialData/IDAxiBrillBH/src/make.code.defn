@@ -1,0 +1,8 @@
+# Main make.code.defn file for thorn IDAxiBrillBH
+# $Header$
+
+# Source files in this directory
+SRCS = IDAxiBrillBH.F mg59p.F shmgp.F77 ParamCheck.c
+
+# Subdirectories containing source files
+SUBDIRS = 

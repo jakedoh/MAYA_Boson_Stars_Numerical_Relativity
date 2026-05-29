@@ -1,0 +1,12 @@
+Cactus Code Thorn ID_Mag_NS
+Author(s)    : Erik Schnetter <schnetter@cct.lsu.edu>
+Maintainer(s): Erik Schnetter <schnetter@cct.lsu.edu>
+Licence      : GPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+Import LORENE Mag_NS magnetised neutron star initial data.
+
+This thorn is one of three closely related thorns ID_Bin_BH,
+ID_Bin_NS, and ID_Mag_NS which all import LORENE initial data.

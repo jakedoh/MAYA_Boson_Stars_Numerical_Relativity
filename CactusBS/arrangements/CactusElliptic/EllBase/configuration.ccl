@@ -1,0 +1,6 @@
+PROVIDES EllBase
+{
+   SCRIPT
+   LANG
+}
+

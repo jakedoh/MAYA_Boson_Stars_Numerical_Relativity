@@ -1,0 +1,66 @@
+# Parameter definitions for thorn Hydro_InitExcision
+
+shares: grid
+
+USES keyword domain
+
+restricted:
+
+boolean hydro_initexcision "Sets up an excision zone"
+{
+} "no"
+
+boolean hydro_initexcision_poststep "Schedule also at poststep" STEERABLE=always
+{
+} "no"
+
+CCTK_INT hydro_initexcision_old_mask "Also set the old 'emask'?"
+{
+  0:1 :: "0 (default) for no, 1 for yes"
+} 0
+
+keyword hydro_initexcision_type "Type of excision to apply"
+{
+  "box"	     :: "Box excised region"
+  "x-axis"   :: "X axis excision"
+  "y-axis"   :: "Y axis excision"
+  "z-axis"   :: "Z axis excision"
+  "diagonal" :: "diagonal excision"
+  "sphere"   :: "sphere excision"
+} "x-axis"
+
+CCTK_INT hydro_initexcision_flip "Exchange excised and normal region"
+{
+  0:1 :: "0 (default) for no, 1 for yes"
+} 0
+
+CCTK_REAL hydro_initexcision_fraction "Fraction of excised region"
+{
+  0:1      :: "Represents the fraction of excised region (0..1)"
+} 0.25
+
+CCTK_REAL hydro_initexcision_coordinate_length "Length of excised region" STEERABLE=always
+{
+  0:  :: "Length of excised region, has different meanings for the types"
+} 0
+
+CCTK_REAL hydro_initexcision_position_x "x-coordinate"
+{
+  : :: "anything real is ok"
+} 0.0
+
+CCTK_REAL hydro_initexcision_position_y "y-coordinate"
+{
+  : :: "anything real is ok"
+} 0.0
+
+CCTK_REAL hydro_initexcision_position_z "z-coordinate"
+{
+  : :: "anything real is ok"
+} 0.0
+
+CCTK_INT hydro_initexcision_min_points "minimal number of points of excision"
+{
+ 0: :: "minimal number of points of excision, currently only partly implemented"
+} 0
+

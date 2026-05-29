@@ -1,0 +1,71 @@
+
+STORAGE: minimum minimum_new extra_variable_value extra_variable_value_new
+
+# This is not called on recovery as by then the information is in grid
+# scalars.
+
+schedule MinSearch_SetupOutputFiles at CCTK_BASEGRID
+{
+  OPTIONS: GLOBAL
+  LANG: C
+} "Initialize MinSearch output files"
+
+schedule MinSearch_Init at CCTK_BASEGRID after SphericalSurface_Setup before SphericalSurface_HasBeenSet
+{
+  OPTIONS: GLOBAL
+  LANG: C
+} "Set MinSearch grid scalars from parameters"
+
+schedule MinSearch_ParamCheck at CCTK_PARAMCHECK
+{
+  OPTIONS: GLOBAL
+  LANG: C
+} "Check MinSearch parameters"
+
+schedule group MinSearch_FindMinimumGroup at CCTK_POSTSTEP
+{
+} "all minimum finding routines go here"
+
+if(find_localized_minimum)
+{
+  schedule MinSearch_FindLocalizedMinimum in MinSearch_FindMinimumGroup
+  {
+    LANG: C
+  } "Search for minimum within a radius"
+
+  # GLOBAL routines run at the same time as the last LOCAL routine (in POSTSTEP)
+  schedule MinSearch_ReduceLocalizedMinimum in MinSearch_FindMinimumGroup AFTER MinSearch_FindGlobalMinimum BEFORE MinSearch_SetSphericalSurface
+  {
+    LANG: C
+    OPTIONS: GLOBAL
+  } "Reduce the per processor minima"
+}
+else
+{
+  schedule MinSearch_InterpolateMinimum in MinSearch_FindMinimumGroup BEFORE MinSearch_SetSphericalSurface
+  {
+    LANG: C
+    OPTIONS: GLOBAL loop-local
+  } "Search for each minimum"
+}
+
+schedule MinSearch_SetSphericalSurface in MinSearch_FindMinimumGroup
+{
+  OPTIONS: GLOBAL
+  LANG: C
+} "Set the SphericalSurface from the grid variables, store final data in grid variables"
+
+schedule MinSearch_Output at CCTK_POSTSTEP AFTER MinSearch_FindMinimumGroup
+{
+  OPTIONS: GLOBAL
+  LANG: C
+} "Write output to disk"
+
+if(steer_positions)
+{
+  schedule MinSearch_SteerPosition at CCTK_POSTSTEP AFTER MinSearch_FindMinimumGroup
+  {
+    OPTIONS: GLOBAL
+    LANG: C
+  } "Steer position in parameters and grid scalars"
+}

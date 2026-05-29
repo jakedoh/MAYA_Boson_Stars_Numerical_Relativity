@@ -1,0 +1,2 @@
+/*#define HORIZON_GAUGE*/
+#undef HORIZON_GAUGE

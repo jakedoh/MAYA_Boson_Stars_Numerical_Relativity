@@ -1,0 +1,116 @@
+
+#############################################################
+# Parameter file for running a single puncture with matter
+#############################################################
+
+ActiveThorns = "CoordBase SymBase Boundary InitBase CartGrid3d CarpetIOBasic CarpetIOScalar IOUtil Carpet CarpetLib CarpetReduce CarpetInterp CarpetSlab CarpetRegrid CarpetIOASCII LoopControl GSL SphericalSurface AEILocalInterp SpaceMask ReflectionSymmetry AHMask"
+
+#############################################################
+# Grid
+#############################################################
+
+CoordBase::domainsize                   = minmax
+
+CoordBase::boundary_size_x_lower        = 3
+CoordBase::boundary_size_y_lower        = 3
+CoordBase::boundary_size_z_lower        = 3
+CoordBase::boundary_shiftout_x_lower    = 1
+CoordBase::boundary_shiftout_y_lower    = 1
+CoordBase::boundary_shiftout_z_lower    = 1
+
+CoordBase::boundary_size_x_upper        = 3
+CoordBase::boundary_size_y_upper        = 3
+CoordBase::boundary_size_z_upper        = 3
+CoordBase::boundary_shiftout_x_upper    = 0
+CoordBase::boundary_shiftout_y_upper    = 0
+CoordBase::boundary_shiftout_z_upper    = 0
+
+CartGrid3D::type                        = "coordbase"
+CartGrid3D::domain                      = "full"
+CartGrid3D::avoid_origin                = "no"
+
+ReflectionSymmetry::reflection_x   = yes
+ReflectionSymmetry::reflection_y   = yes
+ReflectionSymmetry::reflection_z   = yes
+ReflectionSymmetry::avoid_origin_x = no
+ReflectionSymmetry::avoid_origin_y = no
+ReflectionSymmetry::avoid_origin_z = no
+
+CoordBase::xmin                         = 0
+CoordBase::ymin                         = 0
+CoordBase::zmin                         = 0
+CoordBase::xmax                         = 12
+CoordBase::ymax                         = 12
+CoordBase::zmax                         = 12
+CoordBase::dx                           = 1
+CoordBase::dy                           = 1
+CoordBase::dz                           = 1
+
+#############################################################
+# CarpetRegrid
+#############################################################
+
+CarpetRegrid::regrid_every                = 0
+CarpetRegrid::veryverbose                 = "no"
+CarpetRegrid::verbose                     = "no"
+CarpetRegrid::refinement_levels           = 2
+CarpetRegrid::keep_same_grid_structure    = "no"
+#CarpetRegrid::symmetry_x                  = "yes"
+#CarpetRegrid::symmetry_y                  = "yes"
+#CarpetRegrid::symmetry_z                  = "yes"
+
+#############################################################
+# Mesh refinement
+#############################################################
+
+Carpet::ghost_size                      = 2
+Carpet::domain_from_coordbase           = "yes"
+Carpet::max_refinement_levels           = 2
+Carpet::refinement_factor               = 2
+Carpet::prolongation_order_space        = 3
+Carpet::prolongation_order_time         = 1
+Carpet::poison_new_timelevels           = "yes"
+Carpet::check_for_poison                = "no"
+Carpet::poison_value                    = 113
+Carpet::verbose = "no"
+Carpet::enable_all_storage		= "yes"
+Carpet::init_fill_timelevels            = "yes"
+
+#############################################################
+# CarpetLib
+#############################################################
+
+CarpetLib::print_memstats_every           = 128
+CarpetLib::poison_new_memory            = "yes"
+CarpetLib::poison_value                 = 114
+
+
+#############################################################
+# Time integration
+#############################################################
+
+Cactus::terminate = "iteration"
+Cactus::cctk_itlast = 0
+
+#############################################################
+# Output
+#############################################################
+
+AHMask::verbose = 1
+
+#############################################################
+# Output
+#############################################################
+
+IO::out_dir                   = $parfile
+CarpetIOBasic::outInfo_every  = 1
+CarpetIOBasic::outInfo_vars   = "AHMask::AHmasked_weight CarpetReduce::weight"
+CarpetIOBasic::outInfo_reductions  = "minimum maximum"
+
+CarpetIOASCII::out2D_every          = 1
+CarpetIOASCII::out2D_xy             = "yes"
+CarpetIOASCII::out2D_xz             = "no"
+CarpetIOASCII::out2D_yz             = "no"
+CarpetIOASCII::out2D_xyplane_z      = 1
+CarpetIOASCII::out2D_vars           = "AHMask::AHmasked_weight"
+CarpetIOASCII::one_file_per_group   = "yes"

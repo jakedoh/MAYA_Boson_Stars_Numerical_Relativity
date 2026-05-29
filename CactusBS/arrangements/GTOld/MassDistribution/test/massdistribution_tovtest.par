@@ -1,0 +1,148 @@
+
+ActiveThorns = "TmunuBase Whisky_TOVSolverC ADMCoupling ADMMacros Whisky EOS_Base EOS_Polytrope GenericFD CoordBase SymBase Boundary CartGrid3d Time IOUtil Carpet CarpetLib CarpetReduce CarpetInterp CarpetSlab CarpetRegrid ADMBase  StaticConformal  SpaceMask Slab InitBase ReflectionSymmetry LoopControl GSL HydroBase RiemannSolverMarquina ReconstructPPM RecoverMarti NaNChecker MoL SphericalSurface MassDistribution Constants Formaline"
+
+#############################################################
+# Grid
+#############################################################
+
+CartGrid3D::type                        = "coordbase"
+CartGrid3D::domain                      = "full"
+CartGrid3D::avoid_origin                = "no"
+
+CoordBase::domainsize                   = minmax
+CoordBase::xmin                         = 0
+CoordBase::ymin                         = 0
+CoordBase::zmin                         = -9
+CoordBase::xmax                         = 9
+CoordBase::ymax                         = 9
+CoordBase::zmax                         = 9
+CoordBase::dx                           = 0.5
+CoordBase::dy                           = 0.5
+CoordBase::dz                           = 0.5
+CoordBase::boundary_size_x_lower        = 3
+CoordBase::boundary_size_y_lower        = 3
+CoordBase::boundary_size_z_lower        = 3
+CoordBase::boundary_shiftout_x_lower    = 1
+CoordBase::boundary_shiftout_y_lower    = 1
+CoordBase::boundary_shiftout_z_lower    = 0
+CoordBase::boundary_size_x_upper        = 3
+CoordBase::boundary_size_y_upper        = 3
+CoordBase::boundary_size_z_upper        = 3
+CoordBase::boundary_shiftout_x_upper    = 0
+CoordBase::boundary_shiftout_y_upper    = 0
+CoordBase::boundary_shiftout_z_upper    = 0
+
+#############################################################
+# Symmetries
+#############################################################
+
+ReflectionSymmetry::reflection_x        = "yes"
+ReflectionSymmetry::reflection_y        = "yes"
+ReflectionSymmetry::reflection_z        = "no"
+ReflectionSymmetry::avoid_origin_x      = "no"
+ReflectionSymmetry::avoid_origin_y      = "no"
+ReflectionSymmetry::avoid_origin_z      = "no"
+
+#############################################################
+# CarpetRegrid
+#############################################################
+
+CarpetRegrid::refinement_levels           = 2
+CarpetRegrid::verbose                     = "no"
+
+#############################################################
+# Carpet
+#############################################################
+
+Carpet::ghost_size                      = 3
+Carpet::domain_from_coordbase           = "yes"
+Carpet::max_refinement_levels           = 2
+Carpet::use_buffer_zones                = "yes"
+Carpet::verbose                         = "no"
+Carpet::poison_new_timelevels           = "yes"
+Carpet::check_for_poison                = "no"
+Carpet::poison_value                    = 113
+Carpet::init_fill_timelevels            = "yes"
+Carpet::prolongation_order_space        = 3
+
+#############################################################
+# CarpetLib
+#############################################################
+
+CarpetLib::poison_new_memory            = "yes"
+CarpetLib::poison_value                 = 114
+
+#############################################################
+# Time integration
+#############################################################
+
+Cactus::terminate                     = "iteration"
+Cactus::cctk_itlast                   = 0
+Cactus::highlight_warning_messages    = "no"
+
+#############################################################
+# Initial data
+#############################################################
+
+ADMBase::initial_data = "TOV"
+ADMBase::initial_lapse = "TOV"
+ADMBase::initial_shift = "TOV"
+
+#############################################################
+# Initial data for Matter
+#############################################################
+
+WhiskyTovSolver::TOV_Rho_Central[0] = 1e-3
+WhiskyTovSolver::TOV_Velocity_z[0] = 0.3
+
+#############################################################
+# Matter coupling
+#############################################################
+
+TmunuBase::timelevels               = 1
+TmunuBase::stress_energy_storage    = "no"
+TmunuBase::stress_energy_at_RHS	    = "no"
+TmunuBase::stress_energy_2_storage   = "no"
+
+#############################################################
+# Whisky, Other Parameters 
+#############################################################
+
+HydroBase::timelevels             = 2
+Whisky::whisky_evolve             = "no"
+Whisky::whisky_eos_type           = "Polytype"
+Whisky::whisky_eos_table          = "2D_Polytrope"
+Whisky::whisky_stencil            = 3
+Whisky::bound                     = "none"
+Whisky::rho_abs_min               = 1.e-10
+Whisky::initial_atmosphere_factor = 0.999
+Whisky::Riemann_Solver            = "Marquina"
+Whisky::Recon_Method              = "ppm"
+Whisky::Whisky_MaxNumSandRVars    = 0
+
+SpaceMask::use_mask	  = "yes"
+
+#############################################################
+# Distribution of specific energy
+#############################################################
+MassDistribution::calc_every         = 1
+MassDistribution::rho_min            = 1.e-10
+MassDistribution::number_of_bins     = 10
+MassDistribution::intvolumes         = 2
+MassDistribution::verbose            = 0
+
+MassDistribution::bin_variable[0] = "specific energy"
+MassDistribution::weight_variable[0] = "CarpetReduce::weight"
+
+MassDistribution::bin_variable[1] = "u0"
+MassDistribution::weight_variable[1] = "CarpetReduce::weight"
+MassDistribution::bin_mode[1]     = "manual"
+MassDistribution::bin_variable_minimum[1] = 0.8
+MassDistribution::bin_variable_maximum[1] = 1.0
+
+#############################################################
+# Output
+#############################################################
+
+IO::out_dir                          = $parfile
+IO::out_fileinfo                     = "all"

@@ -1,0 +1,22 @@
+# Parameter definitions for thorn ReconstructENO
+# $Header:$
+
+int eno_order "The order of accuracy of the ENO reconstruction"
+{
+  1:*           :: "Anything above 1, but above 5 is pointless"
+} 2
+
+SHARES: Whisky
+USES int whisky_stencil
+USES keyword whisky_eos_type
+USES keyword recon_vars
+
+USES boolean evolve_tracer
+USES boolean use_min_tracer
+USES real min_tracer
+USES int number_of_tracers
+
+EXTENDS keyword recon_method
+{
+  "eno" :: "ENO reconstruction"
+}

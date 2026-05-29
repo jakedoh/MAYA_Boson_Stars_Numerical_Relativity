@@ -1,0 +1,83 @@
+The files in this directory can be used to modify the Cauchy
+extraction data. In particular, filter the data via an FFT and
+calculate a smooth time derivative. These programs require the HDF5
+and FFTW libraries installed somewhere.
+
+They are compiled using the gamke CONFIGNAME-utils mechanism.
+
+To filter the Cauchy data:
+
+  In general a simulation will be run over multiple jobs, each one
+producing an individual metric_decomp.h5 file. You will need to
+combine these files using hdf5_merge.
+
+For example
+  hdf5_merge Run1/metric_obs_0_Decomp.h5 \
+             Run2/metric_obs_0_Decomp.h5 \
+             metric_obs_0_Decomp.h5
+
+Once the files are merged, you will need to find the last timestep
+using the "findlast" command
+
+./findlast  metric_obs_0_Decomp.h5
+   8086: 4.010913e+02
+
+Here 8086 is the last timestep, which corresponds to a time of 401.0913.
+
+Next it is a good idea to examine the data in one of the higher modes
+you will use. In this case we will examine the n=1, l=4,m=4 mode
+of gxx (the 0 below corresponds to gxx, see the source)
+
+./ascii_output 8086 1 4 4 0 metric_obs_0_Decomp.h5  > test_out
+
+We will use this data to ensure that only high-frequency junk is
+filtered. In this case it was found that the true signal frequency
+is smaller than 0.5 (omega). To be safe, we'll set the maximum
+allowed frequency to 2.
+
+./fftwfilter 8086 2 1 metric_obs_0_Decomp.h5
+
+Here the "2" corresponds to the maximum frequency, while the "1"
+corresponds to the damping length. Note that the maximum frequency is
+in units of 2*pi/(physical time), while the damping length is units of
+integer frequency. Choosing a large damping length can lead to suppression
+of the true signal.
+
+The output file is metric_obs_0_Decomp_ft.h5, which contains the
+filtered metric data and the time derivatives of these data (which the
+original file did not contain). The filtered data can now be used in a
+Characteristic evolution.
+
+In order to use the Cauchy extraction data in a subsequent Characteristic
+evolution, you need to know the timestep in the Cauchy data and
+the region in radius that the data cover. The program "readmeta" will
+give you this region.
+
+./readmeta metric_obs_0_Decomp_ft.h5 
+Run Parameters
+... nn = 7
+... na = 49
+... Rin = 1.800000e+01
+... Rout = 2.200000e+01
+
+Here we see that the data covers the interval 18<r<22. In this case,
+we would choose an extraction radius of 20 and set the following
+parameters in the parfile
+
+ #Extraction radius---------------
+ SphericalHarmonicRecon::r_extract=20.0
+ NullSHRExtract::cr = 20.0
+ NullGrid::null_rwt = 20.0
+
+ SphericalHarmonicRecon::time_derivative_in_file = "yes" 
+ SphericalHarmonicRecon::metric_data_filename = "metric_obs_0_Decomp_ft.h5"
+
+Choosing a timestep for the characteristic evolution that is an integer
+multiple of the Cauchy dump times will remove time interpolation
+errors and can lead to smoother signals. To find these dump time,
+use the "printtime" command. The syntax is "printtime iteration file"
+
+./printtime 1 metric_obs_0_Decomp_ft.h5 
+1: 4.960317e-02
+
+In this case the dump times are separated by 0.04960317.

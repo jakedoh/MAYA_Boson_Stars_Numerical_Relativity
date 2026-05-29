@@ -1,0 +1,243 @@
+# Interface definition for thorn EHFinder
+# $Header$
+
+implements: ehfinder
+inherits: grid admbase coordgauge staticconformal spacemask boundary
+
+USES INCLUDE: Boundary.h carpet.h
+
+CCTK_INT FUNCTION MoLRegisterEvolvedGroup(CCTK_INT IN EvolvedIndex, \
+                                          CCTK_INT IN RHSIndex)
+USES FUNCTION MoLRegisterEvolvedGroup
+
+CCTK_INT FUNCTION Boundary_SelectGroupForBC(CCTK_POINTER_TO_CONST IN GH, \
+                                            CCTK_INT IN faces, \
+                                            CCTK_INT IN boundary_width, \
+                                            CCTK_INT IN table_handle, \
+                                            CCTK_STRING IN var_name, \
+                                            CCTK_STRING IN bc_name)
+
+USES FUNCTION Boundary_SelectGroupForBC
+
+private:
+
+# The scalar level set functions that defines the null surfaces.
+CCTK_REAL f[eh_number_level_sets] TYPE=GF TIMELEVELS=3
+
+# Sources for the level set functions.
+CCTK_REAL sf[eh_number_level_sets] TYPE=GF TIMELEVELS=1 tags='tensortypealias="Scalar" Prolongation="None"'
+
+# X-derivatives of the level set functions.
+CCTK_REAL dfx[eh_number_level_sets] TYPE=GF TIMELEVELS=1 tags='Prolongation="None"'
+
+# Y-derivatives of the level set functions.
+CCTK_REAL dfy[eh_number_level_sets] TYPE=GF TIMELEVELS=1 tags='Prolongation="None"'
+
+# Z-derivatives of the level set functions.
+CCTK_REAL dfz[eh_number_level_sets] TYPE=GF TIMELEVELS=1 tags='Prolongation="None"'
+
+# Squares of the derivatives of the level set functions.
+CCTK_REAL dfsq[eh_number_level_sets] TYPE=GF TIMELEVELS=1 tags='tensortypealias="Scalar" Prolongation="None"'
+
+# Temporary variables used in pde re-initialization.
+CCTK_REAL ftmp[eh_number_level_sets] TYPE=GF TIMELEVELS=1 tags='tensortypealias="Scalar" Prolongation="None"'
+
+# Temporary variables for the right hand side used in pde re-initialization.
+CCTK_REAL sftmp[eh_number_level_sets] TYPE=GF TIMELEVELS=1 tags='tensortypealias="Scalar" Prolongation="None"'
+
+# Temporary placeholder for the level set during re-initialization.
+CCTK_REAL fbak[eh_number_level_sets] TYPE=GF TIMELEVELS=1 tags='tensortypealias="Scalar" Prolongation="None"'
+
+CCTK_REAL g3inv TYPE=GF TIMELEVELS=1 tags='tensortypealias="Scalar" Prolongation="None"'
+{
+  g3xx, g3xy, g3xz, g3yy, g3yz, g3zz
+} "The inverse of the 3-metric"
+
+# Masks to define active cells.
+CCTK_INT eh_mask[eh_number_level_sets] TYPE=GF TIMELEVELS=1 tags='tensortypealias="Scalar" Prolongation="None"'
+
+# Temporary masks to define active cells.
+CCTK_INT tm_mask[eh_number_level_sets] TYPE=GF TIMELEVELS=1 tags='tensortypealias="Scalar" Prolongation="None"'
+
+# Temporary placeholders for the masks during re-initialization.
+CCTK_INT eh_mask_bak[eh_number_level_sets] TYPE=GF TIMELEVELS=1 tags='tensortypealias="Scalar" Prolongation="None"'
+
+# Control variable for while loops in re-initialization.
+CCTK_INT re_init_control TYPE=SCALAR
+ 
+# Counter for iterations in re-initialization.
+CCTK_INT niter_reinit TYPE=SCALAR
+ 
+## Control variable for while loops in re-initialization (used with PUGH).
+#CCTK_INT pugh_re_init_control TYPE=SCALAR
+# 
+## Control variable for while loops in re-initialization (used with Carpet).
+#CCTK_INT carpet_re_init_control TYPE=SCALAR
+
+# Grid function used in counting surfaces.
+CCTK_REAL surface_index TYPE=GF TIMELEVELS=1 tags='tensortypealias="Scalar" Prolongation="None"'
+{
+  sc
+}
+
+# Flag to indicate succesful location of points on a surface.
+CCTK_INT find_surface_status TYPE=SCALAR
+
+CCTK_INT levelset_integers TYPE=SCALAR
+{
+  levelset_counter
+  more_levelsets
+} "Integer variables used to loop over the level sets"
+
+CCTK_INT surface_integers TYPE=SCALAR
+{
+  surface_counter
+  points_counter
+  more_surfaces
+  more_points
+  integrate_counter
+} "Integer variables used in surface integration"
+
+CCTK_REAL surface_reals TYPE=SCALAR
+{
+  sym_factor, theta_sym_factor, phi_sym_factor
+} "Real variables used in surface integration"
+
+CCTK_REAL surface_arrays TYPE=ARRAY DIM=2 TIMELEVELS=1 SIZE=ntheta,nphi GHOSTSIZE=n_array_ghosts,n_array_ghosts DISTRIB=DEFAULT
+{
+  ctheta, cphi, rsurf, sintheta, costheta, sinphi, cosphi,
+  drdtheta, drdphi, da, gtt, gtp, gpp, weights, dltheta, dlphi,
+  thetaweights, phiweights
+} "Grid arrays for points on the surface"
+
+CCTK_REAL surface_tmp_arrays TYPE=ARRAY DIM=2 TIMELEVELS=1 SIZE=ntheta,nphi GHOSTSIZE=n_array_ghosts,n_array_ghosts DISTRIB=DEFAULT
+{
+  drsurf, interp_x, interp_y, interp_z, f_interp,
+  dfdx_interp, dfdy_interp, dfdz_interp
+} "Temporary grid arrays for finding points on the surface"
+
+CCTK_REAL center_arrays TYPE=ARRAY DIM=1 TIMELEVELS=1 SIZE=3 DISTRIB=CONSTANT
+{
+  center
+} "The cartesian location of the center for the spherical coordinate system"
+
+CCTK_INT surface_int_array TYPE=ARRAY DIM=2 TIMELEVELS=1 SIZE=ntheta,nphi GHOSTSIZE=n_array_ghosts,n_array_ghosts DISTRIB=DEFAULT
+{
+  n_since_last_reduction
+} "Temporary integer grid array for finding points on the surface"
+
+CCTK_REAL interp_metric_arrays TYPE=ARRAY DIM=2 TIMELEVELS=1 SIZE=ntheta,nphi GHOSTSIZE=n_array_ghosts,n_array_ghosts DISTRIB=DEFAULT
+{
+  gxxi, gxyi, gxzi, gyyi, gyzi, gzzi, psii
+} "Arrays for holding the interpolated metric and conformal factor"
+
+CCTK_REAL integrate_tmp_array TYPE=ARRAY DIM=2 TIMELEVELS=1 SIZE=ntheta,nphi GHOSTSIZE=n_array_ghosts,n_array_ghosts DISTRIB=DEFAULT
+{
+  int_tmp
+} "Temporary array that is used in the integration of various quantities"
+
+# Storage for the event horizon areas. This is used to trigger output.
+CCTK_REAL eh_area[eh_number_level_sets] TYPE=ARRAY DIM=1 TIMELEVELS=1 SIZE=maximum_surface_number GHOSTSIZE=0 DISTRIB=DEFAULT
+
+# Temporary storage for the event horizon areas.
+CCTK_REAL eh_area2[eh_number_level_sets] TYPE=ARRAY DIM=1 TIMELEVELS=1 SIZE=maximum_surface_number GHOSTSIZE=0 DISTRIB=DEFAULT 
+
+# Storage for the event horizon x-centroids. This is used to trigger output.
+CCTK_REAL eh_centroid_x[eh_number_level_sets] TYPE=ARRAY DIM=1 TIMELEVELS=1 SIZE=maximum_surface_number GHOSTSIZE=0 DISTRIB=DEFAULT
+
+# Storage for the event horizon y-centroids. This is used to trigger output.
+CCTK_REAL eh_centroid_y[eh_number_level_sets] TYPE=ARRAY DIM=1 TIMELEVELS=1 SIZE=maximum_surface_number GHOSTSIZE=0 DISTRIB=DEFAULT
+
+# Storage for the event horizon z-centroids. This is used to trigger output.
+CCTK_REAL eh_centroid_z[eh_number_level_sets] TYPE=ARRAY DIM=1 TIMELEVELS=1 SIZE=maximum_surface_number GHOSTSIZE=0 DISTRIB=DEFAULT
+
+# Temporary storage for the event horizon x-centroids.
+CCTK_REAL eh_centroid2_x[eh_number_level_sets] TYPE=ARRAY DIM=1 TIMELEVELS=1 SIZE=maximum_surface_number GHOSTSIZE=0 DISTRIB=DEFAULT
+
+# Temporary storage for the event horizon y-centroids.
+CCTK_REAL eh_centroid2_y[eh_number_level_sets] TYPE=ARRAY DIM=1 TIMELEVELS=1 SIZE=maximum_surface_number GHOSTSIZE=0 DISTRIB=DEFAULT
+
+# Temporary storage for the event horizon z-centroids.
+CCTK_REAL eh_centroid2_z[eh_number_level_sets] TYPE=ARRAY DIM=1 TIMELEVELS=1 SIZE=maximum_surface_number GHOSTSIZE=0 DISTRIB=DEFAULT
+
+# Storage for the event horizon equatorial circumferences.
+# This is used to trigger output.
+CCTK_REAL eh_circ_eq[eh_number_level_sets] TYPE=ARRAY DIM=1 TIMELEVELS=1 SIZE=maximum_surface_number GHOSTSIZE=0 DISTRIB=DEFAULT
+
+# Storage for the event horizon polar circumferences.
+#This is used to trigger output.
+CCTK_REAL eh_circ_pol[eh_number_level_sets] TYPE=ARRAY DIM=1 TIMELEVELS=1 SIZE=maximum_surface_number GHOSTSIZE=0 DISTRIB=DEFAULT
+
+# Temporary storage for the event horizon equatorial circumferences.
+# This is used to trigger output.
+CCTK_REAL eh_circ_eq2[eh_number_level_sets] TYPE=ARRAY DIM=1 TIMELEVELS=1 SIZE=maximum_surface_number GHOSTSIZE=0 DISTRIB=DEFAULT
+
+# Temporary storage for the event horizon polar circumferences.
+# This is used to trigger output.
+CCTK_REAL eh_circ_pol2[eh_number_level_sets] TYPE=ARRAY DIM=1 TIMELEVELS=1 SIZE=maximum_surface_number GHOSTSIZE=0 DISTRIB=DEFAULT
+
+# The X-position of the generators of the event horizons.
+CCTK_REAL xg[eh_number_level_sets] TYPE=ARRAY DIM=1 TIMELEVELS=3 SIZE=number_of_generators GHOSTSIZE=0 DISTRIB=DEFAULT
+
+# The Y-position of the generators of the event horizons.
+CCTK_REAL yg[eh_number_level_sets] TYPE=ARRAY DIM=1 TIMELEVELS=3 SIZE=number_of_generators GHOSTSIZE=0 DISTRIB=DEFAULT
+
+# The Z-position of the generators of the event horizons.
+CCTK_REAL zg[eh_number_level_sets] TYPE=ARRAY DIM=1 TIMELEVELS=3 SIZE=number_of_generators GHOSTSIZE=0 DISTRIB=DEFAULT
+
+# The right hand side of the X-position of the generators.
+CCTK_REAL dxg[eh_number_level_sets] TYPE=ARRAY DIM=1 TIMELEVELS=1 SIZE=number_of_generators GHOSTSIZE=0 DISTRIB=DEFAULT
+
+# The right hand side of the Y-position of the generators.
+CCTK_REAL dyg[eh_number_level_sets] TYPE=ARRAY DIM=1 TIMELEVELS=1 SIZE=number_of_generators GHOSTSIZE=0 DISTRIB=DEFAULT
+
+# The right hand side of the Z-position of the generators.
+CCTK_REAL dzg[eh_number_level_sets] TYPE=ARRAY DIM=1 TIMELEVELS=1 SIZE=number_of_generators GHOSTSIZE=0 DISTRIB=DEFAULT
+
+
+CCTK_REAL generator_arrays TYPE=ARRAY DIM=1 TIMELEVELS=1 SIZE=number_of_generators GHOSTSIZE=0 DISTRIB=DEFAULT
+{
+  alpg, betaxg, betayg, betazg, gxxg, gxyg, gxzg, gyyg, gyzg, gzzg, dfxg, dfyg, dfzg, psig
+} "Arrays to hold the interpolated metric, gauge and level set data"
+
+CCTK_REAL generator_gf TYPE=GF TIMELEVELS=1 tags='Prolongation="None"'
+{
+  xgf, ygf, zgf
+} "Temporary grid function used in calculating the right hand side of the generator evolution equation"
+
+# The following is for a 2-d distribution of generators on the surface.
+
+# The X-position of the generators of the event horizons.
+CCTK_REAL xg2[eh_number_level_sets] TYPE=ARRAY DIM=2 TIMELEVELS=3 SIZE=number_of_generators_theta,number_of_generators_phi GHOSTSIZE=0,0 DISTRIB=DEFAULT
+
+# The Y-position of the generators of the event horizons.
+CCTK_REAL yg2[eh_number_level_sets] TYPE=ARRAY DIM=2 TIMELEVELS=3 SIZE=number_of_generators_theta,number_of_generators_phi GHOSTSIZE=0,0 DISTRIB=DEFAULT
+
+# The Z-position of the generators of the event horizons.
+CCTK_REAL zg2[eh_number_level_sets] TYPE=ARRAY DIM=2 TIMELEVELS=3 SIZE=number_of_generators_theta,number_of_generators_phi GHOSTSIZE=0,0 DISTRIB=DEFAULT
+
+# The right hand side of the X-position of the generators.
+CCTK_REAL dxg2[eh_number_level_sets] TYPE=ARRAY DIM=2 TIMELEVELS=1 SIZE=number_of_generators_theta,number_of_generators_phi GHOSTSIZE=0,0 DISTRIB=DEFAULT
+
+# The right hand side of the Y-position of the generators.
+CCTK_REAL dyg2[eh_number_level_sets] TYPE=ARRAY DIM=2 TIMELEVELS=1 SIZE=number_of_generators_theta,number_of_generators_phi GHOSTSIZE=0,0 DISTRIB=DEFAULT
+
+# The right hand side of the Z-position of the generators.
+CCTK_REAL dzg2[eh_number_level_sets] TYPE=ARRAY DIM=2 TIMELEVELS=1 SIZE=number_of_generators_theta,number_of_generators_phi GHOSTSIZE=0,0 DISTRIB=DEFAULT
+
+
+CCTK_REAL generator_arrays2 TYPE=ARRAY DIM=2 TIMELEVELS=1 SIZE=number_of_generators_theta,number_of_generators_phi GHOSTSIZE=0,0 DISTRIB=DEFAULT
+{
+  alpg2, betaxg2, betayg2, betazg2, gxxg2, gxyg2, gxzg2, gyyg2, gyzg2, gzzg2, dfxg2, dfyg2, dfzg2, psig2
+} "Arrays to hold the interpolated metric, gauge and level set data"
+
+CCTK_REAL generator_gf2 TYPE=GF TIMELEVELS=1 tags='Prolongation="None"'
+{
+  xgf2, ygf2, zgf2
+} "Temporary grid function used in calculating the right hand side of the generator evolution equation"
+
+## Counter for re-initialization iterations.
+#CCTK_INT niter TYPE=SCALAR
+#
+## Counter for re-initialization iterations.
+#CCTK_INT niter2 TYPE=SCALAR

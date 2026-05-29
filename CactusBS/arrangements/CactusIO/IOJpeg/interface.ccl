@@ -1,0 +1,40 @@
+# Interface definition for thorn IOJpeg
+# $Header$
+
+implements: IOJpeg
+inherits:   IO
+
+CCTK_INT FUNCTION \
+  Hyperslab_Get (CCTK_POINTER_TO_CONST IN cctkGH, \
+                 CCTK_INT IN mapping_handle, \
+                 CCTK_INT IN proc, \
+                 CCTK_INT IN vindex, \
+                 CCTK_INT IN timelevel, \
+                 CCTK_INT IN hdatatype, \
+                 CCTK_POINTER IN hdata)
+
+CCTK_INT FUNCTION \
+  Hyperslab_GlobalMappingByIndex (CCTK_POINTER_TO_CONST IN cctkGH, \
+                                  CCTK_INT IN vindex, \
+                                  CCTK_INT IN hdim, \
+                                  CCTK_INT ARRAY IN direction, \
+                                  CCTK_INT ARRAY IN origin, \
+                                  CCTK_INT ARRAY IN extent, \
+                                  CCTK_INT ARRAY IN downsample, \
+                                  CCTK_INT IN table_handle, \
+                                  CCTK_INT CCTK_FPOINTER IN \
+                                   conversion_fn (CCTK_INT IN nelems, \
+                                                  CCTK_INT IN src_stride,\
+                                                  CCTK_INT IN dst_stride,\
+                                                  CCTK_INT IN src_type, \
+                                                  CCTK_INT IN dst_type, \
+                                                  CCTK_POINTER_TO_CONST IN src, \
+                                                  CCTK_POINTER IN dst), \
+                                  CCTK_INT ARRAY OUT hsize)
+
+CCTK_INT FUNCTION Hyperslab_FreeMapping (CCTK_INT IN mapping_handle)
+
+
+REQUIRES FUNCTION Hyperslab_Get
+REQUIRES FUNCTION Hyperslab_GlobalMappingByIndex
+REQUIRES FUNCTION Hyperslab_FreeMapping

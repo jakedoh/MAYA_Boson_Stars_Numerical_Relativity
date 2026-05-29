@@ -1,0 +1,9 @@
+Cactus Code Thorn ADMDerivatives
+Author(s)    : Christian Reisswig <reisswig@aei.mpg.de>
+Maintainer(s): Christian Reisswig <reisswig@aei.mpg.de>
+Licence      : GNU
+--------------------------------------------------------------------------
+
+1. Purpose
+
+This thorn calculates and stores derivatives of the ADMBase variables.

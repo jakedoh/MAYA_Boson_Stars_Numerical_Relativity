@@ -1,0 +1,5 @@
+# Module dependencies for thorn Whisky
+
+TVD_PreLoop.F90.o:	TVD_Scalars.F90.o
+TVD.F90.o:		TVD_Scalars.F90.o
+SlopeLimiter.F90.o:	TVD_Scalars.F90.o

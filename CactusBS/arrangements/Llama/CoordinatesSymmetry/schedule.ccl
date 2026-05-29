@@ -1,0 +1,13 @@
+# Schedule definitions for thorn CoordinatesSymmetry
+
+SCHEDULE CoordinatesSymmetry_Apply AS CoordinatesSymmetry_Apply_FirstPass IN BoundaryConditions BEFORE Interpolate2ApplyBC
+{
+  LANG: C
+} "Apply multipatch symmetries"
+
+# Note: the second pass is actually only necessary for all points in the symmetry zone that are also inter-patch boundary points.
+#       Right now, we re-apply the complete symmetry condition, which could be optimized by only applying the symmetry condition to the points in the interpatch boundary.
+SCHEDULE CoordinatesSymmetry_Apply AS CoordinatesSymmetry_Apply_SecondPass IN BoundaryConditions AFTER Interpolate2ApplyBC
+{
+  LANG: C
+} "Apply multipatch symmetries for remaining points not filled by interpatch interpolation"

@@ -1,0 +1,9 @@
+# Schedule definitions for thorn Baum
+# $Header: /numrelcvs/HerrmannCVS/Baum/schedule.ccl,v 1.5 2005/10/20 14:01:19 herrmann Exp $
+
+STORAGE: not_happy_mass_group, int_scalars, real_scalars
+
+schedule Baum AT INITIAL before Baum_CallTwoPunctures
+{
+  LANG: C
+} "check AH mass"

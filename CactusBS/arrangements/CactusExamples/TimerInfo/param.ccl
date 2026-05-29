@@ -1,0 +1,19 @@
+# Parameter definitions for thorn TimerInfo
+# $Header$
+
+private:
+
+INT every "How often to print information" STEERABLE=always
+{
+ 0:* :: "Positive"
+} 0
+
+STRING clock "Which clock to use" STEERABLE=always
+{
+ .* :: "Anything"
+} "all"
+
+STRING timer "Which timer to use" STEERABLE=always
+{
+ .* :: "Anything"
+} "all"

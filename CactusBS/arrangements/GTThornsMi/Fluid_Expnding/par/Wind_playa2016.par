@@ -1,0 +1,334 @@
+## Fluid_Wind ------- This par file show a fluid wind moving initially in -X direction perpendicular to 
+#the direction of the axis of rotation of the black hole,
+#Figure 1 of the ApJ initial v_\ifinity =0.5, C_s=0.1, r_hor/r_acc = 0.26, Low resolution.
+
+#If you need more resolution you can play with the pameter num_levels1.
+
+
+ActiveThorns = "Time MoL"
+ActiveThorns = "Coordbase CartGrid3d MyBoundary StaticConformal"
+ActiveThorns = "SymBase ADMBase TmunuBase HydroBase InitBase ADMCoupling ADMMacros"
+ActiveThorns = "IOUtil Formaline"
+ActiveThorns = "SpaceMask CoordGauge Constants LocalReduce aeilocalinterp LoopControl"
+ActiveThorns = "Carpet CarpetLib CarpetReduce CarpetRegrid2 CarpetInterp"
+ActiveThorns = "CarpetIOASCII CarpetIOScalar CarpetIOHDF5 CarpetIOBasic"
+ActiveThorns = "NaNChecker Exact"
+ActiveThorns = "Hydro_InitExcision Outflow"
+ActiveThorns= "Fluid_Wind"
+
+# grid parameters
+CartGrid3D::type         = "coordbase"
+CartGrid3D::domain       = "full"
+CartGrid3D::avoid_origin = "no"
+
+CoordBase::xmin = -20.0
+CoordBase::ymin = -20.0
+CoordBase::zmin = -20.0
+CoordBase::xmax =  20.0
+CoordBase::ymax =  20.0
+CoordBase::zmax =  20.0
+CoordBase::dx   =   0.5
+CoordBase::dy   =   0.5
+CoordBase::dz   =   0.5
+
+CoordBase::boundary_size_x_lower        = 3
+CoordBase::boundary_size_y_lower        = 3
+CoordBase::boundary_size_z_lower        = 3
+CoordBase::boundary_size_x_upper        = 3
+CoordBase::boundary_size_y_upper        = 3
+CoordBase::boundary_size_z_upper        = 3
+CoordBase::boundary_shiftout_x_lower    = 1
+CoordBase::boundary_shiftout_y_lower    = 1
+CoordBase::boundary_shiftout_z_lower    = 1
+CoordBase::boundary_shiftout_x_upper    = 1	
+CoordBase::boundary_shiftout_y_upper    = 1
+CoordBase::boundary_shiftout_z_upper    = 1
+
+
+
+
+ActiveThorns = "ReflectionSymmetry"
+
+ReflectionSymmetry::reflection_x = "no"
+ReflectionSymmetry::reflection_y = "no"
+ReflectionSymmetry::reflection_z = "no"
+ReflectionSymmetry::avoid_origin_x = "no"
+ReflectionSymmetry::avoid_origin_y = "no"
+ReflectionSymmetry::avoid_origin_z = "no"
+
+
+
+TmunuBase::stress_energy_storage = yes
+TmunuBase::stress_energy_at_RHS  = yes
+TmunuBase::timelevels            =  1
+TmunuBase::prolongation_type     = none
+
+ADMMacros::spatial_order = 4
+ADMBase::metric_type     = "physical"
+
+SpaceMask::use_mask      = "yes"
+ActiveThorns = "CarpetMask"
+CarpetMask::excluded_surface       [0] = 0
+CarpetMask::excluded_surface_factor[0] = 1.0
+
+################################################
+
+Cactus::terminate           = "time"
+Cactus::cctk_final_time     = 2000
+
+Carpet::domain_from_coordbase = "yes"
+Carpet::enable_all_storage       = no
+Carpet::use_buffer_zones         = "yes"
+
+Carpet::poison_new_timelevels    = "yes"
+Carpet::check_for_poison         = "no"
+Carpet::poison_value             = 113
+
+Carpet::init_3_timelevels        = "yes"
+Carpet::init_fill_timelevels     = "no"
+
+CarpetLib::poison_new_memory = "yes"
+CarpetLib::poison_value      = 114
+
+# system specific Carpet paramters
+Carpet::max_refinement_levels    = 10
+driver::ghost_size               = 3
+Carpet::prolongation_order_space = 3
+Carpet::prolongation_order_time  = 2
+
+CarpetRegrid2::regrid_every = 0
+CarpetRegrid2::
+num_centres  = 1
+
+CarpetRegrid2::num_levels_1 = 1
+CarpetRegrid2::radius_1[1]  = 8.0
+CarpetRegrid2::radius_1[2]  = 4.0
+CarpetRegrid2::radius_1[3]  = 12.5
+CarpetRegrid2::radius_1[4]  = 0.0
+
+
+time::dtfac = 0.25
+MoL::ODE_Method             = "rk4"
+MoL::MoL_Intermediate_Steps = 4
+MoL::MoL_Num_Scratch_Levels = 1
+
+# check all physical variables for NaNs
+NaNChecker::check_every = 1
+NaNChecker::action_if_found = "terminate" #"terminate", "just warn", "abort"
+NaNChecker::check_vars = "HydroBase::rho HydroBase::eps 
+HydroBase::press HydroBase::vel"
+
+# Hydro paramters
+ActiveThorns = "EOS_Omni"
+ActiveThorns = "GRHydro"
+
+## EXCISION FOR THE HYDRO VARIABLES
+
+
+hydro_initexcision::hydro_initexcision = "yes"
+hydro_initexcision::hydro_initexcision_type = "sphere"
+hydro_initexcision::hydro_initexcision_position_x = 0.0 
+hydro_initexcision::hydro_initexcision_position_y = 0.0
+hydro_initexcision::hydro_initexcision_position_z = 0.0
+hydro_initexcision::hydro_initexcision_coordinate_length = 1.8
+hydro_initexcision::hydro_initexcision_poststep = "no"
+#
+
+GRHydro::method_type               = "RSA FV"
+GRHydro::riemann_solver            = "HLLE"
+GRHydro::GRHydro_eos_type           = "General"
+GRHydro::GRHydro_eos_table          = "Ideal_Fluid"
+GRHydro::recon_method              = "tvd"
+GRHydro::tvd_limiter               = "minmod"
+GRHydro::GRHydro_stencil            = 3
+GRHydro::bound                     = "custom"
+GRHydro::rho_abs_min               = 1.e-15
+GRHydro::clean_divergence          = "no"
+GRHydro::transport_constraints     = "yes"
+GRHydro::track_divB                = "yes"
+GRHydro::calculate_bcom            = "yes"
+GRHydro::Grhydro_MaxNumConstrainedVars = 13
+GRHydro::GRHydro_MaxNumEvolvedVars     = 9
+eos_omni::gl_gamma                 = 1.33333333333
+
+#================FLUID INITIAL CONDITIONS=====================
+HydroBase::evolution_method      = "GRHydro"
+HydroBase::timelevels            = 3
+HydroBase::initial_hydro         = "fluid_wind"
+HydroBase::initial_Bvec          = "constant_field"
+HydroBase::Bvec_evolution_method = "GRHydro"
+#HydroBase::prolongation_type    = "weno"
+
+#==============================================================
+
+#BOUNDARY FACES 
+# 1:: is  inflow
+# 2:: is  outflow
+
+MyBoundary::face_xmin                      = 2
+MyBoundary::face_xmax                      = 1
+MyBoundary::face_ymin                      = 2
+MyBoundary::face_ymax                      = 2
+MyBoundary::face_zmin                      = 2
+MyBoundary::face_zmax                      = 2
+
+
+
+
+#########  The Wind Parameters
+Fluid_Wind::rho_ini_cons                 = 1.e-6
+Fluid_Wind::mygamma                      = 1.333333333
+Fluid_Wind::C_s                          = 0.1
+Fluid_Wind::v_inf_x                       = -0.5
+Fluid_Wind::v_inf_y                       =  0.0
+Fluid_Wind::v_inf_z                       = 0.0
+Fluid_Wind::parallel                      = "no"
+Fluid_Wind::my_a                         = 0.0
+Fluid_Wind::my_M                         = 1.0
+Fluid_Wind::B_0                           = 0.0
+Fluid_Wind::A_b                          = 0.0
+ActiveThorns = "GenericFD NewRad"
+
+ADMBase::evolution_method        = "none"
+ADMBase::lapse_evolution_method  = "static"
+ADMBase::shift_evolution_method  = "static"
+ADMBase::dtlapse_evolution_method= "static"
+ADMBase::dtshift_evolution_method= "static"
+
+
+# init parameters
+InitBase::initial_data_setup_method = "init_some_levels"
+
+
+
+
+ADMBase::initial_data            = "exact"
+ADMBase::initial_lapse           = "exact"
+ADMBase::initial_shift           = "exact"
+ADMBase::initial_dtlapse         = "zero"
+ADMBase::initial_dtshift         = "zero"
+ADMBase::lapse_timelevels = 3
+ADMBase::shift_timelevels = 3
+
+
+Exact::exact_model = "Kerr/Kerr-Schild"
+
+Exact::Kerr_KerrSchild__mass            = 1.0
+Exact::Kerr_KerrSchild__spin            = 0.5
+Exact::Kerr_KerrSchild__boost_v         = 0.0
+
+
+#######################################################
+####################SPHERICALSurface###################
+#######################################################
+
+ActiveThorns = "SphericalSurface"
+
+SphericalSurface::nsurfaces = 2
+
+SphericalSurface::maxntheta = 120
+SphericalSurface::maxnphi   = 100
+
+
+SphericalSurface::set_spherical[0] = "yes"
+SphericalSurface::ntheta      [0] = 39
+SphericalSurface::nphi        [0] = 76
+SphericalSurface::radius[0]        = 4.0
+
+
+SphericalSurface::set_spherical[1] = "yes"
+SphericalSurface::ntheta[1]        = 39
+SphericalSurface::nphi[1]          = 76
+SphericalSurface::radius[1]        = 8.0
+
+
+
+#############################################################
+# Outflow
+#############################################################
+
+Outflow::compute_every            = 4
+Outflow::num_detectors            = 2
+Outflow::interpolator_name        = "Lagrange polynomial interpolation"
+Outflow::interpolator_pars        = "order=4"
+Outflow::verbose                  = 0
+
+# AH Fluxes
+Outflow::surface_index[0]       =  0
+Outflow::compute_every_det[0]   =  64
+
+# Integration Volume Boundary Fluxes
+Outflow::surface_index[1]       =  1
+Outflow::compute_every_det[1]   =  64
+
+
+Outflow::output_2d_data           = "no"
+#Outflow::extra_variables          = "HydroBase::eps HydroBase::rho"
+
+Outflow::num_thresholds           = 0
+
+
+#############################################################
+
+
+#############################################################
+
+
+
+IOBasic::outInfo_every              = 1
+IOBasic::outInfo_vars               = "HydroBase::rho"
+
+IO::out_dir      = $parfile
+
+IOScalar::outScalar_every = 1
+IOScalar::one_file_per_group = yes
+IOScalar::outScalar_vars  = "
+ HydroBase::rho
+ HydroBase::vel
+ GrHydro::divB 
+"
+
+IOASCII::out1D_every     = 256
+IOASCII::one_file_per_group = yes
+#OASCII::output_symmetry_points = no
+#IOASCII::out3D_ghosts           = no
+#IOASCII::out3D_outer_ghosts     = no
+IOASCII::out1D_vars      = "
+ HydroBase::rho
+ HydroBase::vel
+ HydroBase::Bvec
+ GrHydro::divB
+
+"
+
+CarpetIOASCII::out0D_every     = 10
+CarpetIOASCII::out0d_point_x  = 10.0
+CarpetIOASCII::out0d_point_y  = 0.0
+CarpetIOASCII::out0d_point_z  = 0.0
+CarpetIOASCII::out0D_vars      = "
+ HydroBase::rho
+ HydroBase::Bvec
+ GrHydro::divB
+"
+
+CarpetIOASCII::out2D_every     = 1024000
+CarpetIOASCII::out2d_xyplane_z = 3
+CarpetIOASCII::out2D_vars      = "
+ HydroBase::rho
+
+"
+
+
+IOHDF5::out3D_every 	= 25600
+IOHDF5::out2D_every 	= 25600
+IOHDF5::one_file_per_group = "yes"
+IOHDF5::out3D_vars      = "HydroBase::rho HydroBase::vel HydroBase::Bvec"
+
+IOHDF5::checkpoint                  = yes
+IO::checkpoint_dir                  = $parfile
+IO::checkpoint_ID                   = yes
+IO::checkpoint_every_walltime_hours = 6.0
+IO::checkpoint_on_terminate         = yes
+
+IO::recover     = "autoprobe"
+IO::recover_dir = $parfile

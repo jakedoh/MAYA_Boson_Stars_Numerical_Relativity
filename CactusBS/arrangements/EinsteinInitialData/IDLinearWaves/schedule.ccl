@@ -1,0 +1,58 @@
+# Schedule definitions for thorn IDLinearWaves
+
+if (CCTK_Equals(initial_data,"planewaves")) 
+{
+  schedule IDLinearWaves_ParamChecker at CCTK_PARAMCHECK
+  {
+    LANG: C
+    OPTIONS: global
+  } "Check that the metric_type is recognised"
+
+  schedule IDLinearWaves_PlaneWaves in ADMBase_InitialData
+  {
+    LANG: Fortran
+  } "Construct linear planewave initial data"  
+}
+
+if (CCTK_Equals(initial_data,"standing_planewaves")) 
+{
+  schedule IDLinearWaves_ParamChecker at CCTK_PARAMCHECK
+  {
+    LANG: C
+    OPTIONS: global
+  } "Check that the metric_type is recognised"
+
+  schedule IDLinearWaves_StandWaves in ADMBase_InitialData
+  {
+    LANG: Fortran
+  } "Construct linear planewave initial data"  
+}
+
+if (CCTK_Equals(initial_data,"teukwaves")) 
+{
+  schedule IDLinearWaves_ParamChecker at CCTK_PARAMCHECK
+  {
+    LANG: C
+    OPTIONS: global
+  } "Check that the metric_type is recognised"
+
+  schedule IDLinearWaves_TeukWaves in ADMBase_InitialData
+  {
+    LANG: Fortran
+    WRITES: ADMBase::metric(everywhere), ADMBase::curv(everywhere)
+  } "Construct linear Teukolsky wave initial data"  
+}
+
+if (CCTK_Equals(initial_data,"sine_planewaves")) 
+{
+  schedule IDLinearWaves_ParamChecker at CCTK_PARAMCHECK
+  {
+    LANG: C
+    OPTIONS: global
+  } "Check that the metric_type is recognised"
+
+  schedule IDLinearWaves_SinePlaneWaves in ADMBase_InitialData
+  {
+    LANG: Fortran
+  } "Construct linear plane wave initial data"  
+}

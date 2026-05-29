@@ -1,0 +1,97 @@
+\section{Post-processing data from the CactusEinstein infrastructure}
+
+I (Erik Schnetter \textless schnetter@cct.lsu.edu\textgreater) was
+asked how to run thorn IsolatedHorizon on data that are stored in a
+file.  Here is what I answered.  I thought I should conserve it for
+posteriority.
+
+
+
+\subsection{Step 1}
+
+You do the following.  I assume that you have the 3-metric and the
+extrinsic curvature in HDF5 files.  You set up a parameter file for a
+grid structure that contains the region around the horizon.  The
+refinement level structure and grid spacing etc. needs to be the same
+as in the HDF5 files, but the grids can be much smaller.  You can also
+leave out some finer grids, i.e., reduce the number of levels.
+However, the coarse grid spacing must remain the same.  The symmetries
+must also be the same.
+
+You then use the file reader and thorn AEIThorns/IDFileADM to read in
+the ADM variables from the files.  The parameter file does not need to
+activate BSSN\_MoL or any time evolution mechanism.  IDFileADM acts as
+provider for initial data, so you don't need any other initial data
+either.
+
+You set up your parameter file so that the AH finder runs, stores the
+horizon shape in SphericalSurface, and IsolatedHorizon accesses these
+data.
+
+This gives you the time-independent variables on the horizon, i.e.,
+mostly the spin.  It also allows you to look for apparent horizons if
+you don't know where they are.
+
+
+
+\subsection{Step 2}
+
+If you also want time-dependent data on the horizon, e.g. its
+3-determinant, then you also have to perform some time steps.  You can
+either read in lapse and shift from files, or you can set them
+arbitrarily (e.g.\ lapse one, shift zero).  You also need to activate
+a time evolution thorn, i.e., BSSN\_MoL, MoL, Time, etc.  In order to
+fill the past time levels, just choose MoL::initial\_data\_is\_crap.
+If you have hydrodynamics, you will also need to read in the hydro
+variables.
+
+You only need to perform two time steps.  Remember that the output of
+IsolatedHorizon for iteration 0 and 1 are incorrect or very
+inaccurate, since the past time levels are not correct, and hence the
+time derivatives that IsolatedHorizon calculates are wrong.  However,
+iteration 2 should be good.  (You can also perform 5 iterations and
+cross-check.)
+
+
+
+\subsection{Step 3}
+
+If you do not have the extrinsic curvature, but have the 3-metric,
+lapse, and shift for consecutive time steps (that is, if you have data
+suitable for finding event horizons), then you need to reconstruct the
+extrinsic curvature first.  There is a thorn AEIThorns/CalcK that
+helps you.  It reads the data for the 4-metric timestep after
+timestep, calculates the time derivative of the 3-metric through
+finite differencing in time, and then determines the extrinsic
+curvature from that, and writes it to a file.  Once you have it, you
+can start as in step 1.  CalcK has a small shell script that tells you
+what to do.
+
+
+
+\subsection{Additional remarks}
+
+In general, things become more interesting if a static conformal
+factor is involved (since you now have more variables), especially if
+you output the static conformal factor only once (since it is static),
+which means that you have to mix variables from different time steps.
+
+The thorns that I mentioned above have some examples.  In general,
+this is NOT a ``just do it'' action; you have to know what you are
+doing, since you have to put the pieces together in your parameter
+file and make sure that everything is consistent.  We may have a
+vision that you just call a script in a directory that contains output
+files and the script figures out everything else, but we're not there
+yet.  All the ingredients are there, but you'll have to put them
+together in the right way.  Think Lego.
+
+You could start by reading the documentation of the file reader in
+CactusBase/IOUtil (to find out how it locates and reads files) and the
+CactusEinstein initial data mechanism (since IDFileADM provides
+initial data).  After that, step 1 is straightforward.
+
+Step 2 is also easy if you know how to evolve data in time.
+
+Step 3 is conceptually simple, but technically complicated because it
+involves moving data around in HDF5 files.  If you need to do that, I
+can explain it in more detail.

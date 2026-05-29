@@ -1,0 +1,42 @@
+# Initial data for bowl spacetime, no evolution
+# $Header$
+
+# Required thorns
+ActiveThorns = "CartGrid3D CoordBase SymBase Boundary Time   PUGH PUGHReduce PUGHSlab   LocalReduce IOAscii IOUtil IOBasic   ADMBase ADMMacros StaticConformal CoordGauge   Exact"
+
+# Grid
+driver::global_nx = 20
+driver::global_ny = 20
+driver::global_nz = 20
+grid::type   = "byspacing"
+grid::dxyz   = 0.2
+grid::domain = "octant"
+
+cactus::cctk_initial_time = 0.0
+cactus::cctk_itlast       = 0
+time::dtfac = 0.25
+
+# Initial data 
+admbase::metric_type = "physical"
+admbase::initial_data = "exact"
+Exact::exact_model = "bowl"
+Exact::bowl__shape = "Gaussian"
+Exact::bowl__evolve = "false"
+Exact::bowl__strength = 0.5
+Exact::bowl__center = 2.5
+Exact::bowl__sigma = 1.0
+
+# Output
+IO::out_dir       = "bowl-init"
+IO::parfile_write = "no"
+IO::out_fileinfo  = "none"
+IO::new_filename_scheme = "no"
+
+IOBasic::outInfo_every = 1
+IOBasic::outInfo_vars  = "admbase::gxx"
+
+IOBasic::outScalar_every =  1
+IOBasic::outScalar_vars  = "admbase::gxx admbase::gyy admbase::gzz"
+
+IOASCII::out1D_every =  1
+IOASCII::out1D_vars  = "admbase::gxx admbase::gyy admbase::gzz"

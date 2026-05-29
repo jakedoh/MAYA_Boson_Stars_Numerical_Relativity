@@ -1,0 +1,56 @@
+# Schedule definitions for thorn Bremsstrahlung
+# $Header:$
+
+storage: Brems_Group[1], EmissFact
+
+if ( intbrems ) {
+	storage: BremsScalars, BeamedBrems, SymmetryFactor, Sym_Signs
+}
+
+schedule Brems_Startup AT CCTK_PARAMCHECK
+{
+  LANG: C
+} "Check parameters"
+
+schedule Brems_Init at CCTK_BASEGRID
+{
+  LANG: C
+} "Initialize gridfunctions"
+
+schedule group Bremsen at ANALYSIS
+{
+} "Group for all Bremsstrahlung analysis calculations"
+
+schedule BremsCalc in Bremsen
+{
+  LANG: C
+} "Calculate the local Bremsstrahlung quantities"
+
+if ( intbrems && (intvolumes>0) )
+{
+
+   schedule Brems_Scalars at CCTK_BASEGRID
+   {
+        LANG: C
+  	OPTIONS: global
+   } "Initialize scalars"
+
+   schedule ZeroBrems in Bremsen before SumBrems
+   {
+        lang: C
+        OPTIONS: global
+   } "Zero the total Bremsstrahlung grid scalars (integral accumulators)"
+
+   schedule SumBrems in Bremsen after BremsCalc
+   {
+	LANG: C
+	OPTIONS: global loop-local
+   } "Integrate within a specified radius"
+
+   schedule Brems_Output in Bremsen after SumBrems
+   {
+	LANG: C
+	OPTIONS: global
+   } "Write integrated values to a compact file."
+
+}

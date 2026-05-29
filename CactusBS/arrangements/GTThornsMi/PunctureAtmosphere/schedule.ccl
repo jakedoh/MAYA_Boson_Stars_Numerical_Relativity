@@ -1,0 +1,16 @@
+# Schedule definitions for thorn PunctureAtmosphere
+
+
+if (CCTK_Equals(initial_hydro,"Puncture_Atmosphere"))
+{
+schedule Set_Prim_to_HydroBase in HydroBase_Initial
+{
+  LANG:        C
+  SYNC:ADMBase::metric,ADMBase::curv,ADMBase::lapse,ADMBase::shift
+  SYNC: rho
+  SYNC: press
+  SYNC: eps
+  SYNC: vel
+  SYNC: w_lorentz
+} "Initial data for a puncture+atmosphere evolution"
+}

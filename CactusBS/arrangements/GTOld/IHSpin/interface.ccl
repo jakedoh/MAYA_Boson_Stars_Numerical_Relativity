@@ -1,0 +1,15 @@
+# Interface definition for thorn IHSpin
+# $Header:$
+
+implements: ihspin
+inherits: ADMBase SphericalSurface StaticConformal 
+
+REAL ihspin_spin[num_horizons] TYPE=scalar
+REAL ihspin_spin_x[num_horizons] TYPE=scalar
+REAL ihspin_spin_y[num_horizons] TYPE=scalar
+REAL ihspin_spin_z[num_horizons] TYPE=scalar
+
+REAL ihspin_mom_x[num_horizons] TYPE=scalar
+REAL ihspin_mom_y[num_horizons] TYPE=scalar
+REAL ihspin_mom_z[num_horizons] TYPE=scalar
+

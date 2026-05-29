@@ -1,0 +1,35 @@
+# Schedule definitions for thorn ShiftedKerrSchild
+
+STORAGE: ShiftedKerrSchild_3metric_shift[1]
+
+# The C code selectively only sets the quantities asked for so this just keeps
+# the schedule tidy
+if (CCTK_EQUALS(initial_data , "ShiftedKerrSchild") ||
+    CCTK_EQUALS(initial_lapse, "ShiftedKerrSchild") ||
+    CCTK_EQUALS(initial_shift, "ShiftedKerrSchild")) {
+
+  schedule ShiftedKerrSchild_ParamCheck AT PARAMCHECK
+  {
+    LANG: C
+  } "Check parameters for consitency and unsupported values"
+
+  schedule GROUP ShiftedKerrSchild_Initial IN CCTK_INITIAL before HydroBase_Initial after ADMBase_InitialGauge
+  {
+  } "Schedule ShiftedKerrSchild initial data group"
+
+  schedule ShiftedKS_ID in ShiftedKerrSchild_Initial
+  {
+    LANG: C
+  } "Set up shifted Kerr-Schild initial data"
+
+  schedule ShiftedKS_ID in CCTK_PRESTEP
+  {
+    LANG: C
+  } "Set up shifted Kerr-Schild initial data"
+
+  schedule ShiftedKS_ID in CCTK_ANALYSIS
+  {
+    LANG: C
+  } "Set up shifted Kerr-Schild initial data"
+
+}

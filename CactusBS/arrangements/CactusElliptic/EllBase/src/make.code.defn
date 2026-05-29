@@ -1,0 +1,9 @@
+# Main make.code.defn file for thorn EllBase
+# $Header$
+
+# Source files in this directory
+SRCS = Ell_Interface.c Ell_Register.c Startup.c Ell_DBstructure.c
+
+# Subdirectories containing source files
+SUBDIRS = 
+

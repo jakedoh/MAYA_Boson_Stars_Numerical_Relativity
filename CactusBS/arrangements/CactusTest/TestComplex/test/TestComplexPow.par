@@ -1,0 +1,18 @@
+!DESC "Test complex power function"
+
+ActiveThorns = "PUGH LocalReduce PUGHSlab PUGHReduce IOUtil IOBasic IOASCII CartGrid3D CoordBase SymBase TestComplex"
+
+cactus::cctk_itlast = 0
+
+IO::out_dir   = "TestComplexPow"
+IO::out_every = 1
+
+IOBasic::outscalar_every = 1
+IOBasic::outInfo_vars         = "testcomplex::real_part testcomplex::imaginary_part"
+IOBasic::outScalar_vars       = "testcomplex::real_part testcomplex::imaginary_part"
+
+
+# disable output of file information (parameter filename, creation date) and parameter file
+# because this could cause diffs when running the testsuite
+IO::out_fileinfo  = "none"
+IO::parfile_write = "no"

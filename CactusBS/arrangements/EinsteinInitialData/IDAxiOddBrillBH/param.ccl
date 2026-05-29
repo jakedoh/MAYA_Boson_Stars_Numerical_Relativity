@@ -1,0 +1,104 @@
+# Parameter definitions for thorn AxiOddBrillBHIVP
+# $Header$
+
+shares: StaticConformal
+
+USES KEYWORD conformal_storage
+
+shares:admbase
+
+USES KEYWORD metric_type
+
+EXTENDS KEYWORD initial_lapse 
+{
+  "schwarz" :: "Set lapse to Schwarzschild"
+}
+EXTENDS KEYWORD initial_data 
+{
+   "axioddbh" :: "Axisymmetry Initial data for Brandt-Seidel"
+}
+
+private:
+
+REAL amp "Brill wave amplitude for extrinsic curveture"
+{
+  *:* :: "No restriction"
+} 0.1
+
+REAL amp_me "Brill wave amplitude for metric"
+{
+  *:* :: "No restriction"
+} 0.0
+
+REAL xi "for recoil"
+{
+  *:* :: "No restriction"
+} 0.0
+
+REAL eta0 "Brill wave center (in eta coords) for extrisic curvature"
+{
+  *:* :: "No restriction"
+} 0.0
+
+REAL eta0_me "Brill wave center (in eta coords) for metric"
+{
+  *:* :: "No restriction"
+} 0.0
+
+REAL sigma "Brill wave width (in eta) for extrinsic curveture"
+{
+  *:* :: "No restriction"
+} 1.0
+
+REAL sigma_me "Brill wave width (in eta) for metric"
+{
+  *:* :: "No restriction"
+} 1.0
+
+REAL byJ "Bowen and York Momenta"
+{
+  *:* :: "No restriction"
+} 0.0
+
+REAL etamax "Eta value for outer edge of grid"
+{
+  *:* :: "No restriction"
+} 5.0
+
+
+INT n "sin**n theta in brill wave for extrinsic curveture"
+{
+  *:* :: "No restriction"
+} 3
+
+INT n_me "sin**n theta in brill wave for metric"
+{
+  *:* :: "No restriction"
+} 3
+
+INT neta "Eta resolution for solve"
+{
+  *:* :: "No restriction"
+} 300
+
+INT ntheta "Theta resolution for solve"
+{
+  *:* :: "No restriction"
+} 50
+
+BOOLEAN brandt_seidel "Brand-Seidel initial data"
+{
+} "no"
+
+BOOLEAN sergio "Sergio initial data"
+{
+} "no"
+
+BOOLEAN verbose ""
+{
+} "yes"
+
+INT interpolation_order "Order for interpolation" STEERABLE = ALWAYS
+{
+  1:3 :: "Choose between first, second, and third-order"
+} 1

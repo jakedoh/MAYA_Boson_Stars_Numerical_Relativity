@@ -1,0 +1,13 @@
+# Schedule definitions for thorn IDConstraintViolate
+# $Header$
+
+schedule IDConstraintViolate_ParamChecker at PARAMCHECK
+{
+  LANG: C
+} "Check parameters"
+
+schedule IDConstraintViolate_Initial in ADMBase_InitialData
+{
+  LANG: Fortran
+} "Set up constraint violating initial data"
+

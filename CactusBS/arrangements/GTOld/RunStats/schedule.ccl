@@ -1,0 +1,38 @@
+
+STORAGE: cputime, timing_stats, memory_stats, memory_stats_mb, memory_stats_kb
+
+schedule RunStats_Init at CCTK_BASEGRID
+{
+  LANG: C
+  OPTIONS: GLOBAL
+} "Initialise the run statistics"
+
+schedule RunStats_Calculate at CCTK_ANALYSIS
+{
+  LANG: C
+  OPTIONS: GLOBAL
+} "Calculate the run statistics"
+
+schedule RunStats_GetMemoryStatistics at CCTK_ANALYSIS
+{
+  LANG: C
+  OPTIONS: GLOBAL
+} "Get the memory statistics"
+
+schedule RunStats_Output at CCTK_ANALYSIS after RunStats_Calculate
+{
+  LANG: C
+  OPTIONS: GLOBAL
+} "Output the run statistics"
+
+schedule RunStats_OutputAllMemory at CCTK_ANALYSIS after RunStats_GetMemoryStatistics
+{
+  LANG: C
+  OPTIONS: GLOBAL
+} "Output the process memory statistics"
+
+schedule RunStats_OutputSystemMemory at CCTK_ANALYSIS
+{
+  LANG: C
+  OPTIONS: GLOBAL
+} "Calculate the node memory statistics"

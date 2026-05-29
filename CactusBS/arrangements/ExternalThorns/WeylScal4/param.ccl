@@ -1,0 +1,113 @@
+# file produced by user hinder, 15/11/2006
+# Produced with Mathematica Version 5.2 for Linux (June 20, 2005)
+
+# Mathematica script written by Ian Hinder and Sascha Husa
+
+# $Id$
+
+
+shares: GenericFD
+
+USES CCTK_INT stencil_width
+USES CCTK_INT stencil_width_x
+USES CCTK_INT stencil_width_y
+USES CCTK_INT stencil_width_z
+USES CCTK_INT boundary_width
+
+
+shares: MethodOfLines
+
+USES CCTK_INT MoL_Num_Evolved_Vars
+USES CCTK_INT MoL_Num_Constrained_Vars
+
+restricted:
+CCTK_REAL verbose "verbose"
+{
+  *:* :: "no restrictions"
+} 0
+
+restricted:
+CCTK_REAL offset "offset"
+{
+  *:* :: "no restrictions"
+} 1.e-15
+
+restricted:
+CCTK_REAL xorig "xorig"
+{
+  *:* :: "no restrictions"
+} 0
+
+restricted:
+CCTK_REAL yorig "yorig"
+{
+  *:* :: "no restrictions"
+} 0
+
+restricted:
+CCTK_REAL zorig "zorig"
+{
+  *:* :: "no restrictions"
+} 0
+
+private:
+KEYWORD fd_order "fd_order"
+{
+  "2nd" :: "2nd"
+  "4th" :: "4th"
+} "2nd"
+
+restricted:
+CCTK_INT WeylScal4_MaxNumEvolvedVars "Number of evolved variables used by this thorn" ACCUMULATOR-BASE=MethodofLines::MoL_Num_Evolved_Vars
+{
+  0:0 :: "Number of evolved variables used by this thorn"
+} 0
+
+restricted:
+CCTK_INT WeylScal4_MaxNumConstrainedVars "Number of constrained variables used by this thorn" ACCUMULATOR-BASE=MethodofLines::MoL_Num_Constrained_Vars
+{
+  22:22 :: "Number of constrained variables used by this thorn"
+} 22
+
+restricted:
+CCTK_INT psis_calc_2nd_calc_every "psis_calc_2nd_calc_every"
+{
+  *:* :: "no restrictions"
+} 1
+
+restricted:
+CCTK_INT psis_calc_4th_calc_every "psis_calc_4th_calc_every"
+{
+  *:* :: "no restrictions"
+} 1
+
+restricted:
+CCTK_INT psis_calc_2nd_calc_offset "psis_calc_2nd_calc_offset"
+{
+  *:* :: "no restrictions"
+} 0
+
+restricted:
+CCTK_INT psis_calc_4th_calc_offset "psis_calc_4th_calc_offset"
+{
+  *:* :: "no restrictions"
+} 0
+
+restricted:
+# calc_max_reflevel can be used to save some time by calculating psi4 etc. only
+# on levels that are eg intersected by the extraction sphere of Ylm_Decomp. 
+# WARNING: there is no correct way of not calculating psi4 on all levels, all
+# the time if mesh refinement is used. It is strongly advised to use poisoning
+# to catch any junk values from higher refinement levels being restricted into
+# the lower ones and contaminating the result. This will usually happen if an
+# extraction sphere is too close to the innermost refinement boundary.
+CCTK_INT calc_max_reflevel "Do not calculate on refinement levels greater this"
+{
+  0:* :: "any refinement level"
+  -1  :: "calculate on all levels"
+} -1
+
+private:
+BOOLEAN schedule_in_evol "schedule calc_np in EVOL instead of ANALYSIS to have proper restriction"
+{
+} "no"

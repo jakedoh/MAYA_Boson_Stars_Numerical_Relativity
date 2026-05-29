@@ -1,0 +1,68 @@
+# Parameter definitions for thorn NaNChecker
+# $Header$
+
+#############################################################################
+### declare NaNChecker parameters
+#############################################################################
+private:
+
+INT check_every "How often to check for NaNs" STEERABLE = ALWAYS
+{
+  0   :: "Never (default)"
+  1:* :: "Every so many iterations"
+} 0
+
+INT check_after "Start checking for NaNs after so many iterations" STEERABLE = ALWAYS
+{
+  0:* :: "Any valid iteration number"
+} 0
+
+INT report_max "How many NaNs to report for a single variable" STEERABLE = ALWAYS
+{
+  -1   :: "Report all (default)"
+   0:* :: "Do not report more than report_max number of NaNs"
+} -1
+
+STRING check_vars "Groups and/or variables to check for NaNs" STEERABLE = ALWAYS
+{
+  .* :: "List of full group and/or variable names, or 'all' for everything"
+} ""
+
+KEYWORD check_for "Check for NaNs and/or infinite numbers (only evaluated if finite(3) is available)" STEERABLE = ALWAYS
+{
+  "NaN"  :: "Check only for NaNs"
+  "Inf"  :: "Check only for infinite numbers"
+  "both" :: "Check for both NaNs and infinite numbers"
+} "both"
+
+BOOLEAN out_NaNmask "Dump the NaN grid function mask into an HDF5 file" STEERABLE = ALWAYS
+{
+} "yes"
+
+KEYWORD action_if_found "What to do if a NaN was found" STEERABLE = ALWAYS
+{
+  "just warn" :: "Just print a level 1 warning"
+  "terminate" :: "Warn and terminate Cactus gracefully as soon as possible"
+  "abort"     :: "Warn and abort Cactus immediately"
+} "just warn"
+
+KEYWORD verbose "How much information to give" STEERABLE = ALWAYS
+{
+  "all"      :: "All information"
+  "standard" :: "Standard information"
+} "standard"
+
+BOOLEAN ignore_restricted_points "do not check grid points whose values will be restricted away" STEERABLE = ALWAYS
+{
+} "no"
+
+STRING  restriction_mask "grid function to use to decide which points are restricted away, points where the mask is zero are ignored" STEERABLE = ALWAYS
+{
+  "CarpetReduce[:][:]weight" :: "Carpet's reduction mask"
+  "CarpetEvolutionMask[:][:]evolution_mask" :: "takes prolongation stencil into account"
+  ".*[:][:].*" :: "any grid function with points masked out set to zero"
+} "CarpetReduce::weight"
+
+BOOLEAN setup_test "set up grid function with NaNs"
+{
+} "no"

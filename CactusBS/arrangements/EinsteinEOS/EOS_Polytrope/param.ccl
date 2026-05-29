@@ -1,0 +1,23 @@
+# Parameter definitions for thorn EOS_Polytrope
+# $Header$
+
+restricted:
+
+REAL eos_gamma "Adiabatic Index for Ideal Fluid"
+{
+ : :: ""
+} 2.0
+
+REAL eos_k "Polytropic constant" STEERABLE=ALWAYS
+{
+ : :: ""
+} 80.0
+
+BOOLEAN use_cgs "Use the CGS units"
+{
+} "no"
+
+REAL gamma_ini "Polytropic Gamma used for the initial model (e.g., by RNSID)"
+{
+ : :: ""
+} 2.0

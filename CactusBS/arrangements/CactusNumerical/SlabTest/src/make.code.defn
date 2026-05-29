@@ -1,0 +1,9 @@
+# Main make.code.defn file for thorn SlabTest
+# $Header$
+
+# Source files in this directory
+SRCS = slabtest.c
+
+# Subdirectories containing source files
+SUBDIRS = 
+

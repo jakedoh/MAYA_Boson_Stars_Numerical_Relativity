@@ -1,0 +1,8 @@
+# Certain versions of the Intel compiler produce incorrect code when
+# using -O2 or above in ML_ADMConstraints_evaluate.  In those cases,
+# setting -fp-model precise seems to disable the broken optimisations
+# and leads to correct code, presumably at the cost of some
+# performance. See https://trac.einsteintoolkit.org/ticket/1995.
+
+ML_ADMConstraints_evaluate.cc.o: HAVE_BROKEN_COMPILER := $(shell $(CC) -V 2>&1 | grep 'Intel.*Version 1[5-8]\.')
+ML_ADMConstraints_evaluate.cc.o: CXXFLAGS += $(if $(HAVE_BROKEN_COMPILER),-fp-model precise) 

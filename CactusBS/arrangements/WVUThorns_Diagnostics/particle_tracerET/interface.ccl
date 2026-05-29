@@ -1,0 +1,27 @@
+# Interface definition for thorn particle_tracerET
+# $Header:$
+
+implements: particle_tracerET
+inherits: grid HydroBase ADMBase
+
+int RK4IterationCounterVar type = SCALAR DISTRIB=CONSTANT
+{
+  RK4IterationCounter
+} "Counter that keeps track of which RK4 iteration we are on."
+
+real particle_position_arrays TYPE=ARRAY DISTRIB=CONSTANT DIM=1 SIZE=10001
+{
+  particle_position_x,particle_position_y,particle_position_z,
+  particle_position_x_k1,particle_position_y_k1,particle_position_z_k1,
+  particle_position_x_k2,particle_position_y_k2,particle_position_z_k2,
+  particle_position_x_k3,particle_position_y_k3,particle_position_z_k3,
+  particle_position_x_k4,particle_position_y_k4,particle_position_z_k4,
+  particle_velx,particle_vely,particle_velz
+} "Particle positions and RK4 coefficients k1,k2,k3,k4 for each particle"
+
+#vvvvvvv u^i/u^0 3-velocity must be used here, as it is used in MHD induction equations. This way fluid flow is consistent with MHD frozen-in condition vvvvvvv#
+cctk_real velocity_consistent_with_MHD_induction_equations type = GF TAGS='InterpNumTimelevels=1 prolongation="none" Checkpoint="no"'
+{
+  MHDvx,MHDvy,MHDvz
+}
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^#

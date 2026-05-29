@@ -1,0 +1,8 @@
+Cactus Code Thorn Whisky_IVP
+Authors    : Ian Hawke <hawke@aei-potsdam.mpg.de>
+CVS info   : $Header$
+--------------------------------------------------------------------------
+
+Purpose of the thorn:
+
+Solves the IVP using BAM.

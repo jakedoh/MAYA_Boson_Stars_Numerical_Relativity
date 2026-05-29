@@ -1,0 +1,9 @@
+# Main make.code.defn file for thorn TestReduce
+# $Header$
+
+# Source files in this directory
+SRCS = Reduce_Maximum.c Reduce_Sum.c Reduce_Avg.c
+
+# Subdirectories containing source files
+SUBDIRS = 
+

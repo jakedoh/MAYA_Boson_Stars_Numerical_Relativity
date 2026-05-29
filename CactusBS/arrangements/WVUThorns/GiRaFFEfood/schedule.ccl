@@ -1,0 +1,130 @@
+# Schedule definitions for thorn GiRaFFEfood
+
+STORAGE: HydroBase::rho[1],HydroBase::press[1],HydroBase::eps[1],HydroBase::vel[1],HydroBase::Bvec[1],HydroBase::Avec[1],HydroBase::Aphi[1]
+
+STORAGE: delAi, B2mE2, delBi, delvi, ElectricFields, delBi_ThreeWaves
+
+schedule GiRaFFEfood_CheckParameters at CCTK_PARAMCHECK
+{
+  LANG: C
+} "Check parameters"
+
+schedule GROUP GiRaFFE_Initial IN CCTK_INITIAL after HydroBase_Initial before GiRaFFE_ID_Converter
+{
+} "Schedule GiRaFFE functions in HydroBase_Initial"
+
+schedule GiRaFFEfood_Set_HydroBase_to_Zero in GiRaFFE_Initial before GiRaFFE_Food after HydroBase_Aphi_zero
+{
+  LANG: C
+} "Set HydroBase quantities to zero, including velocity and magnetic potentials, before initialization."
+
+if (CCTK_Equals(test_case,"FastWave")) {
+   schedule GiRaFFEfood_FastWave in GiRaFFE_Initial as GiRaFFE_Food
+   {
+     LANG: C
+   } "Fast 1D force free wave"
+}
+
+if (CCTK_Equals(test_case,"AlfvenWave")) {
+   schedule GiRaFFEfood_AlfvenWave in GiRaFFE_Initial as GiRaFFE_Food
+   {
+     LANG: C
+   } "Alfven 2D force free wave"
+}
+
+if (CCTK_Equals(test_case,"DegenAlfvenWave")) {
+   schedule GiRaFFEfood_DegenAlfvenWave in GiRaFFE_Initial as GiRaFFE_Food
+   {
+     LANG: C
+   } "Degenerate Alfven 2D force free wave"
+}
+
+if (CCTK_Equals(test_case,"ThreeAlfvenWave")) {
+   schedule GiRaFFEfood_ThreeAlfvenWave in GiRaFFE_Initial as GiRaFFE_Food 
+   {
+     LANG: C
+   } "Three Alfven 2D force free waves"
+}
+
+if (CCTK_Equals(test_case,"FFEBreakdown")) {
+   schedule GiRaFFEfood_FFEBreakdown in GiRaFFE_Initial as GiRaFFE_Food
+   {
+     LANG: C
+   } "Force free breakdown 2D test"
+}
+
+if (CCTK_Equals(test_case,"SplitMonopole")) {
+   schedule GiRaFFEfood_SplitMonopole in GiRaFFE_Initial as GiRaFFE_Food
+   {
+     LANG: C
+   } "Bandford-Znajek Split Monopole Test"
+
+}
+
+if (CCTK_Equals(test_case,"ExactWald")) {
+   schedule GiRaFFEfood_ExactWald in GiRaFFE_Initial as GiRaFFE_Food
+   {
+     LANG: C
+   } "Exact Wald Electrovacuum Solution Test"
+}
+
+if (CCTK_Equals(test_case,"MagnetoWald")) {
+   schedule GiRaFFEfood_MagnetoWald in GiRaFFE_Initial as GiRaFFE_Food
+   {
+     LANG: C
+   } "Magnetic Wald Electrovacuum Solution Test"
+}
+
+if (CCTK_Equals(test_case,"AlignedRotator")) {
+   schedule GiRaFFEfood_AlignedRotator in GiRaFFE_Initial as GiRaFFE_Food
+   {
+     LANG: C
+   } "Aligned Rotator Solution Test"
+}
+
+##########################################################
+
+#Error analysis
+
+if ( CCTK_Equals(test_case,"ThreeAlfvenWave") ) {
+  schedule GiRaFFEfood_ErrorBThreeWaves at Analysis #in MoL_PostStep after AddtoTmunu
+  {
+    LANG: C
+    OPTIONS: GLOBAL-EARLY,loop-local
+  } "Calculate the difference between the numerical and analytical magnetic field for the Three Wave"
+}
+
+if ( CCTK_Equals(test_case,"DegenAlfvenWave") || CCTK_Equals(test_case,"FastWave") ) {
+  schedule GiRaFFEfood_OutputFlatSpaceEfield at Analysis
+  {
+    LANG: C
+    OPTIONS: GLOBAL-EARLY,loop-local
+  } "Output flat-space electric field"
+}
+
+if ( CCTK_Equals(test_case,"FFEBreakdown") ) {
+  schedule GiRaFFEfood_OutputB2mE2 at Analysis
+  {
+    LANG: C
+    OPTIONS: GLOBAL-EARLY,loop-local
+  } "Output B^2 - E^2"
+}
+
+if ( CCTK_Equals(test_case,"SplitMonopole") ) {
+  schedule GiRaFFEfood_ErrorSplitM at Analysis before VIslab_InitializeIntegralCounter #in MoL_PostStep after AddtoTmunu
+  {
+    LANG: C
+    OPTIONS: GLOBAL-EARLY,loop-local
+  } "Calculate the difference between the numerical and analytical magnetic field for the split monopole" 
+}
+
+if ( CCTK_Equals(test_case,"ExactWald") ) {
+  schedule GiRaFFEfood_ConvergenceWald at Analysis before VIslab_InitializeIntegralCounter #at MoL_PostStep after AddtoTmunu
+  {
+    LANG: C
+## Uncommenting following line removes NaN's from t=0 data, but introduces weird results at later times.
+    OPTIONS: GLOBAL-EARLY,loop-local
+#    OPTIONS: GLOBAL,loop-local
+  } "Calculate the difference between the numerical and analytical vector potential for the Wald solution"
+}
+

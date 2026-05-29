@@ -1,0 +1,9 @@
+#Schedule definitions for thorn MatterAnalysis
+# $Header:$
+
+storage: momentum_density_vector, density_weighted_position
+
+schedule MatterAnalysis_CalculateQuantities AT CCTK_ANALYSIS BEFORE SubspaceNorms
+{
+	LANG: C
+} "Fills out grid functions for desired analysis quantities"

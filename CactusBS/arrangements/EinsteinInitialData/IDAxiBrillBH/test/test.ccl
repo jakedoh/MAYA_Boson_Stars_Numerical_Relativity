@@ -1,0 +1,11 @@
+ABSTOL 1.e-7
+RELTOL 1.e-8
+
+# data constains singularity, z=0 slice gets too close to it so is affected by
+# numerical roundoff implification
+TEST test_axibrill_nostagger
+{
+  RELTOL 5e-4 ^psiyy_z_\[16\]\[16\]\.xg$
+}
+
+

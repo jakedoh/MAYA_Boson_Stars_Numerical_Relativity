@@ -1,0 +1,57 @@
+ActiveThorns = "time MoL pugh pughreduce pughslab coordbase symbase cartgrid3d ioutil ioascii iobasic boundary admbase staticconformal spacemask coordgauge admmacros hydrobase whisky whisky_tovsolverc nanchecker eos_base eos_polytrope Constants LocalReduce TmunuBase InitBase"
+
+TmunuBase::stress_energy_storage	=	yes
+TmunuBase::stress_energy_at_RHS		=	yes
+
+time::dtfac = 0.375
+
+boundary::radpower        = 2
+
+SpaceMask::use_mask = "yes"
+
+grid::type            = "byrange"
+grid::domain          = "full"
+grid::xyzmin          = -15.0
+grid::xyzmax          =  15.001
+driver::ghost_size    =   3
+driver::global_nsize  =  33
+
+cactus::cctk_itlast   =       0
+
+hydrobase::timelevels = 2
+hydrobase::evolution_method       = "whisky"
+
+whisky::Whisky_MaxNumSandRVars	  = 16
+
+whisky::riemann_solver            = "Marquina"
+whisky::whisky_eos_type           = "Polytype"
+whisky::whisky_eos_table          = "2D_Polytrope"
+whisky::recon_method              = "ppm"
+whisky::whisky_stencil            = 3
+whisky::bound                     = "none"
+whisky::tvd_limiter               = "VanLeerMC2"
+whisky::rho_abs_min               = 1.e-7
+whisky::initial_atmosphere_factor = 0.999
+
+ADMBase::initial_data  = "tov"
+ADMBase::initial_lapse = "tov"
+ADMBase::initial_shift = "tov"
+
+whiskytovsolver::TOV_Rho_Central[0] = 1.28e-3
+whiskytovsolver::TOV_Gamma[0]       = 2.0
+whiskytovsolver::TOV_K[0]           = 100.0
+whiskytovsolver::TOV_Combine_Method = "maximum"
+
+EOS_Polytrope::eos_gamma            = 2.0
+EOS_Polytrope::eos_k                = 100.0
+
+ActiveThorns = "ADMMass"
+
+ADMMass::ADMMass_surface_distance[0] = 12
+
+IO::out_dir = $parfile
+IO::out_fileinfo="none"
+
+IOBasic::outScalar_every = 1
+IOBasic::outScalar_vars  = "ADMMass::ADMMass_Masses"
+IOBasic::outScalar_style = "gnuplot"

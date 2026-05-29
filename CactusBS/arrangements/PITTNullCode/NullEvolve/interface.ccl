@@ -1,0 +1,55 @@
+# Interface definition for thorn NullEvolve
+# $Header$
+
+implements: NullEvolve
+inherits: NullInterp NullGrid NullVars Time 
+friend: NullSHRExtract
+
+CCTK_INT FUNCTION IO_TruncateOutputFiles \
+  (CCTK_POINTER_TO_CONST IN GH)
+
+USES FUNCTION IO_TruncateOutputFiles
+
+cctk_complex distmp[2] Type=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+   distmp_F, distmp_d2F, distmp_d4F
+} "temporaries used for dissipation"
+
+cctk_real dissip_mask Type=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts "dissipation mask"
+
+cctk_complex diagtmp[2] Type=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts "temporaries used for diagnostics"
+
+CCTK_INT aux_mask TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+  auxiliary_maskn, auxiliary_masks
+} "auxiliary evolution masks"
+
+CCTK_INT eth4_mask TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+  eth4_maskn, eth4_masks
+} "dissipation masks, to protect the startup from taking eth4"
+
+CCTK_COMPLEX Jrad TYPE=ARRAY dim=1 size=NullGrid::N_radial_pts DISTRIB=CONSTANT
+{
+ jcn_rad, jcs_rad
+}
+
+CCTK_COMPLEX dxJrad TYPE=ARRAY dim=1 size=NullGrid::N_radial_pts DISTRIB=CONSTANT
+{
+ dxjcn_rad, dxjcs_rad
+}

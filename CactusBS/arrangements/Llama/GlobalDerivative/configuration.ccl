@@ -1,0 +1,4 @@
+# Configuration definition for thorn GlobalDerivative
+# $Header$
+
+REQUIRES SummationByParts

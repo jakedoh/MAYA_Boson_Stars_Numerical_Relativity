@@ -1,0 +1,22 @@
+Cactus Code Thorn RotatingSymmetry180
+Author(s)    : Erik Schnetter <schnetter@cct.lsu.edu>
+Maintainer(s): Erik Schnetter <schnetter@cct.lsu.edu>
+Licence      : GPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+Provide a 180 degree rotational symmetry boundary condition.  This is
+the kind of symmetry that exists e.g. in a binary black hole evolution
+when the two black holes are identical.  The same setup also admits an
+additional bitant symmetry.
+
+Currently the symmetry is fixed to be located at the lower x boundary,
+so that there is a rotation about the z axis.
+
+The coordinate thorn does not know about this symmetry.  You will have
+to set up the domain such that you have an upper bitant in the x
+direction.
+
+This symmetry boundary condition can be mixed with arbitrary symmetry
+conditions in the z direction, e.g. bitant or periodicity.

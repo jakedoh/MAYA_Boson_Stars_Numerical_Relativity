@@ -1,0 +1,18 @@
+# Interface definition for thorn SoundSpeed
+# $Header:$
+
+implements: soundspeed
+inherits: ADMBase HydroBase
+
+# Convenient way to determine boundary sizes
+CCTK_INT FUNCTION GetBoundarySizesAndTypes \
+   (CCTK_POINTER_TO_CONST IN cctkGH, \
+    CCTK_INT IN size, \
+    CCTK_INT OUT ARRAY bndsize, \
+    CCTK_INT OUT ARRAY is_ghostbnd, \
+    CCTK_INT OUT ARRAY is_symbnd, \
+    CCTK_INT OUT ARRAY is_physbnd)
+REQUIRES FUNCTION GetBoundarySizesAndTypes
+
+REAL SoundSpeed type=GF tags='checkpoint="no" tensortypealias="Scalar"' "Speed of Sound" 
+REAL MachNum type=GF tags='checkpoint="no" tensortypealias="Scalar"' "Mach Number"

@@ -1,0 +1,38 @@
+# Interface definition for thorn Norms
+# $Header$
+
+implements: Norms
+inherits:
+
+
+private:
+INT handles_group TYPE=SCALAR
+{
+  sum_handle
+} "handles for reduction operators"
+
+
+INT varinfo TYPE=ARRAY DIM=1 SIZE=max_nr_vars DISTRIB=constant
+{
+  varindices_1st, varindices_2nd
+} "variable info - which vars to compute norms for"
+
+INT nrdecvar_gr TYPE=SCALAR
+{
+  nr1stvars, nr2ndvars
+} "number of vars to compute for 1st & 2nd order vars"
+
+REAL bgvals_group TYPE=ARRAY DIM=1 SIZE=max_nr_vars DISTRIB=constant
+{
+  bgvals_1st, bgvals_2nd
+} "background value for variable - these get subtracted"
+
+REAL norm_group TYPE=SCALAR
+{
+  norm, norm_u, norm_v, norm_grad
+} "computed norm"
+
+REAL diff_term_group TYPE=GF
+{
+  diff_term
+} "diff terms for norm"

@@ -1,0 +1,27 @@
+# wavetoyf77.par - minimal wavetoy evolution
+# $Id$
+#
+# /*@@
+#   @file      wavetoyf77.par
+#   @date      Sunday 24th July
+#   @author    Gabrielle Allen
+#   @desc
+#   Wavetoy parameter file demonstrating minimal evolution
+#   @enddesc
+# @@*/
+
+ActiveThorns = "boundary localreduce idscalarwavec time wavetoyc pugh pughslab pughreduce CartGrid3D CoordBase SymBase ioutil ioascii httpd socket"
+
+WaveToy::bound = "static"
+
+driver::global_nx = 40
+driver::global_ny = 40
+driver::global_nz = 40
+
+time::dtfac = 0.5
+
+Cactus::cctk_itlast=50000
+
+IOASCII::out1d_every = 10
+IOASCII::out1D_vars = "wavetoy::phi"
+

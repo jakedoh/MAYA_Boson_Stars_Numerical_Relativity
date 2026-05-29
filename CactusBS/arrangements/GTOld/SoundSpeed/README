@@ -1,0 +1,11 @@
+Cactus Code Thorn SoundSpeed
+Author(s)    : Tanja Bode <tanja.bode@physics.gatech.edu>
+Maintainer(s): Tanja Bode <tanja.bode@physics.gatech.edu>
+Licence      : None
+--------------------------------------------------------------------------
+
+1. Purpose
+
+Extremely basic thorn to recalculate the speed of sound for analysis.
+
+cs^2 = (1/h) * ( (dP/drho) + P*(dP/deps)/(rho^2) )

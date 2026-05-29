@@ -1,0 +1,16 @@
+
+!DESC "Test complex grid functions"
+
+ActiveThorns = "iobasic LocalReduce CartGrid3D CoordBase SymBase pugh testcomplex ioutil ioascii pughslab"
+
+cactus::cctk_itlast = 10
+
+io::out_every = 1
+IO::out_dir = "TestComplex"
+
+iobasic::outinfo_vars="testcomplex::comp3d testcomplex::acomp2d"
+iobasic::outscalar_vars="testcomplex::comp3d testcomplex::acomp3d testcomplex::acomp2d testcomplex::acomp1d testcomplex::scomp"
+iobasic::outscalar_every = 1
+ioascii::out1d_vars="testcomplex::comp3d testcomplex::acomp3d testcomplex::acomp2d testcomplex::acomp1d"
+ioascii::out2d_vars="testcomplex::acomp3d testcomplex::acomp2d"
+ioascii::out2d_every = 10

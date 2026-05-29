@@ -1,0 +1,96 @@
+# Schedule definitions for thorn NullEvolve
+# $Header$
+storage: NullVars::realcharfuncs[2]
+storage: NullVars::cmplxcharfuncs_basic[2]
+storage: NullVars::cmplxcharfuncs_aux[2]
+#storage: NullVars::mask
+storage: RNewsArrs CNewsArrs patch_index time_of_news omega JJ_l
+storage: StateS
+#storage: DumpArr LimDump ReGA CmplxGA
+
+if (interp_to_constant_uBondi == 1)
+{
+   storage: NewsB_uBondi News_uBondi Psi4_uBondi
+   storage: constant_uBondi
+   storage: uBondi_past News_past NewsB_past Psi4_past
+   
+   if (compute_lin_strain)
+   {
+      storage: linStrain_uBondi
+      storage: linStrain_past
+   }
+}
+
+storage: uBondi[1] NewsB[1] News[1] Psi4[1]
+
+if (compute_lin_strain)
+{
+   storage: linStrain[1]
+}
+
+
+
+schedule NullNews_Init at PostInitial after NullEvol_Initial
+{
+  LANG: Fortran
+  OPTIONS: global
+} "Init News"
+
+
+schedule NullNews_ScriVals at CCTK_EVOL after NullEvol_Step 
+{
+  LANG: Fortran
+  OPTIONS: global
+} "News get scrivals"
+
+schedule NullNews_GetNews at EVOL after NullNews_ScriVals
+{
+  LANG: Fortran
+  OPTIONS: global
+  storage: CmplxGA ReGA  
+} "News calc"
+
+
+if (interp_to_constant_uBondi == 1)
+{
+   schedule NullNews_InterpInit AT INITIAL
+   {
+     LANG: C
+     OPTIONS: GLOBAL
+   } "Initialise past timelevels."
+
+   schedule NullNews_InterpCycleTimelevels AT PRESTEP
+   {
+     LANG: C
+     OPTIONS: GLOBAL
+   } "Cycle timelevels used for interpolating to constant uBondi"
+
+   schedule NullNews_Interp_to_constant_uBondi AT EVOL AFTER NullNews_GetNews
+   {
+     LANG: C
+     OPTIONS: global
+   } "Interpolate News, NewsB, Psi4 to constant Bondi-time"
+}
+
+if (write_spherical_harmonics)
+{
+
+  schedule NullNews_WriteSphHarm AT ANALYSIS
+  {
+    LANG: Fortran
+    OPTIONS: global
+  } "If requested, output spherical harmonics of the news"
+
+}
+
+if (Ylm_at_Scri == 1)
+{
+  STORAGE: YlmScri_group
+
+  schedule NullNews_YlmScri at INITIAL after NullNews_Init # before??
+  {
+     LANG: Fortran
+  } "fill the waveform at Scri with spherical harmonics"
+
+}
+

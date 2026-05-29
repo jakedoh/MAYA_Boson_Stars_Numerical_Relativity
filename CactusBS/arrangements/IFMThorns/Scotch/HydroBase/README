@@ -1,0 +1,10 @@
+Cactus Code Thorn HydroBase
+Authors    : See the ThornGuide.
+--------------------------------------------------------------------------
+
+Purpose of the thorn:
+
+This thorn should be the interface between all hydro codes and the
+spacetime codes.
+
+For more information see the documentation in the ThornGuide.

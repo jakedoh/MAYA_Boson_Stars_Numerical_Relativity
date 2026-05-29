@@ -1,0 +1,4 @@
+# Configuration definition for thorn AEIThorns/EHFinder
+# $Header$
+
+REQUIRES THORNS: CartGrid3D

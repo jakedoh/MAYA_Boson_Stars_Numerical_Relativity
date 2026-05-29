@@ -1,0 +1,7 @@
+# Interface definition for thorn PunctureAtmosphere
+implements: PunctureAstmosphere
+inherits:   HydroBase, ADMBase, Constants, Grid
+USES INCLUDE: constants.h
+
+
+

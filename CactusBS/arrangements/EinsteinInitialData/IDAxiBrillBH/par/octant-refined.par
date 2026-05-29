@@ -1,0 +1,203 @@
+
+# Set up the IO Directory
+ActiveThorns = "IOUtil"
+IO::out_dir = $parfile
+
+# Checkpoint, if you like
+#IO::checkpoint_dir = $parfile
+
+# TOTAL NUMBER OF TIMESTEPS TO DO
+cactus::cctk_itlast        = 100
+
+# Set up the coordinates and symmetry
+ActiveThorns = "CoordBase SymBase"
+CoordBase::domainsize = spacing # set domain by grid spacing & number of cells
+CoordBase::zero_origin_x = yes # lower bounds are set at 0.0
+CoordBase::zero_origin_y = yes
+CoordBase::zero_origin_z = yes
+CoordBase::dx = 0.05 # grid spacing
+CoordBase::dy = 0.05
+CoordBase::dz = 0.05
+CoordBase::ncells_x = 32 # number of cells (not points) in grid.
+CoordBase::ncells_y = 32
+CoordBase::ncells_z = 32
+# These are the offsets between bdry loc and 1st bdry pt at lower x/y/z faces
+CoordBase::boundary_shiftout_x_lower = 1
+CoordBase::boundary_shiftout_y_lower = 1
+CoordBase::boundary_shiftout_z_lower = 1
+CoordBase::boundary_size_x_lower = 2 # same as num of ghostzones
+CoordBase::boundary_size_y_lower = 2
+CoordBase::boundary_size_z_lower = 2
+
+# Set up Carpet stuff.
+ActiveThorns = "Carpet CarpetLib CarpetReduce CarpetSlab"
+Carpet::domain_from_coordbase = yes # using CoordBase--works better
+Carpet::max_refinement_levels = 2 # only coarse and fine.
+driver::ghost_size = 2
+
+# Here's where the specific coordinates for the fine mesh are set.
+ActiveThorns = "CarpetRegrid"
+CarpetRegrid::refinement_levels = 2
+CarpetRegrid::refined-regions = manual-coordinate-list
+CarpetRegrid::smart_outer_boundaries = yes
+CarpetRegrid::coordinates = " [ [ ([0.0, 0.0, 0.0]:[2.0, 2.0, 2.0]:[0.05, 0.05, 0.05]) ] ] "
+
+# Coordinates? Boundary?
+ActiveThorns = "Boundary CartGrid3D"
+grid::type = coordbase
+grid::avoid_origin = no
+grid::domain = octant
+
+# Set up time stepping.
+ActiveThorns = "Time"
+Time::dtfac = 0.25
+Cactus::cctk_initial_time = 0.0
+
+# Physics, now.
+ActiveThorns = "ADMBase StaticConformal PsiKadelia"
+ActiveThorns = "SpaceMask ADMCoupling ADMMacros ADMConstraints"
+# just to run ADMConstraints!
+
+# Gauge and Evolution
+ActiveThorns = "CoordGauge BSSN_MoL MoL LocalReduce"
+ADMBase::lapse_evolution_method = "1+log"
+ADMBase::evolution_method = "adm_bssn" # From BSSN_MoL
+MoL::ODE_Method = "ICN"
+MoL::MoL_Intermediate_Steps = 3
+# Change the above and Carpet::num_integrator_substeps (below) together
+
+ADM_BSSN::bound = "newrad"
+
+ADMBase::metric_type = "static conformal" # From StaticConformal
+
+# The interpolator
+ActiveThorns = "LocalInterp" # Needed for IDAxiBrillBH
+ActiveThorns = "CarpetInterp" # Needed for IDAxiBrillBH
+
+Carpet::prolongation_order_space = 3
+Carpet::prolongation_order_time = 2
+Carpet::num_integrator_substeps = 3 # because of ICN
+Carpet::use_outer_buffer_zones = yes
+
+
+# Initial Data parameters
+ActiveThorns = "IDAxiBrillBH IDAnalyticBH"
+admbase::initial_data      = "axibrillbh" #From IDAxiBrillBH
+idaxibrillbh::amp          = 0.5
+idaxibrillbh::eta0         = 0.0
+idaxibrillbh::sigma        = 1.0
+idaxibrillbh::etamax       = 6.0
+idaxibrillbh::n            = 2
+idaxibrillbh::ne           = 302
+idaxibrillbh::nq           = 54
+
+
+
+# And Excision, because there is a nasty singularity.
+ActiveThorns = "LegoExcision"
+LegoExcision::fixed_excision = "sphere"
+LegoExcision::fixed_size = 0.4 # half of the apparant horizon radius
+# the origin is the center, so that's good.
+SpaceMask::use_mask = yes # Need these for lego excision
+BSSN_MoL::excise = yes
+BSSN_MoL::excisionType = lego
+
+
+### Extraction parameters
+
+ActiveThorns = "Extract"
+extract::interpolation_order = 2
+
+extract::num_detectors = 2
+extract::itout         = 1
+
+extract::Nt        = 150
+extract::Np        = 150
+extract::origin_x  = 0.
+extract::origin_y  = 0.
+extract::origin_z  = 0.
+
+extract::all_modes  = "no"
+extract::l_mode     = 2
+extract::m_mode     = 0
+extract::detector1 = 5.0 #2
+extract::detector2 = 6.0 #3
+
+
+
+# AH finder.
+#ActiveThorns = "AHFinder"
+#ahfinder::ahf_active   = "yes"
+#ahfinder::ahf_flow     = "yes"
+#ahfinder::ahf_gaussout = "yes"
+#ahfinder::ahf_findevery= 10
+#ahfinder::interpolation_order = 2
+
+
+
+# AH finder direct
+ActiveThorns = "AHFinderDirect SphericalSurface AEILocalInterp"
+#AHFinderDirect::find_every = 10
+AHFinderDirect::find_every = 1
+AHFinderDirect::print_timing_stats = "true"
+AHFinderDirect::verbose_level = "algorithm highlights"
+
+AHFinderDirect::output_Theta_every = 1
+AHFinderDirect::h_base_file_name     = "h"
+AHFinderDirect::Theta_base_file_name = "Theta"
+
+AHFinderDirect::N_horizons = 1
+AHFinderDirect::origin_x[1] = 0.0
+AHFinderDirect::origin_y[1] = 0.0
+AHFinderDirect::origin_z[1] = 0.0
+
+AHFinderDirect::initial_guess_method[1] = "coordinate sphere"
+AHFinderDirect::initial_guess__coord_sphere__x_center[1] = -0.2
+AHFinderDirect::initial_guess__coord_sphere__y_center[1] = 0.3
+AHFinderDirect::initial_guess__coord_sphere__z_center[1] = 0.0
+AHFinderDirect::initial_guess__coord_sphere__radius[1] = 1.0
+
+AHFinderDirect::geometry_interpolator_name = "Lagrange polynomial interpolation"
+AHFinderDirect::geometry_interpolator_pars = "order=4"
+AHFinderDirect::surface_interpolator_name  = "Lagrange polynomial interpolation"
+AHFinderDirect::surface_interpolator_pars  = "order=4"
+
+
+# Analysis
+ActiveThorns = "ADMAnalysis"
+# This += thing doesn't work.
+# OUTPUT 1D ASCII
+#ioascii::out1D_vars      += "admanalysis::spherical_metric"
+
+# OUTPUT 2D ASCII
+#ioascii::out2D_vars      += "admanalysis::spherical_metric"
+
+
+# Parameters which will affect performance
+# ----------------------------------------
+# Each time admconstraints:: is output thorn ADMConstraints is used
+# Each time psikadelia:: is output thorn PsiKadelia is used
+# Output can be done in as groups of variables or single variables
+# Useful groups are
+#   einstein::metric - 6 variables
+#   einstein::conv - 4 variables
+#   admconstraints::admconstraints - 4 variables
+
+ActiveThorns = "CarpetIOBasic CarpetIOASCII CarpetIOScalar"
+
+# OUTPUT TO SCREEN
+iobasic::outInfo_every   = 2
+#iobasic::outInfo_vars    = "ADMBase::alp PsiKadelia::psi4re admconstraints::ham"
+IOBasic::outInfo_vars = "ADMBase::alp ADMConstraints::ham"
+
+# OUTPUT Scalars reductions
+IOScalar::outScalar_every = 1
+IOScalar::outScalar_vars  = "ADMBase::alp ADMBase::metric admconstraints::ham PsiKadelia::psi4re"
+
+# OUTPUT 1D ASCII
+ioascii::out1D_every     = 1
+ioascii::out1D_vars      = "admbase::alp admbase::metric admconstraints::ham PsiKadelia::psi4re" #  ADMAnalysis::spherical_metric"
+
+# OUTPUT 2D ASCII
+ioascii::out2D_every     = 10
+ioascii::out2D_vars      = "admbase::alp admbase::metric admconstraints::ham PsiKadelia::psi4re" #  ADMAnalysis::spherical_metric"

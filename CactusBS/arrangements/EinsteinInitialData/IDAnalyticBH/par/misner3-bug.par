@@ -1,0 +1,51 @@
+# This parameter file tries to set up 3-black-hhole Misner initial data.
+# Alas, it reveals a nasty "infinite memory leak" in IDAnalyticBH:
+# the process size grows steadily at around O(100) Megabytes/second
+# until all swap space is exhausted.  (It was over a Gigabyte when I
+# killed the process!)
+
+########################################
+ 
+#
+# ***** grid *****
+#
+
+ActiveThorns = "CartGrid3D CoordBase SymBase PUGH"
+
+Driver::global_nx   = 15
+Driver::global_ny   = 15
+Driver::global_nz   = 10
+PUGH::ghost_size    = 2
+
+Grid::domain        = "bitant"
+Grid::type          = "byspacing"
+Grid::dxyz          = 0.1
+Grid::avoid_origin  = "true"
+
+########################################
+
+#
+# physics
+#
+
+ActiveThorns = "ADMBase ADMCoupling CoordGauge StaticConformal SpaceMask"
+ActiveThorns = "IDAnalyticBH"
+
+ADMBase::initial_data    = "multiple_misner_bh"
+IDAnalyticBH::misner_nbh = 3
+IDAnalyticBH::mu         = 1.0
+
+########################################
+
+#
+# numerical methods
+#
+
+Cactus::cctk_itlast = 0
+ADMBase::metric_type               = "static conformal"
+StaticConformal::conformal_storage = "factor"
+ADMBase::evolution_method       = "none"
+ADMBase::initial_lapse          = "Cadez"
+ADMBase::lapse_evolution_method = "static"
+ADMBase::initial_shift          = "zero"
+ADMBase::shift_evolution_method = "static"

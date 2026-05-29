@@ -1,0 +1,31 @@
+Organization of these test files:
+
+"xeon" stands for the rounding errors that I detected for the
+conspiration compiler-precessor in these machines.
+
+Thus I have preserved the "test" files designed for Einstein 1.
+
+"E2" Stands for the version converted for Einstein 2.
+
+------
+
+How these work:
+
+Comparing the directories test vs xeon_test you will notice
+the rounding error I just mentioned.....
+
+Comparing xeon_test vs E2xeon_test you won't notice any
+difference, since both were configured for the conspiracy 
+xeon-?compiler .... this is my test for the conversion
+from Einstein 1 to Einstein 2 .... it was done on xeon04....
+
+I could add a test later carried out in other machines 
+and update this information too.... I'll need to ask Ryoji 
+where he compiled the test for E1.....
+
+------
+
+Francisco
+
+
+

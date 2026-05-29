@@ -1,0 +1,5 @@
+# Interface definition for thorn TestTable
+# $Header$
+
+implements: TestTable
+inherits:

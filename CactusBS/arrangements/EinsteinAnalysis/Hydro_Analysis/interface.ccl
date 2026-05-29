@@ -1,0 +1,49 @@
+# Interface definition for thorn HydroAnalysis
+
+implements: Hydro_Analysis
+
+inherits: Grid, HydroBase, ADMBase 
+
+
+public:
+
+CCTK_REAL Hydro_Analysis_rho_max type = SCALAR "value of the maximum of rho"
+
+CCTK_REAL Hydro_Analysis_rho_sum type = SCALAR "value of the sum of rho"
+
+CCTK_REAL Hydro_Analysis_rho_max_loc[3] type = SCALAR "coordinate location of the maximum of rho"
+
+CCTK_REAL Hydro_Analysis_rho_center_volume_weighted_gf[3] type = GF Timelevels = 3 tags='checkpoint="no" tensortypealias="u"' "temporary GF to obtain the coordinate location of the volume weighted center of mass via a reduction"
+
+CCTK_REAL Hydro_Analysis_rho_center_volume_weighted[3] type = SCALAR "coordinate location of the volume weightes center of mass"
+
+CCTK_REAL Hydro_Analysis_rho_max_origin_distance  type = SCALAR "proper distance between the maximum of the density and the origin (along a straight coordinate line)"
+
+# core center of mass
+CCTK_REAL Hydro_Analysis_core_rho_sum type = SCALAR "value of the sum of rho in the core region"
+
+# rho,rho*x,rho*y,rho*z
+CCTK_REAL Hydro_Analysis_core_rho_centroid_gf[4] type = GF Timelevels = 3 tags='checkpoint="no" tensortypealias="4u"' "temporary GF to obtain the coordinate location of the centroid location of rho*x in the core region via a reduction"
+
+CCTK_REAL Hydro_Analysis_core_rho_centroid[3] type = SCALAR "coordinate location of the centroid of rho*x in the core region"
+
+
+##################
+# Baryonic Masses
+##################
+
+private:
+
+real grid_spacing_product type=SCALAR tags='checkpoint="no"' "product of cctk_delta_space, to be computed in local mode and later used in global mode"
+
+real Hydro_Analysis_masses[restmass_masses_nr] type=SCALAR tags='checkpoint="no"' "Baryonic masses at different radii"
+
+real Hydro_Analysis_masses_fractions[restmass_masses_nr] type=SCALAR tags='checkpoint="no"' "Fractional Baryonic masses at different radii"
+
+real Hydro_Analysis_total_rest_mass type=SCALAR tags='checkpoint="no"'
+{
+   total_rest_mass
+} "Total Baryonic mass"
+
+real Hydro_Analysis_masses_temps[restmass_masses_nr+1] type=GF timelevels=3 tags='checkpoint="no"' "Temporaries for the mass calculation"   # the [0] is used for total_rest_mass
+

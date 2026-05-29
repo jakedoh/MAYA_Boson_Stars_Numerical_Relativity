@@ -1,0 +1,10 @@
+# Configuration definition for thorn EOS_RealisticPP
+
+PROVIDES EOS_RealisticPP
+{
+  SCRIPT
+  LANG
+}
+
+REQUIRES EOS_Base 
+

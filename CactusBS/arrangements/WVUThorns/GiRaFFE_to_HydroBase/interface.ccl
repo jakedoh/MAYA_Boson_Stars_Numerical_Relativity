@@ -1,0 +1,7 @@
+# Interface definition for thorn GiRaFFE_to_HydroBase
+# $Header:$
+
+implements: GiRaFFE_to_HydroBase
+inherits: grid HydroBase ADMBase GiRaFFE
+
+uses include header: GiRaFFE_headers.h

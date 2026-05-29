@@ -1,0 +1,12 @@
+# Main make.code.defn file for thorn EOS_Hybrid
+# $Header$
+
+# Source files in this directory
+SRCS = 	EOS_Hybrid.F \
+	EOS_Hybrid_Analysis.F \
+	EOS_Hybrid_Scalars.F \
+	EOS_Hybrid_Startup.F
+
+# Subdirectories containing source files
+SUBDIRS = 
+

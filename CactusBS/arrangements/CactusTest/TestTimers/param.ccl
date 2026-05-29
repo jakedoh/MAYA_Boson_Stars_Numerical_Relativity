@@ -1,0 +1,11 @@
+# Parameter definitions for thorn TestTimers
+# $Header$
+
+private:
+
+KEYWORD TestParameter "Parameter for measuring CCTK_Equals times"
+{
+  "yes" :: "yes"
+  "no"  :: "no"
+  "maybe" :: "maybe"
+} "no"

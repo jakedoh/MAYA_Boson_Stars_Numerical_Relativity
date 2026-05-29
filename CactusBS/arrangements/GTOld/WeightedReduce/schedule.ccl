@@ -1,0 +1,7 @@
+# Schedule definitions for thorn WeightedReduce
+
+schedule WeightedReduceStartup at STARTUP
+{
+  LANG: C
+} "Startup routine"
+

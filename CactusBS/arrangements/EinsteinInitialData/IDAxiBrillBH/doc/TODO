@@ -1,0 +1,30 @@
+Things that Could be Improved in This Thorn
+===========================================
+
+This thorn works with non-unigrid Cactus, but it doesn't work very
+efficiently: it does the 2D elliptic setup and solve all over again
+for each local Cactus (3D) grid.  It would be more efficient to move the
+2D elliptic stuff out into a separately scheduled routine which would
+be done once (for Carpet, it would be scheduled in global
+mode), and have only the interpolation to the 3D grid done for each
+local Cactus grid.
+
+Part of this same change might also be to store the 2D elliptic results
+in Cactus grid arrays rather than native Fortran 90 arrays.  This would
+let us use standard Cactus I/O methods to output the 2D elliptic results
+instead of the hard-wired code we use right now.
+
+
+
+For each Cactus grid point, IDAxiBrillBH calculates
+  eta := |log(2r/m)|
+and uses this to interpolate into an internal grid.  This internal grid
+covers the range eta = 0 to etamax, where etamax defaults to 5.0.
+So... for m=1, r must lie in the range 0.00337 to 74.2, or else the
+computed  eta  value will fall outside the internal grid.
+
+It would be nice if this restriction could be lifted (eg allowing
+a grid point at the origin).  Maybe some sort of interpolation in real
+space (instead of in eta-space) to fill in the hole at the origin?
+Maybe an extrapolation that can lead outside the eta grid?  Maybe use
+the unperturbed black hole data outside the eta grid?

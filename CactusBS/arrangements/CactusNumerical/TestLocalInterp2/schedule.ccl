@@ -1,0 +1,23 @@
+# Schedule definitions for thorn TestLocalInterp2
+
+STORAGE: success
+
+SCHEDULE TestLocalInterp2_Lagrange1D AT CCTK_INITIAL
+{
+    LANG: C
+    STORAGE: poly
+} "Test 1D Lagrange interpolation operators"
+
+SCHEDULE TestLocalInterp2_Lagrange3D AT CCTK_INITIAL
+{
+    LANG: C
+    STORAGE: poly
+} "Test 3D Lagrange interpolation operators"
+
+if(test_symmetric_interpolation) {
+  SCHEDULE TestLocalInterp2_Symmetric AT CCTK_INITIAL
+  {
+      LANG: C
+      STORAGE: func
+  } "Test symmetry of the interpolation operators"
+}

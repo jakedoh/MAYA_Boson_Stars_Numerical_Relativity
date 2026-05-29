@@ -1,0 +1,8 @@
+# Main make.code.defn file for thorn RiemannSolverHLL
+# $Header:$
+
+# Source files in this directory
+SRCS = flux.c hll.c signal_speed.c
+
+# Subdirectories containing source files
+SUBDIRS = 

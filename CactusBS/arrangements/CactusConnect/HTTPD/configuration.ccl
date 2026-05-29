@@ -1,0 +1,19 @@
+# Configuration definitions for thorn HTTPD
+# $Header$
+
+REQUIRES SOCKET
+
+# This will disappear if we can function alias the stuff
+PROVIDES HTTPD
+{
+  SCRIPT
+  LANG
+}
+
+OPTIONAL MPI
+{
+}
+
+OPTIONAL PTHREADS
+{
+}

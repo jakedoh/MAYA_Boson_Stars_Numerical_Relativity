@@ -1,0 +1,8 @@
+# Main make.code.defn file for thorn WaveToy
+# $Header$
+
+# Source files in this directory
+SRCS = InitSymBound.F90 WaveToy.F90 Startup.F90
+
+# Subdirectories containing source files
+SUBDIRS = 

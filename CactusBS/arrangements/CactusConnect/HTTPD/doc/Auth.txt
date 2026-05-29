@@ -1,0 +1,108 @@
+ /*@@
+   @file      Auth.txt
+   @date      Fri Sep 15 14:05:49 2000
+   @author    Tom Goodale
+   @desc 
+   Description of http authentication interface interface.
+   @enddesc 
+   @version $Header$
+ @@*/
+
+There is an HTTP authentication interface, which is accessed by
+including http_Auth.h.
+
+This provides two functions:
+
+int HTTP_AuthAddUser(const char *database, 
+                     const char *name,
+                     const char *password,
+                     const char *encryption_scheme);
+
+which allows databases of users and passwords to be created.
+
+The encryption scheme says how the password which is being passed in
+is encrypted.  Currently supported schemes are 'none' for plaintext,
+or 'crypt' for a password encrypted using crypt(3), such as is produced 
+by the unix passwd command, plus many other tools.  The use of
+crypt(3) relies on Cactus determining that the function exists.  Other 
+encryption systems are easily added.
+
+This allows the password stored in parameter files or displayed on a
+web page to be encrypted.
+
+The other function is
+
+int HTTP_AuthenticateBasic(httpRequest *request,
+                           const char *database,
+                           char *user,
+                           int length);
+
+which takes an HTTP request, and a password database, and sees if the
+'Authorization' header field declares a user and password which are in 
+the database.  This function supports the 'Basic' authentication
+scheme supplied by HTTP/1.0.  It will also, if 'user' is not null,
+pass back the name of the user who authenticated if that isn't longer
+than length.
+
+This function has three possible return codes.
+
++1  - the Authorization header was missing.
+0   - header there.  User and password match.
+-1  - header there.  User and password don't match.
+
+Usage:
+------
+
+Create a set of users and password in a database, e.g.
+
+  HTTP_AuthAddUser("developers","goodale","foo","none");
+
+which declares a database called 'developers' and adds a user
+'goodale; with password 'foo' which is plaintext.  An equivalent
+declaration would have been
+
+HTTP_AuthAddUser("developers","goodale","fSzQC4Ssz0ab.","crypt");
+
+if the configuration supports crypt(3) passwords.
+
+Then when a page comes in, one does
+
+  notauthorised = HTTP_AuthenticateBasic(request, "users", NULL, 0);
+
+  if(!notauthorised)
+  {
+    /* Access allowed */
+    strcpy(message,"HTTP/1.0 200 Ok\r\n"); 
+  
+    HTTP_Write(request, message, strlen(message)); 
+
+    strcpy(message,"WWW-Authenticate: Basic realm=\"foo\"\r\n"); 
+  
+    HTTP_Write(request, message, strlen(message)); 
+
+    strcpy(message,"Content-Type: text/html\r\n\r\n");
+
+    HTTP_Write(request, message, strlen(message));
+
+    ...
+  }
+  else
+  {
+    /* Access not allowed. */
+    strcpy(message,"HTTP/1.0 401 Unauthorized\r\n"); 
+  
+    HTTP_Write(request, message, strlen(message)); 
+
+    strcpy(message,"WWW-Authenticate: Basic realm=\"foo\"\r\n"); 
+  
+    HTTP_Write(request, message, strlen(message)); 
+
+    strcpy(message,"Content-Type: text/html\r\n\r\n");
+
+    HTTP_Write(request, message, strlen(message));
+   
+    ...
+  }
+
+  Additionally you could check whether 'notauthorised' = +1 or -1 and
+in the latter case log some message about a failed access request.

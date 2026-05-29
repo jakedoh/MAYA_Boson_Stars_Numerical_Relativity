@@ -1,0 +1,5 @@
+# Interface definition for thorn ID_Mag_NS
+
+IMPLEMENTS: ID_Mag_NS
+
+INHERITS: grid ADMBase HydroBase

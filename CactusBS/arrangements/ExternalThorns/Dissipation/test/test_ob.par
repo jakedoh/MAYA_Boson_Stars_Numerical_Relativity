@@ -1,0 +1,147 @@
+!DESC "distorted BH, no rotation, fixed mesh refinement evolution with carpet"
+#
+# $Id: test_ob.par,v 1.3 2006/04/11 09:58:15 knarf Exp $
+#
+# Distorted BH
+#
+# Frank Herrmann 19.Jun.2003
+#
+# Edited IH 31.Jul.2003 for Carpet.
+#
+
+ActiveThorns = "ahfinderdirect sphericalsurface symbase CoordBase carpetioascii idaxibrillbh spacemask admcoupling admbase staticconformal admmacros coordgauge admanalysis mol bssn_mol admconstraints carpetinterp localinterp aeilocalinterp boundary time carpet carpetlib carpetregrid carpetreduce carpetslab cartgrid3d ioutil iobasic ellbase nanchecker dissipation localreduce"
+
+#--- grid
+time::dtfac                             = 0.25
+grid::type                              = "coordbase"
+grid::avoid_origin                     = "no"
+grid::domain                            = "bitant"
+carpet::domain_from_coordbase = "yes"
+coordbase::xmin = -12.45
+coordbase::xmax = +12.35
+coordbase::ymin = -12.4
+coordbase::ymax = +12.4
+coordbase::zmin = -0.8
+coordbase::zmax = +12.0
+coordbase::dx=0.4
+coordbase::dy=0.4
+coordbase::dz=0.4
+coordbase::boundary_size_x_lower = 2 #ghost size
+coordbase::boundary_shiftout_x_lower = 1 #due to avoid_origin="no"
+coordbase::boundary_size_z_lower = 2
+coordbase::boundary_shiftout_z_lower = 1
+carpetregrid::smart_outer_boundaries = "yes"
+carpet::grid_structure_filename = "grids"
+cactus::cctk_itlast                     = 4
+carpet::ghost_size                      = 2
+carpet::max_refinement_levels           = 2
+carpetregrid::refinement_levels         = 2
+carpet::prolongation_order_space        = 3
+carpet::prolongation_order_time         = 2
+carpet::buffer_width                    = 4
+carpet::init_3_timelevels               = "yes"
+carpetregrid::refined_regions = "manual-coordinate-list"
+carpetregrid::coordinates = "[ [ ([-0.2,-0.2,-0.2]:[4.0,4.0,4.0]:[0.2,0.2,0.2]) ] ]"
+
+
+#--- axisymmetric brill wave+bh
+admbase::initial_data              = "axibrillbh"
+idaxibrillbh::amp                  = 0.1
+idaxibrillbh::eta0                 = 0.0
+idaxibrillbh::sigma                = 1.0
+idaxibrillbh::etamax               = 6.0
+idaxibrillbh::n                    = 4
+idaxibrillbh::ne                   = 302
+idaxibrillbh::nq                   = 54
+admbase::initial_shift             = "zero"
+admbase::evolution_method          = "adm_bssn"
+admbase::metric_type               = "static conformal"
+staticconformal::conformal_storage = "factor+derivs+2nd derivs"
+
+#--- numerics
+mol::ode_method        = "icn"
+mol::initial_data_is_crap = "yes"
+adm_bssn::bound        = "newrad"
+adm_bssn::stencil_size = 2
+adm_bssn::advection    = "upwind2"
+boundary::radpower     = 3
+
+#--- gauge
+admbase::initial_lapse          = "one"
+admbase::lapse_evolution_method = "1+log"
+adm_bssn::lapsesource           = "modified"
+adm_bssn::harmonic_f            = 2.0
+adm_bssn::force_lapse_positive  = "yes"
+adm_bssn::LapsePsiPower         = 4
+adm_bssn::AlphaDissip           = 2.0
+admbase::shift_evolution_method = "gamma0"
+adm_bssn::ShiftGammaCoeff       = 0.75
+adm_bssn::BetaDriver            = 1.1
+adm_bssn::BetaDriverAlpPower    = 1
+#adm_bssn::BetaDriverAlpPower    = 0
+adm_bssn::ShiftAlpPower         = 1
+adm_bssn::ShiftPsiPower         = 2
+
+#--- output
+io::out_dir                             = $parfile
+io::out_fileinfo                        = "none"
+iobasic::outScalar_every                = 2
+iobasic::outScalar_vars                 = "admbase::alp admbase::metric admbase::shift admconstraints::momentum admconstraints::ham dissipation::epsdisA"
+iobasic::outInfo_every                  = 2
+iobasic::outInfo_vars                   = "dissipation::epsdisA"
+ioascii::out1D_every                    = 1
+ioascii::out1D_vars                     = "admbase::alp admbase::metric admbase::curv admbase::shift admconstraints::momentum admconstraints::ham dissipation::epsdisA"
+## ascii 2D output gets big
+#ioascii::out2D_every                    = 1
+#ioascii::out2D_vars                     = "admbase::alp admbase::metric admbase::curv admbase::shift admconstraints::momentum admconstraints::ham admconstraints::normalized_hamiltonian adm_bssn::adm_bs_phi adm_bssn::adm_bssn_metric adm_bssn::adm_bs_k adm_bssn::adm_bssn_gamma adm_bssn::adm_bssn_curv dissipation::epsdisA"
+
+#--- nanchecker
+nanchecker::check_every     = 2
+nanchecker::check_vars      ="admbase::alp admbase::metric admbase::curv admbase::shift"
+nanchecker::action_if_found ="terminate"
+
+
+#--- sphericalsurface
+sphericalsurface::nsurfaces = 1
+sphericalsurface::maxntheta = 100
+sphericalsurface::maxnphi = 100
+sphericalsurface::ntheta[0] = 100
+sphericalsurface::ntheta[1] = 100
+
+
+#--- ahfinderdirect
+AHFinderDirect::N_horizons                               = 1
+AHFinderDirect::find_every                               = 1
+AHFinderDirect::max_Newton_iterations__initial           = 50
+AHFinderDirect::max_Newton_iterations__subsequent        = 50
+AHFinderDirect::initial_guess__coord_sphere__radius  [1] = 2.0
+ahfinderdirect::which_surface_to_store_info          [1] = 0
+
+
+
+
+#--- dissipation
+dissipation::ah_slope = 2.0
+dissipation::epsdis   = 0.2
+dissipation::verbose = "no"
+dissipation::extra_dissipation_in_horizons = "yes"
+dissipation::update_ah_every = 2
+dissipation::surface_number[0] = 0
+dissipation::horizon_number[0] = 1
+dissipation::extra_dissipation_at_outerbound = "yes"
+dissipation::outer_bound_npoints = 5
+dissipation::ob_slope = 1
+Dissipation::vars = "
+        ADM_BSSN::ADM_BSSN_phi
+        ADM_BSSN::ADM_BSSN_metric
+        ADM_BSSN::ADM_BSSN_curv
+        ADM_BSSN::ADM_BSSN_K
+        ADM_BSSN::ADM_BSSN_gamma
+        ADMBase::lapse
+        ADMBase::shift
+"
+
+#--- timer info
+Cactus::cctk_timer_output = "FULL"
+IO::print_timing_info     = "yes"
+

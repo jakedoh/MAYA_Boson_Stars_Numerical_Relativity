@@ -1,0 +1,154 @@
+# Schedule definitions for thorn HydroAnalysis
+
+if (Hydro_Analysis_comp_rho_max || Hydro_Analysis_comp_rho_max_origin_distance)
+{
+  STORAGE: Hydro_Analysis_rho_max
+  STORAGE: Hydro_Analysis_rho_max_loc
+}
+if (Hydro_Analysis_comp_vol_weighted_center_of_mass)
+{
+  STORAGE: Hydro_Analysis_rho_sum
+  STORAGE: Hydro_Analysis_rho_center_volume_weighted
+  STORAGE: Hydro_Analysis_rho_center_volume_weighted_gf[3]
+}
+if (Hydro_Analysis_comp_rho_max_origin_distance)
+{
+  STORAGE: Hydro_Analysis_rho_max_origin_distance
+}
+if (Hydro_Analysis_comp_core_rho_centroid)
+{
+  STORAGE: Hydro_Analysis_core_rho_sum
+  STORAGE: Hydro_Analysis_core_rho_centroid
+}
+
+schedule Hydro_Analysis_Init IN CCTK_BASEGRID
+{
+  LANG: C
+  OPTIONS: global
+} "Initialize variables"
+
+
+schedule group Hydro_Analysis AT POSTSTEP
+{
+} "Group for Hydro_Analysis routines"
+
+schedule Hydro_Analysis_PrepareReduction IN Hydro_Analysis
+{
+  LANG: C
+  OPTIONS: global-early loop-local
+} "Compute the local reduction results"
+
+schedule Hydro_Analysis_Reduction IN Hydro_Analysis AFTER Hydro_Analysis_PrepareReduction
+{
+  LANG: C
+  OPTIONS: global
+} "Compute the global reduction results"
+
+if (Hydro_Analysis_comp_rho_max || Hydro_Analysis_comp_rho_max_origin_distance)
+{
+  schedule GROUP Hydro_Analysis_LocationSearch IN Hydro_Analysis AFTER Hydro_Analysis_Reduction
+  {
+  } "Look for the location of the maximum density"
+  schedule Hydro_Analysis_LocationSearch_Setup IN Hydro_Analysis_LocationSearch
+  {
+    LANG: C
+    OPTIONS: global
+  } "Prepare data structures for search"
+  # this is not perfect, loop-local calls us in all timelevels, not just
+  # the ones that a local routine would be called on, so we are mixing
+  # information from different times. Also not sure what happens if Carpet
+  # performs time interpolation for the maximum reduction. Fine is the maximum
+  # is on the finest level.
+  schedule Hydro_Analysis_LocationSearch_Search IN Hydro_Analysis_LocationSearch AFTER Hydro_Analysis_LocationSearch_Setup
+  {
+    LANG: C
+    OPTIONS: global loop-local
+  } "Search for the location of the maximum density"
+  schedule Hydro_Analysis_LocationSearch_Combine IN Hydro_Analysis_LocationSearch AFTER Hydro_Analysis_LocationSearch_Search
+  {
+    LANG: C
+    OPTIONS: global
+  } "Communicate and verify the location of the maximum density"
+}
+
+if (Hydro_Analysis_comp_rho_max_origin_distance)
+{
+  schedule Hydro_Analysis_FindSeparation IN Hydro_Analysis AFTER Hydro_Analysis_LocationSearch
+  {
+    LANG: Fortran
+    OPTIONS: global
+  } "Compute the proper distance between the maximum of the density and the origin (along a straight coordinate line)"
+}
+
+if (Hydro_Analysis_comp_core_rho_centroid)
+{
+  # we need to be AFTER Hydro_Analysis_LocationSearch since the core is
+  # centered around the densest point
+  # since Hydro_Analysis runs in POSTSTEP (why?) we can get away with global
+  # and do not need global-early to run before OutputGH happens
+  schedule GROUP Hydro_Analysis_CompCoreRhoCentroid IN Hydro_Analysis AFTER Hydro_Analysis_LocationSearch
+  {
+  } "Compute center of mass of core region"
+
+  # STORAGE does not work since it allocates in LEVEL mode and thus only
+  # changes the number of timelevels of the refinement level currently active
+  # when we entered the group
+  schedule Hydro_Analysis_CompCoreRhoCentroid_GetStorage IN Hydro_Analysis_CompCoreRhoCentroid BEFORE Hydro_Analysis_CompCoreRhoCentroid_PrepareReduction
+  {
+    LANG: C
+    OPTIONS: global
+  } "Get temporary storage for duration of reduction"
+
+  schedule Hydro_Analysis_CompCoreRhoCentroid_PrepareReduction IN Hydro_Analysis_CompCoreRhoCentroid
+  {
+    LANG: C
+    OPTIONS: global loop-local
+  } "Prepare core center of mass densities for reduction"
+
+  schedule Hydro_Analysis_CompCoreRhoCentroid_Reduction IN Hydro_Analysis_CompCoreRhoCentroid AFTER Hydro_Analysis_CompCoreRhoCentroid_PrepareReduction
+  {
+    LANG: C
+    OPTIONS: global
+  } "Compute the global core center of mass reduction results"
+
+  schedule Hydro_Analysis_CompCoreRhoCentroid_FreeStorage IN Hydro_Analysis_CompCoreRhoCentroid AFTER Hydro_Analysis_CompCoreRhoCentroid_Reduction
+  {
+    LANG: C
+    OPTIONS: global
+  } "Free temporary storage"
+}
+
+
+
+
+###########################################################
+## Baryonic masses
+###########################################################
+
+if (restmass_compute_masses)
+{
+
+        STORAGE: Hydro_Analysis_masses_temps[3]
+	STORAGE: Hydro_Analysis_masses
+	STORAGE: Hydro_Analysis_total_rest_mass
+	STORAGE: Hydro_Analysis_masses_fractions
+	STORAGE: grid_spacing_product
+	
+	schedule group Hydro_Analysis_Masses AT Poststep
+	{
+	} "Computation of rest masses contained within given radii"
+
+
+
+	schedule Hydro_Analysis_Masses_Local IN Hydro_Analysis_Masses
+	{
+	  LANG: Fortran
+	} "Rest masses within given radii, local calculations"
+
+	schedule Hydro_Analysis_Masses_Global IN Hydro_Analysis_Masses AFTER Hydro_Analysis_Masses_Local
+	{
+	  LANG: Fortran
+	  OPTIONS: global
+	} "Rest masses within given radii, reduction operation"
+
+}

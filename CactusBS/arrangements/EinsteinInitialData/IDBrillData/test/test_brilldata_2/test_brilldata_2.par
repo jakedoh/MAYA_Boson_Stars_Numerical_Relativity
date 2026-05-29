@@ -1,0 +1,49 @@
+
+!DESC "Brill wave initial data (Conformal, BAM)"
+
+ActiveThorns = "bam_elliptic LocalReduce admbase staticconformal ellbase ellsor boundary pugh pughslab pughreduce CartGrid3D CoordBase SymBase idbrilldata ioascii iobasic ioutil time"
+
+# General
+
+driver::global_nx 				= 35
+driver::global_ny 				= 35
+driver::global_nz 				= 35
+
+grid::type 					= "byspacing"
+grid::dxyz 					= 0.2
+grid::domain 					= "octant"
+
+cactus::cctk_itlast 				= 0
+
+# Brill wave initial data
+
+ADMBase::initial_data 				= "brilldata"
+ADMBase::metric_type				= "static conformal"
+StaticConformal::conformal_storage              = "factor"
+
+# Brill wave parameters
+
+idbrilldata::brill_q 				= 2
+idbrilldata::brill_a 				= 5.0
+
+# Elliptic solver.
+
+idbrilldata::brill_solver 			= "bam"
+
+bam_elliptic::bam_bound                 	= "bamrobin"
+
+# Output.
+
+IO::out_dir       = "test_brilldata_2"
+IO::out_fileinfo = "none"
+
+IOBasic::outInfo_every = 1
+IOBasic::outInfo_vars  = "idbrilldata::brillpsi"
+
+IOBasic::outScalar_every = 1
+IOBasic::outScalar_vars = "admbase::gxx admbase::gyy admbase::gzz admbase::gxy idbrilldata::brillpsi staticconformal::psi"
+
+IOASCII::out1D_every = 1
+IOASCII::out1D_vars = "admbase::gxx admbase::gyy admbase::gzz admbase::gxy idbrilldata::brillpsi staticconformal::psi"
+
+IO::new_filename_scheme = "no"

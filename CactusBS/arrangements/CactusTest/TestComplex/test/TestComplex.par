@@ -1,0 +1,22 @@
+!DESC "Test complex grid functions"
+
+ActiveThorns = "PUGH PUGHSlab PUGHReduce IOUtil IOBasic IOASCII CartGrid3D CoordBase SymBase TestComplex LocalReduce"
+
+IO::out_every = 1
+IO::out_dir   = "TestComplex"
+
+#IOBasic::outInfo_vars         = "testcomplex::comp3d"
+#IOBasic::outInfo_reductions   = "norm1 norm2 norm3 norm4"
+#IOBasic::outScalar_vars       = "testcomplex::comp3d"
+#IOBasic::outScalar_reductions = "norm1 norm2 norm3 norm4"
+IOBasic::out_format           = ".4f"
+
+IOASCII::out1D_vars  = "testcomplex::comp3d"
+IOASCII::out2D_vars  = "testcomplex::comp3d"
+IOASCII::out2D_every = 10
+IOASCII::out_format  = ".4f"
+
+# disable output of file information (parameter filename, creation date) and parameter file
+# because this could cause diffs when running the testsuite
+IO::out_fileinfo  = "none"
+IO::parfile_write = "no"

@@ -1,0 +1,7 @@
+# Main make.code.defn file for thorn WaveToyOpenCL
+
+# Source files in this directory
+SRCS = wave.cc init.cl evol.cl boundary.cl
+
+# Subdirectories containing source files
+SUBDIRS = 

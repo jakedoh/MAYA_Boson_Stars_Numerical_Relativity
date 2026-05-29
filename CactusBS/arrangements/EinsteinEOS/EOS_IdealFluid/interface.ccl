@@ -1,0 +1,12 @@
+# Interface definition for thorn EOS_Ideal_Fluid
+# $Header$
+
+implements: EOS_Ideal_Fluid
+inherits: EOS_Base
+
+USES INCLUDE: EOS_Base.h
+USES INCLUDE: EOS_Base.inc
+
+private:
+
+

@@ -1,0 +1,18 @@
+# Schedule definitions for thorn WaveToyExtra
+# $Header$
+
+
+schedule WaveToyExtra_Boundary at EVOL AFTER WaveToy_Evolution BEFORE WaveToy_Boundaries
+{
+  LANG: C
+} "Additional boundary conditions for 3D wave equation"
+
+schedule WaveToyExtra_Boundary at POSTRESTRICT BEFORE WaveToy_Boundaries
+{
+  LANG: C
+} "Additional boundary conditions for 3D wave equation"
+  
+schedule WaveToyC_Terminate at TERMINATE
+{
+  LANG: C
+} "Tidy up"

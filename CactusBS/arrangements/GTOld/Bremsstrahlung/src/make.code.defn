@@ -1,0 +1,8 @@
+# Main make.code.defn file for thorn Bremsstrahlung
+# $Header:$
+
+# Source files in this directory
+SRCS = CalcBrems.c ParamCheck.c
+
+# Subdirectories containing source files
+SUBDIRS = 

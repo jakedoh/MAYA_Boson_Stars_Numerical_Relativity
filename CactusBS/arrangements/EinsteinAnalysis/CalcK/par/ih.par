@@ -1,0 +1,171 @@
+# $Header$
+
+Cactus::cctk_run_title     = "Isolated Horizon"
+Cactus::cctk_full_warnings = yes
+Cactus::cctk_timer_output  = full
+
+Cactus::cctk_itlast = 0
+
+ActiveThorns = "LocalInterp AEILocalInterp"
+
+ActiveThorns = "Slab"
+
+ActiveThorns = "SphericalSurface"
+SphericalSurface::nsurfaces = 1
+SphericalSurface::symmetric_z[0] = yes
+SphericalSurface::ntheta[0]      = 11
+
+ActiveThorns = "TGRtensor"
+
+ActiveThorns = "PUGH PUGHInterp PUGHReduce PUGHSlab"
+driver::global_nx = 80
+driver::global_ny = 80
+driver::global_nz = 40
+
+ActiveThorns = "NaNChecker"
+
+ActiveThorns = "IOUtil"
+IO::out_dir = $parfile
+
+IO::filereader_ID_files = "
+	psi
+	gxx gxy gxz gyy gyz gzz
+	kxx kxy kxz kyy kyz kzz
+	alp
+	betax betay betaz
+"
+IO::filereader_ID_vars = "
+	StaticConformal::confac
+	ADMBase::lapse[cctk_iteration=101]
+	ADMBase::curv
+	ADMBase::shift[cctk_iteration=101]
+	ADMBase::metric[cctk_iteration=101]
+"
+
+ActiveThorns = "IOHDF5 IOHDF5Util"
+
+ActiveThorns = "Boundary CartGrid3D CoordBase SymBase"
+CartGrid3D::type         = byspacing
+CartGrid3D::domain       = bitant
+CartGrid3D::dxyz         = 0.08
+CartGrid3D::avoid_origin = no
+
+ActiveThorns = "ADMBase ADMCoupling ADMMacros CoordGauge SpaceMask StaticConformal"
+
+ADMBase::metric_type = "static conformal"
+StaticConformal::conformal_storage = "factor"
+
+ActiveThorns = "IDFileADM"
+
+ADMBase::initial_data  = "read from file"
+ADMBase::initial_lapse = "read from file"
+ADMBase::initial_shift = "read from file"
+
+ActiveThorns = "AHFinderDirect"
+AHFinderDirect::N_horizons = 2
+
+AHFinderDirect::origin_y[1]                                       = -1.168433
+AHFinderDirect::initial_guess_method[1]                           = "read from named file"
+AHFinderDirect::initial_guess__read_from_named_file__file_name[1] = "/data3/diener/pi0-384_dc_cou_20_3d2/h.t101.ah1.gp"
+AHFinderDirect::which_surface_to_store_info[1]                    =  0
+
+AHFinderDirect::origin_y[2]                                       = +1.168433
+AHFinderDirect::initial_guess_method[2]                           = "read from named file"
+AHFinderDirect::initial_guess__read_from_named_file__file_name[2] = "/data3/diener/pi0-384_dc_cou_20_3d2/h.t101.ah2.gp"
+
+#AHFinderDirect::initial_guess_method[3]                           = "read from named file"
+#AHFinderDirect::initial_guess__read_from_named_file__file_name[3]= "/data3/diener/pi0-384_dc_cou_20_3d2/h.t101.ah3.gp"
+
+# centroid 0.003181 1.168433 0.000000
+# radius 0.4446773218
+#
+# centroid -0.003181 -1.168433 0.000000
+# radius  0.4446773520
+#
+# centroid 0.000000 -0.000000 0.000000
+# radius 1.145238733 1.780038605 1.020373858
+
+ActiveThorns = "IsolatedHorizon"
+IsolatedHorizon::verbose       = yes
+IsolatedHorizon::veryverbose   = yes
+IsolatedHorizon::surface_index = 0
+
+ActiveThorns = "IOBasic"
+IOBasic::outInfo_every      = 1
+IOBasic::outInfo_reductions = "norm2"
+IOBasic::outInfo_vars       = "
+        IsolatedHorizon::ih_spin
+        IsolatedHorizon::ih_radius
+        IsolatedHorizon::ih_mass
+"
+
+IOBasic::outScalar_every      = 1
+IOBasic::outScalar_reductions = "minimum maximum mean norm1 norm2 norm_inf"
+IOBasic::outScalar_style      = gnuplot
+IOBasic::outScalar_vars       = "
+        ADMBase::gxx
+        ADMBase::kxx
+        ADMBase::lapse
+        SphericalSurface::sf_valid
+        SphericalSurface::sf_info
+        SphericalSurface::sf_radius
+        SphericalSurface::sf_origin
+        SphericalSurface::sf_coordinate_descriptors
+        IsolatedHorizon::ih_state
+        IsolatedHorizon::ih_time
+        IsolatedHorizon::ih_grid_int
+        IsolatedHorizon::ih_grid_real
+        IsolatedHorizon::ih_shape
+        IsolatedHorizon::ih_coordinates
+        IsolatedHorizon::ih_tetrad_l
+        IsolatedHorizon::ih_tetrad_n
+        IsolatedHorizon::ih_tetrad_m
+        IsolatedHorizon::ih_newman_penrose
+        IsolatedHorizon::ih_twometric
+        IsolatedHorizon::ih_killing_vector
+        IsolatedHorizon::ih_scalars
+        IsolatedHorizon::ih_variables
+"
+
+ActiveThorns = "IOASCII"
+IOASCII::out1D_every = 1
+IOASCII::out1D_style = "gnuplot f(x)"
+IOASCII::out1D_vars  = "
+        ADMBase::gxx
+        ADMBase::kxx
+        ADMBase::lapse
+        SphericalSurface::sf_radius
+        IsolatedHorizon::ih_shape
+        IsolatedHorizon::ih_coordinates
+        IsolatedHorizon::ih_tetrad_l
+        IsolatedHorizon::ih_tetrad_n
+        IsolatedHorizon::ih_tetrad_m
+        IsolatedHorizon::ih_newman_penrose
+        IsolatedHorizon::ih_twometric
+        IsolatedHorizon::ih_killing_vector
+        IsolatedHorizon::ih_variables
+"
+
+IOASCII::out2D_every = 1
+IOASCII::out2D_style = "gnuplot f(x,y)"
+IOASCII::out2D_vars  = "
+        SphericalSurface::sf_radius
+        IsolatedHorizon::ih_shape
+        IsolatedHorizon::ih_coordinates
+        IsolatedHorizon::ih_tetrad_l
+        IsolatedHorizon::ih_tetrad_n
+        IsolatedHorizon::ih_tetrad_m
+        IsolatedHorizon::ih_newman_penrose
+        IsolatedHorizon::ih_twometric
+        IsolatedHorizon::ih_killing_vector
+        IsolatedHorizon::ih_variables
+"
+
+IOHDF5::out_every = 1
+IOHDF5::out_vars  = "
+	StaticConformal::confac
+        ADMBase::metric
+        ADMBase::curv
+        ADMBase::lapse
+        ADMBase::shift
+"

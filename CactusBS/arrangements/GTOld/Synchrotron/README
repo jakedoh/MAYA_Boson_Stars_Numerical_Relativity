@@ -1,0 +1,15 @@
+Cactus Code Thorn Synchrotron
+Author(s)    : Tanja Bode <tanja.bode@physics.gatech.edu>
+Maintainer(s): Tanja Bode <tanja.bode@physics.gatech.edu>
+Licence      : GPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+Calculate local synchrotron emissivity luminosities from a dynamic gas cloud.
+Currently assumes high temperatures.
+
+This has the option for coupling to an actual magnetic field, but it hasn't 
+been implemented yet.
+
+See documentation for units.

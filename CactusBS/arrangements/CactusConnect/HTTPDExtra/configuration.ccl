@@ -1,0 +1,8 @@
+# Configuration definition for thorn http_utils
+# $Header$
+
+REQUIRES HTTPD IOUTIL
+
+OPTIONAL MPI
+{
+}

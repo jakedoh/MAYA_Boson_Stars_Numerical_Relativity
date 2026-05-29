@@ -1,0 +1,17 @@
+CVS info   : $Header$
+
+Cactus Code Thorn NoExcision
+Thorn Author(s)     : Erik Schnetter <schnetter@aei.mpg.de>
+Thorn Maintainer(s) : Erik Schnetter <schnetter@aei.mpg.de>
+--------------------------------------------------------------------------
+
+Purpose of the thorn:
+
+Overwrite the regions near a singularity with "something else",
+possibly flat space, ignoring the constraints.  This is instead of
+excision.
+
+This method is modelled after an idea by Denis Pollney, following an
+serendipitous bug by Ian Hawke.  The word "serendipity" was coined by
+Horace Walpole in the 18th century, from the Persian fairy tale "The
+Three Princes of Serendip" (www.wikipedia.org).

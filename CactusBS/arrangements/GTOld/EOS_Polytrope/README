@@ -1,0 +1,12 @@
+Cactus Code Thorn EOS_Polytrope
+Authors    : Ian Hawke
+CVS info   : $Header$
+--------------------------------------------------------------------------
+
+Purpose of the thorn:
+
+This is a "faked" polytropic equation of state. It is designed to work through the CactusEOS interface. The EoS reads
+
+Pressure = eos_k * rho ** (eos_gamma)
+
+The specific internal energy is given by the assumption of a perfect fluid.

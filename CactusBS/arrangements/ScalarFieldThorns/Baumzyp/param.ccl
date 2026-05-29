@@ -1,0 +1,144 @@
+# Parameter definitions for thorn Baum
+# $Header: /numrelcvs/HerrmannCVS/Baum/param.ccl,v 1.6 2005/10/20 14:01:19 herrmann Exp $
+
+private:
+
+INT verbose "verbosity level"
+{
+  0:9 :: "higher gives more output"
+} 3
+
+REAL m_search "individual BH mass to search for"
+{
+  0: :: "positive"
+} 0.5
+
+REAL percent_range "percentage range to search in"
+{
+  0:1 :: ""
+} 0.2
+
+REAL par_m1_guess "guess for m+ parameter"
+{
+ -1: :: ""
+} -1
+
+REAL par_m2_guess "guess for m- parameter"
+{
+ -1: :: ""
+} -1
+
+REAL j_mu "angular momentum of sequence: J/mu"
+{
+  0: :: "positive"
+} 0.5
+
+BOOLEAN search_j_ang_mom "search for a given J (=L+S) instead of just L"
+{
+} "no"
+
+BOOLEAN use_irreducible_masses "use irreducible masses instead of total mass of BHs"
+{
+} "no"
+
+
+REAL b_max "max separation"
+{
+  0: :: "positive"
+} 0.5
+
+REAL b_min "min separation"
+{
+  0: :: "positive"
+} 0.5
+
+REAL eta "mass ratio to search for: eta=m1*m2/(m1+m2)^2: eta=0.25 is equal mass"
+{
+  0:0.25 :: "positive"
+} 0.25
+
+INT number_of_sequence_members "how many members do we have in one sequence"
+{
+  0: :: "positive"
+} 1
+
+BOOLEAN use_admrad "use adm mass from finite radius"
+{
+} "yes"
+
+REAL eps_mass "accuracy for mass search"
+{
+  0: :: "positive, but small"
+} 1e-7
+
+REAL eps_mass_param "accuracy for mass search parameter"
+{
+  0: :: "positive, but small"
+} 1e-12
+
+
+BOOLEAN touch_npts "change npoints_A, npoints_B,..."
+{
+} "no"
+
+REAL switch_high_acc "accuracy for switching to better ID computations. search"
+{
+  0: :: "positive, but small"
+} 1e-3
+
+REAL switch_med_acc "accuracy for switching to better ID computations. search"
+{
+  0: :: "positive, but small"
+} 1e-2
+
+# SphericalSurface
+INT max_nsurface "maximum no. of AH's"
+{
+  0: :: "positive"
+} 2
+
+REAL m_range_min_init "minimum value for m parameter in binary search"
+{
+ 0: :: "positive"
+} 0
+
+REAL m_range_max_init "maximum value for m parameter in binary search"
+{
+ 0: :: "positive"
+} 1
+
+KEYWORD get_mass_from "where do we get the mass for the individual holes from?"
+{
+  "TwoPuncturesMatterzyp" :: "get it directly from the twopunctures thorn"
+  "sphericalsurface" :: "get it from the sphericalsurface thorn"
+} "TwoPuncturesMatterzyp"
+
+KEYWORD search_method "method used for searching"
+{
+  "bisection" :: "bisection search - needs many iterations, converges slowly > 20 iterations! testing only!"
+  "secant" :: "secant search - usually needs about 5-10 iterations!"
+} "secant"
+
+REAL stupid_fac "factor for changing m in stupid search"
+{
+  0: :: "positive, but small"
+} 1.0
+
+INT surface_index[100] "surface that contains AH information"
+{
+  -1: :: ""
+} -1
+
+KEYWORD initial_data_thorn "which thorn to use for the generation of initial data"
+{
+  "TwoPuncturesMatterzyp" :: "markus ansorg's twopunctures thorn"
+  "InitialAnalytic" :: "maya InitialAnalytic thorn"
+} "TwoPuncturesMatterzyp"
+
+# import SphericalSurface parameters.
+SHARES: SphericalSurface
+USES INT nsurfaces
+
+# import IOUtile out_dir param
+shares: IO
+USES STRING out_dir

@@ -1,0 +1,7 @@
+# Main make.code.defn file for thorn RNSID
+
+# Source files in this directory
+SRCS = rns.c rns_methods.c
+
+# Subdirectories containing source files
+SUBDIRS = rnsv2

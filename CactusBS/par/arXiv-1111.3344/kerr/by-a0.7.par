@@ -1,0 +1,379 @@
+ActiveThorns = "
+        Boundary
+        CartGrid3D
+        CoordBase
+        IOUtil
+        InitBase
+        MoL
+	Time
+        SymBase
+
+        ADMBase
+        ADMCoupling
+        ADMMacros
+        CoordGauge
+        SpaceMask
+        StaticConformal
+
+        NaNChecker
+
+        Carpet
+        CarpetIOASCII
+        CarpetIOBasic
+        CarpetIOScalar
+        CarpetLib
+        CarpetReduce
+	CarpetRegrid2
+        CarpetInterp
+        LoopControl
+        SystemTopology
+
+        ReflectionSymmetry
+        RotatingSymmetry180
+
+        TwoPunctures
+        Formaline
+        GSL
+
+        Slab
+
+        GenericFD
+
+        ML_BSSN
+        ML_BSSN_Helper
+	SphericalSurface
+	TmunuBase
+	Dissipation
+
+        CarpetIOHDF5
+
+        AHFinderDirect
+
+        AEILocalInterp LocalReduce
+
+        QuasiLocalMeasures
+
+        WeylScal4 MultiPole 
+"
+#        NoExcision LocalInterp SummationByParts
+
+# output
+
+IO::out_dir = $parfile
+
+IOBasic::outInfo_every = 1
+IOBasic::outInfo_vars = "
+        ML_BSSN::H
+        ML_BSSN::trK
+"
+
+IOScalar::one_file_per_group = yes
+IOScalar::outScalar_every    = 64
+IOScalar::outScalar_vars     = "
+        ML_BSSN::ML_Ham
+        ML_BSSN::ML_mom
+        ML_BSSN::ML_cons_detg
+        ML_BSSN::ML_cons_Gamma
+        ML_BSSN::ML_cons_traceA
+"
+
+IOASCII::one_file_per_group = yes
+IOASCII::out0D_every        = 60
+IOASCII::out0D_vars         = "
+        QuasiLocalMeasures::qlm_scalars
+        QuasiLocalMeasures::qlm_multipole_moments
+"
+
+IOASCII::out1D_every        = 64
+IOASCII::out1D_vars         = "
+        ADMBase::metric
+        ADMBase::curv
+        ADMBase::lapse
+        ADMBase::shift
+        ML_BSSN::ML_log_confac
+        ML_BSSN::ML_metric
+        ML_BSSN::ML_trace_curv
+        ML_BSSN::ML_curv
+        ML_BSSN::ML_Gamma
+        ML_BSSN::ML_lapse
+        ML_BSSN::ML_shift
+        ML_BSSN::ML_Ham
+        ML_BSSN::ML_mom
+        ML_BSSN::ML_cons_detg
+        ML_BSSN::ML_cons_Gamma
+        ML_BSSN::ML_cons_traceA
+"
+
+### Checkpointing
+
+CarpetIOHDF5::checkpoint                = yes
+IO::checkpoint_ID                       = no
+IO::recover                             = "autoprobe"
+IO::checkpoint_every                    = 512
+IO::out_proc_every                      = 1
+IO::checkpoint_keep                     = 2
+IO::checkpoint_dir                      = $parfile
+IO::recover_dir                         = $parfile
+Carpet::regrid_during_recovery          = no
+CarpetIOHDF5::use_grid_structure_from_checkpoint = yes
+
+#--- driver
+
+#Cactus::cctk_itlast = 0
+Cactus::terminate = time
+Cactus::cctk_final_time = 120
+Carpet::use_buffer_zones      = yes
+Carpet::use_tapered_grids     = yes
+
+CarpetLib::interleave_communications = yes
+CarpetLib::combine_sends             = yes
+CarpetLib::print_memstats_every      = 1024
+#Carpet::regrid_in_level_mode         = no
+Carpet::output_timers_every          = 1024
+CarpetLib::print_timestats_every     = 1024
+Carpet::print_timestats_every        = 1
+#Carpet::init_each_timelevel          = yes
+
+
+carpet::verbose = no
+carpet::veryverbose = no
+
+#--- Carpet prolongation order settings
+
+Carpet::prolongation_order_space                = 5
+Carpet::prolongation_order_time                 = 1
+
+
+# MoL time integration
+
+MoL::ODE_Method = RK4
+Carpet::num_integrator_substeps = 4
+MoL::MoL_Intermediate_Steps 			= 	4
+MoL::MoL_Num_Scratch_Levels			=	1
+time::dtfac                             	= 	0.25
+
+#--- grid and symmetries
+
+driver::ghost_size            = 3
+grid::type = "CoordBase"
+CoordBase::domainsize = "minmax"
+CoordBase::xmax = 258.048
+CoordBase::ymax = 258.048
+CoordBase::zmax = 258.048
+CoordBase::xmin =   0.000
+CoordBase::ymin =-258.048
+CoordBase::zmin =   0.000
+CoordBase::dx   =   3.072
+CoordBase::dy   =   3.072
+CoordBase::dz   =   3.072
+
+
+ReflectionSymmetry::reflection_x   = no
+ReflectionSymmetry::reflection_y   = no
+ReflectionSymmetry::reflection_z   = yes
+ReflectionSymmetry::avoid_origin_x = no
+ReflectionSymmetry::avoid_origin_y = no
+ReflectionSymmetry::avoid_origin_z = no
+CarpetRegrid2::symmetry_rotating180     = yes
+
+CoordBase::boundary_shiftout_x_lower = 1
+CoordBase::boundary_shiftout_z_lower = 1
+
+Carpet::domain_from_coordbase = yes
+
+CoordBase::boundary_size_x_lower = 3
+CoordBase::boundary_size_y_lower = 3
+CoordBase::boundary_size_z_lower = 3
+CoordBase::boundary_size_x_upper = 3
+CoordBase::boundary_size_y_upper = 3
+CoordBase::boundary_size_z_upper = 3
+
+
+carpet::max_refinement_levels           	= 8
+CarpetRegrid2::num_centres              = 1
+CarpetRegrid2::num_levels_1             = 8
+CarpetRegrid2::position_x_1             = +0.0
+CarpetRegrid2::radius_1             [1] = 128.0 # 1.536
+CarpetRegrid2::radius_1             [2] =  64.0 # 0.768
+CarpetRegrid2::radius_1             [3] =  16.0 # 0.384
+CarpetRegrid2::radius_1             [4] =   8.0 # 0.192
+CarpetRegrid2::radius_1             [5] =   4.0 # 0.096
+CarpetRegrid2::radius_1             [6] =   2.0 # 0.048
+CarpetRegrid2::radius_1             [7] =   1.0 # 0.024
+
+
+#--- initial data
+
+ADMBase::initial_data      = "twopunctures"
+ADMBase::initial_lapse     = "twopunctures-averaged"
+ADMBase::initial_shift     = "zero"
+ADMBase::initial_dtlapse   = "zero"
+ADMBase::initial_dtshift   = "zero"
+ADMBase::lapse_timelevels  = 2
+ADMBase::shift_timelevels  = 2
+ADMBase::metric_timelevels = 2
+InitBase::initial_data_setup_method     = init_some_levels
+TwoPunctures::par_b                     = 1.0
+TwoPunctures::center_offset[0]          = -1.0
+TwoPunctures::par_m_plus                = 0.75174408
+TwoPunctures::par_m_minus               = 0.0
+TwoPunctures::par_S_plus[2]             = 0.7
+TwoPunctures::TP_epsilon                = 1e-6
+TwoPunctures::grid_setup_method         = evaluation
+TwoPunctures::verbose                   = yes
+TwoPunctures::do_residuum_debug_output  = yes
+TwoPunctures::do_initial_debug_output   = yes
+TwoPunctures::npoints_A                 = 40
+TwoPunctures::npoints_B                 = 40
+TwoPunctures::npoints_phi               = 16
+#Carpet::init_each_timelevel             = yes
+#Carpet::init_3_timelevels               = yes
+Carpet::init_fill_timelevels             = yes
+
+
+
+##--- NoExcision
+#
+#NoExcision::num_regions = 1
+#NoExcision::method = new
+#NoExcision::smooth_regions = yes
+#NoExcision::use_user_regions = yes
+#NoExcision::centre_x            [0] = +0.0
+#NoExcision::radius              [0] =  0.001
+#
+#NoExcision::smoothing_order         = 6
+#NoExcision::smoothing_eps           = 1e-5
+#NoExcision::verbose                 = yes
+
+#--- ML_BSSN
+
+ADMBase::evolution_method = "ML_BSSN"
+ADMBase::lapse_evolution_method = "ML_BSSN"
+ADMBase::shift_evolution_method = "ML_BSSN"
+
+ML_BSSN::timelevels = 2
+
+ML_BSSN::harmonicN       = 1      # 1+log
+ML_BSSN::harmonicF       = 2.0    # 1+log
+ML_BSSN::ShiftGammaCoeff = 0.75
+ML_BSSN::BetaDriver      = 1.0
+ML_BSSN::LapseAdvectionCoeff = 1.0
+ML_BSSN::ShiftAdvectionCoeff = 1.0
+
+#ML_BSSN::ML_log_confac_bound = "radiative"
+#ML_BSSN::ML_metric_bound     = "radiative"
+#ML_BSSN::ML_Gamma_bound      = "radiative"
+#ML_BSSN::ML_trace_curv_bound = "radiative"
+#ML_BSSN::ML_curv_bound       = "radiative"
+#ML_BSSN::ML_lapse_bound      = "radiative"
+#ML_BSSN::ML_dtlapse_bound    = "radiative"
+#ML_BSSN::ML_shift_bound      = "radiative"
+#ML_BSSN::ML_dtshift_bound    = "radiative"
+
+ML_BSSN::my_boundary_condition = "Minkowski"
+
+ML_BSSN::ML_log_confac_bound = "none"
+ML_BSSN::ML_metric_bound     = "none"
+ML_BSSN::ML_Gamma_bound      = "none"
+ML_BSSN::ML_trace_curv_bound = "none"
+ML_BSSN::ML_curv_bound       = "none"
+ML_BSSN::ML_lapse_bound      = "none"
+ML_BSSN::ML_dtlapse_bound    = "none"
+ML_BSSN::ML_shift_bound      = "none"
+ML_BSSN::ML_dtshift_bound    = "none"
+
+ADMMacros::spatial_order = 4
+
+#--- Dissipation
+
+Dissipation::vars = "
+	ML_BSSN::ML_Gamma
+  	ML_BSSN::ML_lapse
+  	ML_BSSN::ML_shift
+  	ML_BSSN::ML_log_confac
+  	ML_BSSN::ML_metric
+  	ML_BSSN::ML_trace_curv
+  	ML_BSSN::ML_curv
+"
+Dissipation::order = 5
+
+### Horizons
+
+AHFinderDirect::N_horizons                               = 1
+AHFinderDirect::find_every                               = 12
+AHFinderDirect::output_h_every                           = 0
+AHFinderDirect::max_Newton_iterations__initial           = 50
+AHFinderDirect::max_Newton_iterations__subsequent        = 50
+AHFinderDirect::max_allowable_Theta_growth_iterations    = 10
+AHFinderDirect::max_allowable_Theta_nonshrink_iterations = 10
+#AHFinderDirect::max_N_zones_per_right_angle              = 36
+#AHFinderDirect::N_zones_per_right_angle[1]               = 36
+AHFinderDirect::geometry_interpolator_name               = "Lagrange polynomial interpolation"
+AHFinderDirect::geometry_interpolator_pars               = "order=4"
+AHFinderDirect::surface_interpolator_name                = "Lagrange polynomial interpolation"
+AHFinderDirect::surface_interpolator_pars                = "order=4"
+#AHFinderDirect::verbose_level                            = "physics details"
+AHFinderDirect::verbose_level                            = "algorithm highlights"
+AHFinderDirect::Jacobian_store_solve_method              = "row-oriented sparse matrix/ILUCG"
+AHFinderDirect::move_origins                             = yes
+
+AHFinderDirect::origin_x                                 [1] = 0.0
+AHFinderDirect::initial_guess__coord_sphere__x_center    [1] = 0.0
+AHFinderDirect::initial_guess__coord_sphere__radius      [1] = 0.5
+AHFinderDirect::which_surface_to_store_info              [1] = 0
+AHFinderDirect::set_mask_for_individual_horizon          [1] = no
+AHFinderDirect::reset_horizon_after_not_finding          [1] = no
+#AHFinderDirect::dont_find_after_individual               [1] = 3328
+
+
+# Horizon surfaces
+
+SphericalSurface::nsurfaces             = 1
+SphericalSurface::maxntheta             = 73
+SphericalSurface::maxnphi               = 144
+
+SphericalSurface::ntheta            [0] = 73
+SphericalSurface::nphi              [0] = 144
+SphericalSurface::nghoststheta      [0] = 2
+SphericalSurface::nghostsphi        [0] = 2
+
+WeylScal4::fd_order = "4th"
+
+Multipole::integration_method = "Simpson"
+Multipole::interpolator_name = "Lagrange polynomial interpolation"
+Multipole::interpolator_pars = "order=4 boundary_off_centering_tolerance={0.0 0.0 0.0 0.0 0.0 0.0} boundary_extrapolation_tolerance={0.0 0.0 0.0 0.0 0.0 0.0}"
+Multipole::nradii       = 4
+Multipole::radius[0]    = 30
+Multipole::radius[1]    = 40
+Multipole::radius[2]    = 50
+Multipole::radius[3]    = 60
+Multipole::ntheta       = 72
+Multipole::nphi         = 144
+Multipole::variables    = "WeylScal4::Psi4r{sw=-2 cmplx='WeylScal4::Psi4i' name='psi4'}"
+Multipole::out_every    = 64
+Multipole::l_max       = 8
+
+
+### QuasiLocalMeasures
+
+QuasiLocalMeasures::verbose                = yes
+#IsolatedHorizon::veryverbose            = no
+QuasiLocalMeasures::interpolator           = "Lagrange polynomial interpolation"
+QuasiLocalMeasures::interpolator_options   = "order=4"
+QuasiLocalMeasures::spatial_order          = 4
+QuasiLocalMeasures::num_surfaces           = 1
+QuasiLocalMeasures::surface_index      [0] = 0
+
+#--- Analysis
+
+nanchecker::check_every                         =       1
+nanchecker::check_vars                          =       "
+        ML_BSSN::ML_Gamma
+        ML_BSSN::ML_lapse
+        ML_BSSN::ML_shift
+        ML_BSSN::ML_log_confac
+        ML_BSSN::ML_metric
+        ML_BSSN::ML_trace_curv
+        ML_BSSN::ML_curv
+"
+nanchecker::action_if_found                     =       "terminate"

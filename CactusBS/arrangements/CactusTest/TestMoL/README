@@ -1,0 +1,10 @@
+Cactus Code Thorn TestMoL
+Author(s)    : Roland Haas <rhaas@caltech.edu>
+Maintainer(s): Roland Haas <rhaas@caltech.edu>
+Licence      : LGPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+Tests the ODE integration methods in MoL by providing a simple right-hand-side
+and tests that exercise all integration methods.

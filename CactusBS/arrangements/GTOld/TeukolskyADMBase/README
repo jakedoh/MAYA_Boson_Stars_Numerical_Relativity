@@ -1,0 +1,9 @@
+Cactus Code Thorn TeukolskyADMBase
+
+Initially written by Uli Sperhake
+Modified by Ian Hinder:
+	ADMBase and Kranc2BSSN adapted
+Modified by Tanja Bode:
+	Added odd parity mode functionality
+	Added offset origin functionality
+	Added m=0 odd mode	

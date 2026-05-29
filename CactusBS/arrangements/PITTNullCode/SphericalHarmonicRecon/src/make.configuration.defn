@@ -1,0 +1,4 @@
+# make.configuration.defn file for thorn SphericalHarmonicRecon 
+
+# Define this thorn's utilities
+ALL_UTILS += ascii_output fftwfilter setmeta findlast printtime readmeta

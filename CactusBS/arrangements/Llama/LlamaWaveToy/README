@@ -1,0 +1,10 @@
+Cactus Code Thorn LlamaWaveToy
+Thorn Author(s)     : Erik Schnetter <schnetter@cct.lsu.edu>
+Thorn Maintainer(s) : Erik Schnetter <schnetter@cct.lsu.edu>
+--------------------------------------------------------------------------
+
+Purpose of the thorn:
+
+A solver for the scalar wave equation on a non-trivial, static
+background.
+

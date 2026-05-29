@@ -1,0 +1,57 @@
+# Schedule definitions for thorn TerminationTrigger
+
+STORAGE: watchminutes triggered
+
+SCHEDULE TerminationTrigger_ParamCheck AT PARAMCHECK
+{
+  LANG: C
+} "Check consitency of parameters"
+
+SCHEDULE TerminationTrigger_ResetTrigger AT BaseGrid
+{
+  LANG: C
+} "Clear trigger state"
+
+SCHEDULE TerminationTrigger_StartTimer AT BaseGrid
+{
+  LANG: C
+  WRITES: TerminationTrigger::watchminutes(everywhere)
+} "Start timer"
+
+SCHEDULE TerminationTrigger_ResetMinutes AT post_recover_variables
+{
+  LANG: C
+  OPTIONS: global
+  WRITES: TerminationTrigger::watchminutes(everywhere)
+} "Reset Watchtime"
+
+SCHEDULE TerminationTrigger_CheckWalltime AT analysis
+{
+  LANG: C
+  READS: TerminationTrigger::watchminutes(everywhere)
+  WRITES: TerminationTrigger::watchminutes(everywhere)
+} "Check elapsed job walltime"
+
+SCHEDULE TerminationTrigger_StartSignalHandler AT startup
+{
+  LANG: C
+} "Start signal handler"
+
+SCHEDULE TerminationTrigger_CheckSignal AT analysis
+{
+  LANG: C
+} "Check if we received a termination signal"
+
+
+if (create_termination_file)
+{
+  SCHEDULE TerminationTrigger_CreateFile AT BaseGrid
+  {
+    LANG: C
+  } "Create termination file"
+}
+
+SCHEDULE TerminationTrigger_CheckFile AT analysis
+{
+  LANG: C
+} "Check termination file"

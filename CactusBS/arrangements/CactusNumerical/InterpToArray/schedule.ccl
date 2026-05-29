@@ -1,0 +1,11 @@
+# Schedule definitions for thorn InterpToArray
+
+SCHEDULE InterpToArray AT analysis
+{
+  LANG: C
+  OPTIONS: global
+  STORAGE:  scalars arrays1d arrays2d arrays3d parrays1d parrays2d parrays3d
+  TRIGGERS: scalars arrays1d arrays2d arrays3d parrays1d parrays2d parrays3d
+  WRITES: InterpToArray::scalars(everywhere), arrays1d, arrays2d, arrays3d
+  WRITES: InterpToArray::parrays1d(everywhere), parrays2d, parrays3d
+} "Interpolate to grid arrays"

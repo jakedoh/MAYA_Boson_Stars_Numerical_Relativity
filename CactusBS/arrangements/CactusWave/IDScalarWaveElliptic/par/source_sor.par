@@ -1,0 +1,48 @@
+# wavetoyf77_rad.par - wavetoy evolution with radiation boundaries
+# $Id$
+#
+# /*@@
+#   @file      wavetoyf77_rad.par
+#   @date      Sunday 24th July
+#   @author    Gabrielle Allen
+#   @desc
+#   Wavetoy parameter file demonstrating radiation boundaries in Octant
+#   @enddesc
+# @@*/          
+
+ActiveThorns = "ellsor ellpetsc ellbase idscalarwaveelliptic idscalarwave time wavetoyf77 pugh pughreduce pughslab localreduce cartgrid3d coordbase initbase symbase boundary ioutil ioascii iobasic"
+ 
+time::dtfac = 0.5
+
+idscalarwave::initial_data = "charge"
+idscalarwaveelliptic::output_tmp = "yes"
+idscalarwaveelliptic::radius = 5.5
+idscalarwaveelliptic::charge = 1
+idscalarwaveelliptic::solver = "sor"
+
+wavetoyf77::bound = "radiation"
+
+grid::type = "BySpacing"
+grid::domain = "octant"
+grid::dxyz = 0.3
+
+driver::global_nsize = 20
+
+ellbase::elliptic_verbose="yes"
+IDScalarWaveElliptic::sor_maxit = 10000
+cactus::cctk_itlast = 10
+
+IOBasic::outScalar_every = 2
+IOBasic::outScalar_vars = "wavetoy::phi"
+IOBasic::outScalar_style = "gnuplot"
+
+IOASCII::out1D_every = 2
+IOASCII::out1D_z = "no"
+IOASCII::out1D_y = "no"
+IOASCII::out1D_vars = "wavetoy::phi "
+IOASCII::out1D_style = "gnuplot f(t,x)"
+
+IOBasic::outInfo_every = 10
+IOBasic::outInfo_vars = "wavetoy::phi"
+ 
+IO::out_dir = $parfile

@@ -1,0 +1,30 @@
+# hdf5.par: HDF5 output
+
+ActiveThorns = "Boundary CartGrid3D CoordBase SymBase IOUtil IDScalarWave WavetoyF77 PUGH PUGHSlab IOHDF5 IOHDF5Util"
+
+Cactus::cctk_brief_output	= "yes"
+
+IDScalarWave::radius = 0.0
+IDScalarWave::amplitude = 1.0
+IDScalarWave::initial_data = "gaussian"
+
+cactus::cctk_itlast = 10
+
+# PUGH parameters
+driver::global_nsize = 10
+
+
+####################### IO parameters ###################################
+
+# flag to enable verbose output
+IO::verbose = "full"
+
+# say how often to output
+IO::out_every     = 1
+IO::out_mode      = "onefile"
+IO::out_unchunked = "yes"
+
+# say what GF to output
+IOHDF5::out_vars = "wavetoy::phi"
+
+IOHDF5::out_dir = "./hdf5"

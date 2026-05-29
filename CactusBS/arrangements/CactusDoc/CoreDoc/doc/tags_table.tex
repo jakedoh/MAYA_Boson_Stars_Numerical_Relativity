@@ -1,0 +1,242 @@
+\section{Tags Tables: Optional Attributes for Cactus Grid Variables}
+
+[This section last updated on $ $Date$ $.]
+
+Cactus defines a ``tags table'' mechanism where a Cactus key-value
+table is associated with each Cactus group of grid variables.
+By default the flesh sets up an empty table for each group. If a group is
+declared with a \verb|tags="..."| clause in its \verb|interface.ccl|,
+the flesh uses this optional string to initialize the key-value tags table
+for this group.
+Keys in a tags table are conventionally taken to have case-insensitive
+semantics.  The value string (which must be deliminated by a single or double
+quotes in \verb|interface.ccl|)) is interpreted by the function
+\verb|Util_TableSetFromString()| (see the Cactus Reference Manual
+for a description of this function).
+
+Currently the contents of a tags table are not evaluated by the CST
+parser and not used by the flesh; it's entirely up to thorns to agree
+among themselves as to what should be in the tags table and how it
+should be interpreted.
+
+You can get the tags table's table handle for a specified group
+by calling the flesh function \verb|CCTK_GroupTagsTable()| or
+\verb|CCTK_GroupTagsTableI()|.  Once you have this table handle,
+you can access the tags table itself using the standard key-value
+table API as documented in the Cactus Reference Manual.  
+
+Most thorns which use tags-table information only look at the tags
+table once (when they start up), and won't notice if the information
+is changed later on.  Therefore, modifying the tags table is probably
+not a good idea (it's likely to cause confusion if some thorns change
+their behavior based on the new tags-table entries, while other thorns
+don't change).
+
+The following sections document some common conventions for tags-table
+entries.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Tensor Types}
+
+The following tags-table entries describe the tensor types of grid
+functions/arrays.  These are widely used, both by \textbf{CactusEinstein}
+and by other arrangements/thorns:
+\begin{description}
+\item[\texttt{tensortypealias}]\mbox{}\\
+	This value associated with this tags-table key gives the
+	primary tensor type (behavior under coordinate transformation),
+	and may be one of the following strings:
+	\begin{description}
+	\item[\texttt{"scalar"}]
+		for a 3-scalar or group of 3-scalars;
+		this is generally assumed if no
+		\texttt{tensortypealias} tag is present.
+	\item[\texttt{"u"}]
+		for a group of 3~grid functions/arrays
+		storing a contravariant 3-vector $T^i$.
+	\item[\texttt{"d"}]
+		for a group of 3~grid functions/arrays
+		storing a covariant 3-vector $T_i$.
+	\item[\texttt{"uu\_sym"}]
+		for a group of 6~grid functions/arrays
+		storing a contravariant rank~2 symmetric 3-tensor $S^{ij}$.
+	\item[\texttt{"dd\_sym"}]
+		for a group of 6~grid functions/arrays
+		storing a covariant rank~2 symmetric 3-tensor $S_{ij}$.
+	\item[\texttt{"4scalar"}]
+		for a 4-scalar or group of 4-scalars.
+	\item[\texttt{"4u"}]
+		for a group of 4~grid functions/arrays
+		storing a contravariant 4-vector $T^a$.
+	\item[\texttt{"4d"}]
+		for a group of 4~grid functions/arrays
+		storing a covariant 4-vector $T_a$.
+	\item[\texttt{"4uu\_sym"}]
+		for a group of 10~grid functions/arrays
+		storing a contravariant rank~2 symmetric 4-tensor $S^{ab}$.
+	\item[\texttt{"4dd\_sym"}]
+		for a group of 10~grid functions/arrays
+		storing a covariant rank~2 symmetric 4-tensor $S_{ab}$.
+	\end{description}
+	Note that for multi-index tensors, different thorns have different
+	conventions about the order of the grid functions.  Row-major
+	order by indices is most common (for example, indices 11, 12,
+	13, 22, 23, 33 for a rank~2 symmetric 3-tensor), but some thorns
+	may use column-major order instead (in this example, indices
+	11, 21, 31, 22, 23, 33).  This also illustrates that for multi-index
+	symmetric tensors, there are multiple conventions about which
+	subset of algebraically-independent components is actually stored.
+\item[\texttt{tensormetric}]\mbox{}\\
+	The string value associated with this tags-table key gives the
+	full name (Thorn::Gridfn) of the grid variable holding the
+	tensor 3-metric with respect to which the other tensor-transformation
+	properties are defined.
+\item[\texttt{tensorweight}]\mbox{}\\
+	For a tensor density, this gives the weight.
+	If omitted, most code will use a default weight of $0$.
+\item[\texttt{tensorparity}]\mbox{}\\
+	For a (pseudo)tensor, this gives the parity.
+        The parity can be either $+1$ or $-1$.
+        The parity defines whether the quantity has a different sign
+        change behaviour under odd parity transformations, such as
+        e.g.\ reflections.  E.g., Pseudoscalars and axial vectors have
+        negative parity.
+	If omitted, most code will use a default parity of $+1$.
+\item[\texttt{tensorspecial}]\mbox{}\\
+	This is an ``escape-hatch'' tag used for things which are
+	``sort of tensors, but not really''.  If present, it may
+	have one of the following string values describing variables
+	in the AEI BSSN formalism (gr-qc/0003071):
+	\begin{description}
+	\item[\texttt{"phi"}]
+		for the BSSN logarithmic-conformal-factor
+		$\phi \equiv \frac{1}{12} \log \det [g_{ij}]$.
+	\item[\texttt{"gamma"}]
+		for the BSSN contracted-conformal-Christoffel-symbols
+		$\tilde{\Gamma}^i \equiv \tilde{g}^{mn} \tilde{\Gamma}^i{}_{mn}
+				  \equiv -\partial_j \tilde{g}^{ij}$.
+	\end{description}
+\end{description}
+
+Some thorns, particularly those for multi-patch computations, may also
+use the following tags-table entry:
+\begin{description}
+\item[\texttt{tensorbasis}]\mbox{}\\
+	The string value associated with this tags-table key specifies
+	the type of tensor basis being used:
+	\begin{description}
+	\item[\texttt{"global xyz"}]
+		means that the tensor basis is a global Cartesian one,
+		the same for all patches (and hence that this group
+		should not be tensor-transformed when it's interpolated
+		from one patch to another)
+	\item[\texttt{"local"}]
+		means that the tensor basis is a local per-patch one
+		(which varies from one patch to another); usually this
+		will be the obvious local-Cactus-coordinates coordinate basis
+	\end{description}
+	Other values may also be allowed for this key; see the documentation
+	for individual multi-patch infrastructures for further details
+	(including a discussion of what defaults are assumed for this).
+\end{description}
+
+%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Example}
+
+For example, the BSSN 3-metric might be declared with an \verb|interface.ccl|
+entry like this:
+\begin{verbatim}
+real conformal_metric                           type=GF timelevels=3    \
+     tags='tensortypealias="dd_sym"                                     \
+           tensorweight=-0.66666666666666667                            \
+           tensormetric="BSSNBase::conformal_metric"'
+{
+g_tilde_dd_11
+g_tilde_dd_12
+g_tilde_dd_13
+g_tilde_dd_22
+g_tilde_dd_23
+g_tilde_dd_33
+} "conformal 3-metric $\tilde{g}_{ij}$"
+\end{verbatim}
+Notice the syntax here: the \verb|tags=| string is enclosed in single
+quotes (\verb|tags='...'|), and may contain double-quoted strings.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Checkpointing of Cactus Grid Variables}
+
+During checkpointing all variables which have global storage assigned are saved
+in a checkpoint file for later recovery. For some variables this isn't really
+necessary because they are set up at \verb|BASEGRID| and remain constant
+thereafter, or they are used only as temporaries which don't need to be
+initialized from a checkpoint during recovery.
+
+\begin{description}
+\item[\texttt{checkpoint}]\mbox{}\\
+  This boolean key-value tag is meant as a hint to checkpoint methods
+  as to whether a Cactus grid variable group needs to be checkpointed.
+  \begin{description}
+    \item[\texttt{"yes"}]\mbox{}\\
+      The group needs to be saved in a checkpoint.
+      This is the default if no such tag is specified in a group's tags table.
+    \item[\texttt{"no"}]\mbox{}\\
+      The group may be omitted from a checkpoint. For a recovery Cactus run,
+      user code in application thorns makes sure that variables in this group
+      are properly initialized.
+  \end{description}
+\end{description}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Carpet-specific Tags}
+
+This section lists tags table entries which are specific to the mesh-refinement
+driver thorn {\tt Carpet}. For a detailed description of these tags please
+refer to the Carpet documentation.
+
+\begin{description}
+\item[\texttt{Prolongation}]\mbox{}\\
+  This string key-value tag speficifies which method Carpet should use to
+  prolongate variables in this group. Possible values are:
+  \begin{description}
+    \item[\texttt{"none"}]\mbox{}\\
+      do not prolongate this group
+    \item[\texttt{"Copy"}]\mbox{}\\
+      use simple copying for prolongation (needs only one time level)
+    \item[\texttt{"Lagrange"}]\mbox{}\\
+      use Lagrange interpolation (this is the default if no prolongation
+      operator has been specified for this group)
+    \item[\texttt{"TVD"}]\mbox{}\\
+      use TVD stencils (for hydro)
+    \item[\texttt{"ENO"}]\mbox{}\\
+      use ENO stencils (for hydro)
+    \item[\texttt{"WENO"}]\mbox{}\\
+      use WENO stencils (for hydro)
+  \end{description}
+
+\item[\texttt{ProlongationParameter = <parameter\_name>}]\mbox{}\\
+  Rather than naming a fixed prolongation operator at compile time via the
+  {\tt Prolongation} tag in an interface.ccl file, it is also possible to
+  specify it for each group only at runtime: the {\tt ProlongationParameter}
+  tag key expects a string value denoting the full name of a Cactus {\bf STRING}
+  or {\bf KEYWORD} parameter which specifies the actual prolongation operator
+  (from the same set listed above).\\
+  The {\tt ProlongationParameter} and {\tt Prolongation} tags are mutually
+  exclusive, one can either use one or the other in an inteface.ccl file.\\
+  Currently Carpet evaluates the prolongation parameter information only once
+  at startup, it is assumed that prolongation operators for individual groups
+  do not change afterwards.
+
+%\item[\texttt{Interpolator = <name>}]\mbox{}\\
+%  This tag speficies ???
+
+\item[\texttt{InterpNumTimelevels = <levels>}]\mbox{}\\
+  This tag specifies how many timelevels should be used for time interpolation.
+
+\end{description}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

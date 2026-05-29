@@ -1,0 +1,57 @@
+#! /bin/bash
+
+# Make output data from large runs useful again.
+# 2004-02-05 Erik Schnetter <schnetter@aei.mpg.de>
+
+# The directory scheme is:
+# All output data that are produced by this script go into subdirectories.
+# All data that are input data for later stages are symlinks from the current
+# directory into one of the subdirectories.
+
+# The time step which is extracted is determined by the parameter files
+# in the directory $PARDIR.  In order to extract different steps, it is not
+# necessary to re-run the recombination stage.
+
+# The recombination stage is quite slow; it might sense to run it on a machine
+# that has fast access to the data.
+
+DATADIR=/data3/diener/pi0-384_dc_cou_20_3d2
+DESTDIR=/data3/eschnett/dest
+
+MPIRUN=/opt/mpich/intel_ia32/bin/mpirun
+EXEDIR=/home/eschnett/Calpha/Cactus/exe
+EXE=einstein-peyote
+
+PARDIR=/home/eschnett/Calpha/Cactus/arrangements/AEIThorns/CalcK/par
+
+mkdir -p $DESTDIR
+cd $DESTDIR
+
+# Recombine the data
+echo "Recombining data..."
+mkdir -p recombined
+## for var in psi gxx gxy gxz gyy gyz gzz alp betax betay betaz; do
+##     echo "Recombining $var..."
+##     $EXEDIR/$EXE/hdf5_recombiner $DATADIR/${var}_3d/$var.file_0.h5 recombined/$var.h5
+## done
+ln -s recombined/*.h5 .
+echo "Done recombining."
+
+# Extract the metric from the previous time step
+echo "Extracting previous time step..."
+$MPIRUN $EXEDIR/cactus_$EXE -W 2 $PARDIR/copy_to_prev.par 2>&1 | tee copy_to_prev.out
+ln -s copy_to_prev/*_prev.h5 .
+
+# Extract the metric from the next time step
+echo "Extracting next time step..."
+$MPIRUN $EXEDIR/cactus_$EXE -W 2 $PARDIR/copy_to_next.par 2>&1 | tee copy_to_next.out
+ln -s copy_to_next/*_next.h5 .
+
+# Calculate the extrinsic curvature
+echo "Calculating extrinsic curvature..."
+$MPIRUN $EXEDIR/cactus_$EXE -W 2 $PARDIR/calck.par 2>&1 | tee calck.out
+ln -s calck/k??.h5 .
+
+# Calculate Isolated Horizon quantities
+echo "Calculating Isolated Horizon quantities..."
+$MPIRUN $EXEDIR/cactus_$EXE -W 2 $PARDIR/ih.par 2>&1 | tee ih.out

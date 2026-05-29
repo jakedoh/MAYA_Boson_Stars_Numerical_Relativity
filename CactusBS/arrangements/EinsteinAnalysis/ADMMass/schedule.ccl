@@ -1,0 +1,87 @@
+# Schedule definitions for thorn ADMMass
+# $Header$
+
+STORAGE:ADMMass_LoopCounterG
+STORAGE:ADMMass_Masses
+###############################################################################
+# The storage of the following grid functions at all times is necessary only
+# because carpet would allocate them only for the finest level, if the STORAGE
+# specification were only in the ADMMass group, as it was earlier. This will
+# be changed back again, when carpet will be modified.
+###############################################################################
+STORAGE:ADMMass_GFs_surface[3] 
+STORAGE:ADMMass_GFs_volume[3] 
+
+schedule ADMMass_InitLoopCounter AT INITIAL
+{
+  LANG: C
+  OPTIONS: global
+} "Initialise the loop counter for ADMMass"
+
+schedule ADMMass_SetLoopCounter AT POSTSTEP AFTER OutsideMask_UpdateMask
+{
+  LANG: C
+  OPTIONS: global
+} "Set the loop counter to the value of the parameter ADMMass:ADMMass_number"
+
+###############################################################################
+# We must schedule the local routines to compute the integrals in
+# global-loop-local (as opposed to local) mode, in order to make sure that the
+# scheduling condition "AFTER", which describes the ADMMass group, is respected.
+# This group may depend on local routines (excision, emask) and must be run
+# after all local routines. If we had no such a dependence, we could have
+# scheduled the integral computations simply in local mode.
+###############################################################################
+schedule GROUP ADMMass AT POSTSTEP AFTER ADMMass_SetLoopCounter WHILE ADMMass::ADMMass_LoopCounter
+{
+  STORAGE:ADMMass_GFs_surface[3]
+  STORAGE:ADMMass_GFs_volume[3]
+  STORAGE:ADMMass_box
+  STORAGE:grid_spacing_product
+} "ADMMass loop"
+
+schedule ADMMass_Loop IN ADMMass
+{
+  LANG: C
+  OPTIONS: global
+} "Decrement loop counter"
+
+schedule ADMMass_Surface IN ADMMass AFTER ADMMass_Loop
+{
+  LANG: C
+  OPTIONS: global loop-local
+  SYNC: ADMMass_GFs_surface
+} "Calculate the ADMmass using a surface integral: local routine"
+
+schedule ADMMass_Surface_Global IN ADMMass AFTER ADMMass_Surface
+{
+  LANG: C
+  OPTIONS: global
+} "Calculate the ADMmass using a surface integral: global routine"
+
+schedule ADMMass_Surface_Lapse IN ADMMass AFTER ADMMass_Surface_Global
+{
+  LANG: C
+  OPTIONS: global loop-local
+  SYNC: ADMMass_GFs_surface
+} "Calculate the ADMmass*lapse using a surface integral: local routine"
+
+schedule ADMMass_Surface_Lapse_Global IN ADMMass AFTER ADMMass_Surface_Lapse
+{
+  LANG: C
+  OPTIONS: global
+} "Calculate the ADMmass*lapse using a surface integral: global routine"
+
+schedule ADMMass_Volume IN ADMMass AFTER ADMMass_Surface_Lapse_Global
+{
+  LANG: C
+  OPTIONS: global loop-local
+  SYNC: ADMMass_GFs_volume
+} "Calculate the ADMmass using a volume integral: local routine"
+
+schedule ADMMass_Volume_Global IN ADMMass AFTER ADMMass_Volume
+{
+  LANG: C
+  OPTIONS: global
+} "Calculate the ADMmass using a volume integral: global routine"
+

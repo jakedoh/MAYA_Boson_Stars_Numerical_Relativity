@@ -1,0 +1,28 @@
+# Interface definition for thorn SphericalHarmonicDecomp
+# $Header:$
+
+implements: SphericalHarmonicDecomp
+inherits:
+
+CCTK_INT FUNCTION sYlm_DecomposeField(\
+               CCTK_POINTER_TO_CONST IN cctkGH,\
+               CCTK_POINTER_TO_CONST IN name,\
+               CCTK_INT IN re_gindx,\
+               CCTK_INT IN im_gindx,\
+               CCTK_REAL IN radius,\
+               CCTK_INT IN spin)
+
+CCTK_INT FUNCTION sYlm_DecomposeField_3D(\
+               CCTK_POINTER_TO_CONST IN cctkGH,\
+               CCTK_POINTER_TO_CONST IN name,\
+               CCTK_INT IN re_gindx,\
+               CCTK_INT IN im_gindx,\
+               CCTK_INT IN spin)
+
+
+PROVIDES FUNCTION sYlm_DecomposeField WITH \
+     SphericalHarmonicDecomp_DecomposeField LANGUAGE C
+
+
+PROVIDES FUNCTION sYlm_DecomposeField_3D WITH \
+     SphericalHarmonicDecomp_3D_Decompose LANGUAGE C

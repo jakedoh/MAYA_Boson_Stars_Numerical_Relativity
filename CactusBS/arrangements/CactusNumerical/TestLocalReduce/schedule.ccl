@@ -1,0 +1,21 @@
+# Schedule definitions for thorn TestLocalReduce
+# $Header$
+
+
+STORAGE: real_vals int_vals
+
+schedule TestLocalReduceC_Maximum at CCTK_POSTINITIAL
+{
+  LANG: C
+} "Test out maximum reductions from C"
+
+schedule TestLocalReduceC_Sum at CCTK_POSTINITIAL
+{
+  LANG: C
+} "Test out sum reductions from C"
+
+schedule TestLocalReduceC_Avg at CCTK_POSTINITIAL
+{
+  LANG: C
+} "Test out avg reductions from C"
+

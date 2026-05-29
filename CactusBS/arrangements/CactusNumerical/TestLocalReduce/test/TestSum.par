@@ -1,0 +1,15 @@
+!DESC "Test sum Local Reductions, very simple and straightforward"
+
+ActiveThorns = "PUGH CartGrid3D CoordBase TestLocalReduce LocalReduce IOUtil IOBasic"
+
+cactus::cctk_itlast = 0
+
+IO::out_every = 1
+IO::out_dir   = "TestSum"
+
+IOBasic::outScalar_vars  = "testlocalreduce::real_sum_3D testlocalreduce::real_sum_2D testlocalreduce::real_sum_1D testlocalreduce::int_sum_3D testlocalreduce::int_sum_2D testlocalreduce::int_sum_1D"
+IOBasic::outScalar_every = 1
+
+
+IO::out_fileinfo  = "none"
+IO::parfile_write = "no"

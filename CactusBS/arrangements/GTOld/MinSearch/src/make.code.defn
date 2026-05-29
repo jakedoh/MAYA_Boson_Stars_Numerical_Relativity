@@ -1,0 +1,6 @@
+
+# Source files in this directory
+SRCS = mintracker.cc steer.cc
+
+# Subdirectories containing source files
+SUBDIRS = 

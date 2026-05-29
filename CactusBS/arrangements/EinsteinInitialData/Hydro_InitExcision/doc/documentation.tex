@@ -1,0 +1,71 @@
+\documentclass{article}
+\usepackage{../../../../doc/latex/cactus}
+\begin{document}
+
+% The title of the document (not necessarily the name of the Thorn)
+\title{Hydro\_InitExcision - Initial Excision for Hydro Evolutions}
+
+% The author of the documentation - on one line, otherwise it does not work
+\author{Andrea Nerozzi, Frank L\"offler}
+
+\maketitle
+
+% Use the Cactus ThornGuide style file
+% (Automatically used from Cactus distribution, if you have a 
+%  thorn without the Cactus Flesh download this from the Cactus
+%  homepage at www.cactuscode.org)
+
+% Do not delete next line
+% START CACTUS THORNGUIDE
+
+%\newcommand{\eqref}[1]{(\ref{#1})}
+
+% Add an abstract for this thorn's documentation
+\begin{abstract}
+  This thorn initialises the excision-spacemask for GRHydro to
+  specified forms. It is based on a similar version used to initialise
+  the excision-mask for Whisky code.
+\end{abstract}
+
+% The following sections are suggestive only.
+% Remove them or add your own.
+
+\section{Using This Thorn}
+
+Using this thorn is quite easy:
+You have to activate it in your parameter file and specify at least the
+following:
+
+\begin{verbatim}
+hydro_initexcision::hydro_initexcision = "yes"
+\end{verbatim}
+
+In addition to that you may want to specify the type of excision zone
+you want to have. You can do this by
+
+\begin{verbatim}
+hydro_initexcision::hydro_initexcision_type = <TYPE>
+\end{verbatim}
+
+where \begin{verbatim}<TYPE>\end{verbatim} is one of the following list:
+\begin{itemize}
+ \item "x-axis"
+ \item "y-axis"
+ \item "z-axis"
+ \item "box"
+ \item "sphere"
+\end{itemize}
+
+\section{Thorn Source Code}
+
+This was initially written by Andrea Nerozzi and later changed
+by Frank L\"offler.
+
+\section{Thorn Documentation}
+
+This documentation was largely written by Frank L\"offler.
+
+% Do not delete next line
+% END CACTUS THORNGUIDE
+
+\end{document}

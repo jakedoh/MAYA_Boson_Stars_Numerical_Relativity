@@ -1,0 +1,10 @@
+Cactus Code Thorn MassDistribution
+Author(s)    : Roland Haas <roland.haas@physics.gatech.edu>
+Maintainer(s): Roland Haas <roland.haas@physics.gatech.edu>
+Licence      : GPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+Computes the distribution of specific energy in the fluid elements by bining
+the amount of mass with a certain energy.

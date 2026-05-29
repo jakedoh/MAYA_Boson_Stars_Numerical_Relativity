@@ -1,0 +1,257 @@
+! vim:syntax=fortran
+#include "cctk.h"
+#include "cctk_Functions.h"
+#include "cctk_Arguments.h"
+#include "cctk_Parameters.h"
+
+subroutine InterpCoord(CCTK_ARGUMENTS)
+  use spinweightedYlm
+  implicit none
+
+#include "Eth_Iface.h"
+INTERFACE
+  subroutine null_cinterp(cctkGH, gx, gy, lsh, lbnd, ubnd, qq, pp, zz, J1, J2, gf_indices, spin, mypc)
+   implicit none
+   CCTK_POINTER, intent(in) :: cctkGH
+   CCTK_INT, intent(in) :: spin, gx, gy, mypc
+   CCTK_INT, intent(in), dimension(2) :: lsh, lbnd, ubnd
+   CCTK_REAL, dimension(lsh(1), lsh(2)), intent(in) :: qq, pp
+   CCTK_COMPLEX, dimension(lsh(1), lsh(2)), intent(in) :: zz
+   CCTK_COMPLEX, dimension(lsh(1),lsh(2)), intent(inout) :: J1, J2
+   integer, dimension(2), intent(in) :: gf_indices
+  end subroutine null_cinterp
+END INTERFACE
+
+
+   CCTK_INT :: i, j, nx, ny, k, mypc
+   CCTK_REAL :: dx, dy
+
+   !CCTK_COMPLEX, dimension(cctk_lsh(1), cctk_lsh(2)) :: J1, J2, J3, J4
+   CCTK_INT, dimension(:,:), allocatable :: mask
+   CCTK_COMPLEX, dimension(:,:,:), allocatable :: Ylm
+   integer :: ierror, ierr
+   integer :: gf_indices(2), gsh(2), lsh(2), lbnd(2), ubnd(2)
+ 
+character(len=1000) :: message = "blank message"
+
+
+
+   DECLARE_CCTK_FUNCTIONS
+   DECLARE_CCTK_ARGUMENTS
+   DECLARE_CCTK_PARAMETERS
+
+
+    call CCTK_GroupgshGN(ierr,cctkGH,2,gsh,"NullGrid::my2dc")
+    call CCTK_GrouplshGN(ierr,cctkGH,2,lsh,"NullGrid::my2dc")
+    call CCTK_GrouplbndGN(ierr,cctkGH,2,lbnd,"NullGrid::my2dc")
+    call CCTK_GroupubndGN(ierr,cctkGH,2,ubnd,"NullGrid::my2dc")
+
+
+!   if (lsh(1) .ne. lsh(2) ) then 
+!     call CCTK_WARN(0, "nx and ny must be identical")
+!   endif
+
+   allocate(mask(lsh(1), lsh(2)), Ylm(lsh(1), lsh(2), 2))
+   call sYlm(spin,ell,em, lsh(1), lsh(2), zeta, Ylm)
+
+   J1 = Ylm(:,:,1)
+   J2 = Ylm(:,:,2)
+   J3 = J1
+   J4 = J2
+
+   mask = 0
+   if (lbnd(1) == 0) then
+     mask(1,:) = 1
+  endif
+  if(ubnd(1) == global_nx - 1) then
+     mask(lsh(1),:) = 1
+   endif
+   if (lbnd(2) == 0) then
+     mask(:,1) = 1
+  endif
+  if(ubnd(2) == global_ny - 1) then
+     mask(:,lsh(2)) = 1
+   endif
+ 
+   J3 = J3 + 1.0d50 * mask
+
+   J4 = J4  + 1.0d50 * mask
+
+   call null_d2(lsh(1), lsh(2),&
+     cctk_delta_space(1), cctk_delta_space(2), pp, zeta, J3, J1, spin,-1,1)
+   call null_d2(lsh(1), lsh(2),&
+     cctk_delta_space(1), cctk_delta_space(2), pp, zeta, J4, J2, spin,-1,1)
+
+   call CCTK_SyncGroup(ierr, cctkGH, "NullGrid::my2dcc")
+   call CCTK_VarIndex(gf_indices(2), "NullGrid::J3")
+   call CCTK_VarIndex(gf_indices(1), "NullGrid::J4")
+
+mypc = CCTK_MyProc(cctkGH)
+
+   call null_cinterp(cctkGH, global_nx, global_ny, lsh, lbnd, ubnd, qg, pg, zeta, J3, J4, gf_indices, spin, mypc)
+
+  call null_d2(lsh(1), lsh(2),&
+     cctk_delta_space(1), cctk_delta_space(2), pp, zeta, J1, J3, spin,1,-1)
+   call null_d2(lsh(1), lsh(2),&
+     cctk_delta_space(1), cctk_delta_space(2), pp, zeta, J2, J4, spin,1,-1)
+
+   call CCTK_SyncGroup(ierr, cctkGH, "NullGrid::my2dcc")
+  J3 = J1
+  J4 = J2
+
+  call null_cinterp(cctkGH, global_nx, global_ny, lsh, lbnd, ubnd, qg, pg, zeta, J3, J4, gf_indices, spin, mypc)
+
+   call sYlm(spin,ell,em, lsh(1), lsh(2), zeta, Ylm)
+   Ylm = Ylm * 2*spin 
+   J1 = Ylm(:,:,1)
+   J2 = Ylm(:,:,2)
+   E1  = abs(J3 - J1)
+   E2  = abs(J4 - J2)
+      write(*,*) maxval(abs(E1)), maxval(abs(E2))
+      write(*,*) maxval(abs(E1(2:lsh(1)-1,2:lsh(2)-1))), maxval(abs(E2))
+write(message,*) "proc ", mypc, "has abs ", maxval(abs(E1)), maxval(abs(E2))
+call CCTK_INFO(trim(message))
+write(100+mypc,*) mypc, maxval(abs(E1))
+write(100+mypc,*) mypc, qg(1,1), pg(1,1)
+write(100+mypc,*) mypc, E1(1,1)
+write(100+mypc,*) mask(1,3), mask(lsh(1),3), mask(3,1), mask(3,lsh(2))
+call flush(100+mypc)
+!if (mypc == 0 ) then
+!   E1 = 0
+!endif
+!if (mypc ==3 ) then
+!    E1 = 0
+!endif
+!   deallocate(mask, Ylm)
+     
+end subroutine  InterpCoord 
+subroutine null_cinterp(cctkGH, gx, gy, lsh, lbnd, ubnd, qq, pp, zz, J1, J2, gf_indices, spin, mypc)
+   implicit none
+   CCTK_POINTER, intent(in) :: cctkGH
+   CCTK_INT, intent(in) :: spin, gx, gy, mypc
+   CCTK_INT, intent(in), dimension(2) :: lsh, lbnd, ubnd
+   CCTK_REAL, dimension(lsh(1), lsh(2)), intent(in) :: qq, pp
+   CCTK_COMPLEX, dimension(lsh(1), lsh(2)), intent(in) :: zz
+   CCTK_COMPLEX, dimension(lsh(1),lsh(2)), intent(inout) :: J1, J2
+   integer, dimension(2), intent(in) :: gf_indices
+
+   CCTK_INT :: i, j, k
+
+   logical, save :: FirstTime = .true.
+   CCTK_REAL, dimension(:), allocatable, save :: qcoord, pcoord
+   CCTK_COMPLEX, dimension(:), allocatable, save :: Iarr1, Iarr2
+   CCTK_INT, dimension(:), allocatable, save :: reindexi, reindexj
+   CCTK_INT, save :: tot_nbp, nbp
+   integer :: ierror, ierr
+   integer, save :: interp_handle, coord_system_handle
+ 
+INTERFACE
+  subroutine Cinterp( GH, XinC, YinC, n_points, &
+       inputIndx1, inputIndx2, Out1, Out2)
+
+    implicit none
+    CCTK_POINTER, intent(in) :: GH
+    CCTK_REAL, dimension(n_points),intent(in) :: XinC, Yinc
+    CCTK_INT, intent(in) :: n_points, inputIndx1, inputIndx2
+    CCTK_COMPLEX, dimension(n_points), intent(out) :: Out1, Out2
+ end subroutine Cinterp
+END INTERFACE
+
+   if ( FirstTime ) then
+     FirstTime = .false.
+
+     tot_nbp = 2*gx+2*gy
+     allocate(qcoord(tot_nbp), pcoord(tot_nbp), reindexi(tot_nbp), reindexj(tot_nbp),&
+              Iarr1(tot_nbp), Iarr2(tot_nbp))
+  
+     k = 0
+     if (lbnd(2) .eq. 0 ) then
+write(100+mypc,*) " bottom"
+       do i = 1, lsh(1) 
+         k = k + 1
+         j = 1
+         qcoord(k) = qq(i,j)/(qq(i,j)**2 + pp(i,j)**2)
+         pcoord(k) = -pp(i,j)/(qq(i,j)**2 + pp(i,j)**2)
+         reindexi(k) = i
+         reindexj(k) = j
+       end do
+     endif
+     if (lbnd(1) .eq. 0 ) then
+write(100+mypc,*) " left"
+       do j = 1, lsh(2)
+          k =k + 1
+          i  = 1
+         qcoord(k) = qq(i,j)/(qq(i,j)**2 + pp(i,j)**2)
+         pcoord(k) = -pp(i,j)/(qq(i,j)**2 + pp(i,j)**2)
+         reindexi(k) = i
+         reindexj(k) = j
+       end do
+     endif
+     if (ubnd(2) .eq. gy - 1) then
+write(100+mypc,*) " top"
+       do  i = 1, lsh(1)
+         k = k + 1
+         j = lsh(2)
+         qcoord(k) = qq(i,j)/(qq(i,j)**2 + pp(i,j)**2)
+         pcoord(k) = -pp(i,j)/(qq(i,j)**2 + pp(i,j)**2)
+         reindexi(k) = i
+         reindexj(k) = j
+       end do
+     endif
+     if (ubnd(1) .eq. gx -1) then 
+write(100+mypc,*) " right"
+       do j = 1, lsh(2)
+         k = k + 1
+         i = lsh(1)
+         qcoord(k) = qq(i,j)/(qq(i,j)**2 + pp(i,j)**2)
+         pcoord(k) = -pp(i,j)/(qq(i,j)**2 + pp(i,j)**2)
+         reindexi(k) = i
+         reindexj(k) = j
+       end do
+     endif
+     nbp = k ! actual number of bp
+
+     if ( nbp > tot_nbp ) then
+        call CCTK_WARN(0,"Boundary point determination error")
+     endif
+      call CCTK_InterpHandle (interp_handle, "third-order uniform cartesian")
+     if (interp_handle < 0) then
+           call CCTK_WARN(0,"Interpolation operator not found")
+     end if
+  
+     call CCTK_CoordSystemHandle (coord_system_handle, "stereo")
+  
+     if (coord_system_handle < 0) then
+           call CCTK_WARN(0,"Coordinate system 'stereo' not registered")
+     end if
+
+   endif
+write(100+mypc,*) nbp
+   if ( nbp == 0 ) then
+       return
+    endif
+
+
+call Cinterp( cctkGH, qcoord, pcoord, nbp, gf_indices(1), gf_indices(2), Iarr1, Iarr2)
+!    call CCTK_InterpGV(ierror, cctkGH, interp_handle,&
+!           coord_system_handle, nbp , 2, 2,&
+!          qcoord, pcoord,&
+!          CCTK_VARIABLE_REAL, CCTK_VARIABLE_REAL,&
+!          gf_indices(1), gf_indices(2),&
+!          Iarr1, Iarr2,&
+!          CCTK_VARIABLE_COMPLEX, CCTK_VARIABLE_COMPLEX)
+
+    if (ierror<0) then
+        call CCTK_WARN(1,"Interpolation error")
+    endif
+ 
+    do k = 1, nbp
+      i = reindexi(k) 
+      j = reindexj(k) 
+      write(100+mypc,*) i,j
+      write(100+mypc,*) Iarr1(k), qq(i,j), pp(i,j)
+      J1(i,j) = Iarr1(k) * (-zz(i,j)/conjg(zz(i,j)))**spin
+      J2(i,j) = Iarr2(k) * (-zz(i,j)/conjg(zz(i,j)))**spin
+    end do
+end subroutine null_cinterp
+

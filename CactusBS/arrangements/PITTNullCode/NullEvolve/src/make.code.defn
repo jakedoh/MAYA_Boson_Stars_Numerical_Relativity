@@ -1,0 +1,12 @@
+# Main make.code.defn file for thorn NullEvolve
+# $Header$
+                                                                                                                              
+# Source files in this directory
+SRCS =  NullEvol_Bdry.F90 NullEvol_cfl_test.F90 NullEvol_Evol.F90 \
+        NullEvol_hyper_beta.F90 NullEvol_hyper_u.F90 NullEvol_hyper_q.F90 NullEvol_hyper_w.F90 \
+        NullEvol_InitialData.F90 NullEvol_TimeStep.F90 NullEvol_Mask.F90 NullEvol_DissipMask.F90 \
+        NullEvol_Pulse.F90 NullEvol_Step.F90 NullEvol_sYlm.F90 NullEvol_InitialSlice.F90 \
+	NullEvol_Diag.F90 NullEvol_DiagMod.F90
+
+# Subdirectories containing source files
+SUBDIRS =

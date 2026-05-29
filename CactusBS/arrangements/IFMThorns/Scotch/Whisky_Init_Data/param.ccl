@@ -1,0 +1,322 @@
+# Parameter definitions for thorn Whisky_Init_Data
+# $Header$
+
+shares:ADMBase
+
+EXTENDS KEYWORD initial_data ""
+{
+#  "shocktube"		:: "Shock tube initial data for Whisky"
+#  "tov"                 :: "TOV star initial data for Whisky -- Unsupported"
+  "con2primtest"	:: "Testing the con -> prim conversion"
+  "con2prim2con_test"	:: "Testing the con -> prim -> con conversion"
+  "reconstruction_test"	:: "Testing reconstruction"
+}
+
+shares: HydroBase
+
+EXTENDS KEYWORD initial_hydro "Initial data (doubles whisky_initial_data)"
+{
+  "shocktube"	  :: "Shocktube type"
+  "MHD_shocktube" :: "MHD Shocktube type (incl. HD shock cases)"
+  "monopole"      :: "Magnetic Monopole"
+  "only_atmo"	  :: "Set only a low atmosphere"
+  "read_conformal":: "After reading in initial alp, rho and gxx from h5 files, sets the other quantities"
+  "simple_wave"   :: "Set initial data from Anile Miller Motta, Phys.Fluids. 26, 1450 (1983)"
+  "cylExplosion"  :: "Cylindrical explosion"
+  "magrotor"         :: "Magnetic Rotor test from DelZanna,Bucciantini, and Londrillo A&A 400, 397 (2003)"
+}
+
+EXTENDS KEYWORD initial_Bvec ""
+{
+  "shocktube"    :: "Magnetized shocktubes"
+  "cylExplosion" :: "Cylindrical explosion"
+  "magrotor"        :: "Rotor test"
+}
+
+EXTENDS KEYWORD initial_Avec ""
+{
+  "shocktube"    :: "Magnetized shocktubes"
+  "cylExplosion" :: "Cylindrical explosion"
+  "magrotor"        :: "Rotor test"
+}
+
+USES KEYWORD evolution_method
+
+private:
+
+KEYWORD whisky_initial_data "Initial data for hydro variables only"
+{
+  "none"	  :: "Nothing set here"
+  "shocktube"	  :: "Shocktube type"
+  "MHD_shocktube" :: "MHD Shocktube type (incl. HD shock cases)"
+  "monopole"      :: "Magnetic Monopole"
+  "only_atmo"	  :: "Set only a low atmosphere"
+  "read_conformal":: "After reading in initial alp, rho and gxx from h5 files, sets the other quantities"
+  "simple_wave"   :: "Set initial data from Anile Miller Motta, Phys.Fluids. 26, 1450 (1983)"
+  "cylExplosion"  :: "Cylindrical explosion"
+  "magrotor"         :: "Magnetic Rotor test from DelZanna,Bucciantini, and Londrillo A&A 400, 397 (2003)"
+} "none"
+
+KEYWORD shocktube_type "Diagonal or parallel shock?"
+{
+  "diagshock"	:: "Diagonal across all axes"
+  "xshock"	:: "Parallel to x axis"
+  "yshock"	:: "Parallel to y axis"
+  "zshock"	:: "Parallel to z axis"
+  "sphere"  :: "spherically symmetric shock"
+} "diagshock"
+
+KEYWORD shock_case "Simple, Sod's problem or other?"
+{
+  "Simple"	:: "GRAstro_Hydro test case(HD)"
+  "Sod"		:: "Sod's problem (HD)"
+  "Blast"	:: "Strong blast wave (HD)"
+  "Custom"	:: "Left and Right sides specified by parameters (HD and MHD)"
+  "DuezMHDA"	:: "Fast shock from Duez PRD 72, 024028 (MHD)"
+  "DuezMHDB"	:: "Slow shock from Duez PRD 72, 024028 (MHD)"
+  "DuezMHDC"	:: "Switch-off fast Rarefaction Duez PRD 72, 024028 (MHD)"
+  "DuezMHDD"	:: "Switch-off slow Rarefaction Duez PRD 72, 024028 (MHD)"
+  "DuezMHDE"	:: "Shock tube 1, Duez PRD 72, 024028 (MHD)"
+  "DuezMHDF"	:: "Shock tube 2, Duez PRD 72, 024028 (MHD)"
+  "DuezMHDG"	:: "Collision, Duez PRD 72, 024028 (MHD)"
+  "DuezMHDH"	:: "Nonlinear Alfven wave, Duez PRD 72, 024028 (MHD)"
+  "Balsara1"    :: "Balsara 2001, Shock 1"
+  "Balsara2"    :: "Balsara 2001, Shock 2"
+  "Balsara3"    :: "Balsara 2001, Blast 1"
+  "Balsara4"    :: "Balsara 2001, Blast 2"
+  "Balsara5"    :: "Balsara 2001, non-coplanar set of waves"
+  "Komissarov1" :: "Same fast shock as DuezMHDA, Komissarov MNRAS 303, 343 (1999)"
+  "Komissarov2" :: "Same slow shock as DuezMHDB, Komissarov 1999"
+  "Komissarov3" :: "Same switch-off fast rarefaction as DuezMHDC, Komissarov 1999"
+  "Komissarov4" :: "Same switch-off slow rarefaction as DuezMHDD, Komissarov 1999"
+  "Komissarov5" :: "Same Alfven wave as DuezMHDH, Komissarov 1999"
+  "Komissarov7" :: "Same Shock tube 1 as DuezMHDE, Komissarov 1999"
+  "Komissarov8" :: "Same Shock tube 2 as DuezMHDF, Komissarov 1999"
+  "Komissarov9" :: "Same Collision as DuezMHDG, Komissarov 1999"
+} "Sod"
+
+REAL shock_xpos "Position of shock plane: x"
+{
+  *:*		:: "Anything"
+} 0.0
+
+REAL shock_ypos "Position of shock plane: y"
+{
+  *:*		:: "Anything"
+} 0.0
+
+REAL shock_zpos "Position of shock plane: z"
+{
+  *:*		:: "Anything"
+} 0.0
+
+REAL shock_radius "Radius of sperical shock"
+{
+  0.0:*   :: "Anything positive"
+} 1.0
+
+BOOLEAN change_shock_direction "Change the shock direction"
+{ 
+} "no"
+
+# For custom shocks
+REAL left_rho "density left of shock"
+{
+  0:* :: "Positive"
+} 0
+
+REAL left_vel[3] "velocity left of shock"
+{
+  *:* :: "Anything"
+} 0
+
+REAL left_eps "eps left of shock"
+{
+  0:* :: "Positive"
+} 0
+
+REAL left_bvec[3] "Eulerian B-field (observer n^i)"
+{
+  *:* :: "Anything"
+} 0
+
+REAL right_rho "density right of shock"
+{
+  0:* :: "Positive"
+} 0
+
+REAL right_vel[3] "velocity right of shock"
+{
+  *:* :: "Anything"
+} 0
+
+REAL right_eps "eps right of shock"
+{
+  0:* :: "Positive"
+} 0
+
+REAL right_bvec[3] "Eulerian B-field (observer n^i)"
+{
+  *:* :: "Anything"
+} 0
+
+REAL simple_wave_constant_c_0 "The c_0 constant in Anile Miller Motta, Phys.Fluids. 26, 1450 (1983)"
+{
+  0:1     :: "It is the sound speed where the fluid velocity is zero"
+} 0.3
+
+REAL simple_wave_v_max "The v_max constant in Anile Miller Motta, Phys.Fluids. 26, 1450 (1983)"
+{
+  0:1     :: "It is the maximum velocity in the initial configuration (see p. 1457, bottom of first column)"
+} 0.7
+
+# For monopoles (currently assumes hard-coded background and
+#                monopole imposed on B^x only)
+
+KEYWORD monopole_type "Diagonal or parallel shock?"
+{
+  "Point"    :: "Single gridpoint containing a monopole"
+  "Gaussian" :: "Gaussian region containing monopoles "
+} "Point"
+
+REAL monopole_pos[3] "Position of monopole center"
+{
+  *:*     :: "Anywhere, even off-grid"
+} 0.0
+
+REAL monopole_val "Monopole uses this to perturb a background (uniform) magnetic field."
+{
+  *:*     :: "Anything"
+} 0.5d0 
+
+REAL monopole_sig "Width of monopole gaussian."
+{
+  *:*     :: "Anything"
+} 0.5d0 
+
+# For cylindrical explosion 
+# shocktube_type is usurped for direction of cylinder axis
+
+REAL Bx_init "Initial magnetic field for cylindrical shock"
+{
+  *:*     :: "Anything"
+} 1.0
+
+REAL By_init "Initial magnetic field for cylindrical shock"
+{
+  *:*     :: "Anything"
+} 0
+
+REAL Bz_init "Initial magnetic field for cylindrical shock"
+{
+  *:*     :: "Anything"
+} 0
+
+REAL cylexp_radius_inner "Inner radius of cylindrical explosion"
+{
+  (0:*    :: "Anything positive"
+} 0.8
+
+REAL cylexp_radius_outer "Outer radius of cylindrical explosion"
+{
+  (0:*    :: "Anything positive"
+} 1.0
+
+# For magnetic rotor
+
+CCTK_REAL rotor_xc "Center of rotation"
+{
+  *:* :: "Any location"
+} 0.5
+
+CCTK_REAL rotor_yc "Center of rotation"
+{
+  *:* :: "Any location"
+} 0.5
+
+CCTK_REAL rotor_bx "Initial component of Bvec[0]"
+{
+  *:* :: "any real number"
+} 1.0
+
+CCTK_REAL rotor_by "Initial component of Bvec[1]"
+{
+  *:* :: "any real number"
+} 0.0
+
+CCTK_REAL rotor_bz "Initial component of Bvec[2]"
+{
+  *:* :: "any real number"
+} 0.0
+  
+CCTK_REAL rotor_r_rot "Radius of rotor"
+{
+  (0:* :: "any positive number"
+} 0.1
+  
+CCTK_REAL rotor_v_max "Maximum velocity"
+{
+  (-1:1) :: "any subluminal speed (negative is clockwise)"
+} 0.995
+
+CCTK_REAL rotor_rhoin "Initial density inside rotor"
+{
+  (0:* :: "any positive number"
+} 10.d0
+
+CCTK_REAL rotor_pressin "Initial pressure inside rotor"
+{
+  (0:* :: "any positive number"
+} 1.d0
+
+CCTK_REAL rotor_rhoout "Initial density outside rotor"
+{
+  (0:* :: "any positive number"
+} 1.d0
+
+CCTK_REAL rotor_pressout "Initial pressure outside rotor"
+{
+  (0:* :: "any positive number"
+} 1.d0
+
+CCTK_BOOLEAN rotor_use_smoothing "Smooth the edge?"
+{
+} yes
+
+CCTK_REAL rotor_rsmooth_rel "Define the radius in relative terms if so"
+{
+  (0:* :: "any positive number"
+} 0.05
+
+# For the "atmosphere"
+
+REAL atmosphere_vel[3] "Velocity of the atmosphere if non-trivial"
+{
+  *:*     :: "Anything"
+} 0.0
+
+BOOLEAN attenuate_atmosphere "Attenuate the velocity in the atmosphere"
+{
+} "no"
+
+shares:reconstructTVD
+USES keyword tvd_limiter 
+
+shares:whisky
+
+USES real whisky_rho_central
+USES real whisky_eps_min ""
+USES real whisky_perc_ptol ""
+USES real whisky_del_ptol ""
+USES KEYWORD whisky_eos_type ""
+USES string whisky_eos_table ""
+USES real rho_abs_min
+USES real rho_rel_min
+USES REAL initial_rho_abs_min
+USES REAL initial_rho_rel_min
+USES REAL initial_atmosphere_factor
+USES BOOLEAN clean_divergence
+
+shares: IO
+
+USES STRING out_dir

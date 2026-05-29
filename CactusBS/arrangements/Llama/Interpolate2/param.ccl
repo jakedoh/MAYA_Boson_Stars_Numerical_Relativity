@@ -1,0 +1,78 @@
+#STRING coordsystem "The coordinate system to use" STEERABLE=always
+#{
+#  "" :: "must be a registered coordinate system"
+#} "cart3d"
+#
+#STRING interpolator "The interpolator to use" STEERABLE=always
+#{
+#  "" :: "must be a registered interpolator"
+#} "Lagrange polynomial interpolation"
+#
+#STRING interpolator_options "Options for the interpolator" STEERABLE=always
+#{
+#  "" :: "must be a valid options specification"
+#} "order=4"
+
+
+
+INT interpolator_order "Interpolation order" STEERABLE=recover
+{
+  0:* :: ""
+} 4
+
+
+INT interpolator_order_matter "Interpolation order for those variables having an 'interpolator=matter' tag" STEERABLE=recover
+{
+  -1  :: "Don't use special matter interpolator"
+   1  :: "1st-order Lagrange"
+   2  :: "2nd order ENO"
+} -1
+
+
+
+
+
+REAL fill_patch0_radius_min "Interpolate to patch 0 from this radius on" STEERABLE=recover
+{
+  0.0:* :: ""
+} 1e+30
+
+REAL fill_patch0_radius_max "Interpolate to patch 0 up to this radius" STEERABLE=recover
+{
+  0.0:* :: ""
+} 1e+30
+
+REAL fill_patch0_xyradius_min "Interpolate to patch 0 from this cylindrical radius in the x-y plane on" STEERABLE=recover
+{
+  0.0:* :: ""
+} 1e+30
+
+REAL fill_patch0_xyradius_max "Interpolate to patch 0 up to this cylindrical radius in the x-y plane" STEERABLE=recover
+{
+  0.0:* :: ""
+} 1e+30
+
+
+
+REAL poison "Poison value to detect uninitialised variables" STEERABLE=always
+{
+  *:* :: ""
+} -4.2e+20
+
+
+
+BOOLEAN verbose "Produce debug output" STEERABLE=always
+{
+} "no"
+
+BOOLEAN continue_if_selftest_fails "Continue if the self test fails -- this is only for debugging"
+{
+} "no"
+
+BOOLEAN interpolate_zero "Set interpolation result to zero -- this is only for debugging" STEERABLE=always
+{
+} "no"
+
+BOOLEAN shift_edges "Artificially shift coordinates of grid function edges (use this for DGFE)" STEERABLE=recover
+{
+} "no"

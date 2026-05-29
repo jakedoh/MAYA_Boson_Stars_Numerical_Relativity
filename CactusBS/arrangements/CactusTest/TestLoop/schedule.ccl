@@ -1,0 +1,18 @@
+# Schedule definitions for thorn TestLoop
+
+STORAGE: csums fsums pointtypes
+
+SCHEDULE TestLoopPointwise AT initial
+{
+  LANG: C
+} "Test loop iterators pointwise"
+
+SCHEDULE TestLoopC AT initial
+{
+  LANG: C
+} "Test loop iterators"
+
+SCHEDULE TestLoopFortran AT initial
+{
+  LANG: Fortran
+} "Test loop iterators"

@@ -1,0 +1,5 @@
+# Interface definition for thorn IDBinarySourceC
+# $Header$
+
+implements: binarysource
+inherits: wavetoy grid

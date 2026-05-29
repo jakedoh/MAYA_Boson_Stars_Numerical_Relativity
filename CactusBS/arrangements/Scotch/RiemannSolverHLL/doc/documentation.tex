@@ -1,0 +1,306 @@
+% *======================================================================*
+%  Cactus Thorn template for ThornGuide documentation
+%  Author: Ian Kelley
+%  Date: Sun Jun 02, 2002
+%  $Header: /cactusdevcvs/Cactus/doc/ThornGuide/template.tex,v 1.12 2004/01/07 20:12:39 rideout Exp $
+%
+%  Thorn documentation in the latex file doc/documentation.tex
+%  will be included in ThornGuides built with the Cactus make system.
+%  The scripts employed by the make system automatically include
+%  pages about variables, parameters and scheduling parsed from the
+%  relevant thorn CCL files.
+%
+%  This template contains guidelines which help to assure that your
+%  documentation will be correctly added to ThornGuides. More
+%  information is available in the Cactus UsersGuide.
+%
+%  Guidelines:
+%   - Do not change anything before the line
+%       % START CACTUS THORNGUIDE",
+%     except for filling in the title, author, date, etc. fields.
+%        - Each of these fields should only be on ONE line.
+%        - Author names should be separated with a \\ or a comma.
+%   - You can define your own macros, but they must appear after
+%     the START CACTUS THORNGUIDE line, and must not redefine standard
+%     latex commands.
+%   - To avoid name clashes with other thorns, 'labels', 'citations',
+%     'references', and 'image' names should conform to the following
+%     convention:
+%       ARRANGEMENT_THORN_LABEL
+%     For example, an image wave.eps in the arrangement CactusWave and
+%     thorn WaveToyC should be renamed to CactusWave_WaveToyC_wave.eps
+%   - Graphics should only be included using the graphicx package.
+%     More specifically, with the "\includegraphics" command.  Do
+%     not specify any graphic file extensions in your .tex file. This
+%     will allow us to create a PDF version of the ThornGuide
+%     via pdflatex.
+%   - References should be included with the latex "\bibitem" command.
+%   - Use \begin{abstract}...\end{abstract} instead of \abstract{...}
+%   - Do not use \appendix, instead include any appendices you need as
+%     standard sections.
+%   - For the benefit of our Perl scripts, and for future extensions,
+%     please use simple latex.
+%
+% *======================================================================*
+%
+% Example of including a graphic image:
+%    \begin{figure}[ht]
+% 	\begin{center}
+%    	   \includegraphics[width=6cm]{MyArrangement_MyThorn_MyFigure}
+% 	\end{center}
+% 	\caption{Illustration of this and that}
+% 	\label{MyArrangement_MyThorn_MyLabel}
+%    \end{figure}
+%
+% Example of using a label:
+%   \label{MyArrangement_MyThorn_MyLabel}
+%
+% Example of a citation:
+%    \cite{MyArrangement_MyThorn_Author99}
+%
+% Example of including a reference
+%   \bibitem{MyArrangement_MyThorn_Author99}
+%   {J. Author, {\em The Title of the Book, Journal, or periodical}, 1 (1999),
+%   1--16. {\tt http://www.nowhere.com/}}
+%
+% *======================================================================*
+
+% If you are using CVS use this line to give version information
+% $Header: /cactusdevcvs/Cactus/doc/ThornGuide/template.tex,v 1.12 2004/01/07 20:12:39 rideout Exp $
+
+\documentclass{article}
+
+% Use the Cactus ThornGuide style file
+% (Automatically used from Cactus distribution, if you have a
+%  thorn without the Cactus Flesh download this from the Cactus
+%  homepage at www.cactuscode.org)
+\usepackage{../../../../doc/latex/cactus}
+\usepackage{color}
+
+\begin{document}
+
+% The author of the documentation
+\author{Roland Haas \textless roland.haas@physics.gatech.edu\textgreater}
+
+% The title of the document (not necessarily the name of the Thorn)
+\title{RiemannSolverHLL}
+
+% the date your document was last changed, if your document is in CVS,
+% please use:
+%    \date{$ $Date: 2004/01/07 20:12:39 $ $}
+\date{April 08 2010}
+
+\maketitle
+
+% Do not delete next line
+% START CACTUS THORNGUIDE
+
+% Add all definitions used in this documentation here
+%   \def\mydef etc
+
+% Add an abstract for this thorn's documentation
+\begin{abstract}
+    This thorn solves the Riemann problem in magnetohydrodynamics using a slab
+    geometry approach. It emplys the HLL scheme by Harten, Lax and
+    van~Leer~\cite{hll}.
+    It currently computes the required eigenvalues using the quadratic
+    equation approximation used in the ECHO code~\cite{echo}.
+\end{abstract}
+
+% The following sections are suggestive only.
+% Remove them or add your own.
+
+\section{Introduction}
+If this thorn ever grows up I promise I will write some rivetting indroduction
+to why Riemann solvers are needed. For now I'll state for the record that this
+is the simplest possible Riemann solver for MHD and seems to work fine as it
+is used by all groups (ie. Whisky, the group at UIUC) even though least the
+first group has access to a full Riemann solver and a Roe like solve could
+also be written. Personal communication by Bruno Giacommazzo tells me that the
+important thing is the reconstruction, not the Riemann solver. If we want to
+go to a better solver I would suggest going to HLLD
+anyway~\cite{jets_and_stars}.
+
+\section{Physical System}
+For an in-depth description of Riemann solvers see the book by
+Toro~\cite{toro} (who seems to be the authority in the field) or his chapter
+in~\cite{jets_and_stars}.
+
+The Riemann problem in 1D hydrodynamics (and we reduce everything to 1D by
+using a slab geometry approach) starts with initial data such that the initial
+conditions are constant (but different) on each side of an interface. In terms
+of the prototypical advection equation that seems to be used universally for
+these things it reads
+\begin{gather}
+    \partial_t u + a \partial_x u = 0 \\
+    u(x,0) = u_0(x) = 
+      \begin{cases}
+          % someone decided that defining \def\text#1{{\rm #1}} is a very good
+          % idea. This interferes with AMSMaths \text command meaning I can
+          % not use it here. 
+          u_L & \mbox{if $x < 0$}, \\
+          u_R & \mbox{if $x > 0$},
+      \end{cases}
+\end{gather}
+as shown below.
+\begin{center}
+\input{riemann_problem.tex}
+\end{center}
+
+For the case of the advection equation shown the solution is easy to find and
+is
+\begin{equation}
+    u(x,t) = u_0(x-a t) = \begin{cases} 
+                          u_L & \mbox{if $x - at < 0$} \\
+                          u_R & \mbox{if  $x -at > 0$}
+                          \end{cases}.
+\end{equation}
+And even for the classical hydrodynamics equations written in conservative
+form, the solution is known analytically. 
+
+For magnetohydrodynamics things are more complicated and no analytical
+solution is known (however Bruno Giacomazzo implement a full solver for MHD
+numerically).
+
+The equivalent of the advection equation in MHD reads (from~\cite{whiskymhd})
+\begin{equation}
+    \frac{1}{\sqrt{-g}} \left[ \partial_t (\sqrt{\gamma} \vec F^0) +
+    \partial_i (\sqrt{-g} F^i)\right] = \vec S
+\end{equation},
+for some term $\vec S$ and state vector $F^i = [D, S_j, \tau, B^k]^T$ and
+fluxes
+\begin{equation}
+    \vec F^i = \left( \begin{gathered}
+        D \tilde v^i / \alpha \\
+        S_j \tilde v^i + (p + b^2/2) \delta^i_j - b_j B^i/W \\
+        \tau \tilde v^i / \alpha + (P + b^2/2) v^i - \alpha b^0 B^i / W \\
+        B^k \tilde v^i / \alpha - B^i \tilde v^k / \alpha
+    \end{gathered} \right).
+\end{equation}
+The quantities are all defined in~\cite{whiskymhd} and are as used in the
+code:
+\begin{align}
+    D &= \rho W, \\
+    S_j &= (\rho h + B^2 ) W^2 v_j - \alpha b^0 b_j, \\
+    \tau &= (\rho h + b^2) W^2 - (P+b62/2) - (\alpha b^0)^2 - D, \\
+    B^i &= {}^*F^{i \nu} n_\nu.
+\end{align}
+A useful set of equations links the magnetic field as measured by the
+observers comiving with the fluid $b^\mu$ to that measured by the Eulerian
+observers $B^i$
+\begin{equation}
+    b^0 = \frac{W B^i v_i}{\alpha}, \quad b^i = \frac{B^i + \alpha b^0
+    u^i}{W}, \quad b^2 = b_\mu b^\mu = \frac{B^2 + (\alpha b^0)^2}{W^2}.
+\end{equation}
+as well as the fact that $W v_i = u_i$.
+
+The HLL solver computes numerical fluxes according to 
+\begin{equation}
+    \vec F^i = \frac{\lambda_R \vec F^i_L - \lambda_L \vec F^i_R +
+    \lambda_R*\lambda_L (F^0_R-F^0_L)}{\lambda_R - \lambda_L}
+\end{equation}
+where $\lambda_L$ and $\lambda_R$ are the fastest left and right-going speeds
+as defined in~\cite{echo}. Note that the sign convention used differs from
+that of~\cite{whiskymhd}. Above $\vec F^i_L$ and $\vec F^i_R$ are the fluxes
+to the left and right of the interface respecively and 
+\begin{eqnarray}
+    \lambda_L = min(0,\lambda_{L,left}, \lambda_{L,right}),
+    \lambda_R = max(0,\lambda_{R,left}, \lambda_{R,right}).
+\end{eqnarray}
+
+We compute the wave speeds using the quadratic approximation of~\cite{echo} as
+\begin{equation}
+    \lambda^{\prime x}_{L/R} = \frac{(1-a^2) v^x \mp 
+                       \sqrt{a^2 (1-v^2) [(1-v^2a^2) \gamma^{xx} -
+                                          (1-a^2)(v^x)^2]}
+                      }{1-v^2a^2},
+\end{equation}
+where 
+\begin{equation}
+    a^2 = c_s^2 + c_a^2 - c_s^2 c_a^2,
+\end{equation}
+and
+\begin{equation}
+    c_s^2 = (\rho\left(\frac{dP}{d\rho}\right)_\epsilon + P
+    \left(\frac{dP}{d\epsilon}\right)/rho) / (\rho \, h),
+    \qquad
+    c_a^2 = \frac{b^2}{\rho\, h + b^2},
+\end{equation}
+are the speed of sound and Alf\'en speed respectively. Finally we transform
+from these Lagrangian speeds to Eulerian speeds via
+\begin{equation}
+    \lambda_{L/R} = \alpha \lambda^{\prime x}_{L/R} - \beta^x.
+\end{equation}
+
+\section{Numerical Implementation}
+Not much to say here. We compute signal speeds in \verb|signal_speeds.c|,
+the individual fluxes in \verb|flux.c| and combine them according to the HLL
+prescription in \verb|hll.c|. The only tricky part is that we only implement
+the solver for the $x$ direction and use it for all three flux directions by
+permuting the vector and tensor indices (using pointers) and \verb|Whisky's|
+\verb|xoffset| etc. variables to offset in the flux direction for the
+intercell fluxes.
+
+\section{Using This Thorn}
+Activate in ActiveThorns, set \verb|Whisky::riemann_solver| to ``hll''.
+
+\subsection{Obtaining This Thorn}
+Currently private to GT. 
+
+\subsection{Basic Usage}
+Use like any other Riemann thorn.
+
+\subsection{Special Behaviour}
+None that I would know of. Will collect all featurized bugs in here later.
+
+\subsection{Interaction With Other Thorns}
+Obviously requires Whisky.
+
+\subsection{Examples}
+You bet.
+
+\subsection{Support and Feedback}
+Yell at me if it does not work.
+
+\section{History}
+None yet.
+
+\subsection{Acknowledgements}
+My Mom, my Dad, Jesus, my pet guinea pig, the pope. Sheesh, does this file
+ever end?
+
+
+\begin{thebibliography}{9}
+\bibitem{hll} A.~Harten, P.D.~Lax and B.~van~Leer,
+  ``On Upstream Differencing and Godunov-Type Schemes for Hyperbolic
+  Conservation Laws,''
+  SIAM Review {\bf 25}, 35--61 (1983)
+  [\url{http://dx.doi.org/10.1137/1025002}]
+\bibitem{whiskymhd} B.~Giacomazzo and L.~Rezzolla,
+  ``WhiskyMHD: a new numerical code for general relativistic
+  magnetohydrodynamics,''
+  Class.\ Quant.\ Grav.\  {\bf 24}, S235 (2007)
+  [arXiv:gr-qc/0701109].
+  %%CITATION = CQGRD,24,S235;%%
+\bibitem{echo} L.~Del Zanna, O.~Zanotti, N.~Bucciantini and P.~Londrillo,
+  ``ECHO: an Eulerian Conservative High Order scheme for general relativistic
+  magnetohydrodynamics and magnetodynamics,''
+  arXiv:0704.3206 [astro-ph].
+  %%CITATION = ARXIV:0704.3206;%%
+\bibitem{toro} E.~F.~Toro, 
+    ``Riemann solvers and numerical methods for fluid dynamics: a practical
+    introduction,''
+    2nd ed. Berlin: Springer, 1999. 
+\bibitem{jets_and_stars} S.~Massaglia (ed.),
+    ``Jets from young stars III: numerical MHD and instabilities,''
+    Berlin: Springer, 2008. 
+
+
+
+
+\end{thebibliography}
+
+% Do not delete next line
+% END CACTUS THORNGUIDE
+
+\end{document}

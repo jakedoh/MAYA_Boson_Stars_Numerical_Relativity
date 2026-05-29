@@ -1,0 +1,65 @@
+# Parameter definitions for thorn EOS_RealisticPP
+
+restricted:
+
+REAL code_unit "Code unit in solar masses for conversion from given values."
+{
+ 0:* :: "Any positive value"
+} 1.0
+
+REAL k0 "K value for the lowest density polytrope (in units with 1 M = 1 M_sun)"
+{
+  0:* :: "Any positive value"
+} 168.5819
+
+REAL gamma_zero "Gamma value for lowest density polytrope"
+{
+  0:* :: "Any positive value"
+} 1.35692
+
+REAL gamma_thermal "Gamma value for gamma-law thermal component. A value of 1 indicates no thermal component to the EOS."
+{
+  0:* :: "Any positive value."
+} 1.8
+
+BOOLEAN four_piece "Use the less accurate four-piece EOS that doesn't include the low-density component?"
+{
+} "no"
+
+keyword realistic_eos_name "Which EOS to use"
+{
+  "PAL6"   :: ""
+  "SLy"    :: ""
+  "AP1"    :: ""
+  "AP2"    :: ""
+  "AP3"    :: ""
+  "AP4"    :: ""
+  "FPS"    :: ""
+  "WFF1"   :: ""
+  "WFF2"   :: ""
+  "WFF3"   :: ""
+  "BBB2"   :: ""
+  "BPAL12" :: ""
+  "ENG"    :: ""
+  "MPA1"   :: ""
+  "MS1"    :: ""
+  "MS2"    :: ""
+  "MS1b"   :: ""
+  "PS"     :: ""
+  "GS1"    :: ""
+  "GS2"    :: ""
+  "BGN1H1" :: ""
+  "GNH3"   :: ""
+  "H1"     :: ""
+  "H2"     :: ""
+  "H3"     :: ""
+  "H4"     :: ""
+  "H5"     :: ""
+  "H6"     :: ""
+  "H7"     :: ""
+  "PCL2"   :: ""
+  "ALF1"   :: ""
+  "ALF2"   :: ""
+  "ALF3"   :: ""
+  "ALF4"   :: ""
+} "SLy"

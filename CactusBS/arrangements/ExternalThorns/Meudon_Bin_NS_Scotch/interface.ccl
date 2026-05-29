@@ -1,0 +1,16 @@
+# Interface definition for thorn Meudon_Bin_NS_Scotch
+
+IMPLEMENTS: Meudon_Bin_NS_Scotch
+
+INHERITS: grid SummationByParts ADMBase HydroBase Whisky
+friend: Whisky
+
+SUBROUTINE Diff_gv (CCTK_POINTER_TO_CONST IN cctkGH, \
+                    CCTK_INT IN dir, \
+                    CCTK_REAL IN ARRAY var, \
+                    CCTK_REAL OUT ARRAY dvar, \
+                    CCTK_INT IN table_handle)
+USES FUNCTION Diff_gv
+
+CCTK_INT FUNCTION EOS_SetupCall(CCTK_INT IN table_handle)
+USES FUNCTION EOS_SetupCall

@@ -1,0 +1,29 @@
+TEST kasner
+{
+  NPROCS 2
+}
+
+TEST kasner_amr
+{
+  NPROCS 2
+}
+
+TEST no-overlap
+{
+  NPROCS 2
+}
+
+TEST outer-buffers
+{
+  NPROCS 1
+}
+
+TEST overlap
+{
+  NPROCS 2
+}
+
+TEST presync
+{
+  NPROCS 2
+}

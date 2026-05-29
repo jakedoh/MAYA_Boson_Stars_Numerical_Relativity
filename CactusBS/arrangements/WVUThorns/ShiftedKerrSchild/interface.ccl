@@ -1,0 +1,13 @@
+# Interface definition for thorn ShiftedKerrSchild
+implements: ShiftedKerrSchild
+inherits: ADMBase, Boundary, grid
+
+protected:
+# Shouldn't need to store any gridfunctions in this thorn.
+
+public:
+REAL ShiftedKerrSchild_3metric_shift TYPE = GF timelevels = 1 tags='prolongation="none"'
+{
+  SKSgrr,SKSgrth,SKSgrph,SKSgthth,SKSgthph,SKSgphph,
+  SKSbetar,SKSbetath,SKSbetaph
+} "Shifted Kerr-Schild 3 metric and shift"

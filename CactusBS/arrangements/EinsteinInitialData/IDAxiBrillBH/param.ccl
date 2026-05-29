@@ -1,0 +1,181 @@
+# Parameter definitions for thorn IDAxiBrillBH
+# $Header$
+
+shares: ADMBase
+
+EXTENDS KEYWORD initial_lapse 
+{
+  "schwarz" :: "Set lapse to Schwarzschild"
+}
+
+EXTENDS KEYWORD initial_data 
+{
+   "axibrillbh" :: "Axisymmetry Initial data for Black hole + Brill wave"
+}
+
+USES KEYWORD metric_type
+
+
+private:
+
+############################################################
+
+#
+# ***** debugging parameters *****
+#
+
+#
+# If this parameter is set to true, we output an ASCII data file
+# giving psi on the 2D grid.  The file format should be directly usable
+# by a gnuplot 'splot' command.
+#
+Boolean output_psi2D							\
+  "should we output the conformal factor psi on the 2D grid?"
+{
+} false
+
+string output_psi2D_file_name						\
+  "if we output the conformal factor psi on the 2D grid,		\
+   what file name should we use for the output file?"
+{
+".+" :: "any non-empty string that's a valid file name"
+} "psi2D.dat"
+
+#
+# this parameter controls the amount of (potentially very detailed)
+# debugging information this thorn prints
+#
+CCTK_INT debug                                                          \
+  "level of debugging information to print                              \
+   (0 = none, 2 = a little, 6 = a lot, 10 = huge amounts)"
+{
+0:* :: "any integer >= 0"
+} 0
+
+#
+# to keep the output size quasi-finite, some debug printing which is
+# logicially "per grid point" on the 2-D (eta,q) grid, is actually only
+# done for this single 2-D grid point
+#
+CCTK_INT debug_ii "i coordinate for per-2D-grid-point debug printing"
+{
+*:* :: "any integer"
+} 14
+CCTK_INT debug_jj "j coordinate for per-2D-grid-point debug printing"
+{
+*:* :: "any integer"
+} 15
+
+#
+# to keep the output size quasi-finite, some debug printing which is
+# logicially "per Cactus grid point" is actually only done for this single
+# Cactus grid point
+#
+CCTK_INT debug_i "i coordinate for per-grid-point debug printing"
+{
+*:* :: "any integer"
+} 14
+CCTK_INT debug_j "j coordinate for per-grid-point debug printing"
+{
+*:* :: "any integer"
+} 15
+CCTK_INT debug_k "k coordinate for per-grid-point debug printing"
+{
+*:* :: "any integer"
+} 10
+
+############################################################
+
+#
+# ***** parameters controlling the Brill wave itself *****
+#
+
+REAL amp "Brill wave amplitude"
+{
+  *:* :: "No restriction"
+} 0.1
+
+REAL eta0 "Brill wave center (in eta coords)"
+{
+  *:* :: "No restriction"
+} 0.0
+
+REAL sigma "Brill wave width (in eta)"
+{
+  *:* :: "No restriction"
+} 1.0
+
+REAL etamax "eta value for outer edge of grid"
+{
+  *:* :: "No restriction"
+} 5.0
+
+INT n "sin^n theta in Brill wave"
+{
+  *:* :: "No restriction"
+} 2
+
+############################################################
+
+#
+# ***** parameters for the numerical solution of the *****
+# ***** Brill-wave equation on the 2-D (eta,q) grid *****
+#
+
+INT ne "eta resolution for solve"
+{
+  *:* :: "No restriction"
+} 300
+
+INT nq "theta resolution for solve"
+{
+  *:* :: "No restriction"
+} 50
+
+REAL error_tolerance "tolerance parameter for elliptic solver"
+{
+(0:* :: "any positive real number"
+} 1.0e-12
+
+############################################################
+
+#
+# ***** interpolation parameters *****
+#
+
+#
+# This thorn first computes the Brill wave solution on an internal 2-D
+# grid, then interpolates this to the 3-D Cactus grid.  The following
+# parameters control this interpolation.
+#
+
+STRING interpolator_name \
+  "name of CCTK_InterpLocalUniform() interpolation operator"
+{
+".*" :: "any string"
+} "uniform cartesian"
+
+STRING interpolator_pars "parameters for the interpolation operator"
+{
+".*" :: \
+  "any nonempty string acceptable to Util_TableSetFromString()		\
+   and to the interpolator, or the empty string to use 'order=n',	\
+   where  n  is specified by the  interpolation_order  parameter"
+} ""
+
+INT interpolation_order "Order for interpolation" STEERABLE = ALWAYS
+{
+0:9 :: "any integer accepted by the interpolator"
+} 1
+
+############################################################
+
+#
+# ***** miscellaneous parameters *****
+#
+
+Boolean generate_StaticConformal_metric					\
+  "should we generate a StaticConformal conformal metric (true),	\
+   or a pure ADMBase physical metric (false)"
+{
+} true

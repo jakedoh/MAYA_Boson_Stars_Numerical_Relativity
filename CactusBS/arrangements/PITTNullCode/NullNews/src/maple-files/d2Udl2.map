@@ -1,0 +1,12 @@
+x:=solve(l=(1-x)/x/rwt,x);
+simplify(subs(l=0,diff(x,l)));
+simplify(subs(l=0,diff(x,l,l)));
+
+f:=a0+a1*y+a2*y^2+a3*y^3;
+e0:=subs(y=0,f)=b0;
+e1:=subs(y=-h,f)=b1;
+e2:=subs(y=-2*h,f)=b2;
+e3:=subs(y=-3*h,f)=b3;
+assign(solve({e0,e1,e2,e3},{a0,a1,a2,a3}));
+f2:=diff(f,y,y);
+simplify(subs(y=-h/2,f2));

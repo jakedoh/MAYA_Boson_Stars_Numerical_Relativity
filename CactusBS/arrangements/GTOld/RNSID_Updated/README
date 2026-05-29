@@ -1,0 +1,22 @@
+Cactus Code Thorn RNSID
+Author(s)    : Tanja Bode <tanja.bode@physics.gatech.edu>
+Maintainer(s): Tanja Bode <tanja.bode@physics.gatech.edu>
+Licence      : GPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+Interface to the RNS program by N. Stergioulas for rotating 
+neutron star initial data.  This is based on version 2.0 as 
+publicly available at http://www.gravity.phys.uwm.edu/rns/ .
+
+Thorn written partially while at Tuebingen.
+
+This is still very much in the development phase. The following
+are still to be done:
+
+	* Clear up units questions (poly vs general EoS)
+	* Add possibility to move NS origin.
+	* Test non-polytrope EoS NS.
+	* Remove hard-coding of RNS grid resolution.
+	* Convert numerical recipes code to GSL code.

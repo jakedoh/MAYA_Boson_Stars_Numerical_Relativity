@@ -1,0 +1,131 @@
+# Interface definition for thorn ADMDerivatives
+# $Header:$
+
+implements: ADMDerivatives
+inherits: Coordinates ADMBase 
+
+
+uses include: loopcontrol.h
+uses include: GlobalDerivative.h
+
+
+
+# Specify whether multipatch supports Thornburg04 6-patch system
+CCTK_INT FUNCTION             \
+    MultiPatch_ProvidesThornburg04 \
+    ()
+USES FUNCTION MultiPatch_ProvidesThornburg04
+
+
+CCTK_INT FUNCTION                         \
+    MultiPatch_GetMap                     \
+    (CCTK_POINTER_TO_CONST IN cctkGH)
+USES FUNCTION MultiPatch_GetMap
+    
+CCTK_INT FUNCTION                         \
+    MultiPatch_GetBbox                    \
+        (CCTK_POINTER_TO_CONST IN cctkGH, \
+         CCTK_INT IN size,                \
+         CCTK_INT OUT ARRAY bbox)
+USES FUNCTION MultiPatch_GetBbox
+
+CCTK_INT FUNCTION                           \
+    MultiPatch_GetBoundarySpecification     \
+        (CCTK_INT IN map,                   \
+         CCTK_INT IN size,                  \
+         CCTK_INT OUT ARRAY nboundaryzones, \
+         CCTK_INT OUT ARRAY is_internal,    \
+         CCTK_INT OUT ARRAY is_staggered,   \
+         CCTK_INT OUT ARRAY shiftout)
+USES FUNCTION MultiPatch_GetBoundarySpecification
+
+SUBROUTINE Diff_coeff ( CCTK_POINTER_TO_CONST IN cctkGH, \
+                        CCTK_INT IN dir, \
+                        CCTK_INT IN nsize, \
+                        CCTK_INT OUT ARRAY imin, \
+                        CCTK_INT OUT ARRAY imax, \
+                        CCTK_REAL OUT ARRAY q, \
+                        CCTK_INT IN table_handle )
+USES FUNCTION Diff_coeff
+
+
+### From CactusBase/SymBase
+
+CCTK_INT FUNCTION \
+    SymmetryTableHandleForGrid (CCTK_POINTER_TO_CONST IN cctkGH)
+REQUIRES FUNCTION SymmetryTableHandleForGrid
+
+### From CoordBase
+
+CCTK_INT FUNCTION \
+    GetBoundarySpecification (CCTK_INT IN size,                  \
+                              CCTK_INT OUT ARRAY nboundaryzones, \
+                              CCTK_INT OUT ARRAY is_internal,    \
+                              CCTK_INT OUT ARRAY is_staggered,   \
+                              CCTK_INT OUT ARRAY shiftout)
+USES FUNCTION GetBoundarySpecification
+
+
+CCTK_INT FUNCTION Boundary_SelectVarForBC(CCTK_POINTER_TO_CONST IN GH, \
+  CCTK_INT IN faces, CCTK_INT IN boundary_width, CCTK_INT IN table_handle, \
+  CCTK_STRING IN var_name, CCTK_STRING IN bc_name)
+CCTK_INT FUNCTION Boundary_SelectGroupForBC(CCTK_POINTER_TO_CONST IN GH, \
+  CCTK_INT IN faces, CCTK_INT IN boundary_width, CCTK_INT IN table_handle, \
+  CCTK_STRING IN group_name, CCTK_STRING IN bc_name)
+
+REQUIRES FUNCTION Boundary_SelectVarForBC
+REQUIRES FUNCTION Boundary_SelectGroupForBC
+
+
+PUBLIC:
+
+
+REAL dr_lapse TYPE=GF TIMELEVELS=3 TAGS='checkpoint="no" prolongation="none" tensortypealias="Scalar"'
+{
+  alp_dr
+} "Radial derivatives of ADM lapse"
+
+
+REAL dr_shift TYPE=GF TIMELEVELS=3 TAGS='checkpoint="no" prolongation="none" tensortypealias="U"'
+{
+  betax_dr, betay_dr, betaz_dr
+} "Radial derivatives of ADM shift"
+
+
+REAL dr_metric TYPE=GF TIMELEVELS=3 TAGS='checkpoint="no" prolongation="none" tensortypealias="DD_sym"'
+{
+  gxx_dr, gxy_dr, gxz_dr
+  gyy_dr, gyz_dr
+  gzz_dr
+} "Radial derivatives of ADM 3-metric"
+
+
+REAL dx_vars TYPE=GF TIMELEVELS=1 TAGS='checkpoint="no" prolongation="none"'
+{
+  alp_dx
+  betax_dx, betay_dx, betaz_dx
+  gxx_dx, gxy_dx, gxz_dx
+  gyy_dx, gyz_dx
+  gzz_dx
+  alp_dy
+  betax_dy, betay_dy, betaz_dy
+  gxx_dy, gxy_dy, gxz_dy
+  gyy_dy, gyz_dy
+  gzz_dy
+  alp_dz
+  betax_dz, betay_dz, betaz_dz
+  gxx_dz, gxy_dz, gxz_dz
+  gyy_dz, gyz_dz
+  gzz_dz
+} "Cartesian derivatives of ADM lapse, shift, 3-metric"
+
+
+
+REAL dt_metric TYPE=GF TIMELEVELS=3 TAGS='checkpoint="no" prolongation="none" tensortypealias="DD_sym"'
+{
+  gxx_dt, gxy_dt, gxz_dt
+  gyy_dt, gyz_dt
+  gzz_dt
+} "Time derivatives of ADM 3-metric"
+
+

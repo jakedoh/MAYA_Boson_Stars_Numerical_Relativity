@@ -1,0 +1,15 @@
+# Schedule definitions for thorn IOHDF5Util
+# $Header$
+
+########################################################################
+### register IOHDF5Util routines
+########################################################################
+schedule IOHDF5Util_Startup at STARTUP after IOUtil_Startup
+{
+  LANG:C
+} "IOHDF5Util startup routine"
+
+schedule IOHDF5Util_Terminate at TERMINATE before Driver_Terminate
+{
+  LANG:C
+} "IOHDF5Util termination routine"

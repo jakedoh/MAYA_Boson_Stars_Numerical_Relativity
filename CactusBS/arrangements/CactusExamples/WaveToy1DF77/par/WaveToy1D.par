@@ -1,0 +1,21 @@
+
+!DESC "Test of 1D wave equation with zero boundaries"
+
+ActiveThorns = "CoordBase localreduce  SymBase boundary ioutil iobasic ioascii pughslab pughreduce pugh time wavetoy1df77"
+
+driver::global_nx = 31
+
+cactus::cctk_itlast = 10
+
+wavetoy1d::sigma = 0.1
+
+time::dtfac = 1.0
+
+io::out_every = 1
+
+iobasic::outinfo_vars = "wavetoy1df77::phi"
+iobasic::outscalar_vars = "wavetoy1df77::phi"
+
+ioascii::out1d_vars = "wavetoy1df77::phi"
+
+IO::out_dir = "WaveToy1D"

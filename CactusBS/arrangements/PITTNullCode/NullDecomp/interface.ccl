@@ -1,0 +1,17 @@
+# Interface definition for thorn NullDecomp
+# $Header$
+
+implements: NullDecomp
+inherits: NullGrid
+
+private:
+
+CCTK_REAL kern[2] TYPE=ARRAY TIMELEVELS=1 dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts "kernel of the integral"
+
+CCTK_REAL area TYPE=ARRAY TIMELEVELS=1 dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts "integral algorithms internal variable"

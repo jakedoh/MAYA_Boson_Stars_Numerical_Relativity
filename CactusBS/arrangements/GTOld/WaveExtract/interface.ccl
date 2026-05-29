@@ -1,0 +1,130 @@
+# Interface definition for thorn WaveExtract
+#
+# $Id: interface.ccl,v 1.6 2005/07/26 15:17:29 herrmann Exp $
+
+implements: WaveExtract
+
+inherits: grid admbase staticconformal io sphericalsurface
+
+private:
+
+INT handles_group TYPE=SCALAR
+{
+  sum_handle
+} "handles for reduction operators"
+
+INT do_nothing_group TYPE=SCALAR
+{
+  do_nothing
+} "if equal to 1, then WaveExtract won't do anything (example: all detectors are out of range)"
+
+REAL sym_factor_group TYPE=SCALAR
+{
+  sym_factor, last_time
+} "symmmetry factor for integrals (depends on domain, sym_factor=2 for bitant for example)"
+
+REAL interp_metric_arrays TYPE=ARRAY DIM=2 SIZE=maxntheta,maxnphi DISTRIB=DEFAULT
+{
+  gxxi, gxyi, gxzi,
+  gyyi, gyzi, gzzi,
+  gxxi_t1, gxyi_t1, gxzi_t1, psii_t1,
+  gyyi_t1, gyzi_t1, gzzi_t1, 
+  gxxi_t2, gxyi_t2, gxzi_t2, psii_t2,
+  gyyi_t2, gyzi_t2, gzzi_t2,
+  psii,
+  dx_gxxi, dy_gxxi, dz_gxxi,
+  dx_gxyi, dy_gxyi, dz_gxyi,
+  dx_gxzi, dy_gxzi, dz_gxzi,
+  dx_gyyi, dy_gyyi, dz_gyyi,
+  dx_gyzi, dy_gyzi, dz_gyzi,
+  dx_gzzi, dy_gzzi, dz_gzzi,
+  dx_psii, dy_psii, dz_psii,
+} "2D (theta,phi) Arrays for holding the metric and conformal factor and their first derivatives interpolated onto the extraction coordinate sphere"
+
+REAL surface_arrays TYPE=ARRAY DIM=2 SIZE=maxntheta,maxnphi DISTRIB=DEFAULT
+{
+  interp_x,interp_y,interp_z,
+  psi_ext_deriv,
+  ctheta, cphi, sintheta, costheta, sinphi, cosphi,
+  dr_gxxi,dr_gxyi,dr_gxzi,dr_gyyi,dr_gyzi,dr_gzzi,
+  dr_psii,
+  grr, grt, grp, 
+  gtt, gtp, gpp,
+  dt_grr, dt_grt, dt_grp,
+  dt_gtt, dt_gtp, dt_gpp,
+  gtt_t1, gtp_t1, gpp_t1, psi_t1,
+  gtt_t2, gtp_t2, gpp_t2, psi_t2,
+  dr_gtt, dr_gtp, dr_gpp,
+  h1i,H2i,Gi,Ki,c1i,c2i,dGi,dKi,dc2i
+  ih1i,iH2i,iGi,iKi,ic1i,ic2i,idGi,idKi,idc2i
+} "2D (theta,phi) grid arrays for points on the sphere"
+
+REAL surface_arrays_past_timelevel[number_of_detectors] TYPE=ARRAY DIM=2 SIZE=maxntheta,maxnphi DISTRIB=DEFAULT
+{
+  grr_p, grt_p, grp_p, 
+  gtt_p, gtp_p, gpp_p,
+} "2D arrays containing the past information about grr,..."
+
+
+REAL surface_integrands TYPE=ARRAY DIM=2 SIZE=maxntheta,maxnphi DISTRIB=DEFAULT
+{
+  weights,thetaweights, phiweights,
+  int_tmp1,int_tmp2,int_tmp3,int_tmp4,int_tmp5,
+  int_tmp6,int_tmp7,int_tmp8,int_tmp9,
+  int_tmp10,int_tmp11,int_tmp12,int_tmp13,int_tmp14,
+  int_tmp15,int_tmp16,int_tmp17,int_tmp18
+} "weights and temporary integrands"
+
+REAL Schwarzschild_Mass_Radius_group TYPE=SCALAR
+{
+  dtau_dt, sph_grr, sph_gtt, sph_dr_gtt, sph_gpp,
+  rsch2, rsch, drsch_dri, dri_drsch, S_factor, 
+  Schwarzschild_Mass, Schwarzschild_Radius,
+} "Schwarzschild radius, mass and assorted spherical background pieces"
+
+REAL radiated_E_P_group[number_of_detectors] TYPE=SCALAR
+{
+  Erad,Pxrad,Pyrad,Pzrad,
+  dEdt,dPxdt,dPydt,dPzdt
+} "radiated energy and linear momentum through detector"
+
+REAL Schwarzschild_Mass_Radius_Results_group[number_of_detectors] TYPE=SCALAR
+{
+  Schw_Masses, Schw_Radii
+} "contains Schwarzschild mass/radius from all detectors"
+
+INT l_m_modes_info_group TYPE=SCALAR
+{
+  l_min, l_max, l_step,
+  m_min, m_max, m_step,
+  max_det_no_param,
+  wavextr_files_exist,
+  first_detector_this_time,
+  first_detector_ever
+} "Information about the modes used for extraction"
+
+REAL MoncriefQ TYPE=SCALAR
+{
+  Qodd_Re,Qodd_Im,
+  Qeven_Re,Qeven_Im
+} "Moncrief Qeven, Qodd wave indicators, real & imaginary part"
+
+
+# FIXME : implement this. g00 is needed to calculate dtau_dt
+#REAL g00_group TYPE=GF
+#{
+#  g00
+#} "g00 is needed to calculate proper time. this is not implemented at the moment"
+
+# Current Detector Number
+INT current_detector_group TYPE=SCALAR
+{
+  current_detector
+} "the index number of the current detector"
+
+REAL current_detector_radius_group TYPE=SCALAR
+{
+  current_detector_radius
+} "coordinate radius of the current detector"
+
+

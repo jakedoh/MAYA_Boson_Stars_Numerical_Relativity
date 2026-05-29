@@ -1,0 +1,9 @@
+# Main make.code.defn file for thorn EOS_Ideal_Fluid
+# $Header$
+
+# Source files in this directory
+SRCS = EOS_Ideal_Fluid.F EOS_Ideal_Fluid_Startup.F
+
+# Subdirectories containing source files
+SUBDIRS = 
+

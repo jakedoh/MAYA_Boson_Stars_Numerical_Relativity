@@ -1,0 +1,10 @@
+Cactus Code Thorn WaveMoL
+Author(s)    : Ian Hawke
+Maintainer(s): Cactus team
+Licence      : LGPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+This implements the wave equation in FOSH form for use with the Method
+of Lines thorn. Intended as a basic test. 

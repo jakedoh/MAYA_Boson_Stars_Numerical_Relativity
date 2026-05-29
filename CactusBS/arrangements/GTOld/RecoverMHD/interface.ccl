@@ -1,0 +1,95 @@
+# Interface definition for thorn RecoverMHD
+# $Header:$
+
+implements: PrimRecovery
+inherits: Whisky SphericalSurface StaticConformal HydroBase SpaceMask
+friend: Whisky
+
+USES INCLUDE: loopcontrol.h
+
+## Aliased functions provided by this thorn
+CCTK_INT FUNCTION Con2PrimMHD( CCTK_INT IN handle, CCTK_INT IN phandle, CCTK_INT IN polytype, \
+        CCTK_INT IN iteration, CCTK_INT IN gsl_solver, CCTK_INT IN sys_eqns, \
+        CCTK_REAL OUT dens, CCTK_REAL OUT tau, CCTK_REAL OUT sx, CCTK_REAL OUT sy, \
+        CCTK_REAL OUT sz, CCTK_REAL OUT Bnx, CCTK_REAL OUT Bny, CCTK_REAL OUT Bnz, \
+        CCTK_REAL OUT rho, CCTK_REAL OUT eps, CCTK_REAL OUT velx, CCTK_REAL OUT vely, \
+        CCTK_REAL OUT velz, CCTK_REAL OUT Bvecx, CCTK_REAL OUT Bvecy, \
+        CCTK_REAL OUT Bvecz, CCTK_REAL OUT w_lorentz, CCTK_REAL OUT press, \
+        CCTK_REAL IN x, CCTK_REAL IN y, CCTK_REAL IN z, CCTK_REAL IN gxx, \
+        CCTK_REAL IN gxy, CCTK_REAL IN gxz, CCTK_REAL IN gyy, CCTK_REAL IN gyz, \
+        CCTK_REAL IN gzz, \
+        CCTK_INT IN whisky_reflevel, CCTK_REAL IN carpetweight, \
+	CCTK_INT IN do_impose_s2_limit, CCTK_REAL IN rho_min, CCTK_REAL IN tau_min)
+
+PROVIDES FUNCTION Con2PrimMHD WITH RecoverMHD_Con2Prim_pointwise LANGUAGE C
+
+## Functions provided by Whisky
+void FUNCTION Prim2ConMHDGen(CCTK_INT IN handle, \
+                          CCTK_REAL IN gxx, CCTK_REAL IN gxy, \
+                          CCTK_REAL IN gxz, CCTK_REAL IN gyy, \
+                          CCTK_REAL IN gyz, CCTK_REAL IN gzz, \
+                          CCTK_REAL IN det, CCTK_REAL OUT dens, \
+                          CCTK_REAL OUT sx, CCTK_REAL OUT sy, \
+                          CCTK_REAL OUT sz, CCTK_REAL OUT tau, \
+                          CCTK_REAL IN rho, CCTK_REAL IN velx, \
+                          CCTK_REAL IN vely, \
+                          CCTK_REAL IN velz, CCTK_REAL IN epsilon, \
+                          CCTK_REAL OUT press, CCTK_REAL OUT w_lorentz, \
+			  CCTK_REAL OUT bnx, CCTK_REAL OUT bny, \
+			  CCTK_REAL OUT bnz, CCTK_REAL IN bvecx, \
+			  CCTK_REAL IN bvecy, CCTK_REAL IN bvecz)
+
+void FUNCTION Prim2ConMHDPoly(CCTK_INT IN handle, \
+                           CCTK_REAL IN gxx, CCTK_REAL IN gxy, \
+                           CCTK_REAL IN gxz, CCTK_REAL IN gyy, \
+                           CCTK_REAL IN gyz, CCTK_REAL IN gzz, \
+                           CCTK_REAL IN det, CCTK_REAL OUT dens, \
+                           CCTK_REAL OUT sx, CCTK_REAL OUT sy, \
+                           CCTK_REAL OUT sz, CCTK_REAL OUT tau, \
+                           CCTK_REAL IN rho, CCTK_REAL IN velx, \
+                           CCTK_REAL IN vely, \
+                           CCTK_REAL IN velz, CCTK_REAL OUT epsilon, \
+                           CCTK_REAL OUT press, CCTK_REAL OUT w_lorentz, \
+			   CCTK_REAL OUT bnx, CCTK_REAL OUT bny, \
+			   CCTK_REAL OUT bnz, CCTK_REAL IN bvecx, \
+			   CCTK_REAL IN bvecy, CCTK_REAL IN bvecz)
+
+USES FUNCTION Prim2ConMHDGen
+USES FUNCTION Prim2ConMHDPoly
+
+
+## Function provided by EOS_Base
+CCTK_INT FUNCTION EOS_SetupCall(CCTK_INT IN table_handle)
+USES FUNCTION EOS_SetupCall
+
+# Convenient way to determine boundary sizes
+CCTK_INT FUNCTION GetBoundarySizesAndTypes \
+   (CCTK_POINTER_TO_CONST IN cctkGH, \
+    CCTK_INT IN size, \
+    CCTK_INT OUT ARRAY bndsize, \
+    CCTK_INT OUT ARRAY is_ghostbnd, \
+    CCTK_INT OUT ARRAY is_symbnd, \
+    CCTK_INT OUT ARRAY is_physbnd)
+REQUIRES FUNCTION GetBoundarySizesAndTypes
+
+#CCTK_INT FUNCTION EOS_SetGFs(CCTK_POINTER_TO_CONST IN GH, \
+#                             CCTK_INT IN call_number)
+#USES FUNCTION EOS_SetGFs
+
+
+#CCTK_REAL Con2Prim_temps TYPE=GF tags='Prolongation="None" checkpoint="no"'
+#{
+#  press_old, press_new
+#  eos_dpdeps_temp, eos_dpdrho_temp
+#} "Temporaries for the conservative to primitive conversion"
+
+private:
+CCTK_REAL puncture_utau_min TYPE="scalar" tags='checkpoint="no"'
+CCTK_REAL PunctureInfo[3] TYPE="scalar" tags='checkpoint="no"'
+{
+  radii, center_x, center_y, center_z
+} "Puncture information for applying the Faber limit"
+
+## Mask is 1 if original Con2Prim failed. If fallback fails, code aborts.
+CCTK_INT failed_con2prim_mask  type = GF Timelevels = 1 tags='Prolongation="None"' "Flag where con2prim failed"
+

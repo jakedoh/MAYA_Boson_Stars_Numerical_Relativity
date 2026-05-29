@@ -1,0 +1,24 @@
+
+# Main make.code.defn file for thorn BaikalVacuum
+
+# Source files in this directory
+SRCS =      Banner.c \
+      RegisterSlicing.c \
+      Symmetry_registration_oldCartGrid3D.c \
+      zero_rhss.c \
+      floor_the_lapse.c \
+      MoL_registration.c \
+      BoundaryConditions.c \
+      BoundaryCondition_NewRad.c \
+      ADM_to_BSSN.c \
+      BSSN_to_ADM.c \
+      driver_pt1_BSSN_Ricci.c \
+      BSSN_Ricci_FD_order_4.c \
+      BSSN_Ricci_FD_order_6.c \
+      BSSN_Ricci_FD_order_8.c \
+      driver_pt2_BSSN_RHSs.c \
+      BSSN_RHSs_enable_Tmunu_False_FD_order_4.c \
+      BSSN_RHSs_enable_Tmunu_False_FD_order_6.c \
+      BSSN_RHSs_enable_Tmunu_False_FD_order_8.c \
+      driver_enforcedetgammabar_constraint.c \
+      driver_BSSN_constraints.c

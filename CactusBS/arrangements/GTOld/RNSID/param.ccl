@@ -1,0 +1,262 @@
+# Parameter definitions for thorn RNSID
+# Current repeats of parameters: eos_Kappa, polytropic_index, rho_atmosphere
+
+#########################################
+## Read RNS output from a previous run ##
+#########################################
+
+BOOLEAN read_rns_from_file "Read RNS data from a file instead of generating on the fly"
+{
+} "no"
+
+BOOLEAN rns_file_has_polytropic_units "Solution file uses K=1"
+{
+} "no"
+
+CCTK_INT rns_file_ghostzone_size "Number of ghostzones in file" STEERABLE=ALWAYS
+{
+  -1:* :: "Anything positive makes sense. -1 assumes nghosts"
+} -1
+
+BOOLEAN rns_file_index_starts_at_one "Does indexing in file start at one?"
+{
+} "no"
+  
+STRING rns_file_in "File containing output to be read in"
+{
+  ".*"  :: "Anything.  Preferably something descriptive."
+} "RNS_Solution.asc"
+
+
+CCTK_REAL rns_radius_from_par "If reading in RNS from file, we need the radius for converting r to s.  Will fix in future."
+{
+  *:* :: "Must be positive (negative default for error checking)"
+} -1
+
+########################
+## Parameters for RNS ##
+########################
+
+	#	NS Search Type:
+	#		There are various ways to specify a NS.  I'll start with a basic
+	#		method and grow from there.
+	#			MaxSpin		Given central_energy_density and an EoS, construct the maximally spinning
+	#					NS (such that angular velocity equals the Keplerian angular velocity at
+	#					the equator).  Iterates over decreasing oblateness from 1.
+	#			AngMom		Specify the spin of the NS via rns_angular_momentum. Iterates over oblateness. 
+STRING ns_search_type "Specify how to find a NS"
+{
+  "AngMom"	   :: "Specify a desired Angular Momentum and iterate over oblateness to achieve given (1) central energy density and (2) EoS."
+  "Omega"	   :: "Specify a desired Angular Velocity, Omega, as a fraction of Kepler. Iterate over oblateness."
+} "Omega"
+
+	# 	Central energy density: 
+	# 		Note that there is no guarantee that any of the intermediate
+	# 		stars are stable to radial perturbations. Also there is no
+	# 		guarantee that given any energy density, there will be a 
+	# 		stable rotating solution. As a rule of thumb, the highest 
+	# 		energy density you should use is the value which gives the
+	# 		maximum mass nonrotating star. 
+	#	
+	#	 	It would be a good idea to read some of the papers on rapidly
+	#	 	rotating neutron stars (such as given on the rns homepage)
+	#	 	before embarking on a study of rotating neutron stars
+	#	 	using these routines. 
+CCTK_REAL central_energy_density "Specify a central energy density for the NS (NOTE: e = (eps*rho_0 + rho_0)!)"
+{
+  (0:* :: "Positive"
+} 1e15
+
+CCTK_REAL rns_angular_momentum "Specify angular momentum to search for"
+{
+  *:*  :: "0=non-spinning."
+} 0.3
+
+CCTK_REAL rns_omega_frac_of_Kepler "Specify the angular velocity as a fraction of the Kepler velocity"
+{
+  *:*  :: "0=non-spinning"
+} 0.552
+
+	# 	Equation of State
+	# 		Current choices come from EOS.INDEX, distributed with RNS v.2.
+	#		Each run using a choice other than "poly" must have the proper eos
+	#		table file in the run directory at runtime.
+	#
+	#		Sources for EOS:
+	# 			A&B: Arnett and Bowers ApJ S33, 415 (1977)
+	# 			WFF: Wiringa, Fiks and Fabrocini, PR C 38, 100 (1988) 
+STRING eos_info "Specify eos type.  Must coincide with a file in eos_tables directory."
+{
+  "poly"   :: "Use polytropic (no table)."
+  "eosA"   :: "Pandharipande NS: A&B EOS A"
+  "eosAU"  :: "WFF1 (denoted AV14+UVII in WFF) matched to Negele-Vautherin"
+  "eosB"   :: "Pandharipande NS: A&B EOS B"
+  "eosC"   :: "Bethe-Johnson Model 1: A&B EOS C"
+  "eosF"   :: "Pandharipande (Hyperon) and Arponen: A&B EOS F"
+  "eosFP"  :: "Friedman & Pandharipande EOS (Negele-Vautherin for N<0.1FM^(-3), then * BPS for N<0.001FM^(-3)"
+  "eosFPS" :: "Lorenz, Ravenhall and Pethick, 1993, PRL 70,379"
+  "eosG"   :: "Canuto-Chitre (Solid): A&B EOS G"
+  "eosL"   :: "Pandharipande & Smith (Mean field): A&B EOS L"
+  "eosN"   :: "Walecka-Serot: A&B EOS N"
+  "eosNV"  :: "Negele & Vautherin, 1973, Nucl. Phys. A207, 298"
+  "eosO"   :: "Bowers, Gleeson, and Pedigo. A&B EOS O"
+  "eosUU"  :: "WFF2 (denoted UV14+UVII in WFF) matched to Negele-Vautherin"
+  "eosWNV" :: "WFF3 (denoted UV14+TNI in WFF) matched to Negele-Vautherin"
+  "eosWS"  :: "WFF3 (UV14+TNI) mathed to EOS FPS"
+  ".*"	   :: "Specifies a file containing an EOS table with the proper format."
+} "poly"
+
+	#	Polytropic Index (polytropic N)
+	#		Polytrope Gamma = 1 + 1/N
+CCTK_REAL eos_Gamma "Gamma = 1 + 1/N with Polytrope index N"
+{
+  (0:* :: "Positive"
+} 2
+
+CCTK_REAL eos_Kappa "Kappa for polytrope: default leaves in Kappa=1 units"
+{
+ (0:* :: "Positive"
+} 1.0
+
+CCTK_REAL rho_atmosphere "Currently independent atmosphere rho" 
+{
+  (0:* :: "Positive"
+} 1e-15
+
+####################
+## Metric & Gauge ##
+####################
+
+SHARES: ADMBase
+EXTENDS KEYWORD initial_data
+{
+  "RNS" :: "Rotating NS 3-metric and Primitives"
+}
+EXTENDS KEYWORD initial_shift
+{
+  "RNS" :: "Direct RNS shift"
+}
+EXTENDS KEYWORD initial_lapse
+{
+  "RNS" :: "Direct RNS lapse"
+}
+
+SHARES: HydroBase
+EXTENDS KEYWORD initial_hydro
+{
+  "RNS" :: "Rotating NS 3-metric and Primitives"
+}
+
+#########################
+## RNS Grid Resolution ##
+#########################
+private:
+CCTK_INT angular_spokes "Number of spokes in the angular (mu) direction. CURRENTLY HARD-CODED IN RNS (MDIV)"
+{
+  #(1:* :: "Positive"
+  301:301 :: "Positive"
+} 301
+
+CCTK_INT radial_spokes "Number of spokes in the radial (compactified s) direction. CURRENTLY HARD-CODED IN RNS (SDIV)"
+{
+  #(1:* :: "Positive"
+  601:601 :: "Positive"
+} 601
+
+#################################
+## Parameters for RNS Accuracy ##
+#################################
+
+CCTK_REAL rns_accuracy "Accuracy required from solver"
+{
+  (0:* :: "Positive"
+} 1e-8 
+
+CCTK_REAL convergence_factor "Convergence factor for star"
+{
+  (0:* :: "Positive"
+} 1.0
+
+CCTK_REAL radial_accuracy "Accuracy to accept new radius."
+{
+  (0:* :: "Positive"
+} 1e-4
+
+##########################
+## Iteration Parameters ##
+##########################
+
+CCTK_REAL delta_oblate "d(r_ratio) when trying to find r_ratio"
+{
+  (0:* :: "Positive"
+} 0.05
+
+CCTK_INT max_obits "Maximum number of iterations to get desired oblateness"
+{
+  (1:* :: "Positive"
+} 60
+
+##############################
+## Interpolation Parameters ##
+##############################
+
+CCTK_INT nghosts "Number of ghost zones to add and fill to edge of RNS-generated solution."
+{
+  0:*  :: "Should be the order of the interpolator"
+} 3
+
+CCTK_STRING interpolator_name "Which interpolator should I use" STEERABLE = ALWAYS
+{
+  ".+" :: "Any nonempty string"
+} "Hermite polynomial interpolation"
+
+CCTK_STRING interpolator_pars "Parameters for the interpolator" STEERABLE = ALWAYS
+{
+  ".*" :: "Any string that Util_TableSetFromString() will take"
+} "order=3"
+
+#############################
+## Perturbation Parameters ##
+#############################
+
+BOOLEAN add_pert "Add perturbation to density"
+{
+} "no"
+
+CCTK_REAL pert_amp "Amplitude of perturbation"
+{
+  *:*  :: "Anything"
+} 1e-3
+
+KEYWORD pert_type "Specify type of perturbation"
+{
+  "Radial Zink" :: "Radial pert for non-rotating NS"
+  "f2 Zink"     :: "l=2 f-mode for non-rotating NS"
+} "Radial Zink"
+
+
+#######################
+## Output Parameters ##
+#######################
+
+BOOLEAN verbose "Lots of output"
+{
+} "no"
+
+BOOLEAN write_out_rns "Write out RNS data arrays (metric potentials and hydro quantities) with ghost zones"
+{
+} "yes"
+
+STRING rns_file "File containing output to be read in"
+{
+  ".*"  :: "Anything.  Preferably something descriptive."
+} "RNS_Solution.asc"
+
+STRING out_format "Which format for Scalar floating-point number output" STEERABLE = ALWAYS
+{
+  ^(\.[1]?[0-9])?[EGefg]$ :: "output with given precision in exponential / floating point notation"
+} ".19g"
+
+shares: IO
+
+USES STRING out_dir

@@ -1,0 +1,32 @@
+# Interface definition for thorn DistortedBHIVP
+# $Header$
+
+implements: distortedbhivp
+inherits: ADMBase grid StaticConformal
+
+private:
+
+real sph_to_car_coord TYPE=GF
+{
+eta,
+abseta,
+sign_eta,
+q,
+phi
+} "coordinate"
+
+real sph_to_car_psi TYPE=GF
+{
+psi3d,
+detapsi3d,
+dqpsi3d,
+dphipsi3d,
+detaetapsi3d,
+detaqpsi3d,
+detaphipsi3d,
+dqqpsi3d,
+dqphipsi3d,
+dphiphipsi3d
+}"psi"
+
+

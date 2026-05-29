@@ -1,0 +1,181 @@
+Cactus Code Thorn HTTPD
+Author(s)    : Gabrielle Allen
+               Tom Goodale
+               Thomas Radke
+Maintainer(s): Cactus team
+Licence      : LGPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+This is a prototype C version of a web server thorn.  
+
+[Note that it has not been audited against buffer overruns or other
+security problems, so please be aware that it is possible that someone
+could exploit this server to access your machine if you run the server
+on an open network.]
+
+Usage:
+-------------------
+
+Interface:
+---------
+
+The current interface for this webserver is contained in
+
+http_Request.h
+
+(Note that this will change once we have an agreed common protocol for
+other thorns to talk to web-serving thorns.)  There are also utility
+interface for parameter steering and HTTP authentication, which are
+described in the files in the doc directory.
+
+The primary mechanism is to
+
+HTTP_RegisterPage(path, function, data)
+
+where 'path' is the URI you want to register, e.g.
+
+/parameters
+
+'function' is a function of the form
+
+int foo(const cGH *cctkGH, httpRequest *request, void *data)
+
+which will be called when the page is accessed, with 'data' being the
+same data pointer that was passed into the registration routine.
+
+Note that a request of the form '/foo/bar/' will look for a page of
+the called '/foo/var/index.html' first, followed by '/foo/bar',
+followed by '/foo' followed by '/'.
+
+The httpRequest structure contains various pieces of information -
+
+request->body               The body of the http request.  This is
+                            empty for a GET.
+
+request->body_length        The length of the body.
+
+request->method             The http method.
+request->uri                The full URI of the request.
+request->residual           The URI remaining after the registered URI 
+                            is removed from it.
+
+request->http_major_version The major version of the HTTP protocol
+                            used.
+
+request->http_minor_version The minor version of the HTTP protocol
+                            used.
+
+request->n_arguments        The number of arguments passed to the
+                            request.
+
+All other members of the structure should be considered opaque.
+
+
+To get details of arguments or HTTP header lines, the functions
+
+const char *HTTP_ArgumentValue(const httpRequest *request, 
+                               const char *arg);
+
+const char *HTTP_HeaderValue(const httpRequest *request, 
+                             const char *header);
+
+may be used.  Given the name of a header field or an argument, these
+functions will return the corresponding value, or NULL if the argument 
+or header does not exist.
+
+There is also a function
+
+const httpArg *HTTP_ArgumentWalk(httpRequest *request, int first);
+
+which will walk through all the arguments passed to a page.  If
+'first' is true it will start with the first argument, otherwise it
+will start with the next argument after the last one queried.
+Currently this is the only way to get arguments which are passed in
+more than once.  The httpArg structure contains two public variables
+
+arg                      The name of the argument.
+value                    The value of the argument.
+
+
+Writing to the browser:
+----------------------
+
+This is done with the 
+
+HTTP_Write(httpRequest *request, const char *buffer, size_t count);
+
+function.  This takes three arguments - the request, a buffer, and the
+length of the buffer.
+
+The first line sent to the browser should be
+
+
+HTTP_Write(request, "HTTP/1.0 200 OK\r\n",19)
+
+(or an error code, e.g. "404 Not Found").  This should be followed by
+any HTTP headers, such as "Content-Type", followed by "\r\n\r\n" and
+then the content of your page, or at least that's what the standard
+says 8-).  You may make as many calls to this function as you like to
+get the data to the browser.
+
+Examples:
+---------
+
+For examples of how to use the interface, please look at the Content.c 
+file.
+
+Structure of the thorn:
+----------------------
+
+The thorn is split into three parts - basic web serving, utilities,
+and content provision
+
+Web serving:
+-----------
+The web server capabilities are held in
+
+Sockets.c           - basic socket utilities;  these should be
+                      replaced by or moved to the Socket thorn.
+
+Server.c            - Stuff to register and serve pages.
+
+http.c              - Parsing of HTTP requests.
+
+Startup.c           - normal scheduled stuff.
+
+The above files should not need to be touched apart from debugging
+purposes, to add more HTTP methods, or otherwise to enhance the
+interaction with the network and protocols.
+
+Utilities:
+_________
+
+The web server provided utilities to help content provision -
+
+Steer.c             - parameter steering interface
+                    - see doc/Steering.txt
+
+Authorisation.c     - HTTP authentication
+                    - see doc/Auth.txt
+
+Content Provision:
+-----------------
+
+The content provision is currently  in 
+
+Headers.c
+
+Content.c
+
+Groups.c
+
+Parameters.c
+
+This makes use of the interfaces in http_Request.h described above to
+provide content.  In principle this could be in another thorn, but
+that should wait until we have an agreed set of interfaces to allow
+web-server thorns to be interchangeable, at least at compile time, but 
+hopefully at run-time.
+

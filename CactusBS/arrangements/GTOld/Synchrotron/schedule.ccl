@@ -1,0 +1,56 @@
+# Schedule definitions for thorn Synchrotron
+# $Header:$
+
+storage: Synchro_Group[1], EmissFact
+
+if ( intsynchro ) {
+	storage: SynchroScalars, SynchroBeamed, SymmetryFactor, Sym_Signs
+}
+
+schedule Synchro_Startup AT CCTK_PARAMCHECK
+{
+  LANG: C
+} "Check parameters"
+
+schedule Synchro_Init at CCTK_BASEGRID
+{
+  LANG: C
+} "Initialize gridfunctions"
+
+schedule group Synchrotron at ANALYSIS
+{
+} "Group for all Synchrotron analysis calculations"
+
+schedule SynchroCalc in Synchrotron
+{
+  LANG: C
+} "Calculate the local Synchrotron quantities"
+
+if ( intsynchro && (intvolumes>0) )
+{
+
+   schedule Synchro_Scalars at CCTK_BASEGRID
+   {
+        LANG: C
+  	OPTIONS: global
+   } "Initialize scalars"
+
+   schedule ZeroSynchro in Synchrotron before SumSynchro
+   {
+        lang: C
+        OPTIONS: global
+   } "Zero the total Synchrotron grid scalars (integral accumulators)"
+
+   schedule SumSynchro in Synchrotron after SynchroCalc
+   {
+	LANG: C
+	OPTIONS: global loop-local
+   } "Integrate within a specified radius"
+
+   schedule Synchro_Output in Synchrotron after SumSynchro
+   {
+	LANG: C
+	OPTIONS: global
+   } "Write integrated values to a compact file."
+
+}

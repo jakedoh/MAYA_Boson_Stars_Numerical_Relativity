@@ -1,0 +1,10 @@
+# Parameter definitions for thorn WaveToyOpenCL
+
+BOOLEAN verbose "Output progress information" STEERABLE=always
+{
+} "no"
+
+CCTK_REAL wavelength "Wavelength of initial data"
+{
+  *:* :: ""
+} 1.0

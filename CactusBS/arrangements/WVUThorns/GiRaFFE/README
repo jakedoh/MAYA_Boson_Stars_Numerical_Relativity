@@ -1,0 +1,43 @@
+Cactus Code Thorn GiRaFFE
+Author(s)    : Maria Babiuc, Zachariah B. Etienne, Mew-Bing Wan
+Note         : GiRaFFE is based on IllinoisGRMHD, and uses the algorithm of
+               the Illinois Numerical Relativity group for incorporating
+               force-free electrodynamics. 
+Maintainer(s): Zachariah B. Etienne
+License      : GNU General Public License, version 2 or higher.
+--------------------------------------------------------------------------
+
+1. Purpose
+
+GiRaFFE solves the equations of General Relativistic 
+Force-Free Electrodynamics (GRFFE) using a high-resolution shock capturing scheme.
+It is based on IllinoisGRMHD, which is a rewrite of the Illinois Numerical Relativity 
+(ILNR) group's GRMHD code.
+
+GiRaFFE is particularly good at modeling black hole magnetospheres. Its 
+conservative-to-primitive solver has also been modified to check the 
+physicality of conservative variables prior to primitive inversion, and move them 
+into the physical range if they become unphysical.
+
+Currently GiRaFFE consists of
+1) the Piecewise Parabolic Method (PPM) for reconstruction, 
+2) the Harten, Lax, van Leer (HLL/HLLE) approximate Riemann solver, and
+3) a modified HARM Conservative-to-Primitive solver. 
+
+GiRaFFE evolves the vector potential A_{\mu} (on staggered grids) 
+instead of the magnetic fields (B^i) directly, to guarantee that the 
+magnetic fields will remain divergenceless even at AMR boundaries. On 
+uniform resolution grids, this vector potential formulation produces 
+results equivalent to those generated using the standard, staggered 
+flux-CT scheme. This scheme is based on that of Del Zanna (2003, see
+below OPTIONAL CITATION #1).
+
+REQUIRED CITATIONS:
+
+1) GiRaFFE code announcement paper: https://arxiv.org/abs/1704.00599
+
+2) IllinoisGRMHD code announcement paper: 
+Class. Quantum Grav. 32 (2015) 175009, (https://arxiv.org/abs/1501.07276)
+
+OPTIONAL CITATIONS:
+1) Del Zanna, Bucciantini & Londrillo A&A 400, 397 (2003), Eq. (44)

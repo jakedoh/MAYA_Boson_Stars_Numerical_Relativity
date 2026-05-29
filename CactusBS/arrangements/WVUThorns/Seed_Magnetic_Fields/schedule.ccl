@@ -1,0 +1,9 @@
+# Schedule definitions for thorn Seed_Magnetic_Fields
+
+# Zach says: these explicit STORAGE statements ARE necessary. Otherwise, segfault.
+STORAGE: HydroBase::rho[1],HydroBase::press[1],HydroBase::eps[1],HydroBase::vel[1],HydroBase::Bvec[1],HydroBase::Avec[1],HydroBase::Aphi[1]
+
+SCHEDULE Seed_Magnetic_Fields at CCTK_INITIAL after HydroBase_Initial before IllinoisGRMHD_ID_Converter
+{
+  LANG: C
+} "Set up seed magnetic field configuration."

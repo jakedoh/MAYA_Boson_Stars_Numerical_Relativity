@@ -1,0 +1,22 @@
+# make.code.deps file for thorn Formaline   -*-Makefile-*-
+
+# Store the utilities in the scratch directory of this configuration.
+
+# This has to live here in the file make.code.deps instead of in the
+# file make.configuration.deps because only here the location of the
+# source directory is known.
+
+FORMALINE_BIN_DIR = $(SCRATCH_BUILD)/Formaline/bin
+
+FORMALINE_TAR_FILES = gethostname.pl makeblob.pl makemetablob.pl
+FORMALINE_GIT_FILES = git-ssh.sh update-git-repo.pl
+
+$(CCTK_TARGET): $(FORMALINE_TAR_FILES:%=$(FORMALINE_BIN_DIR)/%) $(FORMALINE_GIT_FILES:%=$(FORMALINE_BIN_DIR)/%)
+
+$(FORMALINE_BIN_DIR)/%.pl: $(SRCDIR)/util/%.pl
+	mkdir -p $(FORMALINE_BIN_DIR)
+	cp $^ $@
+
+$(FORMALINE_BIN_DIR)/%.sh: $(SRCDIR)/util/%.sh
+	mkdir -p $(FORMALINE_BIN_DIR)
+	cp $^ $@

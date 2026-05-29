@@ -1,0 +1,72 @@
+# Schedule definitions for thorn WaveExtract
+# $Id: schedule.ccl,v 1.5 2005/07/26 12:53:56 herrmann Exp $
+
+
+
+if(active)
+{
+  STORAGE: sym_factor_group, handles_group, do_nothing_group
+
+  # FIXME : This could be moved where it is needed
+  STORAGE: surface_arrays,surface_arrays_past_timelevel
+  STORAGE: surface_integrands
+  STORAGE: interp_metric_arrays
+  STORAGE: Schwarzschild_Mass_Radius_group
+  STORAGE: Schwarzschild_Mass_Radius_Results_group
+  STORAGE: current_detector_group,current_detector_radius_group
+  STORAGE: l_m_modes_info_group
+  STORAGE: current_detector_group
+  STORAGE: current_detector_radius_group
+  STORAGE: radiated_E_P_group
+  # test if this makes a difference
+  STORAGE: MoncriefQ
+
+  schedule WavExtr_ParamCheck at PARAMCHECK
+  {
+    LANG: C
+  } "Check Parameters for WaveExtract"
+
+
+  # Initial Setup
+  schedule WavExtr_Init at INITIAL
+  {
+    LANG: FORTRAN
+  } "Setup weights for integration"
+
+  schedule WavExtr_Setup_Detectors at INITIAL
+  {
+    LANG: FORTRAN
+    OPTIONS: GLOBAL
+  } "Initial setup of all detectors"
+
+
+  # Initial Setup also after recovery (only needed if wave extract
+  # wasn't switched on before)
+  schedule WavExtr_Init at CCTK_POST_RECOVER_VARIABLES
+  {
+    LANG: FORTRAN
+  } "Setup weights for integration (after recovery)"
+
+  schedule WavExtr_Setup_Detectors at CCTK_POST_RECOVER_VARIABLES
+  {
+    LANG: FORTRAN
+    OPTIONS: GLOBAL
+  } "Initial setup of all detectors (after recovery)"
+
+
+  # Analysis
+  if (use_spherical_surface) {
+    schedule WaEx_Setup_SphericalSurface at ANALYSIS before loop_over_detectors
+    {
+      LANG: FORTRAN
+    } "setup detectors from spherical surface"
+  }
+
+
+  schedule WavExtr_loop_over_detectors at ANALYSIS
+  {
+    LANG: Fortran
+    OPTIONS: global
+  } "loop over all detectors"
+
+}

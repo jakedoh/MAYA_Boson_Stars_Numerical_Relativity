@@ -1,0 +1,29 @@
+# Interface definition for thorn TwoPuncturesFLRW
+
+
+IMPLEMENTS: TwoPuncturesFLRW
+
+INHERITS: ADMBase StaticConformal grid
+
+
+
+REAL puncture_u TYPE=gf
+
+
+REAL precomputed_group TYPE=SCALAR
+{
+  par_b_pcmp,
+  par_m_plus_pcmp,par_m_minus_pcmp,
+  par_P_plus_pcmp1, par_P_plus_pcmp2, par_P_plus_pcmp3,
+  par_P_minus_pcmp1, par_P_minus_pcmp2, par_P_minus_pcmp3,
+  par_S_plus_pcmp1, par_S_plus_pcmp2, par_S_plus_pcmp3,
+  par_S_minus_pcmp1, par_S_minus_pcmp2, par_S_minus_pcmp3
+} "values precomputed"
+
+REAL mass_group TYPE=SCALAR
+{
+  admMass, admMassRad, admMass_plus, admMass_minus
+} "mass"
+
+public:
+REAL psi_static TYPE=gf

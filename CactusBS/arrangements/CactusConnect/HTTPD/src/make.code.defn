@@ -1,0 +1,30 @@
+# Main make.code.defn file for thorn httpd
+# $Header$
+
+# Source files in this directory
+
+MISC_SRC = Startup.c Expression.c Map.cc
+
+SERVER_SRC = Server.c Sockets.c http.c
+
+CONTENT_SRC = Content.c Headers.c Groups.c Parameters.c Thorns.c
+
+STEERING_SRC = Steer.c
+
+AUTHENTICATION_SRC = Authorisation.c base64.c 
+
+COOKIES_SRC = Cookies.c
+
+REDIRECTION_SRC = Redirect.c
+
+STRINGS_SRC = SString.c SStringHTML.c
+
+SRCS = $(MISC_SRC)           \
+       $(SERVER_SRC)         \
+       $(CONTENT_SRC)        \
+       $(STEERING_SRC)       \
+       $(AUTHENTICATION_SRC) \
+       $(COOKIES_SRC)        \
+       $(REDIRECTION_SRC)    \
+       $(STRINGS_SRC)
+

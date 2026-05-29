@@ -1,0 +1,4 @@
+# Interface definition for thorn TestFortranDependencies2
+# $Header$
+
+implements: TestFortranDependencies2

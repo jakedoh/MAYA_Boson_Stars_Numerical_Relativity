@@ -1,0 +1,5 @@
+# Module dependencies for thorn Whisky
+
+Whisky_Eigenproblem.F90.o:		Whisky_Scalars.F90.o
+Whisky_Eigenproblem_Marquina.F90.o:	Whisky_Scalars.F90.o
+Whisky_PreLoop.F90.o:			Whisky_Scalars.F90.o

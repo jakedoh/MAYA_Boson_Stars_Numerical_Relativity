@@ -1,0 +1,8 @@
+# Main make.code.defn file for thorn RiemannSolverMarquina
+# $Header:$
+
+# Source files in this directory
+SRCS = Marquina_Eigenproblem.F90 Marquina.F90 Marquina_PreLoop.F90 Marquina_Scalars.F90
+
+# Subdirectories containing source files
+SUBDIRS = 

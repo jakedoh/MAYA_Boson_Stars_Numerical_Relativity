@@ -1,0 +1,140 @@
+Cactus::cctk_run_title     = "Kerr with a 180 degree rotational symmetry"
+Cactus::cctk_full_warnings = yes
+Cactus::cctk_itlast        = 3
+
+ActiveThorns = "InitBase"
+
+ActiveThorns = "Slab"
+
+ActiveThorns = "IOUtil"
+IO::out_dir       = $parfile
+IO::out_fileinfo = "none"
+IO::parfile_write = no
+
+ActiveThorns = "PUGH PUGHReduce PUGHSlab"
+driver::global_nx  = 32
+driver::global_ny  = 32
+driver::global_nz  = 18
+driver::ghost_size =  2
+
+ActiveThorns = "NaNChecker"
+
+ActiveThorns = "Boundary CartGrid3D CoordBase SymBase ReflectionSymmetry"
+CartGrid3D::type         = coordbase
+CartGrid3D::domain       = full
+CartGrid3D::avoid_origin = yes
+
+CoordBase::xmin         = -4.0+0.5
+CoordBase::ymin         = -4.0+0.5
+CoordBase::zmin         =  0.0
+CoordBase::xmax         =  4.0-0.5
+CoordBase::ymax         =  4.0-0.5
+CoordBase::zmax         =  4.0-0.5
+CoordBase::dx           = 0.25
+CoordBase::dy           = 0.25
+CoordBase::dz           = 0.25
+CoordBase::boundary_size_x_upper     = 2
+CoordBase::boundary_size_y_upper     = 2
+CoordBase::boundary_size_z_upper     = 2
+CoordBase::boundary_size_x_lower     = 2
+CoordBase::boundary_size_y_lower     = 2
+CoordBase::boundary_size_z_lower     = 2
+CoordBase::boundary_staggered_x_upper = yes
+CoordBase::boundary_staggered_y_upper = yes
+CoordBase::boundary_staggered_z_upper = yes
+CoordBase::boundary_staggered_x_lower = yes
+CoordBase::boundary_staggered_y_lower = yes
+CoordBase::boundary_staggered_z_lower = yes
+
+ReflectionSymmetry::avoid_origin_x = yes
+ReflectionSymmetry::avoid_origin_y = yes
+ReflectionSymmetry::avoid_origin_z = yes
+ReflectionSymmetry::reflection_z = yes
+
+ActiveThorns = "ADMBase ADMMacros CoordGauge SpaceMask StaticConformal"
+SpaceMask::use_mask = yes
+
+ActiveThorns = "KerrSchild GenericFD"
+ADMBase::initial_data  = "KerrSchild"
+ADMBase::initial_lapse = "KerrSchild"
+ADMBase::initial_dtlapse = "KerrSchild"
+ADMBase::initial_shift = "KerrSchild"
+ADMBase::initial_dtshift = "KerrSchild"
+KerrSchild::M = 1.0
+KerrSchild::a = 0.6
+
+ActiveThorns = "NoExcision SphericalSurface LoopControl"
+NoExcision::num_regions = 1
+NoExcision::radius[0]   = 0.6
+NoExcision::Minkowski_scale[0] = 2.6 # value found at r=0.75
+NoExcision::reduce_rhs[0] = yes
+
+ActiveThorns = "Time"
+Time::dtfac = 0.25
+
+ActiveThorns = "MoL"
+MoL::ODE_Method = RK3
+
+ActiveThorns = "ML_BSSN ML_BSSN_Helper NewRad TmunuBase LoopControl"
+
+ADMBase::evolution_method = ML_BSSN
+ML_BSSN::fdOrder      = 2
+ML_BSSN::my_initial_boundary_condition = "extrapolate-gammas"
+ML_BSSN::my_rhs_boundary_condition     = "NewRad"
+# These are necessary
+ML_BSSN::ML_log_confac_bound = "none"
+ML_BSSN::ML_metric_bound     = "none"
+ML_BSSN::ML_Gamma_bound      = "none"
+ML_BSSN::ML_trace_curv_bound = "none"
+ML_BSSN::ML_curv_bound       = "none"
+ML_BSSN::ML_lapse_bound      = "none"
+ML_BSSN::ML_dtlapse_bound    = "none"
+ML_BSSN::ML_shift_bound      = "none"
+ML_BSSN::ML_dtshift_bound    = "none"
+
+
+ADMBase::lapse_evolution_method = ML_BSSN
+ADMBase::dtlapse_evolution_method = "ML_BSSN" 
+ML_BSSN::harmonicN           = 1   # 1+log 
+ML_BSSN::harmonicF           = 2.0
+ML_BSSN::AlphaDriver         = 1
+ML_BSSN::LapseAdvectionCoeff = 0
+
+ADMBase::shift_evolution_method = ML_BSSN
+ADMBase::dtshift_evolution_method = ML_BSSN
+ML_BSSN::ShiftGammaCoeff = 0
+
+ActiveThorns = "ML_ADMConstraints"
+
+ActiveThorns = "IOBasic LocalReduce"
+IOBasic::outInfo_every      = 1
+IOBasic::outInfo_reductions = "norm2"
+IOBasic::outInfo_vars       = "
+        ML_ADMConstraints::ml_ham
+        ML_ADMConstraints::M1
+"
+
+IOBasic::outScalar_every      = 1
+IOBasic::outScalar_reductions = "minimum maximum average norm1 norm2 norm_inf"
+IOBasic::outScalar_style      = gnuplot
+IOBasic::outScalar_vars       = "
+        ADMBase::metric
+        ADMBase::curv
+        ADMBase::lapse
+        ADMBase::shift
+        ML_ADMConstraints::ml_ham
+        ML_ADMConstraints::ml_mom
+"
+
+ActiveThorns = "IOASCII"
+IOASCII::out1D_every = 1
+IOASCII::out1D_style = "gnuplot f(x)"
+IOASCII::out1D_vars  = "
+        ADMBase::metric
+        ADMBase::curv
+        ADMBase::lapse
+        ADMBase::shift
+        ML_ADMConstraints::ml_ham
+        ML_ADMConstraints::ml_mom
+        SpaceMask::mask
+"

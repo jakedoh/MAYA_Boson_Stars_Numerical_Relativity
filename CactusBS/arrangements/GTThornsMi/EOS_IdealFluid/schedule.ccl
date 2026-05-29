@@ -1,0 +1,9 @@
+# Schedule definitions for thorn EOS_Ideal_Fluid
+# $Header$
+
+SCHEDULE EOS_Ideal_Fluid_Startup AT startup
+{
+  LANG: Fortran
+} "Setup EOS test in Fortran"
+
+

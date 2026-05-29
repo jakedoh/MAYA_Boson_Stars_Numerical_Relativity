@@ -1,0 +1,136 @@
+!DESC "Testing the baryonic mass calculation"
+ActiveThorns = "
+  admbase
+  boundary
+  Carpet
+  CarpetIOASCII
+  CarpetIOBasic
+  CarpetIOScalar
+  CarpetLib
+  CarpetReduce
+  LocalReduce
+  CarpetRegrid2
+  cartgrid3d
+  Constants
+  coordbase
+  coordgauge
+  hydrobase
+  Hydro_Analysis
+  InitBase
+  ioutil
+  LoopControl
+  MoL
+  ReflectionSymmetry
+  spacemask
+  staticconformal
+  symbase
+  time
+  tovsolver
+"
+
+CartGrid3D::type = "coordbase"
+CartGrid3D::domain = "full"
+CartGrid3D::avoid_origin = "no"
+
+CoordBase::xmin = 0.0
+CoordBase::ymin = 0.0
+CoordBase::zmin = 0.0
+CoordBase::xmax = 240.0
+CoordBase::ymax = 240.0
+CoordBase::zmax = 240.0
+CoordBase::dx = 12
+CoordBase::dy = 12
+CoordBase::dz = 12
+
+CoordBase::boundary_size_x_lower = 3
+CoordBase::boundary_size_y_lower = 3
+CoordBase::boundary_size_z_lower = 3
+CoordBase::boundary_size_x_upper = 3
+CoordBase::boundary_size_y_upper = 3
+CoordBase::boundary_size_z_upper = 3
+CoordBase::boundary_shiftout_x_lower = 1
+CoordBase::boundary_shiftout_y_lower = 1
+CoordBase::boundary_shiftout_z_lower = 1
+CoordBase::boundary_shiftout_x_upper = 0
+CoordBase::boundary_shiftout_y_upper = 0
+CoordBase::boundary_shiftout_z_upper = 0
+
+ReflectionSymmetry::reflection_x = "yes"
+ReflectionSymmetry::reflection_y = "yes"
+ReflectionSymmetry::reflection_z = "yes"
+ReflectionSymmetry::avoid_origin_x = "no"
+ReflectionSymmetry::avoid_origin_y = "no"
+ReflectionSymmetry::avoid_origin_z = "no"
+ReflectionSymmetry::verbose = "no"
+
+driver::ghost_size = 3
+
+cactus::cctk_itlast = 0
+
+hydrobase::timelevels = 2
+admbase::metric_timelevels = 2
+admbase::shift_timelevels = 2
+admbase::lapse_timelevels = 2
+
+ADMBase::initial_data = "tov"
+ADMBase::initial_lapse = "tov"
+ADMBase::initial_shift = "tov"
+ADMBase::initial_dtlapse = "zero"
+ADMBase::initial_dtshift = "zero"
+ADMBase::evolution_method = "static"
+ADMBase::lapse_evolution_method = "static"
+ADMBase::shift_evolution_method = "static"
+ADMBase::dtlapse_evolution_method = "static"
+ADMBase::dtshift_evolution_method = "static"
+
+SpaceMask::use_mask      = "yes"
+
+Carpet::domain_from_coordbase = "yes"
+Carpet::enable_all_storage       = no
+Carpet::use_buffer_zones         = "yes"
+Carpet::poison_new_timelevels    = "yes"
+Carpet::check_for_poison         = "no"
+Carpet::poison_value             = 113
+Carpet::init_3_timelevels        = no
+Carpet::init_fill_timelevels     = "yes"
+
+CarpetLib::poison_new_memory = "yes"
+CarpetLib::poison_value      = 114
+
+# system specific Carpet paramters
+Carpet::max_refinement_levels    = 10
+Carpet::prolongation_order_space = 5
+Carpet::prolongation_order_time  = 1
+
+CarpetRegrid2::regrid_every = 0
+CarpetRegrid2::num_centres  = 1
+
+CarpetRegrid2::num_levels_1 = 5
+CarpetRegrid2::radius_1[1]  =120.0
+CarpetRegrid2::radius_1[2]  = 60.0
+CarpetRegrid2::radius_1[3]  = 30.0
+CarpetRegrid2::radius_1[4]  = 15.0
+
+InitBase::initial_data_setup_method = "init_some_levels"
+
+tovsolver::TOV_Num_TOVs = 1
+tovsolver::TOV_Gamma = 2.0
+tovsolver::TOV_K = 100.0
+tovsolver::TOV_Rho_Central[0] = 1.28e-3
+
+Hydro_Analysis::restmass_compute_masses    = "yes"                                                         
+Hydro_Analysis::restmass_rho_min           = 1.e-10                                                       
+Hydro_Analysis::restmass_masses_nr         = 1   
+
+IO::out_dir = $parfile
+IO::out_fileinfo = "none"
+IO::parfile_write = "no"
+
+# I/O
+IOBasic::outInfo_every              = 1
+IOBasic::outInfo_vars               = "HydroBase::rho ADMBase::lapse Hydro_Analysis::Hydro_Analysis_masses"
+
+IOASCII::out0D_every = 1
+IOASCII::out0D_vars = "
+  Hydro_Analysis::Hydro_Analysis_masses
+"

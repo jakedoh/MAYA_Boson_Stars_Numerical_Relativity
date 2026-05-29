@@ -1,0 +1,10 @@
+# Interface definition for thorn EllSOR
+# $Header$
+
+implements: ellsor
+inherits: ellbase, boundary
+
+USES INCLUDE HEADER: EllBase.h
+USES INCLUDE HEADER: Ell_DBstructure.h
+USES INCLUDE HEADER: Boundary.h
+USES INCLUDE HEADER: Symmetry.h

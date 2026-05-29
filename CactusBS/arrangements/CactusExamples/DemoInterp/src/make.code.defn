@@ -1,0 +1,5 @@
+# Main make.code.defn file for thorn DemoInterp
+# $Header$
+
+# Source files in this directory
+SRCS = Initial1D.F Initial2D.F Initial3D.F Interp1D.F Interp2D.F Interp3D.F

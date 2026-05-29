@@ -1,0 +1,9 @@
+# Schedule definitions for thorn EllPETSc
+
+STORAGE: petscworkspace
+
+schedule EllPETSc_Register at CCTK_BASEGRID
+{
+  LANG:C
+} "Register the PETSc solvers"
+

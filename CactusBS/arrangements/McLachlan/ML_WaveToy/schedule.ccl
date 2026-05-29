@@ -1,0 +1,110 @@
+# File produced by Kranc
+
+STORAGE: WT_u[timelevels]
+
+STORAGE: WT_rho[timelevels]
+
+STORAGE: WT_eps[other_timelevels]
+
+STORAGE: WT_rhorhs[rhs_timelevels]
+
+STORAGE: WT_urhs[rhs_timelevels]
+schedule ML_WaveToy_Startup at STARTUP
+{
+  LANG: C
+  OPTIONS: meta
+} "create banner"
+
+schedule ML_WaveToy_RegisterSymmetries in SymmetryRegister
+{
+  LANG: C
+  OPTIONS: meta
+} "register symmetries"
+
+if (CCTK_EQUALS(initial_data, "Gaussian"))
+{
+  schedule WT_Gaussian AT initial
+  {
+    LANG: C
+    READS: grid::r(Everywhere)
+    WRITES: ML_WaveToy::rho(Everywhere)
+    WRITES: ML_WaveToy::u(Everywhere)
+  } "WT_Gaussian"
+}
+
+if (CCTK_EQUALS(initial_data, "Standing"))
+{
+  schedule WT_Standing AT initial
+  {
+    LANG: C
+    READS: grid::x(Everywhere)
+    READS: grid::y(Everywhere)
+    READS: grid::z(Everywhere)
+    WRITES: ML_WaveToy::rho(Everywhere)
+    WRITES: ML_WaveToy::u(Everywhere)
+  } "WT_Standing"
+}
+
+schedule WT_RHS IN MoL_CalcRHS
+{
+  LANG: C
+  READS: ML_WaveToy::rho(Everywhere)
+  READS: ML_WaveToy::u(Everywhere)
+  WRITES: ML_WaveToy::rhorhs(Interior)
+  WRITES: ML_WaveToy::urhs(Interior)
+} "WT_RHS"
+
+schedule WT_Dirichlet IN MoL_CalcRHS
+{
+  LANG: C
+  WRITES: ML_WaveToy::rhorhs(Boundary)
+  WRITES: ML_WaveToy::urhs(Boundary)
+} "WT_Dirichlet"
+
+schedule WT_Dirichlet AT analysis
+{
+  LANG: C
+  SYNC: WT_rhorhs
+  SYNC: WT_urhs
+  WRITES: ML_WaveToy::rhorhs(Boundary)
+  WRITES: ML_WaveToy::urhs(Boundary)
+} "WT_Dirichlet"
+
+schedule WT_Energy AT analysis
+{
+  LANG: C
+  SYNC: WT_eps
+  READS: ML_WaveToy::rho(Everywhere)
+  READS: ML_WaveToy::u(Everywhere)
+  WRITES: ML_WaveToy::eps(Interior)
+} "WT_Energy"
+
+schedule WT_EnergyBoundary AT analysis
+{
+  LANG: C
+  SYNC: WT_eps
+  WRITES: ML_WaveToy::eps(Boundary)
+} "WT_EnergyBoundary"
+
+schedule ML_WaveToy_SelectBoundConds in MoL_PostStep
+{
+  LANG: C
+  OPTIONS: level
+  SYNC: WT_u
+  SYNC: WT_rho
+} "select boundary conditions"
+
+schedule ML_WaveToy_CheckBoundaries at BASEGRID
+{
+  LANG: C
+  OPTIONS: meta
+} "check boundaries treatment"
+
+schedule ML_WaveToy_RegisterVars in MoL_Register
+{
+  LANG: C
+  OPTIONS: meta
+} "Register Variables for MoL"
+schedule group ApplyBCs as ML_WaveToy_ApplyBCs in MoL_PostStep after ML_WaveToy_SelectBoundConds
+{
+} "Apply boundary conditions controlled by thorn Boundary"

@@ -1,0 +1,99 @@
+#! /usr/bin/perl
+# $Header: /numrelcvs/AEIDevelopment/MultiPatchWaveToy/util/analytic,v 1.2 2004/09/09 22:49:06 schnetter Exp $
+
+#############################################################
+# analytic
+# author: Nils Dorband
+#
+# Usage:
+# analytic XFILE YFILE ZFILE radius amplitude width
+#
+# Outputs an analytic solution at coordinates given by input files
+# xfile, yfile and zfile (in Carpet output format). Right now the
+# only supported analytic solution is a spherically symmetric gaussian
+# pulse with given radius, amplitude and width
+#
+# Output is done to stdout
+#
+# output format:
+# time	x	y	z	u(x,y,z)
+# where u(x,y,z) is the analytic solution
+#
+# I'll put in the l1 mode solution next.
+#############################################################
+
+##### use the trigonometry module
+use Math::Trig;
+
+##### read stdin
+$numarguments = @ARGV;
+
+$xfile = @ARGV[0];
+$yfile = @ARGV[1];
+$zfile = @ARGV[2];
+$radius = @ARGV[3];
+$amplitude = @ARGV[4];
+$width = @ARGV[5];
+
+
+##### define Gauss function
+sub gaussian {
+	my $lr = $_[0];
+
+	$result = $amplitude * exp(- (($lr - $radius)/$width)**2);
+
+	return $result;
+}
+
+sub dgaussian {
+	my $lr = $_[0];
+
+	$result = -2 * gaussian($lr) * ($lr-$radius)/($width**2);
+
+	return $result;
+}
+
+
+### open files
+open(XFILE, $xfile);
+open(YFILE, $yfile);
+open(ZFILE, $zfile);
+
+### read information from files
+@xlines = <XFILE>;
+@ylines = <YFILE>;
+@zlines = <ZFILE>;
+
+$numlines = @xlines;
+
+for ($i=0; $i<$numlines; $i++)
+{
+	$xline = @xlines[$i];
+	$yline = @ylines[$i];
+	$zline = @zlines[$i];
+	
+	@splitxline = split ' ', $xline;
+
+	if (@splitxline == 13)
+	{
+		@splityline = split ' ', $yline;
+		@splitzline = split ' ', $zline;
+		@x[$i] = @splitxline[12];
+		@y[$i] = @splityline[12];
+		@z[$i] = @splitzline[12];
+		$time = @splitxline[8];
+		##### convert to r, phi, theta coordinates
+		$r = sqrt($x[$i]**2+$y[$i]**2+$z[$i]**2);
+		$theta = atan($y[$i]/$z[$i]);
+		$phi = acos($z[$i]/$r);
+
+		##### calculate function value
+        $u[$i] = 0.5 * (($r+$time)/$r * gaussian($r+$time) + ($r-$time)/($r)*gaussian($r-$time));
+	
+		##### print function value
+		print $time, "\t", @x[$i], "\t", @y[$i], "\t",@z[$i], "\t",$u[$i], "\n";
+	} else
+	{
+		print "\n";
+	}
+}

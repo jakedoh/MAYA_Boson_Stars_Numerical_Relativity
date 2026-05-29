@@ -1,0 +1,32 @@
+ActiveThorns = "
+CoordBase
+CartGrid3D
+IOBasic
+IOUtil
+LocalInterp2
+TestLocalInterp2
+PUGH
+"
+
+IO::out_dir       = $parfile
+IO::parfile_write = no
+IO::out_fileinfo  = "none"
+
+Cactus::cctk_itlast = 0
+
+Grid::type   = "BySpacing"
+Grid::domain = "full"
+Grid::dxyz   = 0.25
+
+#ActiveThorns = "
+#IOASCII
+#PUGHSlab
+#"
+#IOASCII::out1D_every = 1
+#IOASCII::out1D_y     = no
+#IOASCII::out1D_z     = no
+#IOASCII::out1D_d     = no
+#IOASCII::out1D_vars  = "Grid::x"
+
+IOBasic::outScalar_every = 1
+IOBasic::outScalar_vars  = "TestLocalInterp2::success"

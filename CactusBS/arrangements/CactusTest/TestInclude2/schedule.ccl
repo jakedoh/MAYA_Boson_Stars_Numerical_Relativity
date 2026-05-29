@@ -1,0 +1,7 @@
+# Schedule definitions for thorn Include2
+# $Header$
+
+schedule PrintInclude2 at INITIAL
+{
+  LANG: Fortran
+} "Print contents of include files"

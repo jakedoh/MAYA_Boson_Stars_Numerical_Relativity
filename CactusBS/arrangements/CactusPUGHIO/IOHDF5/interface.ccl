@@ -1,0 +1,10 @@
+# Interface definition for thorn IOHDF5
+# $Header$
+
+Implements: IOHDF5
+#Inherits:   IO
+
+CCTK_INT FUNCTION IO_TruncateOutputFiles \
+  (CCTK_POINTER_TO_CONST IN GH)
+
+REQUIRES FUNCTION IO_TruncateOutputFiles

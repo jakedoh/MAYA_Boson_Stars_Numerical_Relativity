@@ -1,0 +1,11 @@
+# Configuration definition for thorn EOS_Polytrope
+# $Header$
+
+PROVIDES EOS_Polytrope
+{
+  SCRIPT
+  LANG
+}
+
+REQUIRES EOS_Base 
+

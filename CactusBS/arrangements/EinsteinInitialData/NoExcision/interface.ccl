@@ -1,0 +1,104 @@
+# Interface definition for thorn NoExcision
+# $Header$
+
+IMPLEMENTS: NoExcision
+
+INHERITS: ADMBase StaticConformal grid SphericalSurface Boundary
+
+USES INCLUDE: Boundary.h
+
+USES INCLUDE: carpet.hh
+
+CCTK_INT FUNCTION MoLQueryEvolvedRHS (CCTK_INT IN EvolvedIndex)
+USES FUNCTION MoLQueryEvolvedRHS
+
+CCTK_INT FUNCTION Boundary_SelectGroupForBC(CCTK_POINTER_TO_CONST IN GH, \
+                                            CCTK_INT IN faces, \
+                                            CCTK_INT IN boundary_width, \
+                                            CCTK_INT IN table_handle, \
+                                            CCTK_STRING IN var_name, \
+                                            CCTK_STRING IN bc_name)
+USES FUNCTION Boundary_SelectGroupForBC
+
+CCTK_INT smask type=GF timelevels=1 tags='tensortypealias="scalar" Prolongation="None"'
+{
+  nes_mask
+} "mask for smoothing"
+
+CCTK_REAL reduction_mask type=GF tags='Prolongation="None" InterpNumTimelevels=1 checkpoint="no"'
+{
+  red_mask
+} "Copy of the weight grid function from CarpetReduce"
+
+CCTK_REAL cg_res_metric type=GF timelevels=1 tags='tensortypealias="dd_sym" Prolongation="None"'
+{
+  resgxx, resgxy, resgxz, resgyy, resgyz, resgzz
+} "Conjugate Gradient residual for the metric"
+
+CCTK_REAL cg_res_curv type=GF timelevels=1 tags='tensortypealias="dd_sym" Prolongation="None"'
+{
+  reskxx, reskxy, reskxz, reskyy, reskyz, reskzz
+} "Conjugate Gradient residual for the extrinsic curvature"
+
+CCTK_REAL cg_res_shift type=GF timelevels=1 tags='tensortypealias="u" Prolongation="None"'
+{
+  resx, resy, resz
+} "Conjugate Gradient residual for the shift"
+
+CCTK_REAL cg_res_lapse type=GF timelevels=1 tags='tensortypealias="scalar" Prolongation="None"'
+{
+  res
+} "Conjugate Gradient residual for the lapse"
+
+
+CCTK_REAL cg_d_metric type=GF timelevels=1 tags='tensortypealias="dd_sym" Prolongation="None"'
+{
+  dgxx, dgxy, dgxz, dgyy, dgyz, dgzz
+} "Conjugate Gradient d for the metric"
+
+CCTK_REAL cg_d_curv type=GF timelevels=1 tags='tensortypealias="dd_sym" Prolongation="None"'
+{
+  dkxx, dkxy, dkxz, dkyy, dkyz, dkzz
+} "Conjugate Gradient d for the extrinsic curvature"
+
+CCTK_REAL cg_d_shift type=GF timelevels=1 tags='tensortypealias="u" Prolongation="None"'
+{
+  dx, dy, dz
+} "Conjugate Gradient d for the shift"
+
+CCTK_REAL cg_d_lapse type=GF timelevels=1 tags='tensortypealias="scalar" Prolongation="None"'
+{
+  d
+} "Conjugate Gradient d for the lapse"
+
+
+CCTK_REAL cg_q_metric type=GF timelevels=1 tags='tensortypealias="dd_sym" Prolongation="None"'
+{
+  qgxx, qgxy, qgxz, qgyy, qgyz, qgzz
+} "Conjugate Gradient q for the metric"
+
+CCTK_REAL cg_q_curv type=GF timelevels=1 tags='tensortypealias="dd_sym" Prolongation="None"'
+{
+  qkxx, qkxy, qkxz, qkyy, qkyz, qkzz
+} "Conjugate Gradient q for the extrinsic curvature"
+
+CCTK_REAL cg_q_shift type=GF timelevels=1 tags='tensortypealias="u" Prolongation="None"'
+{
+  qx, qy, qz
+} "Conjugate Gradient q for the shift"
+
+CCTK_REAL cg_q_lapse type=GF timelevels=1 tags='tensortypealias="scalar" Prolongation="None"'
+{
+  q
+} "Conjugate Gradient q for the lapse"
+
+
+CCTK_REAL cg_red_all type=GF timelevels=1 tags='tensortypealias="scalar" Prolongation="None"'
+{
+  redgxx, redgxy, redgxz, redgyy, redgyz, redgzz
+  redkxx, redkxy, redkxz, redkyy, redkyz, redkzz
+  red, redx, redy, redz
+} "Conjugate Gradient red for all variables"
+
+# Control variable for smoothing loop
+CCTK_INT loop_control TYPE=SCALAR

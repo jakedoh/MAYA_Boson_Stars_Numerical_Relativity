@@ -1,0 +1,4 @@
+# Configuration definition for thorn Cartoon2D
+# $Header$
+
+REQUIRES SpaceMask

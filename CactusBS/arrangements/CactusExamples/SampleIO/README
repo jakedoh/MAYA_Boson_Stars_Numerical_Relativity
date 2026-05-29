@@ -1,0 +1,17 @@
+Cactus Code Thorn SampleIO
+Author(s)    : Thomas Radke
+Maintainer(s): Cactus team
+Licence      : LGPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+This thorn provides a very simple I/O method which prints the values of
+three-dimensional Cactus grid functions and arrays at a chosen location
+(selected by parameters) to screen.
+
+The I/O method makes use of the Cactus Hyperslabbing API to obtain the data
+values to print.
+
+The code in this thorn is well documented and can be used as an example to 
+build your own I/O method.

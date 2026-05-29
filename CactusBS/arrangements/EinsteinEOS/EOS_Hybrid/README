@@ -1,0 +1,13 @@
+Cactus Code Thorn EOS_Hybrid
+Author(s)    : Harry Dimmelmeier
+               Ian Hawke
+               Christian Ott
+Maintainer(s): Cactus team
+Licence      : LGPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+This thorn implements the EOS used by Dimmelmeier Novak Font Ibanez Mueller PRD71 064023 (2005) in
+core collapse simulations. Requires the CactusEOS infrastructure.
+

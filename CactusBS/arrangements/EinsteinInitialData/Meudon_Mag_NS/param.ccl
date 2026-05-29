@@ -1,0 +1,51 @@
+# Parameter definitions for thorn ID_Mag_NS
+
+SHARES: ADMBase
+
+EXTENDS KEYWORD initial_data
+{
+  "ID_Mag_NS" :: ""
+}
+
+EXTENDS KEYWORD initial_lapse
+{
+  "ID_Mag_NS" :: ""
+}
+
+EXTENDS KEYWORD initial_shift
+{
+  "ID_Mag_NS" :: ""
+}
+
+EXTENDS KEYWORD initial_dtlapse
+{
+  "ID_Mag_NS" :: ""
+}
+
+EXTENDS KEYWORD initial_dtshift
+{
+  "ID_Mag_NS" :: ""
+}
+
+
+
+SHARES: HydroBase
+
+EXTENDS KEYWORD initial_hydro
+{
+  "ID_Mag_NS" :: ""
+}
+
+EXTENDS KEYWORD initial_Bvec
+{
+  "ID_Mag_NS" :: ""
+}
+
+
+
+PRIVATE:
+
+STRING filename "Input file name"
+{
+  "" :: ""
+} ""

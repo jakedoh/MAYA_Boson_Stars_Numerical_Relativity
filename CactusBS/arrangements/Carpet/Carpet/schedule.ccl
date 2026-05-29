@@ -1,0 +1,65 @@
+# Schedule definitions for thorn Carpet
+
+# This is disabled because its implementation is not complete
+#storage: point_classification
+storage: timing timing_procs timing_levels
+storage: memory_procs
+
+schedule CarpetMultiModelStartup at STARTUP as MultiModel_Startup before Driver_Startup
+{
+  LANG: C
+} "Multi-model Startup routine"
+
+schedule CarpetStartup at STARTUP as Driver_Startup
+{
+  LANG: C
+} "Startup routine"
+
+schedule CarpetParamCheck at PARAMCHECK
+{
+  LANG: C
+} "Parameter checking routine"
+
+# Correct time step for finer levels when there are non-trivial
+# time refinement factors
+
+if (refine_timestep)
+{
+  SCHEDULE CarpetRefineTimeStep AT basegrid AFTER Time_Simple
+  {
+    LANG: C
+    OPTIONS: singlemap
+  } "Correct time step size for spacing on finer grids"
+}
+
+if (use_unusedpoints_mask)
+{
+  storage: carpet_unusedpoints_mask
+
+  schedule CarpetUnusedMask AT BASEGRID
+  {
+    LANG: C
+    WRITES: Carpet::carpet_unusedpoints_mask(everywhere)
+  } "Set mask of unused points"
+
+  schedule CarpetUnusedMask AT POSTREGRID
+  {
+    LANG: C
+    WRITES: Carpet::carpet_unusedpoints_mask(everywhere)
+  } "Set mask of unused points"
+}
+
+if (! CCTK_EQUALS(presync_mode, "off"))
+{
+  schedule GROUP Driver_BoundarySelect at CCTK_WRAGH
+  {
+  } "Group for functions which select BCs for variables and groups."
+
+  schedule GROUP Driver_ApplyBCs
+  {
+  } "Apply boundary conditions"
+
+  schedule GROUP ApplyBCs in Driver_ApplyBCs AS Carpet_ApplyBCs
+  {
+  } "Apply boundary conditions under driver control"
+}

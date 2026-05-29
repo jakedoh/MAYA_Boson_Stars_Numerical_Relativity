@@ -1,0 +1,80 @@
+ /*@@
+   @file      Cookies.txt
+   @date      Mon Sep 18 23:17:20 2000
+   @author    Tom Goodale
+   @desc 
+   Description of the Cookie interface.
+   @enddesc 
+   @version $Header$
+ @@*/
+
+There is an interface for setting and querying cookies, which is
+accessed by including http_Cookies.h.  This provides three functions
+
+int HTTP_CookieSend(httpRequest *request,
+                    const char *name, 
+                    const char *value, 
+                    const char *path,
+                    const char *domain,
+                    const char *expires,
+                    int secure);
+
+which will send a cookie with the appropriate name and value.  All
+other fields may be set to NULL, or 0 as appropriate.
+
+int HTTP_CookieCancel(httpRequest *request,
+                      const char *name, 
+                      const char *path);
+
+which cancels a cookie by setting its value to "" and setting the
+expiry date to the past.
+
+These two functions produce header lines, so should go between the
+HTTP response (e.g. HTTP/1.0 200 OK), and the "\r\n\r\n" seperating
+the header from the body. 
+
+To get the value of a cookie, call
+
+char *HTTP_CookieGet(httpRequest *request,
+                     const char *name);
+
+Note that the returned string must be freed afterwards.
+
+Currently no encoding is done on the value field;  this will be added
+later. As a result things could go seriously wrong if you include a
+';' or 'name=', where 'name' is a cookie name, in the value field.
+
+ 
+Example:
+--------
+
+  /* Status message */
+  strcpy(message,"HTTP/1.0 200 OK\r\n");
+  
+  HTTP_Write(request, message, strlen(message));
+
+  /* Cookie */
+  HTTP_CookieSend(request, "user", "niceuser", NULL,NULL,NULL,0);
+
+  strcpy(message,"Content-Type: text/html\r\n\r\n");
+
+  HTTP_Write(request, message, strlen(message));
+
+  /* Start of body */
+  strcpy(message, "<HTML><HEAD><TITLE>Cookie Test</TITLE></HEAD>\n");
+
+  strcat(message, "<BODY><center><h1>Cookie Test</h1></center>");
+
+  HTTP_Write(request, message, strlen(message));
+
+  strcpy(message, "<center>");
+  HTTP_Write(request, message, strlen(message));
+
+  value2 = HTTP_CookieGet(request,"user");
+
+  sprintf(message, "<p>Cookie is '%s'</p>\n", value2);
+
+  free(value2);
+
+...
+

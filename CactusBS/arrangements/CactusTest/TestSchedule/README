@@ -1,0 +1,9 @@
+Cactus Code Thorn TestSchedule
+Author(s)    : Rion Dooley
+Maintainer(s): Cactus team
+Licence      : LGPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+This thorn is used to test that all schedule bins are executed.

@@ -1,0 +1,45 @@
+# Main make.code.defn file for thorn Hydra
+# $Header$
+
+# Source files in this directory
+
+SRCS = 	Utils.F90 \
+	Whisky_ParamCheck.F90 \
+	Whisky_Scalars.F90 \
+	Whisky_EOS.c \
+	Whisky_EoSChangeGamma.F90 \
+        Whisky_Puncture.F90 \
+	Whisky_Startup.F90 \
+	Whisky_RegisterMask.c \
+	Whisky_RegisterVars.F90 \
+	Whisky_Boundaries.F90 \
+	Whisky_Prim2Con.F90 \
+        Whisky_Prim2Con_Ptwise.F90 \
+	Whisky_Prim2ConInitial.F90 \
+	Whisky_PreLoop.F90 \
+	Whisky_Loop.F90 \
+	Whisky_Source.F90 \
+	Whisky_Eigenproblem.F90 \
+	Whisky_Set_TP_GF.c  \
+	Whisky_Flux.F90 \
+	Whisky_FluxSplit.F90 \
+	Whisky_CalcUpdate.F90 \
+	Whisky_UpdateMask.F90 \
+	Whisky_SetTmunu.F90 \
+        Whisky_UIUC_Pressure_Reset.F90 \
+	Whisky_Maxima.F90 \
+	Whisky_Minima.F90 \
+	Whisky_Minima.cc \
+	Whisky_Particle.F90 \
+	Whisky_Shift.F90 \
+	Whisky_CarpetWeights.cc \
+	Whisky_PastTimelevels.cc \
+	Whisky_CheckNanMask.c \
+	Whisky_divB.F90 \
+        Whisky_calc_b2.F90
+###	Whisky_Weights.c \
+
+
+# Subdirectories containing source files
+SUBDIRS = 
+

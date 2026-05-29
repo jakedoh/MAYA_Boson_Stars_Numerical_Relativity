@@ -1,0 +1,33 @@
+# Parameter definitions for thorn IDFileADM
+# $Header$
+
+SHARES: ADMBase
+
+EXTENDS KEYWORD initial_lapse
+{
+  "read from file" :: "Read the initial lapse using the file reader.  Note that this only allows you to read the lapse from a file, it does not actually do it.  You still have to programme the file reader accordingly."
+}
+
+EXTENDS KEYWORD initial_shift
+{
+  "read from file" :: "Read the initial shift using the file reader.  Note that this only allows you to read the shift from a file, it does not actually do it.  You still have to programme the file reader accordingly."
+}
+
+EXTENDS KEYWORD initial_data
+{
+  "read from file" :: "Read the initial data using the file reader.  Note that this only allows you to read the metric from a file, it does not actually do it.  You still have to programme the file reader accordingly."
+}
+
+USES KEYWORD metric_type
+
+
+
+SHARES: StaticConformal
+
+USES KEYWORD conformal_storage
+
+
+
+SHARES: IO
+
+USES STRING filereader_ID_vars

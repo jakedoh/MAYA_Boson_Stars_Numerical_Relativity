@@ -1,0 +1,198 @@
+#include "cctk.h"
+#include "cctk_Parameters.h"
+#include "cctk_Arguments.h"
+#include "cctk_Functions.h"
+  subroutine interpolation(CCTK_ARGUMENTS)
+
+! This routine interpolate the initial data from a 1D .txt file
+! to a 3D cartesian grid 
+  implicit none
+      DECLARE_CCTK_ARGUMENTS
+      DECLARE_CCTK_PARAMETERS
+      DECLARE_CCTK_FUNCTIONS
+!>>>>>>>>>>>>>>>>>>>>>>>>>ARRAYS
+
+  real(kind=8), allocatable, dimension (:) :: phi,pre,rho_0,rho_00
+  real(kind=8), allocatable, dimension (:) :: alpha,m,xx,r_iso
+!  reaL(kind=8), allocatable, dimension (:,:,:)::masa
+!>>>>>>>>>>>>>>>>>>>>>>>>>>>>>GLOBAL NUMBERS
+
+!>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>AQUI VA LO QUE HABIA EN MAIN
+  CCTK_REAL dt_temp, grr,xp,yp,zp,rp,dx,x1,x2,masa,r_iso3D
+  integer i,j,k,l,ii
+  integer antes,despues
+  CCTK_REAL idx,p_c
+  CCTK_REAL  rr, drr, r_final,zero,third,half,one,two,pii
+! <-
+    CCTK_REAL Total_mass,Rest_mass,rho0_here,mu_here
+    integer i_surface
+
+! Some numbers
+
+   zero  = 0.0D0
+   third = 1.0D0/3.0D0
+   half  = 0.5D0
+   one   = 1.0D0
+   two   = 2.0D0
+   pii = 4.0d0*atan(1.0d0)
+
+    print *, 'pi=',pii
+    print *, 'one=',one
+    print *, 'two=',two
+
+! --->   ALLOCATE ARRAYS
+
+  allocate(alpha(0:Num_datos),m(0:Num_datos),r_iso(0:Num_datos))
+  allocate(pre(0:Num_datos),rho_0(0:Num_datos),rho_00(0:Num_datos))
+  allocate(phi(0:Num_datos),xx(0:Num_datos))
+!  allocate(masa(0:Num_datos,0:Num_datos,0:Num_datos))
+
+!===============================================
+
+  if(CCTK_EQUALS(initial_profile,"ZurekPage")) then
+
+     
+     
+        open(unit = 78,file='Zurek.txt',status='old')
+
+     print *,'----------------------------'
+     print *,'|  Reading  variables        |'
+     print *,'----------------------------'
+
+    do ii=1,Num_datos
+    read(78,*) xx(ii),rho_0(ii),pre(ii),m(ii),phi(ii)  
+        alpha(ii) = exp(phi(ii))
+        r_iso(ii) = 0.5d0*(sqrt(xx(ii)**2-2.0d0*m(ii)*xx(ii)) + xx(ii) - m(ii))  
+        rho_00(ii) = ( (1.0d0/3.0d0)*rho_0(ii) )**(3.0d0/4.0d0)    
+    end do
+    print *, 'dr obteined from file =',xx(2)-xx(1)
+    dx = xx(2)-xx(1)
+    print *, 'We succeded ',xx(1),rho_0(1),pre(1),m(1),phi(1),alpha(1)  
+
+!>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+!>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>HERE COMES THE INTERPOLATION>>>>>>>>>>>>>>>>>>>>>>>>>
+!>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    do k = 1, cctk_lsh(3)
+     do j = 1, cctk_lsh(2)
+       do i = 1, cctk_lsh(1)
+
+
+         antes=1
+             
+!        locate  points before and after r(i,j,k)
+           do l=1,Num_datos
+             if (xx(l).le.r(i,j,k)) then
+               antes = l
+             end if
+           end do	
+        despues = antes+1
+
+          rho(i,j,k) = (rho_00(despues)-rho_00(antes))/dx*(r(i,j,k)-xx(antes)) + rho_00(antes)
+
+ !         rho(i,j,k) = 1e-6
+         
+          press(i,j,k)= mygamma*rho(i,j,k)
+          alp(i,j,k) = (alpha(despues)-alpha(antes))/dx*(r(i,j,k)-xx(antes)) + alpha(antes)
+          masa= (m(despues)-m(antes))/dx*(r(i,j,k)-xx(antes)) + m(antes)
+          r_iso3D= (r_iso(despues)-r_iso(antes))/dx*(r(i,j,k)-xx(antes)) + r_iso(antes)
+!         
+!              grr = 1.0d0/(1.0d0 - 2.0d0*masa/r_iso)
+               grr = (one + 2.0d0*masa/r)**2
+
+               
+        !       grr=1.0d0/(alp(i,j,k)**2)
+               !                 print *, grr
+               xp = x(i,j,k)
+               yp = y(i,j,k)
+               zp = z(i,j,k)
+               rp = r(i,j,k)
+
+               if (rp.eq.0) then
+             !     grr=1.0d0/(1.0d0 - 2.0d0*masa/r(i,j,k)),
+                  gxx(i,j,k) = 1.0
+                  gyy(i,j,k) = 1.0
+                  gzz(i,j,k) = 1.0
+                  gxy(i,j,k) = 0.
+                  gxz(i,j,k) = 0.
+                  gyz(i,j,k) = 0.
+!                  gxx(i,j,k) = (xp/rp)**2 * grr + &
+!                      (zp**2 + yp**2)/(rp**2)
+!                  gyy(i,j,k) = (yp/rp)**2 * grr + &
+!                      (xp**2 + zp**2)/(rp**2)
+!                  gzz(i,j,k) = (zp/rp)**2 * grr + &
+!                      (xp**2 + yp**2)/(rp**2)
+
+
+               else
+
+              !    grr=1.0d0/(1.0d0 - 2.0d0*masa/r(i,j,k)),
+
+                  gxx(i,j,k) = (xp/rp)**2 * grr + &
+                      (zp**2 + yp**2)/(rp**2)
+                  gyy(i,j,k) = (yp/rp)**2 * grr + &
+                      (xp**2 + zp**2)/(rp**2)
+                  gzz(i,j,k) = (zp/rp)**2 * grr + &
+                      (xp**2 + yp**2)/(rp**2)
+     
+             if ((xp.eq.0) .and. (yp.eq.0)) then
+
+                     gxy(i,j,k) = 0.
+                     gyz(i,j,k) = 0.
+                     gxz(i,j,k) = 0.
+
+                  else
+            !         grr=1.0d0/(1.0d0 - 2.0d0*masa/r(i,j,k)),
+                     gxy(i,j,k) = (xp * yp/(rp**2) * grr&
+                    + (xp*yp*zp**2)/(rp**2*(xp**2+yp**2))&
+                    - (yp*xp)/(xp**2+yp**2))
+
+                     gxz(i,j,k) = (xp * zp/(rp**2)&
+                    * grr - (xp * zp/(rp**2)))
+
+                     gyz(i,j,k) = (yp * zp/(rp**2)&
+                    * grr - (yp * zp/(rp**2)))
+
+                  endif
+
+      
+               endif
+                   kxx(i,j,k)=zero
+                   kyy(i,j,k)=zero
+                   kzz(i,j,k)=zero
+                   kxy(i,j,k)=zero
+                   kxz(i,j,k)=zero
+                   kyz(i,j,k)=zero
+                   betax(i,j,k)=zero
+                   betay(i,j,k)=zero
+                   betaz(i,j,k)=zero
+                  
+                   eps(i,j,k)= press(i,j,k) / ( mygamma - one ) / rho(i,j,k)
+                   w_lorentz(i,j,k) = 1/sqrt(1.0-(&
+                                  gxx(i,j,k) * vel(0,i,j,k) * vel(0,i,j,k)+&
+                                  gyy(i,j,k) * vel(1,i,j,k) * vel(1,i,j,k)+&
+                                  gzz(i,j,k) * vel(2,i,j,k) * vel(2,i,j,k)+&
+                                2*gxy(i,j,k) * vel(0,i,j,k) * vel(1,i,j,k)+&
+                                2*gxz(i,j,k) * vel(0,i,j,k) * vel(2,i,j,k)+&
+                                2*gyz(i,j,k) * vel(1,i,j,k) * vel(2,i,j,k)))  
+
+            enddo
+          enddo
+        enddo
+
+        close(unit=78)
+
+            deallocate(phi,pre,rho_0,rho_00)
+            deallocate(xx,alpha,m,r_iso)
+                           
+  else if (CCTK_EQUALS(initial_profile,"MyTov")) then
+
+             print*, 'Are we here?? REALLY!!! that is not correct and if intended the TOV solver is not yet implemented'
+             stop
+!>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  end if
+  print *,
+  print *, 'PROGRAM INTERPOLATOR HAS FINISHED AND WORKS'
+
+  end subroutine interpolation
+
+

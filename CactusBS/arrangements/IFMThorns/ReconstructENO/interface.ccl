@@ -1,0 +1,6 @@
+# Interface definition for thorn ReconstructENO
+# $Header:$
+
+implements: ReconstructENO
+inherits: Whisky HydroBase StaticConformal PrimRecovery
+friend: Whisky

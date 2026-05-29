@@ -1,0 +1,46 @@
+# Interface definition for thorn Bremsstrahlung
+# $Header:$
+
+implements: Brems
+inherits: ADMBase GenericFD Boundary HydroBase SphericalSurface
+
+USES INCLUDE: GenericFD.h
+USES INCLUDE: carpet.hh
+USES INCLUDE: Symmetry.h
+USES INCLUDE: Boundary.h
+USES INCLUDE: HydroBase.h
+
+CCTK_REAL Brems_Group TYPE=GF tags='checkpoint="no"'
+{
+  Brems, RelBrems
+} "Contains both relativistic and non-relativistic local thermal Bremsstrahlung luminosity"
+
+CCTK_REAL BremsScalars[intvolumes] TYPE=scalar tags='checkpoint="no"'
+{
+  TotBrems, TotRelBrems
+} "Scalars related to Bremsstrahlung integration."
+
+CCTK_REAL BeamedBrems TYPE=ARRAY DIM=2 SIZE=intvolumes,num_obs_angles DISTRIB=CONSTANT tags='checkpoint="no"'
+{
+  TotDopBrems, TotDopRelBrems
+} "Relativistically beamed Bremsstrahlung integrations."
+
+private:
+CCTK_INT SymmetryFactor TYPE=scalar tags='checkpoint="no"' "Factor for symmetries"
+CCTK_REAL EmissFact TYPE=scalar tags='checkpoint="no"' "Factor for emissivity"
+CCTK_INT Sym_Signs[24] TYPE=scalar tags='checkpoint="no"' "Velocity transformation Signs for Doppler factor terms"
+
+CCTK_INT FUNCTION \
+    GetBoundarySpecification (CCTK_INT IN size,                  \
+                              CCTK_INT OUT ARRAY nboundaryzones, \
+                              CCTK_INT OUT ARRAY is_internal,    \
+                              CCTK_INT OUT ARRAY is_staggered,   \
+                              CCTK_INT OUT ARRAY shiftout)
+USES FUNCTION GetBoundarySpecification
+
+CCTK_INT FUNCTION                         \
+    GetSymmetryBoundaries                 \
+        (CCTK_POINTER_TO_CONST IN cctkGH, \
+         CCTK_INT IN size,                \
+         CCTK_INT OUT ARRAY symbnd)
+USES FUNCTION GetSymmetryBoundaries

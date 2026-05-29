@@ -1,0 +1,4 @@
+# Configuration definition for thorn HydroBase
+
+REQUIRES Boundary CartGrid3D SpaceMask
+

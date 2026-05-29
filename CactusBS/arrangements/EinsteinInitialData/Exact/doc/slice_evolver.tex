@@ -1,0 +1,402 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentstyle[a4wide]{article}
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title{Documentation for the slice evolver in Cactus thorn Exact}
+
+\author{Carsten Gundlach\\ Faculty for Mathematical Studies\\
+University of Southampton\\ Southampton SO17 1BJ, UK}
+
+\date{6 June 02}
+
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Introduction}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+This text gives all the formulas that are used in the slice evolver of
+Cactus thorn Exact. I wrote it originally for a joint paper with
+Miguel Alcubierre and Paul Walker that we never finished. The two last
+sections are the original code documentation I wrote.
+
+Here are some ways of using exact solutions in numerical relativity:
+
+1) Use preferred slices of exact solutions to obtain initial data,
+lapse and shift. Evolve with this lapse and shift, and with exact
+boundary data or some ad hoc BC.
+
+2) Obtain initial data (solutions of the constraints) without
+symmetries by using an arbitrary slice in an exact solution. 
+
+3) Evolve these data with an arbitrary lapse and shift, and at the
+same time evolve the slice with the same lapse and shift.
+
+a) Test accuracy of the code.
+
+b) Test stability and accuracy of inner boundary conditions.
+
+c) Test effect of outer boundary conditions on introducing
+``spurious'' waves.
+
+4) Test gauge conditions on their own, without the need for stable BC
+and a stable evolution scheme, by evolving the slice only, and faking
+the evolution of the Cauchy data. See if these can smooth a highly
+distorted slice of Kerr or Schwarzschild.
+
+The main idea of thorn Exact is that each physically different
+spacetime is stored only in one set of coordinates, namely those that
+are the standard for it and which are adapted to its symmetries
+(``preferred coordinates''). One can then obtain it in any other
+coordinate system, in particular one that hides the symmetries, by a
+numerical coordinate transformation. As we are interested in a 3+1
+split of the metric, and in Cauchy data, the fundamental object is a
+slice $X^A(x^i)$ embedded in the spacetime. The four coordinates $X^A$
+are the preferred ones, and the three coordinates $x^i$ are the ones
+intrinsic to the slice.  From $X^A(x^i)$ and the four-metric $g_{AB}$
+in the preferred coordinates, we compute the three-metric and
+extrinsic curvature on the slice. We can then either evolve the $g$
+and $K$ with the usual methods, or, if we want to test only a gauge
+condition, we can evolve the slice itself, and read off $g$ and $K$ in
+its new position. 
+
+Since Miguel and I wrote the original code, several physical
+spacetimes have been implemented in a number of coordinate
+systems. However, if you want an exact solution in completely generic
+coordinates, or if you want to test a gauge condition, the slice
+evolver is the way to go.
+
+Alas, the \verb|"Minkowski/conf wave"| model doesn't work with the
+arbitrary-slice evolver.  There's no warning, you'll just silently
+get wrong results.  Sigh\dots
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Extracting Cauchy data on an arbitrary slice}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+An arbitrary slice in the exact solution, together with a coordinate
+system $x^i$ on this slice is given through four scalar functions
+$X^A$ by $x^A=X^A(x^i)$, where $x^A$ are the preferred coordinates of
+the exact solution, and $(t,x^i)$ are the coordinates of the numerical
+code.  The induced 3-metric on the slice is simply
+\begin{equation}
+\label{3-metric}
+g_{ij} = {X^A}_{,i} {X^B}_{,j} g_{AB},
+\end{equation}
+where we use a comma to denote partial derivatives. The index or the
+context  will always make
+clear if these are partial derivatives in the $x^A$ or $(t,x^i)$
+coordinates. Next we construct the unit normal vector to the slice
+as
+\begin{equation}
+n^A = N \bar n^A, \qquad N = (\bar n^A \bar n^B g_{AB})^{-1/2}
+\end{equation}
+where a non-unit normal vector $\bar n^A$ is 
+\begin{equation}
+\bar n^A = g^{AB} \epsilon_{BCDE} {X^C}_{,1} {X^D}_{,2} {X^E}_{,3}.
+\end{equation}
+Here $\epsilon_{BCDE}$ is any totally antisymmetric tensor, for
+example the one given by $\epsilon_{0123}=1$ in coordinates $X^A$. We
+only have to make sure that $\bar n^A$ is future-pointing.
+
+The extrinsic curvature $K_{ij}$ of $\Sigma$ is calculated easily if
+we extend the coordinates $x^i$ on $\Sigma$ to geodesic coordinates
+$(x^i,t)$ on a neighbourhood of $\Sigma$. In these coordinates,
+\begin{equation}
+\label{gdot}
+K_{ij} = -{1\over 2}{\partial\over\partial t} g_{ij}  \hbox{ (for } 
+\alpha=1 \hbox{ and } \beta^i = 0 \hbox{ only).}
+\end{equation}
+In the same coordinates we also have 
+\begin{equation}
+{\partial X^A \over \partial t} = n^A \hbox{ (for } 
+\alpha=1 \hbox{ and } \beta^i = 0 \hbox{ only).}
+\end{equation}
+Substituting (\ref{3-metric}) into (\ref{gdot}), and using the trivial
+commutation relation
+\begin{equation}
+\left[{\partial\over\partial t}, {\partial\over\partial
+x^i}\right] = 0, 
+\end{equation}
+we obtain
+\begin{equation}
+\label{Kij1}
+K_{ij} = -{1\over 2}\left({n^A}_{,i} {X^B}_{,j} + {X^A}_{,i} {n^B}_{,j}\right)
+g_{AB}  -{1\over 2}{X^A}_{,i} {X^B}_{,j} n^C g_{AB,C}.
+\end{equation}
+Note that we are now back within a single slice $\Sigma$, and this
+result is valid without reference to a particular coordinate system on
+spacetime beyond the slice.  This gives us a practical algorithm for
+calculating $g_{ij}$ and $K_{ij}$, given the four functions $X^A$ on a
+numerical $x^i$ grid. We obtain the ${X^A}_{,i}$ by finite differencing on
+the grid, calculate $g_{ij}$ and $n^A$ algebraically for each point on
+the grid, finite difference again to obtain ${n^A}_{,i}$, and
+calculate $K_{ij}$ again algebraically. The metric coefficients
+$g_{AB}(x^C)$ are given in closed form, and are accessed in practice
+through a function call. We can obtain the $g_{AB,C}$ in closed form,
+but in order to save labor and the scope for error, we actually obtain
+them by finite differencing. The error incurred is negligible, as we
+are not bound to a numerical grid, but can use a tiny finite
+differencing interval $\Delta x^C$.
+
+The term ${n^A}_{,i}$ contains both second derivatives of $X^A$ and
+first derivatives of $g_{AB}$. While the former must necessarily be
+calculated by finite differencing on the grid, the latter can be
+obtained to higher accuracy using the analytic expressions for
+$g_{AB,C}$. (This is useful at least when $X^A_{,i}$ are small.)
+Therefore we prefer to eliminate ${n^A}_{,i}$ in favor of
+${X^A}_{,ij}$ for numerical purposes. We do this by taking the
+derivative of the identity
+\begin{equation}
+n^A {X^B}_{,j} g_{AB} = 0,
+\end{equation}
+and obtain
+\begin{equation}
+\label{Kij2}
+K_{ij} =  {X^A}_{,ij} n^B g_{AB}  + {1\over 2} \left(
+{X^A}_{,i} {X^C}_{,j} n^B + {X^C}_{,i} {X^B}_{,j} n^A  
+- {X^A}_{,i} {X^B}_{,j} n^C 
+\right)g_{AB,C}.
+\end{equation}
+
+In the hyperbolic Bona-Mass\'o formulation of the Einstein equations,
+the spatial derivatives of the metric form part of the initial
+data. Again we split these up into derivatives of the slicing and
+the exact metric:
+\begin{equation}
+g_{ij,k}= \left({X^A}_{,ik} {X^B}_{,j} 
++ {X^A}_{,jk} {X^B}_{,i} \right) g_{AB}+ 
+{X^A}_{,i} {X^B}_{,j} {X^C}_{,k}  g_{AB,C}.
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Evolving a slice in time}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+To advance a given slice in time, for a given lapse $\alpha(x^i)$ and shift
+$\beta^i(x^j)$, we use the definition of the vector field
+$\partial/\partial t$ to obtain
+\begin{equation}
+{\partial  X^A \over\partial t}= \alpha n^A + \beta^i {X^A}_{,i},
+\end{equation}
+with $n^A$ defined above in terms of $X^A$ and their first and second
+derivatives.  This is a partial differential equation for the four
+scalar functions $X^A$. In a numerical relativity situation, we want
+to evolve this equation for an interval $\Delta t$ in which $\alpha$
+and $\beta^i$ are considered as fixed functions of the coordinates
+$x^i$. To compare this scheme with a second order convergent numerical
+relativity code, the numerical error must be of $O(\Delta t^3)$. One
+way of doing this is using a Runge-Kutta like approach. In this we
+evolve forward in time by $(\Delta t)/2$, recompute ${X^A}_{,i}$ and
+$n^A$, and leapfrog over this half step. 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Using the preferred slicing}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Things simplify if we use the preferred slicing and spatial
+coordinates 
+\begin{equation}
+X^0 = t, \qquad X^I = x^i.
+\end{equation}
+Then we  have $g_{ij}=g_{IJ}$, and the expression for the extrinsic
+curvature simplifies to
+\begin{equation}
+\label{Kij3}
+K_{ij} = {1\over 2\alpha} \left(-g_{IJ,0} + g_{IJ,K} \beta^K
++ {\beta^K}_{,I} g_{KJ} + {\beta^K}_{,J} g_{KI} \right).
+\end{equation}
+Here we have used the expressions for the lapse and shift in the
+preferred slicing
+\begin{equation}
+\alpha=(-g^{00})^{-1/2}, \qquad \beta^I = -{g^{0I}\over g^{00}}.
+\end{equation}
+These expressions are useful in their own right, as we may want to use
+the analytic value of the lapse and shift in the preferred slicing for
+the numerical evolution.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Code documentation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Rudimentary documentation for Cactus thorn exact.
+
+CG 4.11.97, revised 28.1.98 (PW 28.1.98, 4.9.98 on blend BC PW 2.2.98 on Comp)
+
+This thorn checks cactus against an exact solution.
+
+1) An exact solution with a boost and a rotation Killing vector. The
+solution comes out of Eqns. (2.1), (2.8) and (2.10) of J. Bicak,
+C. Honselaers and B. G. Schmidt, Proc. Royal Soc. London A 390,
+411-419 (1983).
+
+2) Schwarzschild in Eddington-Finkelstein coordinates.
+
+One can separately ask the thorn to provide initial data, the lapse
+and shift, and boundary data, from the exact solution. This means that
+cactus can be tested without the complications of, say, maximal
+slicing, or implementing an outer boundary conditions. But one can
+also test these, using the thorn only to obtain initial data.
+
+Look at exact\_rfr.F. There are three decisions:
+
+1) Set initial data (gij and Kij, and Vs and Ds of BM) and initial
+lapse and shift from the exact solution? Yes, if model =
+"exact". In this case, register exactinitialize with rfr as
+CACTUS\_INITIAL.  Unless lapseinit = "exact" and shift = "exact"
+are also set, there will be an error message, but other values will be
+tolerated. IMPORTANT: The thorn then assumes that after it has been
+called, something else will overwrite the lapse and shift.
+
+2) Are lapse and shift to be set from the exact solution during
+runtime? Yes, if slicing = "exact" and shift = "exact". If one
+is set, the other must be, too. Register exactgauge with
+rfr as	CACTUS\_PRESTEP. Other gauge choices, eg. minmax or geodesic,
+are possible.
+
+3) Are boundary data to be obtained from the exact solution. Yes, if
+bound = "exact". Then register exactboundary with rfr as
+CACTUS\_BOUND. Another choice could be "flat".
+
+4) Blending boundary conditions are available. These will set the
+values of g, K, v, and D to an exact solution outside some radius, the
+evolved value inside some radius, and a linear blend in between. They
+are controlled by various parameters starting with exblend. See
+exactblendbound.F for more documentation and comment. To activate
+blended boundary conditions use
+
+bound = "exact blend"
+
+This blending technique is the same as the GC; on a radius between r1 and   
+r2 a linear combination of the numerical and exact solution is placed on  
+the grid, scaled in r (so at r1 you get all numerical, at r2, all exact,  
+and half way between 50/50). Above r2 the exact solution is simply 
+injected onto the grid.        
+
+You can also blend in a cartesian direction (eg, only boundary layers
+within n * dx of the grid) using bound = "exact cartblend". Control n
+with exblend\_width, with $< 0$ meaning width * dx, and $> 0$ meaning width
+in coordinate space.
+
+Generally, this thorn could be broken by other thorns overwriting what
+it does when they should not, or by not overwriting the initial lapse
+and shift if they should. Therefore CAREFUL with the order of calling.
+
+Exact Cauchy data, lapse and shift, and BM variables are obtained from
+a routine that provides the 4-metric and its inverse. Its output is
+differentiated numerically where necessary. This poses no problem, as
+we are numerically differentiating analytic expressions with a very
+small epsilon (not on the grid!)
+
+Additionally this routine will compute convergence coefficients and
+differences between the exact solution in runtime, a functionality
+previously in thorn\_Comparison.  To use this feature, you need to run
+in convergence mode (convergence="yes") and then activate the
+following parameters:
+
+comparison = "yes"
+comp\_fields = "gxx gyy" 
+
+If you list the comp\_fields in the slice fields then differences
+between the fields and the exact solutions will be output. The
+comparison is done against the exactmodel.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Code structure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Code structure for faking a GR time evolution by evolving a surface
+embedded in an exact solution. 
+
+model = "slice" extracts Cauchy data from an arbitrary embedded slice 
+in an exact solution. The solution in question is selected by, eg.
+exactmodel = "fakebinary". model="exact" is now in effect a subclass of
+model = "slice", although implemented independently.
+
+system = "slice" then fakes a time evolution, by evolving the slice in
+the exact solution, for arbitrary given lapse and shift, and
+extracting Cauchy data at each time step. model = "slice" is then
+implied and redundant.
+
+The use of this is to test BM and ADM against exact solutions, but
+mainly to test new elliptic gauge conditions in a 3D setting without
+having to evolve BH spacetimes. Note that the "exact solution" need
+only be a 4-metric given in a subroutine, but it need not obey the
+Einstein equations. Examples so far are Miguel's bowl metric and Kip's
+fake binary metric (just coded up by Bernd in thorn\_exact.)
+
+Notation: $x^A = X^A(x^i,t)$. A=1,4 corresponding to X,Y,Z,T. 
+
+Grid functions: $x^A$ are stored in GFs slicex, slicey, slicez,
+slicet.  Temporary storage slicetmpx, slicetmpy, slicetmpz,
+slicetmpt. These two groups are referred to in the following as SLICE
+and TMP.
+
+{\obeylines
+
+CACTUS\_INITIAL slice\_initialize: 
+\quad	initialize $x^A$ in SLICE
+\quad	call slice\_data
+\quad	call boundaries
+
+CACTUS\_EVOL slice\_evolve: 
+\quad	Loop over all points:
+\quad\quad		evolve from SLICE to TMP1 using time derivative in TMP2
+\quad\quad\quad			(Lax step, or forward in time to mid point)
+\quad	end do	
+\quad	call linextraponebound on SLICE
+\quad	Loop over interior points:
+\quad\quad		calculate $x^A_{,i}$ from TMP1	
+\quad\quad		include slice\_normal
+\quad	end do	
+\quad	call linextraponebound on TMP2
+\quad	Loop over all points:
+\quad\quad		update SLICE using TMP2
+\quad\quad\quad			(leapfrog, or centered in time, using $dx^A/dt$ in temp)
+\quad	end do
+\quad	call linextraponebound on SLICE
+\quad	call slice\_data	
+
+slice\_data:
+\quad	Loop over interior points
+\quad\quad		calculate $x^A_{,i}$ from SLICE
+\quad\quad		include slice\_normal
+\quad\quad		calculate $g_ij$
+\quad\quad		calculate $x^A_{,ij}$ from SLICE
+\quad\quad		calculate $g_{AB,C}$
+\quad\quad		calculate $K_ij$
+\quad\quad		(if BM) calculate $D_{ijk}$, $V_i$
+\quad	end do	
+\quad	call linextraponebound on TMP2
+			
+slice\_normal: to be used inside a loop over interior points.
+\quad		calculate $n_A$
+\quad		call exactmetric
+\quad		calculate $n^A$
+\quad		calculate $dx^A/dt$ in TMP2
+
+}
+						
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

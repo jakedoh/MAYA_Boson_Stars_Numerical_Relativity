@@ -1,0 +1,22 @@
+Cactus Code Thorn WaveExtract
+Thorn Author(s)     : Frank Herrmann <herrmann@aei.mpg.de>
+Thorn Maintainer(s) : Christian Reisswig <reisswig@aei.mpg.de>
+--------------------------------------------------------------------------
+
+Purpose of the thorn:
+
+Does Wave extraction and only wave extraction using the Zerilli formalism.
+This thorn was formerly Extract, but that got overloaded with lots of stuff.
+
+
+
+NOTE:
+
+This thorn is a modification to the original WaveExtract as found in
+AEIDevelopment and has been extended to be OMP parallel and to use
+CarpetInterp2.  Some features as working with corotating coordinates
+have been removed.
+
+IMPORTANT: The old version in AEIDevelopment/WaveExtract is NOT
+           working with general coordinates (especially radial
+           stretching)!!  Use this thorn instead!

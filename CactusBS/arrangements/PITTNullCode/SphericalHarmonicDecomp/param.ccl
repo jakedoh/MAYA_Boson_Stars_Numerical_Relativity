@@ -1,0 +1,105 @@
+# Parameter definitions for thorn SphericalHarmonicDecomp
+# $Header:$
+
+SHARES: IO
+
+USES CCTK_STRING out_dir AS io_out_dir
+
+PRIVATE:
+
+CCTK_STRING out_dir "output directory" STEERABLE=ALWAYS
+{
+  "^$" :: "Empty stting -> use IO::out_dir"
+  ".+" :: "directory name"
+} ""
+
+CCTK_INT max_spin "maximum absolute spin of fields"
+{
+  0:* :: "positive only"
+} 2 
+
+CCTK_INT num_l_modes "number of l modes ... not lmax"
+{
+  1:* :: "1 or larger"
+} 7
+
+#CCTK_INT num_m_modes "number of m modes ... = 2*mmax + 1"
+#{
+#  1:*:2 :: "must be odd and 1 or larger"
+#} 15
+
+CCTK_INT num_n_modes "number of n modes"
+{
+  1:* :: " 1 or larger"
+} 15
+
+CCTK_INT num_mu_points "number of points in mu direction"
+{
+  1:* :: ""
+} 15
+
+CCTK_INT num_phi_points "number of points in phi directions"
+{
+  1:* :: ""
+} 31
+
+CCTK_INT num_x_points "number of points in phi directions"
+{
+  1:* :: ""
+} 31
+
+CCTK_REAL Rin "inner radius for decomp"
+{
+  0:* :: "positive"
+} 10.0
+
+CCTK_REAL Rout "outer radius for decomp"
+{
+  (0:* :: "positive > Rin"
+} 100.0
+
+
+
+CCTK_REAL EM_Rin[100] "inner radius for decomp"
+{
+  0:* :: "positive"
+} 10.0
+
+CCTK_REAL EM_Rout[100] "outer radius for decomp"
+{
+  (0:* :: "positive > Rin"
+} 100.0
+
+CCTK_INT num_radii "number of radii"
+{
+  1:99 :: ""
+}1
+
+CCTK_INT output_m_max "don't dump m modes larger than this"
+{
+  0:* :: "positive or zero"
+} 100
+
+CCTK_INT output_l_max "don't dump l modes larger than this"
+{
+  0:* :: "positive, but if l_max < |s| then no output generated"
+} 100
+
+BOOLEAN sync_file_each_time "not yet activated"
+{
+} "yes"
+
+BOOLEAN do_test "to test or not to test"
+{
+} "no"
+
+CCTK_INT extract_spacetime_metric_every ""
+{
+  0:* :: "0 or positive. 0 means never"
+} 0
+
+CCTK_KEYWORD action_on_hdf5_error  "What to do" STEERABLE=ALWAYS
+{
+  "abort" :: "stop the run."
+  "alert" :: "only alert the user"
+} "alert" 

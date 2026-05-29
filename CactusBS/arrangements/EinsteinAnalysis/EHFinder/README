@@ -1,0 +1,48 @@
+CVS info   : $Header$
+
+Cactus Code Thorn EHFinder
+Authors    : Peter Diener <diener@aei.mpg.de>
+Maintainer : Peter Diener <diener@aei.mpg.de>
+--------------------------------------------------------------------------
+
+Purpose of the thorn:
+
+To find the event horizon of a numerical spacetime by integrating a null
+surface backwards in time.
+
+The surface will be parametrized as the 0 value isosurface of a level
+set function. This ensures that it is possible to handle cases when the
+topology changes (when evolving backwards in time) from one common event
+horizon to two (or more) individual event horizons.
+
+
+Documentation:
+
+The documentation can be found in the Thorn Guide provided with this
+Thorn. For additional details see gr-qc/0305039.
+
+
+History:
+
+This event horizon finder was written by Peter Diener in 2002-2003.
+
+
+Copyright & Licensing:
+
+This thorn is copyright (C) 2002-2003
+by Peter Diener <diener@aei.mpg.de>.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this thorn (see the file COPYING in this directory);
+if not, write to the Free Software Foundation, Inc., 59 Temple
+Place, Suite 330, Boston, MA 02111-1307 USA

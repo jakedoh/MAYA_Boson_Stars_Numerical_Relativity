@@ -1,0 +1,27 @@
+ActiveThorns = "TestPar"
+
+TestPar::string1 = "value"
+
+TestPar::string2 = "
+        value
+"
+
+TestPar::string3 = "
+        value
+        # comment
+"
+
+TestPar::string4 = "
+        # comment
+        value
+"
+
+TestPar::string5 = "
+        value
+        # comment
+        value
+"
+
+TestPar::string6 = "
+        # comment
+"

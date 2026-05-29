@@ -1,0 +1,18 @@
+# Schedule definitions for thorn IHSpin
+# $Header:$
+
+STORAGE: ihspin_spin,ihspin_spin_x,ihspin_spin_y,ihspin_spin_z,ihspin_mom_x,ihspin_mom_y,ihspin_mom_z
+
+schedule ihspin_init at CCTK_BaseGrid
+{
+  lang: C
+  options: global
+} "initialize ihspin stuff"
+
+schedule ihspin at CCTK_ANALYSIS
+{
+  lang: C
+  options: global
+} "compute ih spin"
+
+

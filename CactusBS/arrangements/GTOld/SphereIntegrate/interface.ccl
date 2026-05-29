@@ -1,0 +1,8 @@
+# Interface definition for thorn SphereIntegrate
+# $Header:$
+
+implements: SphereIntegrate
+inherits:
+
+INCLUDE HEADER: sphereintegrate.h in sphereintegrate.h
+

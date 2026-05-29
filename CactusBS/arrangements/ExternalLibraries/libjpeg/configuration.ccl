@@ -1,0 +1,8 @@
+# Configuration definitions for thorn libjpeg
+
+PROVIDES libjpeg
+{
+  SCRIPT configure.sh
+  LANG bash
+  OPTIONS LIBJPEG_INSTALL_DIR LIBJPEG_DIR
+}

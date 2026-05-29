@@ -1,0 +1,200 @@
+% Hisaaki Shinkai shinkai@atlas.riken.go.jp <- PL use this address
+%-----------------------------------------------------------------------
+% KTsol.tex version 0.1  19980603
+% Hisaaki Shinkai shinkai@wurel.wustl.edu
+%-----------------------------------------------------------------------
+%00000000111111111122222222223333333333444444444455555555556666666666777
+%-----------------------------------------------------------------------
+\documentstyle[11pt]{article}
+% A4 tate -----------------------------
+\topmargin      0.3in
+\oddsidemargin  0.0cm
+\evensidemargin 0.0cm
+\textwidth     16.0cm
+\textheight    23.0cm
+\headsep        0.0in
+%--- US letter size
+\topmargin     -0.0in
+\headsep        0.0in
+\oddsidemargin   0.0in
+\evensidemargin  0.0in
+\textwidth       6.5in
+\textheight      8.5in
+%-----------------------------------------------------------------------
+%------------------------- macro for begin-eqs
+\def\non{\nonumber \\}
+\def\nonn{\nonumber \\ &&}
+\def\be{\begin{equation}}
+\def\en{\end{equation}}
+\def\bear{\begin{eqnarray}}
+\def\enar{\end{eqnarray}}
+\def\beas{\begin{eqnarray*}}
+\def\enas{\end{eqnarray*}}
+%--------------->>>>>>>>>>>> commands for number of eqs. (1.1a)(1.1b)...
+% following definition is for book or report style
+%\renewcommand{\theequation}{\thechapter.\theenumi\alph{equation}}
+\def\bera{ \setcounter{enumi}{\value{equation}}
+            \addtocounter{enumi}{1}
+            \setcounter{equation}{0}
+            \renewcommand{\theequation}{\theenumi\alph{equation}}
+            \begin{eqnarray} }
+\def\enra{ \end{eqnarray}
+            \setcounter{equation}{\value{enumi}}
+            \renewcommand{\theequation}{\arabic{equation}}  }
+%-----------------------------------------------------------------------
+\def\non{\nonumber \\}
+\def\nonn{\nonumber \\ &&}
+\def\dsp{\displaystyle}
+\def\mova{\left( M \over a\right)}
+%------------------------- macro for lists
+\def\been{\begin{enumerate}}
+\def\enen{\end{enumerate}}
+\def\beit{\begin{itemize}}
+\def\enit{\end{itemize}}
+
+\def\pl{ \partial}
+\def\half{{1 \over 2}}
+%-----------------------------------------------------------------------
+\begin{document}
+\noindent
+filename="KTsol.tex" HShinkai ({\tt shinkai@atlas.riken.go.jp})
+
+\begin{center}
+
+{\Large\bf Multi Black Hole solutions}
+
+\end{center}
+\begin{flushright}
+version 0.1 ~~~
+19980603 Hisaaki Shinkai
+\end{flushright}
+
+\section{Majumdar-Papapetrou solution}
+Majumdar-Papapetrou (MP)
+solutions\cite{MP} is a multi-black-hole solution to Einstein's
+equation.
+Each black holes are charged maximally, $Q=M$,  and
+the balance between gravitational attraction and
+electrostatic repulsion among the black holes causes each to maintain
+its position relative to the others eternally.
+The MP solutions are given by
+\be
+ds^2=-{1 \over \Omega^2} dt^2+ \Omega^2(dx^2+dy^2+dz^2),
+\label{MPmetric}
+\en
+$$\mbox{where}~~
+\Omega=1+\sum_{i=1}^N {M_i \over  r_i},~~ \mbox{and}~~
+  r_i=\sqrt{(x-x_i)^2+(y-y_i)^2+(z-z_i)^2}.
+$$
+where $M_i$ and $(x_i, y_i, z_i) \in {\bf R}^3$ are masses and
+locations of black holes.
+
+
+\section{Kastor-Traschen solution}
+
+
+The  Kastor-Traschen (KT) solutions \cite{KT} is the cosmological
+version of MP solution.  This is a multi-black-hole solution
+  to Einstein's
+equation with cosmological constant,  contains arbitrary many
+$Q=M$ black holes that participate in an overall de Sitter expansion
+or contraction.  In the $\Lambda \rightarrow 0$
+limit, the KT solutions reduce to the MP solution.
+ 
+To write the KT
+metric, we first choose $(x_i, y_i, z_i) \in {\bf R}^3$,
+$i=1,2,\cdots,N$ for locations of black holes, then
+\be
+ds^2=-{1 \over \Omega^2} dt^2+a(t)^2 \Omega^2(dx^2+dy^2+dz^2),
+\label{KTmetric}
+\en
+$$\mbox{where}~~
+\Omega=1+\sum_{i=1}^N {M_i \over a r_i},~~ a=e^{Ht}, ~~~
+H=\pm \sqrt{\Lambda \over 3}.$$
+$$\mbox{and}~~ r_i=\sqrt{(x-x_i)^2+(y-y_i)^2+(z-z_i)^2}$$
+where we interpret $M_i$
+as the mass of the $i{\rm th}$ black hole, although we have
+neither an asymptotically flat region nor event horizons available
+to convert this naive interpretation into a rigorous one.
+
+If $H<0$, then the solution represents ``incoming" charged BHs.
+If $H>0$, then the solution represents ``outgoing" charged WHs.
+
+
+The principal null directions of KT solutions are illustrated in
+\cite{KTpnd}.
+The horizon structure of KT solutions are discussed in \cite{KThorizon}.
+
+
+%-----------------------------------------------------------------------
+\newpage
+\appendix
+\section{Reissner-Nordstr{\o}m-de Sitter solution }
+It will be interesting to see such a cosmological extention for
+a single black hole case.
+The global structure of this solution is discussed in
+\cite{RNdShorizon}.
+
+\subsection{Reissner-Nordstr{\o}m-de Sitter solution (static coord) }
+\be
+ds^s=-V(R)dT^2 + {1 \over V(R)} dR^2 + R^2 d\Omega^2
+\en
+$$\mbox{where}~~
+V(R)=1-{2M\over R}+{Q^2 \over R^2}-{\Lambda \over 3} R^2. $$
+\subsection{Reissner-Nordstr{\o}m-de Sitter solution (cosmological coord) }
+By the transformation
+$$
+a(t) r =  R-M, ~~~
+t= T+h(R), ~~~
+{dh \over dR} = - {HR^2 \over (R-M)V(R)}
+$$
+and setting $Q=M$, we will get the cosmological coordinate version of
+RNdS as
+\be
+ds^2=-{1\over F^2}dt^2 + {a^2(t) F^2} ( dr^2 +  r^2 d\Omega^2)
+\en
+$$\mbox{where}~~
+F=1+{M\over ar}, ~~~  a=e^{Ht}, ~~~
+H=\pm \sqrt{\Lambda \over 3}.$$.
+
+The horizons appeare at
+$$
+r_\pm = {1\over 2 a(t) |H| } ( 1 - 2 M |H| \pm \sqrt{1 - 4 M |H|} )
+$$
+which are corresponds to de Sitter horizon ($r_+$) and
+outer BH horizon  ($r_-$),  respectivly.
+
+
+
+
+%%**********************************************************************
+%23456789012345678901234567890123456789012345678901234567890123456789012
+
+\baselineskip .15in
+\begin{thebibliography}{99}
+
+\bibitem{MP}
+S. D. Majumdar, Phys. Rev. {\bf 72}, 930 (1947); A. Papapetrou,
+Proc. R. Ir. Acad. Sect. {\bf A51}, 191 (1947);
+J. B. Hartle and S. W. Hawking, Commun. Math. Phys. {\bf 26}, 87
+(1972).
+
+
+\bibitem{KT}
+D. Kastor and J. Traschen,  Phys. Rev. {\bf D47}, 5370 (1993).
+
+\bibitem{KTpnd}
+L. Gunnarsen, H. Shinkai and K. Maeda, Class. Quantum Grav. {\bf 12},
+133 (1995).
+
+\bibitem{KThorizon}
+K. Nakao, T. Shiromizu and S. A. Hayward,
+Phys. Rev. {\bf D52}, 796 (1995).
+
+\bibitem{RNdShorizon}
+D. R. Brill and S. A. Hayward
+Class. Quant. Grav. {\bf 11}, 359 (1994).
+ 
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,110 @@
+# Schedule definitions for thorn IDAnalyticBH
+# $Header$
+
+if (CCTK_Equals(initial_data,"schwarzschild") ||
+    CCTK_Equals(initial_data,"kerr") ||
+    CCTK_Equals(initial_data,"bl_bh") ||
+    CCTK_Equals(initial_data,"misner_bh") ||
+    CCTK_Equals(initial_data,"multiple_misner"))
+{
+  schedule IDAnalyticBH_ParamChecker at CCTK_PARAMCHECK
+  {
+    LANG: C
+    OPTIONS: global
+  } "Construct parameters for analytic black hole solutions"
+}
+
+if (CCTK_Equals(initial_data,"schwarzschild")) 
+{ 
+	
+   schedule Schwarzschild in ADMBase_InitialData
+   {
+     STORAGE: confac[1]
+     LANG: C
+     READS: GRID::coordinates
+     WRITES: StaticConformal::conformal_state(everywhere)
+     WRITES: StaticConformal::psi(everywhere)
+     WRITES: StaticConformal::confac_1derivs(everywhere)
+     WRITES: StaticConformal::confac_2derivs(everywhere)
+     WRITES: ADMBase::metric(everywhere)
+     WRITES: ADMBase::alp(everywhere)
+     WRITES: ADMBase::curv(everywhere)
+   } "Construct initial data for a single Schwarzschild black hole"
+}
+else if (CCTK_Equals(initial_data,"kerr")) 
+{ 
+
+# The Kerr stuff uses the conformal factor internally, so
+# so make sure that the conformal factor has storage during
+# this routine
+   schedule KerrID in ADMBase_InitialData
+   {	
+     STORAGE: confac[1]
+     LANG: C
+     READS: GRID::x, GRID::y, GRID::z
+     WRITES: StaticConformal::conformal_state(everywhere)
+     WRITES: StaticConformal::psi(everywhere)
+     WRITES: StaticConformal::confac_1derivs(everywhere)
+     WRITES: StaticConformal::confac_2derivs(everywhere)
+     WRITES: ADMBase::metric(everywhere)
+     WRITES: ADMBase::alp(everywhere)
+     WRITES: ADMBase::curv(everywhere)
+     WRITES: ADMBase::shift(everywhere)
+   } "Construct initial data for a single Kerr black hole"
+
+}
+else if (CCTK_Equals(initial_data,"bl_bh")) 
+{ 
+# The Brill-Lindquist stuff uses the conformal factor internally, so
+# so make sure that the conformal factor has storage during
+# this routine
+   schedule BrillLindquist in ADMBase_InitialData
+   {
+     STORAGE: confac[1]
+     LANG: C
+     READS: GRID::x, GRID::y, GRID::z
+     WRITES: StaticConformal::conformal_state(everywhere)
+     WRITES: StaticConformal::psi(everywhere)
+     WRITES: StaticConformal::confac_1derivs(everywhere)
+     WRITES: StaticConformal::confac_2derivs(everywhere)
+     WRITES: ADMBase::metric(everywhere)
+     WRITES: ADMBase::curv(everywhere)
+   } "Construct initial data for Brill Lindquist black holes"
+
+}
+else if (CCTK_Equals(initial_data,"misner_bh")) 
+{ 
+# The Misner stuff uses the conformal factor internally, so
+# so make sure that the conformal factor has storage during
+# this routine
+   schedule Misner_standard in ADMBase_InitialData
+   {
+     STORAGE: confac[1]
+     LANG: C
+     READS: GRID::x, GRID::y, GRID::z
+     WRITES: StaticConformal::conformal_state(everywhere)
+     WRITES: StaticConformal::psi(everywhere)
+     WRITES: StaticConformal::confac_1derivs(everywhere)
+     WRITES: StaticConformal::confac_2derivs(everywhere)
+     WRITES: ADMBase::metric(everywhere)
+     WRITES: ADMBase::curv(everywhere)
+     WRITES: ADMBase::alp(everywhere)
+   } "Construct initial data for two Misner black holes"
+
+}
+else if (CCTK_Equals(initial_data,"multiple_misner_bh")) 
+{ 
+   schedule Misner_multiple in ADMBase_InitialData
+   {
+     STORAGE: confac[1]
+     LANG: C
+     READS: GRID::x, GRID::y, GRID::z
+     WRITES: StaticConformal::conformal_state(everywhere)
+     WRITES: StaticConformal::psi(everywhere)
+     WRITES: StaticConformal::confac_1derivs(everywhere)
+     WRITES: StaticConformal::confac_2derivs(everywhere)
+     WRITES: ADMBase::metric(everywhere)
+     WRITES: ADMBase::curv(everywhere)
+   } "Construct initial data for multiple Misner black holes"
+
+}

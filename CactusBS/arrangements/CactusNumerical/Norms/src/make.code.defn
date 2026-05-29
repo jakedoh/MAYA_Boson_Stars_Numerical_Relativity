@@ -1,0 +1,8 @@
+# Main make.code.defn file for thorn Norms
+# $Header$
+
+# Source files in this directory
+SRCS = Setup_Vars.c Compute_Norm.c
+
+# Subdirectories containing source files
+SUBDIRS = 

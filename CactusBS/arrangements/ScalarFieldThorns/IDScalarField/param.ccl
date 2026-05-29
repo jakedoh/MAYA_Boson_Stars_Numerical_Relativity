@@ -1,0 +1,182 @@
+# Parameter definitions for thorn IDScalarField
+
+KEYWORD scalar_profile "kind of initial data to use"
+{
+  "Gaussian" :: "a Gaussian cloud centred on centre_[xyz][i]"
+  "Tanh" :: "Step function modelled by a hyperbolic tangent"
+  "Y21Tanh" :: "Step function perturbed by 1 + eps*Y21"
+  "Tanh10" :: "Step function from 1 to 0" 
+  "Exponential" :: "decaying exponential"
+  "OneOverR" :: "One over r SF"
+  "perturbation_sin" :: "sinusoidal form"
+  "perturbation_cos" :: "cosine form"
+  "fermi_sin" :: "a fermi-dirac function multiplied with the sin perturbation"
+  "fermi_cos" :: "a fermi-dirac function with the cos"
+  "sin_decaying" :: "sinusoidal perturbation with a decaying exponential"
+} "Gaussian"
+
+KEYWORD potential_type "form of potential to use"
+{
+  "phiFourth" :: "polynomial sixth order in phi"
+  "phiSixth"  :: "polynomial sixth order in phi"
+  "phiEighth" :: "polynomial eighth order in phi"
+  "phiBubble" :: "polynomial fourth order in phi for bubble"
+  "phiExpand" :: "polynomial sixth order in phi for expanding bubble"
+  "none" :: "no potential"
+} "none"
+
+CCTK_REAL sigma_decay "decaying sinusoidal is form e^(-r^2 / sigma_decay^2) "
+{
+  *:* :: "any real number"
+} 0.0
+
+CCTK_REAL centre_x[5] "x coordinate of each scalar blob"
+{
+  *:* :: "any real number"
+} 0.0
+
+CCTK_REAL centre_y[5] "y coordinate of each scalar blob"
+{
+  *:* :: "any real number"
+} 0.0
+
+CCTK_REAL centre_z[5] "z coordinate of each scalar blob"
+{
+  *:* :: "any real number"
+} 0.0
+
+CCTK_REAL num_clouds "number of scalar blobs"
+{
+  0:* :: "any positive number"
+} 0
+
+CCTK_REAL phi0[5] "value of a single scalar field at its centre"
+{
+  *:* :: "any real number"
+} 0.0
+
+CCTK_REAL phiBG "value of a background scalar field"
+{
+  *:* :: "any real number"
+} 0.0
+
+CCTK_REAL eps "value of angular perturbation coefficient"
+{
+  *:* :: "any real number"
+} 0.0
+
+CCTK_REAL phiConst "additive constant to phi"
+{
+  *:* :: "any real number"
+} 0.0
+
+CCTK_REAL piConst "additive constant to pi"
+{
+  *:* :: "any real number"
+} 0.0
+
+CCTK_REAL rcutoff "set field to background after rcutoff"
+{
+  0:* :: "any real number >= 0"
+} 0.0
+
+CCTK_REAL epsilon "multiplicative constant for sinusoidal profile"
+{
+  *:* :: "any real number"
+} 0.0
+
+CCTK_REAL domain_length "length of your computational domain, for sinusoid prof only"
+{
+  *:* :: "any real number"
+} 0.0
+
+CCTK_REAL N_sin "some constant"
+{
+  *:* :: "any real number"
+} 0.0
+
+CCTK_REAL Vlambda "value of a potential coefficient"
+{
+  *:* :: "any real number"
+} 0.0
+
+CCTK_REAL Veta "value of a potential zero"
+{
+  *:* :: "any real number"
+} 0.0
+
+CCTK_REAL Veps "coefficient in bubble potential"
+{
+  *:* :: "any real number"
+} 0.0
+
+CCTK_REAL V0 "additive constant to expanding potential"
+{
+  *:* :: "any real number"
+} 0.0
+
+CCTK_REAL kk "wave number for sinusoidal dependence"
+{
+  *:* :: "any real number"
+} 0.0
+
+CCTK_REAL phase "phase for sinusoidal dependence"
+{
+  *:* :: "any real number"
+} 0.0
+
+CCTK_REAL r0[5] "radius of gaussian shell"
+{
+  0:*	:: "Anything positive. 0.0 = no shell but solid cloud."
+} 0.0
+
+CCTK_REAL sigma0[5] "FWHM of gaussian cloud"
+{
+  (0:*	:: "Anything positive"
+} 5.0
+
+CCTK_REAL alpha "some small number for fermi-dirac function"
+{
+  *:* :: "any real number"
+} 0.0
+
+STRING scalarPhi "scalar field variable to set"
+{
+  ".+[:][:].+" :: "any valid variable name"
+  "BransDickeScalarField[:][:]BDphi" :: "the Brans-Dicke field"
+} "BransDickeScalarField::BDphi"
+
+STRING scalarPi "time derivative of scalar field variable to set"
+{
+  ".+[:][:].+" :: "any valid variable name"
+  "BransDickeScalarField[:][:]BDpi" :: "the Brans-Dicke field"
+} "BransDickeScalarField::BDpi"
+
+STRING field_type "what kind of scalar field"
+{
+  "Bubbles" :: "Add scalar field bubbles to grid"
+  "Everywhere" :: "Add a scalar field to the entire grid"
+} "Bubbles"
+
+BOOLEAN potential "add mexican hat potential"
+{
+} "no"
+
+BOOLEAN sinusoidal "add sinusoidal dependence"
+{
+} "no"
+
+CCTK_REAL alphaE "constant for Everywhere"
+{
+  (*:*  :: "Anything"
+} 0.0
+
+CCTK_REAL betaE "constant for Everywhere"
+{
+  (*:*  :: "Anything"
+} 0.0
+
+CCTK_REAL gammaE "constant for Everywhere"
+{
+  (*:*  :: "Anything"
+} 0.0

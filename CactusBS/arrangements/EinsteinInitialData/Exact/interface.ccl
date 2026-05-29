@@ -1,0 +1,135 @@
+# Interface definition for thorn Exact
+# $Header$
+
+implements: exact
+inherits: admbase grid coordgauge staticconformal
+# Exact sets Tmunu but does not inherit it to support pure vacuum setups
+# in a backwards compatible manner
+
+CCTK_INT FUNCTION Boundary_RegisterPhysicalBC(CCTK_POINTER_TO_CONST IN GH, \
+  CCTK_INT IN CCTK_FPOINTER function_pointer(CCTK_POINTER_TO_CONST IN GH, \
+                                             CCTK_INT IN num_vars, \
+                                             CCTK_INT ARRAY IN var_indices, \
+                                             CCTK_INT ARRAY IN faces, \
+                                             CCTK_INT ARRAY IN boundary_widths, \
+                                             CCTK_INT ARRAY IN table_handles),\
+  CCTK_STRING IN bc_name)
+USES FUNCTION Boundary_RegisterPhysicalBC
+
+CCTK_INT FUNCTION Boundary_SelectGroupForBC(CCTK_POINTER_TO_CONST IN GH, \
+  CCTK_INT IN faces, CCTK_INT IN boundary_width, CCTK_INT IN table_handle, \
+  CCTK_STRING IN group_name, CCTK_STRING IN bc_name)
+USES FUNCTION Boundary_SelectGroupForBC
+
+CCTK_INT FUNCTION Driver_RequireValidData
+  (CCTK_POINTER_TO_CONST IN cctkGH,
+   CCTK_INT ARRAY        IN variables,
+   CCTK_INT ARRAY        IN tls,
+   CCTK_INT              IN nvariables,
+   CCTK_INT ARRAY        IN where)
+USES FUNCTION Driver_RequireValidData
+
+CCTK_INT FUNCTION Driver_NotifyDataModified
+  (CCTK_POINTER_TO_CONST IN cctkGH,
+   CCTK_INT ARRAY        IN variables,
+   CCTK_INT ARRAY        IN tls,
+   CCTK_INT              IN nvariables,
+   CCTK_INT ARRAY        IN where)
+USES FUNCTION Driver_NotifyDataModified
+
+USES INCLUDE   : Slicing.h
+
+################################################################################
+
+#
+# copies of our parameters (with keywords decoded into integers)
+# for the use of the src/include/Scalar_CalcTmunu.inc code
+# (see comments in param.ccl for why we need this)
+#
+protected:
+
+int Exact_pars_int type=SCALAR
+{
+# ***** exact_model decoded to an integer
+decoded_exact_model
+
+# ***** parameters for models which have nonzero stress-energy tensor terms
+
+### this metric doesn't work and has been moved to ../archive/
+### parameters for Robertson-Walker spacetime
+##Robertson_Walker___k
+##Robertson_Walker___pressure
+} "parameters copied to grid scalars so CalcTmunu code sees them in evolution thorns"
+
+real Exact_pars_real type=SCALAR
+{
+# parameters for Schwarzschild-Lemaitre metric
+# (Schwarzschild black hole with cosmological constant)
+Schwarzschild_Lemaitre___Lambda
+Schwarzschild_Lemaitre___mass
+# parameters for Lemaitre-type spacetime
+Lemaitre___kappa
+Lemaitre___Lambda
+Lemaitre___epsilon0
+Lemaitre___R0
+### this metric doesn't work and has been moved to ../archive/
+### parameters for Robertson-Walker spacetime
+##Robertson_Walker___R0
+##Robertson_Walker___rho
+# parameters for de Sitter spacetime
+de_Sitter___scale
+# parameters for de Sitter spacetime with cosmological constant
+de_Sitter_Lambda___scale
+# parameters for anti-de Sitter spacetime with cosmological constant
+anti_de_Sitter_Lambda___scale
+# parameters for Bertotti spacetime
+Bertotti___Lambda
+# parameters for Kasner-like spacetime
+Kasner_like___q
+# parameters for generalized Kasner spacetime
+Kasner_generalized___p1
+Kasner_generalized___p2
+# parameters for constant density (Schwarzschild) star
+constant_density_star___mass
+constant_density_star___radius
+} "parameters copied to grid scalars so CalcTmunu code sees them in evolution thorns"
+
+################################################################################
+##
+### Robertson-Walker metric doesn't work and has been moved to ../archive/
+###
+### temp variable for some of the stress-energy tensor computations
+###
+##protected:
+##real Exact_robwal_var TYPE=GF
+##{
+##   raza
+##} "Raza universului Robertson Walker"
+##
+################################################################################
+
+private:
+
+real Exact_slice type=GF
+{
+  slicex,
+  slicey,
+  slicez,
+  slicet
+} "Position of an arbitrary slice in exact solution spacetime"
+
+real Exact_slicetemp1 type=GF
+{
+  slicetmp1x,
+  slicetmp1y,
+  slicetmp1z,
+  slicetmp1t
+} "Temporary grid functions 1"
+
+real Exact_slicetemp2 type=GF
+{
+  slicetmp2x,
+  slicetmp2y,
+  slicetmp2z,
+  slicetmp2t
+} "Temporary grid functions 2"

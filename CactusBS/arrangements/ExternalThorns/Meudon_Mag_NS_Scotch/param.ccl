@@ -1,0 +1,61 @@
+# Parameter definitions for thorn Meudon_Mag_NS_Scotch
+
+SHARES: ADMBase
+
+EXTENDS KEYWORD initial_data
+{
+  "ID_Mag_NS_Scotch" :: ""
+}
+
+EXTENDS KEYWORD initial_lapse
+{
+  "ID_Mag_NS_Scotch" :: ""
+}
+
+EXTENDS KEYWORD initial_shift
+{
+  "ID_Mag_NS_Scotch" :: ""
+}
+
+EXTENDS KEYWORD initial_dtlapse
+{
+  "ID_Mag_NS_Scotch" :: ""
+}
+
+EXTENDS KEYWORD initial_dtshift
+{
+  "ID_Mag_NS_Scotch" :: ""
+}
+
+
+
+SHARES: HydroBase
+
+EXTENDS KEYWORD initial_hydro
+{
+  "ID_Mag_NS_Scotch" :: ""
+}
+
+EXTENDS KEYWORD initial_Bvec
+{
+  "ID_Mag_NS_Scotch" :: ""
+}
+
+EXTENDS KEYWORD initial_Avec
+{
+  "ID_Mag_NS_Scotch" :: ""
+}
+
+EXTENDS KEYWORD initial_Aphi
+{
+  "ID_Mag_NS_Scotch" :: ""
+}
+
+
+
+PRIVATE:
+
+STRING filename "Input file name"
+{
+  "" :: ""
+} ""

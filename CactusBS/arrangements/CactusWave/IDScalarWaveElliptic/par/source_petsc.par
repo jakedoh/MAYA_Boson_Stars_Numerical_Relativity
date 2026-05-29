@@ -1,0 +1,48 @@
+# test_waveell.par
+# $Id$
+#
+# /*@@
+#   @file      wavetoyf77_rad.par
+#   @date      Sunday 24th July
+#   @author    Gabrielle Allen
+#   @desc
+#   Wavetoy parameter file demonstrating radiation boundaries in Octant
+#   @enddesc
+# @@*/          
+
+ActiveThorns = "boundary pughslab ellpetsc ellbase idscalarwaveelliptic idscalarwave time wavetoyf90 pugh pughreduce CartGrid3D CoordBase InitBase SymBase ioutil ioascii iobasic localreduce"
+ 
+time::dtfac = 0.5
+
+idscalarwave::initial_data = "charge"
+
+idscalarwaveelliptic::output_tmp = "yes"
+idscalarwaveelliptic::radius = 5.5
+idscalarwaveelliptic::charge = 1
+idscalarwaveelliptic::solver = "petsc"
+
+wavetoyf90::bound = "radiation"
+
+grid::type = "BySpacing"
+grid::domain = "full"
+grid::dxyz = 0.3
+
+driver::global_nsize = 20
+
+ellbase::elliptic_verbose="yes"
+cactus::cctk_itlast = 10
+
+IOBasic::outScalar_every = 2
+IOBasic::outScalar_vars = "wavetoy::phi"
+
+IOASCII::out1D_every = 2
+IOASCII::out1D_z = "no"
+IOASCII::out1D_y = "no"
+IOASCII::out1D_vars = "wavetoy::phi "
+
+IOBasic::outInfo_every = 10
+IOBasic::outInfo_vars = "wavetoy::phi"
+ 
+IO::out_dir = "test_waveell"
+IO::out_fileinfo = "none"
+

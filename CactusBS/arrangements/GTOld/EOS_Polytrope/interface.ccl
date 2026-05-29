@@ -1,0 +1,13 @@
+# Interface definition for thorn EOS_Polytrope
+# $Header$
+
+implements: EOS_2d_Polytrope
+inherits: EOS_Base
+
+USES INCLUDE: EOS_Base.h
+USES INCLUDE: EOS_Base.inc
+
+private:
+
+
+

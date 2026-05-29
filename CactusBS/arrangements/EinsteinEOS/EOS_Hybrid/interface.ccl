@@ -1,0 +1,9 @@
+# Interface definition for thorn EOS_Hybrid
+
+implements: EOS_Hybrid
+inherits: HydroBase,EOS_2d_Polytrope
+
+real pressure_contributions type = GF tags='Prolongation="None"'
+{
+  pressure_poly, pressure_th
+} "Polytropic and thermal contributions to the pressure"

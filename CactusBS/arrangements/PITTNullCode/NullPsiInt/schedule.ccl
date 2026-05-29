@@ -1,0 +1,28 @@
+# Schedule definitions for thorn NullPsiInt
+# $Header:$
+
+######## initialization: MoL
+  STORAGE: NewsB_mask, Psi4_mask, NewsB_Psi, re_dotNewsB[2], im_dotNewsB[2], re_PsiInt[2], im_PsiInt[2]
+
+
+  schedule NullPsiInt_InitMoL in NullEvol_Initial after NullEvol_InitialSlice
+  {
+    LANG: Fortran
+    OPTIONS: global
+  } "Initial Data"
+
+  schedule NullPsiInt_MoLRegister in MoL_Register
+  {
+    LANG: C
+  } "Register variables for MoL"
+
+
+######## evolution: Mol
+
+  schedule NullPsiInt_dotNewsPsi in MoL_CalcRHS
+  {
+   LANG: Fortran
+   SYNC: NewsB_Psi
+  } "calculate the integral of Psi4"
+
+

@@ -1,0 +1,168 @@
+!DESC "distorted BH, no rotation, fixed mesh refinement evolution with carpet"
+#
+# $Id$
+#
+# Distorted BH
+#
+# Frank Herrmann 19.Jun.2003
+#
+# Edited IH 31.Jul.2003 for Carpet.
+#
+# Edited RH 29.Apr.2012 for ML_BSSN.
+#
+
+ActiveThorns = "ahfinderdirect sphericalsurface symbase CoordBase carpetioascii idaxibrillbh spacemask admbase staticconformal admmacros coordgauge admanalysis mol ml_bssn ml_bssn_helper genericfd loopcontrol newrad tmunubase ml_admconstraints carpetinterp localinterp aeilocalinterp boundary time carpet carpetlib carpetregrid carpetreduce carpetslab cartgrid3d ioutil carpetiobasic carpetioscalar ellbase nanchecker dissipation localreduce reflectionsymmetry"
+
+#--- grid
+time::dtfac                             = 0.25
+grid::type                              = "coordbase"
+grid::avoid_origin                     = "no"
+grid::domain                            = "full"
+carpet::domain_from_coordbase = "yes"
+coordbase::xmin = -12.5
+coordbase::xmax = +12.3
+coordbase::ymin = -12.5
+coordbase::ymax = +12.3
+coordbase::zmin =   0.0
+coordbase::zmax = +12.0
+coordbase::dx=0.4
+coordbase::dy=0.4
+coordbase::dz=0.4
+coordbase::boundary_size_x_lower = 2 #ghost size
+coordbase::boundary_size_y_lower = 2 #ghost size
+coordbase::boundary_size_z_lower = 2 #ghost size
+coordbase::boundary_size_x_upper = 2 #ghost size
+coordbase::boundary_size_y_upper = 2 #ghost size
+coordbase::boundary_size_z_upper = 2 #ghost size
+coordbase::boundary_shiftout_z_lower = 1
+reflectionsymmetry::avoid_origin_z = "no"
+reflectionsymmetry::reflection_z = "yes"
+carpetregrid::smart_outer_boundaries = "yes"
+carpet::grid_structure_filename = "grids"
+cactus::cctk_itlast                     = 4
+carpet::ghost_size                      = 2
+carpet::max_refinement_levels           = 2
+carpetregrid::refinement_levels         = 2
+carpet::prolongation_order_space        = 3
+carpet::prolongation_order_time         = 2
+carpet::use_buffer_zones		= yes
+carpet::additional_buffer_zones		= 1
+carpet::init_fill_timelevels            = "yes"
+carpetregrid::refined_regions = "manual-coordinate-list"
+carpetregrid::coordinates = "[ [ ([-4.1,-4.1,0.0]:[3.9,3.9,4.0]:[0.2,0.2,0.2]) ] ]"
+
+
+#--- axisymmetric brill wave+bh
+admbase::initial_data              = "axibrillbh"
+idaxibrillbh::amp                  = 0.1
+idaxibrillbh::eta0                 = 0.0
+idaxibrillbh::sigma                = 1.0
+idaxibrillbh::etamax               = 6.0
+idaxibrillbh::n                    = 4
+idaxibrillbh::ne                   = 302
+idaxibrillbh::nq                   = 54
+idaxibrillbh::generate_StaticConformal_metric = false
+idaxibrillbh::error_tolerance      = 1e-8
+admbase::evolution_method          = "ml_bssn"
+ml_bssn::timelevels		   =	3
+admbase::metric_timelevels	   =	3
+ML_ADMConstraints::timelevels	   = 3 
+
+ActiveThorns = NoExcision
+NoExcision::num_regions = 1
+NoExcision::radius[0]   = 0.5
+NoExcision::Minkowski_scale[0] = 87.0321553912965
+
+#--- numerics
+mol::ode_method        = "icn"
+ml_bssn::fdOrder       = 2
+ml_bssn::my_initial_boundary_condition = "extrapolate-gammas"
+ml_bssn::ml_log_confac_bound = "flat"
+ml_bssn::ml_metric_bound     = "flat"
+ml_bssn::ml_gamma_bound      = "flat"
+ml_bssn::ml_trace_curv_bound = "flat"
+ml_bssn::ml_curv_bound       = "flat"
+ml_bssn::ml_lapse_bound      = "flat"
+ml_bssn::ml_dtlapse_bound    = "flat"
+ml_bssn::ml_shift_bound      = "flat"
+ml_bssn::ml_dtshift_bound    = "flat"
+boundary::radpower     = 3
+
+#--- gauge
+admbase::initial_lapse          = "one"
+admbase::lapse_evolution_method = "ML_BSSN"
+admbase::dtlapse_evolution_method = "ML_BSSN"
+ML_BSSN::AlphaDriver = 1
+ML_BSSN::LapseAdvectionCoeff = 0
+ml_bssn::harmonicf             = 2.0
+admbase::initial_shift         = "zero"
+admbase::initial_dtshift         = "zero"
+admbase::initial_dtlapse         = "zero"
+admbase::shift_evolution_method = "ML_BSSN"
+admbase::dtshift_evolution_method = "ML_BSSN"
+ml_bssn::ShiftGammaCoeff       = 0.75
+ml_bssn::BetaDriver            = 1.1
+ML_BSSN::ShiftAdvectionCoeff    = 0
+
+#--- output
+io::out_dir                             = $parfile
+io::parfile_write                       = no
+io::out_fileinfo                        = "axis labels"
+ioscalar::outScalar_every               = 2
+ioscalar::outScalar_vars                = "admbase::alp admbase::metric admbase::shift ml_admconstraints::ML_mom ml_admconstraints::ML_ham dissipation::epsdisA"
+ioscalar::outScalar_reductions          = "average count maximum minimum norm1 norm2 norm_inf"
+iobasic::outInfo_every                  = 2
+iobasic::outInfo_vars                   = "dissipation::epsdisA"
+ioascii::out1D_every                    = 1
+ioascii::out1D_vars                     = "admbase::alp admbase::metric admbase::curv admbase::shift ml_admconstraints::ML_mom ml_admconstraints::ML_ham dissipation::epsdisA"
+## ascii 2D output gets big
+#ioascii::out2D_every                    = 1
+#ioascii::out2D_vars                     = "admbase::alp admbase::metric admbase::curv admbase::shift admconstraints::momentum admconstraints::ham admconstraints::normalized_hamiltonian adm_bssn::adm_bs_phi adm_bssn::adm_bssn_metric adm_bssn::adm_bs_k adm_bssn::adm_bssn_gamma adm_bssn::adm_bssn_curv dissipation::epsdisA"
+
+#--- nanchecker
+nanchecker::check_every     = 2
+nanchecker::check_vars      ="admbase::alp admbase::metric admbase::curv admbase::shift"
+nanchecker::action_if_found ="terminate"
+
+
+#--- sphericalsurface
+sphericalsurface::nsurfaces = 1
+sphericalsurface::maxntheta = 100
+sphericalsurface::maxnphi = 100
+sphericalsurface::ntheta[0] = 100
+sphericalsurface::ntheta[1] = 100
+
+
+#--- ahfinderdirect
+AHFinderDirect::N_horizons                               = 1
+AHFinderDirect::find_every                               = 1
+AHFinderDirect::max_Newton_iterations__initial           = 50
+AHFinderDirect::max_Newton_iterations__subsequent        = 50
+AHFinderDirect::initial_guess__coord_sphere__radius  [1] = 2.0
+ahfinderdirect::which_surface_to_store_info          [1] = 0
+ahfinderdirect::geometry_interpolator_name               = "Lagrange polynomial interpolation" 
+
+
+
+#--- dissipation
+dissipation::ah_slope = 0.1
+dissipation::epsdis   = 0.2
+dissipation::verbose = "no"
+dissipation::extra_dissipation_in_horizons = "yes"
+dissipation::ah_max_epsdis = 0.3
+dissipation::update_ah_every = 2
+dissipation::surface_number[0] = 0
+dissipation::horizon_number[0] = 1
+dissipation::extra_dissipation_at_outerbound = "yes"
+dissipation::outer_boundary_max_epsdis = 0.3
+dissipation::outer_bound_npoints = 5
+dissipation::ob_slope = 0.1
+Dissipation::vars = "
+        ML_BSSN::phi
+        ML_BSSN::ML_metric
+        ML_BSSN::ML_curv
+        ML_BSSN::trK
+        ML_BSSN::ML_Gamma
+        ML_BSSN::ML_lapse
+        ML_BSSN::ML_shift
+"

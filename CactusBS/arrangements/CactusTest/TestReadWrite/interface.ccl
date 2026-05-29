@@ -1,0 +1,97 @@
+# Interface definition for thorn TestReadWrite
+
+IMPLEMENTS: TestReadWriteImp
+INHERITS: grid
+
+# this tries to exercise as much of documentated behaviour as possible
+# - varying capitalization
+# - groups and single variables
+
+CCTK_INT FUNCTION
+      Driver_GetValidRegion
+      (CCTK_POINTER_TO_CONST IN cctkGH,
+      CCTK_INT IN vi,
+      CCTK_INT IN tl)
+USES FUNCTION Driver_GetValidRegion
+
+void FUNCTION
+      Driver_SetValidRegion
+      (CCTK_POINTER_TO_CONST IN cctkGH,
+      CCTK_INT IN vi,
+      CCTK_INT IN tl,
+      CCTK_INT IN where)
+USES FUNCTION Driver_SetValidRegion
+
+CCTK_INT FUNCTION
+   Driver_SelectGroupForBC
+      (CCTK_POINTER_TO_CONST IN cctkGH,
+      CCTK_INT IN faces,
+      CCTK_INT IN width,
+      CCTK_INT IN table_handle,
+      CCTK_STRING IN group_name,
+      CCTK_STRING IN bc_name)
+USES FUNCTION Driver_SelectGroupForBC
+
+public:
+CCTK_REAL Var1 TYPE=GF TIMELEVELS=2 "A real variable"
+
+CCTK_REAL rad1[rad_param] TYPE=array DIM=1 SIZE=radx  DISTRIB=constant 
+CCTK_REAL rad2[rad_param] TYPE=array DIM=2 SIZE=radx,rady DISTRIB=constant 
+CCTK_REAL rad3[rad_param] TYPE=array DIM=3 SIZE=radx,rady,radz DISTRIB=default
+
+private:
+CCTK_REAL Var2 TYPE=GF "A real variable"
+CCTK_REAL ScalarVar TYPE=Scalar "A scalar variable"
+
+protected:
+CCTK_REAL Var3[3] TYPE=GF "A real variable"
+
+protected:
+CCTK_INT TestGroup[1] TIMELEVELS=3 TYPE=GF
+{
+  groupVar1,
+  groupVar2
+} "A group of variables"
+
+CCTK_REAL UnusedVar TYPE=GF "A variable not used by some scheduled functions"
+
+CCTK_INT results
+{
+  UnusedVarIsNullC,
+  UnusedGroupIsNullC,
+
+  VarCurrentLevelC,
+  GroupCurrentLevelC,
+
+  VarPastLevelC,
+  GroupPastLevelC,
+
+  ArrayCurrentLevelC,
+
+  ScalarVarCurrentLevelC,
+
+  ValidRegionsC,
+
+  UnusedVarIsNullF,
+  UnusedGroupIsNullF,
+
+  VarCurrentLevelF,
+  GroupCurrentLevelF,
+
+  VarPastLevelF,
+  GroupPastLevelF,
+
+  ArrayCurrentLevelF,
+
+  ScalarVarCurrentLevelF,
+
+  ValidRegionsF,
+
+  ArraySizeF,
+} "Group containing results of runtime test"
+
+CCTK_REAL gridArrayGroup DISTRIB=constant DIM=2 SIZE=12,13 TIMELEVELS=3 TYPE=array
+{
+  gridArray1,
+  gridArray2
+}"Test grid array"

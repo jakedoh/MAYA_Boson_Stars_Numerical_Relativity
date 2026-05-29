@@ -1,0 +1,8 @@
+# Interface definition for thorn Fluid_Wind
+implements:Fluid_Wind
+
+
+inherits: ADMBase, HydroBase, Constants, Grid, EOS_Omni
+
+USES INCLUDE: constants.h SpaceMask.h
+

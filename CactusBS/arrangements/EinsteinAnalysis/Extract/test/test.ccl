@@ -1,0 +1,6 @@
+EXTENSIONS ul tl
+
+TEST qc0-mclachlan
+{
+  NPROCS 1
+}

@@ -1,0 +1,10 @@
+# Parameter definitions for thorn WeightedReduce
+
+BOOLEAN verbose "Produce screen output while running" STEERABLE=always
+{
+} "no"
+
+STRING weightvar "Which variable to use for the weight grid function" STEERABLE=recover
+{
+  ".*" :: "Any valid variable"
+} "CarpetReduce::weight"

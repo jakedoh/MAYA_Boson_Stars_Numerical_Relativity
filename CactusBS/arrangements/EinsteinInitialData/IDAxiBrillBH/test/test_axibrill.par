@@ -1,0 +1,57 @@
+######################################################################
+!DESC "Initial data for axisymmetric distored black hole"
+######################################################################
+
+ActiveThorns = "LocalInterp Boundary time iobasic pugh pughslab pughreduce CartGrid3D CoordBase SymBase TmunuBase ADMBase StaticConformal admmacros coordgauge ADMAnalysis IDAxiBrillBH ioascii ioutil spacemask localreduce"
+
+#pugh::enable_all_storage = "yes"
+#cactus::cctk_show_banners = 0
+
+# GENERAL
+
+ADMBase::metric_type = "static conformal"
+
+driver::global_nx =  32
+driver::global_ny =  32
+driver::global_nz =  32
+
+grid::type = "byspacing"
+grid::dxyz = 0.4
+grid::domain = "full"
+
+time::dtfac = 0.25   
+
+cactus::cctk_initial_time = 0.   
+cactus::cctk_itlast       = 0
+
+# MODEL
+ADMBase::initial_data = "axibrillbh"
+idaxibrillbh::amp      = 0.5
+idaxibrillbh::eta0     = 0.0
+idaxibrillbh::sigma    = 1.0
+idaxibrillbh::etamax   = 6.0
+idaxibrillbh::n        = 2
+idaxibrillbh::ne       = 102
+idaxibrillbh::nq       = 27
+
+idaxibrillbh::interpolation_order          = 1
+
+# OUTPUT ########################################################
+IO::out_dir               = "test_axibrill"
+IO::out_fileinfo         = "none"
+IO::parfile_write        = "no"
+IOASCII::out1D_every     =  1
+IOASCII::out1D_vars      = "ADMBase::curv admbase::metric ADMAnalysis::grr StaticConformal::confac StaticConformal::confac_1derivs StaticConformal::confac_2derivs"
+IOBasic::outInfo_every   = 1
+IOBasic::outInfo_vars    = "admbase::gxx"
+
+#IOASCII::out1D_xline_y   = 0.2
+#IOASCII::out1D_xline_z   = 0.2
+#
+#IOASCII::out1D_yline_x   = 0.2
+#IOASCII::out1D_yline_z   = 0.2
+#
+#IOASCII::out1D_zline_x   = 0.2
+#IOASCII::out1D_zline_y   = 0.2
+
+##################################################################

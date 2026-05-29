@@ -1,0 +1,126 @@
+# Schedule definitions for thorn LlamaWaveToy
+
+# Evolved variables
+STORAGE: scalar[2] density[2] velocity[2]
+STORAGE: dx_scalar[2]
+STORAGE: dxx_scalar[2]
+STORAGE: dx_density[2]
+STORAGE: errors
+
+# Background metric
+STORAGE: metric inverse_metric lapse shift volume_element
+
+# Startup
+
+SCHEDULE LWT_startup AT startup
+{
+  LANG: C
+  OPTIONS: meta
+} "Register banner with Cactus"
+
+SCHEDULE LWT_register_MoL IN MoL_Register
+{
+  LANG: C
+  OPTIONS: meta
+} "Register variables with MoL"
+
+
+# Set up initial data
+
+SCHEDULE LWT_init_metric AT initial
+{
+  LANG: Fortran
+} "Initialise the metric"
+
+SCHEDULE LWT_calc_inverse_metric AT initial AFTER LWT_init_metric
+{
+  LANG: Fortran
+} "Transform the metric"
+
+SCHEDULE LWT_init AT initial AFTER LWT_init_metric
+{
+  LANG: Fortran
+} "Initialise the system"
+
+# if (! initial_data_analytic_derivatives)
+# {
+#   SCHEDULE LWT_init_derivs AT initial AFTER LWT_init
+#   {
+#     LANG: Fortran
+#   } "Initialise the system, part 2"
+# }
+
+
+
+# Calculate the RHS
+
+STORAGE: scalardot densitydot velocitydot
+
+SCHEDULE LWT_calc_rhs IN MoL_CalcRHS
+{
+  LANG: Fortran
+} "Calculate the RHS"
+
+
+
+# Apply the boundary conditions
+
+SCHEDULE LWT_outerboundary IN MoL_PostStep
+{
+  LANG: Fortran
+} "Apply outer boundaries"
+
+SCHEDULE LWT_RHS_outerboundary IN MoL_RHSBoundaries
+{
+  LANG: Fortran
+} "Apply MoL RHS outer boundaries (eg. radiative boundary condition)"
+
+SCHEDULE LWT_boundaries IN MoL_PostStep AFTER LWT_OuterBound
+{
+  LANG: Fortran
+  OPTIONS: level
+  SYNC: scalar density velocity
+} "Select the boundary condition"
+
+SCHEDULE GROUP ApplyBCs AS LWT_ApplyBCs IN MoL_PostStep AFTER LWT_boundaries
+{
+} "Apply boundary conditions"
+
+# Calculate other analysis quantities
+
+if (recalculate_rhs)
+{
+  SCHEDULE LWT_calc_rhs AT analysis
+  {
+    LANG: Fortran
+    SYNC: scalardot densitydot velocitydot
+    STORAGE: scalardot densitydot velocitydot
+    TRIGGERS: scalardot densitydot velocitydot
+  } "Calculate the RHS"
+}
+
+SCHEDULE LWT_CalcEnergy AT analysis
+{
+  LANG: Fortran
+  SYNC: scalarenergy
+  STORAGE: scalarenergy
+  TRIGGERS: scalarenergy
+} "Calculate the energy of the scalar field"
+
+SCHEDULE LWT_error AT analysis
+{
+  LANG: Fortran
+  STORAGE: errorsperiodic
+  TRIGGERS: errors
+  TRIGGERS: errorsperiodic
+} "Calculate errors of the solution"
+
+
+
+SCHEDULE LWT_min_spacing AT analysis
+{
+  LANG: Fortran
+  SYNC: min_spacing
+  STORAGE: min_spacing
+  TRIGGERS: min_spacing
+} "Calculate the smallest grid spacing"

@@ -1,0 +1,30 @@
+# Schedule definitions for thorn NullGrid
+# $Header$
+
+storage: RadCrd NullSclr StCrd StCmCrd NullGrParArrI NullGrParArrR
+storage: EG_mask, guard_mask, EQ_mask, EV_mask
+
+schedule NullGrid_RegisterCoords at STARTUP
+{
+  LANG: Fortran
+  OPTIONS: global
+} "Register stereo coordinates"
+
+schedule NullGrid_Coord at BASEGRID
+{
+  LANG: Fortran
+  OPTIONS: global
+} "setup stereo coords"
+
+schedule NullGrid_RegisterRange at BASEGRID after NullGrid_Coord
+{
+  LANG: C
+  OPTIONS: global
+} "Register stereo coordinate range"
+
+schedule NullGrid_Setup at BASEGRID after NullGrid_RegisterRange
+{
+  LANG: Fortran
+  OPTIONS: global
+} "setup variables"
+

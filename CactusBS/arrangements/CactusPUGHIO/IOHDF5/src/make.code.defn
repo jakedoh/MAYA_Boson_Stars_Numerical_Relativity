@@ -1,0 +1,10 @@
+# Main make.code.defn file for thorn IOHFD5
+# $Header$
+
+# Source files in this directory
+SRCS = Startup.c Output.c Write.c DumpGH.c RecoverGH.c
+
+# Extend CFLAGS if HDF5 library was built with LFS support
+ifneq ($(strip $(HDF5_LFS_FLAGS)),)
+  CFLAGS += $(HDF5_LFS_FLAGS)
+endif

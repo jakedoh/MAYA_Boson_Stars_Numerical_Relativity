@@ -1,0 +1,5 @@
+# Interface definition for thorn IDConstraintViolate
+# $Header$
+
+implements: idconstraintviolate
+inherits: admbase, grid

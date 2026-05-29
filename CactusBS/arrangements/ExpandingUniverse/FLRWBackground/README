@@ -1,0 +1,14 @@
+
+
+Cactus Code Thorn FLRWBackground
+Thorn Author(s)      : Jordi Manyer <jfuertes7@physics.gatech.edu>
+Thorn Maintainer(s)  : Jordi Manyer <jfuertes7@physics.gatech.edu>
+--------------------------------------------------------------------------------
+
+Purpose of the thorn:
+
+Provides initial FLRW background conditions for the thorns ADMBase and
+HydroBase.
+
+Provides FLRW boundary conditions for thorn GRHydro
+Provides FLRW boundary conditions for thorn Kranc2BSSNChiMatter

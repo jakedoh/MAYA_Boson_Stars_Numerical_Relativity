@@ -1,0 +1,266 @@
+# File produced by Kranc
+
+
+shares: GenericFD
+
+USES CCTK_INT assume_stress_energy_state
+
+
+shares: MethodOfLines
+
+USES CCTK_INT MoL_Num_Evolved_Vars
+USES CCTK_INT MoL_Num_ArrayEvolved_Vars
+
+restricted:
+CCTK_INT verbose "verbose" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT other_timelevels "Number of active timelevels for non-evolved grid functions" STEERABLE=RECOVER
+{
+  0:4 :: ""
+} 1
+
+restricted:
+CCTK_REAL amplitude "Amplitude of initial Gaussian"
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_REAL width "Width of initial Gaussian"
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT tile_size "Loop tile size"
+{
+  *:* :: ""
+} -1
+
+private:
+CCTK_KEYWORD initial_data "initial_data"
+{
+  "Gaussian" :: ""
+  "Standing" :: ""
+} "Gaussian"
+
+restricted:
+CCTK_INT ML_WaveToy_CL_MaxNumEvolvedVars "Number of evolved variables used by this thorn" ACCUMULATOR-BASE=MethodofLines::MoL_Num_Evolved_Vars STEERABLE=RECOVER
+{
+  2:2 :: "Number of evolved variables used by this thorn"
+} 2
+
+restricted:
+CCTK_INT ML_WaveToy_CL_MaxNumArrayEvolvedVars "Number of Array evolved variables used by this thorn" ACCUMULATOR-BASE=MethodofLines::MoL_Num_ArrayEvolved_Vars STEERABLE=RECOVER
+{
+  0:0 :: "Number of Array evolved variables used by this thorn"
+} 0
+
+restricted:
+CCTK_INT timelevels "Number of active timelevels" STEERABLE=RECOVER
+{
+  0:4 :: ""
+} 4
+
+restricted:
+CCTK_INT rhs_timelevels "Number of active RHS timelevels" STEERABLE=RECOVER
+{
+  0:4 :: ""
+} 1
+
+restricted:
+CCTK_INT WT_CL_Gaussian_calc_every "WT_CL_Gaussian_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT WT_CL_Standing_calc_every "WT_CL_Standing_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT WT_CL_RHS_calc_every "WT_CL_RHS_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT WT_CL_Dirichlet_calc_every "WT_CL_Dirichlet_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT WT_CL_Energy_calc_every "WT_CL_Energy_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT WT_CL_EnergyBoundary_calc_every "WT_CL_EnergyBoundary_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT WT_CL_Gaussian_calc_offset "WT_CL_Gaussian_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT WT_CL_Standing_calc_offset "WT_CL_Standing_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT WT_CL_RHS_calc_offset "WT_CL_RHS_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT WT_CL_Dirichlet_calc_offset "WT_CL_Dirichlet_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT WT_CL_Energy_calc_offset "WT_CL_Energy_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT WT_CL_EnergyBoundary_calc_offset "WT_CL_EnergyBoundary_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+private:
+CCTK_KEYWORD u_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "skip"
+
+private:
+CCTK_KEYWORD rho_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "skip"
+
+private:
+CCTK_KEYWORD WT_u_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "none"
+
+private:
+CCTK_KEYWORD WT_rho_bound "Boundary condition to implement" STEERABLE=ALWAYS
+{
+  "flat" :: "Flat boundary condition"
+  "none" :: "No boundary condition"
+  "static" :: "Boundaries held fixed"
+  "radiative" :: "Radiation boundary condition"
+  "scalar" :: "Dirichlet boundary condition"
+  "newrad" :: "Improved radiative boundary condition"
+  "skip" :: "skip boundary condition code"
+} "none"
+
+private:
+CCTK_REAL u_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL rho_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL WT_u_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL WT_rho_bound_speed "characteristic speed at boundary" STEERABLE=ALWAYS
+{
+  0:* :: "outgoing characteristic speed > 0"
+} 1.
+
+private:
+CCTK_REAL u_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL rho_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL WT_u_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL WT_rho_bound_limit "limit value for r -> infinity" STEERABLE=ALWAYS
+{
+  *:* :: "value of limit value is unrestricted"
+} 0.
+
+private:
+CCTK_REAL u_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+
+private:
+CCTK_REAL rho_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+
+private:
+CCTK_REAL WT_u_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+
+private:
+CCTK_REAL WT_rho_bound_scalar "Dirichlet boundary value" STEERABLE=ALWAYS
+{
+  *:* :: "unrestricted"
+} 0.
+

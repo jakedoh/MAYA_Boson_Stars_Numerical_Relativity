@@ -1,0 +1,7 @@
+# Main make.code.defn file for thorn OpenCL
+
+# Source files in this directory
+SRCS = info.c err_code.c device_info.c
+
+# Subdirectories containing source files
+SUBDIRS =

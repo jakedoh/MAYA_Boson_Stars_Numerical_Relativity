@@ -1,0 +1,13 @@
+# Interface definition for thorn Extract
+# $Header$
+
+implements: extract
+inherits: grid ADMBase staticconformal io
+
+private:
+
+REAL temps TYPE=GF DIM=3
+{
+  temp3d
+  g00
+}

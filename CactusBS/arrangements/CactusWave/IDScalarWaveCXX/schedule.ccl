@@ -1,0 +1,14 @@
+# Schedule definitions for thorn IDScalarWave
+# $Header$
+
+schedule IDScalarWaveCXX_CheckParameters at CCTK_PARAMCHECK
+{
+  LANG: C
+} "Check parameters"
+
+schedule IDScalarWaveCXX_InitialData at CCTK_INITIAL as WaveToy_InitialData
+{
+  STORAGE:       wavetoy::scalarevolve[3]
+  LANG:          C
+} "Initial data for 3D wave equation"
+

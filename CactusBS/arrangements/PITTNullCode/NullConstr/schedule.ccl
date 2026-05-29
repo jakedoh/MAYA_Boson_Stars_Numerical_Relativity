@@ -1,0 +1,28 @@
+# Schedule definitions for thorn NullConstr
+# $Header$
+
+
+if (calculate_constraints)
+{
+
+  # stereographic mode
+
+  schedule NullConstr_Driver at analysis 
+  {
+     LANG: Fortran
+     TRIGGER: Null_R00, Null_R01, Null_R0A, Null_R00_south, Null_R01_south, Null_R0A_south, Null_R0A_split 
+     STORAGE: Null_R00, Null_R01, Null_R0A, Null_R00_south, Null_R01_south, Null_R0A_south, Null_R0A_split 
+     SYNC:    Null_R00, Null_R01, Null_R0A, Null_R00_south, Null_R01_south, Null_R0A_south, Null_R0A_split 
+  } "calculate constraint components R00, R01, R0A"
+
+  if (first_order_scheme) {
+     schedule NullConstr_AuxConstr at analysis 
+     {
+        LANG: Fortran
+        TRIGGER: Null_AuxConstr, Null_AuxConstr_south
+        STORAGE: Null_AuxConstr, Null_AuxConstr_south
+        SYNC:    Null_AuxConstr, Null_AuxConstr_south
+     } "calculate constraints associated with auxiliary variables"
+  }
+
+}

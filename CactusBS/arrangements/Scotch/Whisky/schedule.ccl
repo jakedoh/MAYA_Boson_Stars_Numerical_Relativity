@@ -1,0 +1,1257 @@
+# Schedule definitions for thorn Whisky
+# $Header$
+
+#######################################################################
+### We leave the storage on all the time for the variables required ###
+### by MoL. There is probably a better way of doing this.           ###
+#######################################################################
+
+#################################################
+### Storage for the extra timelevels for the  ###
+### use of MoL with Einstein                  ###
+#################################################
+
+if (timelevels == 3)
+{
+  STORAGE:whisky_aux_scalar_var[3]
+  STORAGE:whisky_cons_scalar_var[3]
+  STORAGE:whisky_cons_vector_var[3]
+  if ( CCTK_EQUALS(evolution_method,"Scotch_MHD_Bvec") ||
+       CCTK_EQUALS(evolution_method,"Scotch_QuasiMHD") )
+  {
+    STORAGE:whisky_bfield_var[3]
+    STORAGE:Bvec[3]
+    if (clean_divergence)
+    {
+       STORAGE:divclean_psi[3]
+    }
+  }
+  if ( CCTK_EQUALS(evolution_method,"Scotch_MHD_Avec") ) {
+     STORAGE:whisky_bfield_var[3]
+     STORAGE:Bvec[3]
+     STORAGE:Avec[3]
+     if ( !CCTK_Equals(Avec_gauge,"algebraic") ) {
+        STORAGE:Aphi[3]
+     }
+  }
+  if (monitor_divB)
+  {
+     STORAGE:divB[3]
+  }
+  if (number_of_particles)
+  {
+    STORAGE:particles[3]
+  }
+  STORAGE: ADMBase::metric[3], ADMBase::curv[3]
+  STORAGE: ADMBase::lapse[3]
+}
+else if (timelevels > 0)
+{
+  STORAGE:whisky_aux_scalar_var[2]
+  STORAGE:whisky_cons_scalar_var[2]
+  STORAGE:whisky_cons_vector_var[2]
+  if ( CCTK_EQUALS(evolution_method,"Scotch_MHD_Bvec") ||
+       CCTK_EQUALS(evolution_method,"Scotch_QuasiMHD") )
+  {
+    STORAGE:whisky_bfield_var[2]
+    STORAGE:Bvec[2]
+    if (clean_divergence)
+    {
+       STORAGE:divclean_psi[2]
+    }
+  }
+  if ( CCTK_EQUALS(evolution_method,"Scotch_MHD_Avec") ) {
+     STORAGE:whisky_bfield_var[2]
+     STORAGE:Bvec[2]
+     STORAGE:Avec[2]
+     if ( !CCTK_Equals(Avec_gauge,"algebraic") ) {
+        STORAGE:Aphi[2]
+     }
+  }
+  if (monitor_divB)
+  {
+     STORAGE:divB[2]
+  }
+  if (number_of_particles)
+  {
+    STORAGE:particles[2]
+  }
+  STORAGE: ADMBase::metric[2], ADMBase::curv[2]
+  STORAGE: ADMBase::lapse[2]
+}
+
+if (timelevels > 0 )
+{
+  STORAGE:whisky_reflevel
+  STORAGE:whisky_rhs_var
+  if ( CCTK_EQUALS(evolution_method,"Scotch_MHD_Bvec") )
+  {
+    STORAGE:whisky_bfield_rhs_var
+    if (clean_divergence)
+    {
+      STORAGE: divclean_psirhs
+    }
+  }
+  if ( CCTK_EQUALS(evolution_method,"Scotch_MHD_Avec") )
+  {
+     STORAGE:Avecrhs
+     if ( !CCTK_Equals(Avec_gauge,"algebraic") )
+     {
+        STORAGE:Aphirhs
+     }
+  }
+  if ( calculate_b2_comoving ) {
+     STORAGE:b2_comoving
+  }
+  STORAGE:whisky_eos_scalars
+  STORAGE:whisky_mhd_handle
+  STORAGE:whisky_minima
+  STORAGE:whisky_scalars
+  STORAGE:whisky_Tmunu_params
+  #STORAGE:fluxweightvolume
+  #STORAGE:cell_surface
+  if (number_of_particles)
+  {
+    STORAGE:particle_rhs
+    STORAGE:particle_arrays
+  }
+  
+  if (evolve_tracer)
+  {
+    STORAGE:whisky_tracers[3]
+    STORAGE:whisky_cons_tracers[3]
+    STORAGE:whisky_tracer_rhs
+  }
+}
+
+# leave this here for compatibility with older code, should not be used anymore
+# and go out at some point
+schedule group Whisky_Initial IN HydroBase_Initial
+{
+} "Whisky initial data group"
+
+#################################################
+### Storage for the extra timelevels for the  ###
+### use of MoL with Einstein                  ###
+#################################################
+
+if (timelevels == 3)
+{
+  STORAGE: ADMBase::metric[3], ADMBase::curv[3]
+  STORAGE: ADMBase::lapse[3]
+}
+else if (timelevels > 0)
+{
+  STORAGE: ADMBase::metric[2], ADMBase::curv[2]
+  STORAGE: ADMBase::lapse[2]
+}
+if (!CCTK_Equals(initial_shift,"none")) 
+{
+  if (timelevels == 3)
+  {  
+    STORAGE: ADMBase::shift[3]
+  }
+  else if (timelevels > 0)
+  {
+    STORAGE: ADMBase::shift[2]
+  }
+  if (CCTK_EQUALS(shift_evolution_method,"Comoving"))
+  {
+    if (timelevels == 3)
+    {  
+      STORAGE: whisky_coords[3]
+    }
+    else
+    {
+      STORAGE: whisky_coords[2]
+    }
+    STORAGE: whisky_coords_rhs
+
+    schedule Whisky_SetUpCoords IN HydroBase_Initial
+    {
+      LANG: Fortran
+    } "Set up the coordinates for use with the comoving shift"
+
+    schedule Whisky_EvolveCoords IN WhiskyRHS
+    {
+      LANG: Fortran
+    } "Evolve the coordinates for the comoving shift"
+
+    schedule Whisky_ComovingShift IN HydroBase_PostStep AFTER HydroBase_Con2Prim
+    {
+      LANG: Fortran
+    } "Comoving shift"
+
+  }           
+}
+
+###############################
+### Register startup banner ###
+###############################
+
+schedule Whisky_Startup AT WRAGH AFTER HydroBase_StartUp BEFORE MoL_Register
+{
+  LANG: Fortran
+} "Startup banner"
+
+#########################################
+### Register the masks with SpaceMask ###
+#########################################
+
+if ( timelevels > 0) 
+{
+  schedule Whisky_RegisterMask AT STARTUP
+  {
+    LANG: C
+  } "Register the hydro masks"
+  
+  
+  ####################################
+  ### Check the parameters are ok. ###
+  ####################################
+  
+  schedule Whisky_ParamCheck AT PARAMCHECK
+  {
+    LANG: Fortran
+  } "Check parameters"
+  
+  ######################################
+  ### Standard symmetry registration ###
+  ######################################
+  
+  schedule Whisky_InitSymBound AT BASEGRID
+  {
+    LANG: Fortran
+  } "Schedule symmetries"
+  
+  ##########################################################
+  ### Schedule the flux weighting calculation at initial ###
+  ##########################################################
+  
+  # schedule Whisky_Weights AT CCTK_INITIAL
+  # {
+  #   LANG: C
+  # } "Set up the weighting terms for the fluxes"
+  
+  ##################################
+  ### Set the handle for the EOS ###
+  ##################################
+  
+  schedule Whisky_EOSHandle AT CCTK_INITIAL before (ADMBase_InitialData ADMBase_InitialGauge HydroBase_Initial)
+  {
+    LANG: C
+  } "Set the EOS number"
+  
+  schedule Whisky_EOSHandle AT CCTK_POST_RECOVER_VARIABLES
+  {
+    LANG: C
+  } "Set the EOS number"
+  
+  # Intial data conversion
+  if (initial_prim2con) {
+    if ( ! CCTK_EQUALS(evolution_method,"Scotch_HD") ) 
+    {
+      schedule Prim2ConMHDInitial IN HydroBase_Prim2ConInitial
+      {
+        LANG: Fortran
+      } "Recover the conservative variables from the primitive variables (MHD)"
+    } else {
+      schedule Prim2ConInitial IN HydroBase_Prim2ConInitial
+      {
+        LANG: Fortran
+      } "Recover the conservative variables from the primitive variables"
+    }
+  }
+  
+  ####################################
+  ### Setup of rho minima scalars  ###
+  ####################################
+  
+  schedule Whisky_Rho_Minima_Setup  AT CCTK_Initial BEFORE (ADMBase_InitialData ADMBase_InitialGauge HydroBase_Initial)
+  {
+    LANG: Fortran
+  } "Set up minimum for the rest-mass density in the atmosphere (before intial data)"
+  
+  if (CCTK_IsThornActive("PUGH" ))
+  {
+     schedule Whisky_Rho_Minima_Setup_Final_PUGH  AT CCTK_PostInitial BEFORE MoL_PostStep
+     {
+       LANG: C
+     } "Set the value of the rest-mass density of the atmosphere which will be used during the evolution (PUGH)"
+  }  
+  else if (CCTK_IsThornActive("Carpet"))
+   {
+  #   schedule Whisky_Rho_Minima_Setup_Final  AT CCTK_PostInitial BEFORE MoL_PostStep
+  #   schedule Whisky_Rho_Minima_Setup_Final  AT CCTK_PostStep
+     schedule Whisky_Rho_Minima_Setup_Final  AT CCTK_PostPostInitial BEFORE HydroBase_Con2Prim
+     {
+       LANG: C
+     } "Set the value of the rest-mass density of the atmosphere which will be used during the evolution"
+  
+  #   schedule Whisky_Rho_Minima_Setup_Final  AT POSTREGRID BEFORE MoL_PostStep
+  #   {
+  #     LANG: C
+  #   } "Set the value of the rest-mass density of the atmosphere which will be used during the evolution"
+  
+  }    
+  
+  ######################################################################
+  ### This routine is a bit strangely situated, as it's really to do ###
+  ### with initial data. There may be a better place for it later.   ###
+  ### What it does is reset the hydrodynamical quantities if we have ###
+  ### changed the EoS between constructing the initial model and     ###
+  ### evolving. Essentially, we assume that the polytropic EoS that  ###
+  ### we are using for the atmosphere is correct, and reset eps      ###
+  ### given the values for rho. We then can call the primitive to    ###
+  ### conservative routine to get the pressure.                      ###
+  ######################################################################
+  
+  if (EoS_Change)
+  {
+    if (CCTK_EQUALS(EoS_Change_type,"Gamma"))
+    {
+      schedule Whisky_EoSChangeGamma AT CCTK_Initial AFTER (TOV_Initial_Data HydroBase_Initial) BEFORE Whisky_IVP
+      { 
+        LANG: Fortran
+      } "Reset the specific internal energy if the EoS changes between ID and evolution"
+    }
+    if (CCTK_EQUALS(EoS_Change_type,"K"))
+    {
+      schedule Whisky_EoSChangeK AT CCTK_Initial AFTER (TOV_Initial_Data HydroBase_Initial) BEFORE Whisky_IVP
+      { 
+        LANG: Fortran
+      } "Reset the hydro variables if the EoS (K) changes between ID and evolution"
+    }
+    if (CCTK_EQUALS(EoS_Change_type,"GammaKS"))
+    {
+      schedule Whisky_EoSChangeGammaK_Shibata AT CCTK_Initial AFTER (TOV_Initial_Data HydroBase_Initial) BEFORE Whisky_IVP
+      { 
+        LANG: Fortran
+        SYNC: whisky_aux_scalar_var
+        SYNC: whisky_cons_scalar_var
+        SYNC: rho,press,eps,vel
+        SYNC: whisky_cons_vector_var
+        SYNC: whisky_bfield_var
+        SYNC: Bvec
+        SYNC: divclean_psi
+      } "Reset the hydro variables if the EoS Gamma and K change between ID and evolution"
+    }
+  }
+
+
+  #####################################
+  ### Setup of dens minima scalars  ###
+  #####################################
+  # commented out, since unused for a long time
+  #schedule Whisky_Dens_Minima_Setup AT CCTK_Postinitial
+  #{
+  #  LANG: Fortran
+  #} "Set up and check minima for dens"
+  
+  #################################################
+  ### Standard registration of variables to MoL ###
+  #################################################
+  
+  schedule Whisky_Register IN MoL_Register
+  {
+    LANG: Fortran
+  } "Register variables for MoL"
+  
+  ####################################################
+  ### Setup of any scalars for efficiency purposes ###
+  ####################################################
+  
+  schedule Whisky_Scalar_Setup IN MoL_PreStep
+  {
+    LANG: Fortran
+  } "Set up and check scalars for efficiency"
+  
+  # schedule in BASEGRID and POST_RECOVER_VARIABLES to copy the value of the
+  # atmosphere_is_vacuum parameter into the grid scalar 
+  schedule Whisky_Scalar_Setup AT BASEGRID
+  {
+    LANG: Fortran
+  } "Set up and check scalars"
+  
+  schedule Whisky_Scalar_Setup AT POST_RECOVER_VARIABLES
+  {
+    LANG: Fortran
+  } "Set up and check scalars"
+  
+  ################################################
+  ### We might want to switch off evolution... ###
+  ################################################
+  
+  if (whisky_evolve) {
+  
+  STORAGE:whisky_atmosphere_mask
+  STORAGE:whisky_atmosphere_descriptors
+  
+  schedule Whisky_SetupMask AT CCTK_Initial BEFORE (ADMBase_InitialData ADMBase_InitialGauge HydroBase_Initial)
+  {
+    LANG: Fortran
+  } "Initialize the atmosphere mask"
+  
+  # If using mesh refinement
+  schedule Whisky_SetupMask AT POSTREGRID BEFORE MoL_PostStep AFTER (MaskOne,MaskZero)
+  {
+    LANG: Fortran
+  } "Initialize the atmosphere mask"
+  
+  schedule Whisky_SetupMask AT POSTRESTRICTINITIAL BEFORE HydroBase_PostStep AFTER (MaskOne,MaskZero)
+  {
+    LANG: Fortran
+  } "Initialize the atmosphere mask"
+  
+  if (wk_atmosphere || excision_atmosphere)
+  {
+    schedule Whisky_InitAtmosMask AT INITIAL AFTER Hydrobase_Initial BEFORE SetTmunu
+    {
+      LANG: Fortran
+    } "Set the atmosphere mask"
+  
+    schedule Whisky_InitAtmosMask AT POSTREGRID AFTER Whisky_SetupMask BEFORE MoL_PostStep
+    {
+      LANG: Fortran
+    } "Set the atmosphere mask"
+  
+    schedule Whisky_InitAtmosMask AT POSTRESTRICTINITIAL AFTER Whisky_SetupMask BEFORE HydroBase_PostStep
+    {
+      LANG: Fortran
+    } "Set the atmosphere mask"
+  }
+  
+  schedule Whisky_ScanForAtmosphere AT POSTRESTRICT BEFORE HydroBase_PostStep 
+  {
+    LANG: Fortran
+  } "Scan to set the atmosphere mask"
+  
+  schedule Whisky_SetupDescriptors AT CCTK_Initial BEFORE (ADMBase_InitialData ADMBase_InitialGauge HydroBase_Initial)
+  {
+    LANG: C
+  } "Get and store the mask descriptors"
+  
+  if ( whisky_puncture_trick ){ 
+     schedule Whisky_PunctureCheck IN HydroBase_PostStep BEFORE HydroBase_Do_Boundaries
+     {
+       LANG: Fortran
+     } "Impose the Faber limit"
+  }
+  
+  if ( whisky_check_final_updates ) {
+    schedule Whisky_CheckForAtmosphere IN HydroBase_PostStep BEFORE (HydroBase_Do_Boundaries,Whisky_PunctureCheck)
+    {
+      LANG: Fortran
+    } "Check updates for invalid values and reset to atmospheric values if so"
+  }
+  
+  if ( uiuc_pressure_limit ) {
+    schedule Whisky_UIUC_Pressure_Reset IN HydroBase_PostStep AFTER HydroBase_Con2Prim BEFORE WhiskyKillIsolatedCells
+    {
+      LANG: Fortran
+    } "Check pressure to be within bounds in low density regions"
+  }
+
+  if ( calculate_b2_comoving ) {
+    schedule Whisky_b2comoving IN HydroBase_PostStep AFTER (HydroBase_Con2Prim Whisky_UIUC_Pressure_Reset WhiskyKillIsolatedCells)
+    {
+      LANG: Fortran
+    } "Calculate and store the comoving b2"
+  } 
+  # If using mesh refinement
+  
+  
+  #####################################################################
+  ### The group to calculate the update term for MoL. This contains ###
+  ### the calculation of the source terms and the flux update.      ###
+  #####################################################################
+  
+  if (sanity_check_speed)
+  {
+    schedule Whisky_SanityCheck in HydroBase_RHS BEFORE WhiskyRHS
+    {
+      LANGUAGE: FORTRAN
+    } "Check w_lorentz and v^2 for unphysical values"
+    schedule Whisky_SanityCheck in MoL_PostStep AFTER HydroBase_PostStep
+    {
+      LANGUAGE: FORTRAN
+    } "Check w_lorentz and v^2 for unphysical values"
+  }
+  
+  schedule group WhiskyRHS IN HydroBase_RHS
+  {
+    STORAGE:whisky_scalars
+  } "Calculate the update terms"
+  
+  #============================================
+  # Uncomment the following lines for debugging
+  #
+  # schedule Whisky_Scalar_Setup AT CCTK_Initial
+  # {
+  #   LANG: Fortran
+  # } "Set up and check scalars for efficiency"
+  # 
+  # schedule group WhiskyRHS AT CCTK_Analysis
+  # {
+  #   STORAGE:whisky_scalars
+  #   TRIGGERS: whisky_rhs_var
+  # } "Calculate the update terms"
+  # 
+  # STORAGE:whisky_fluxes
+  # STORAGE:whisky_con_bext
+  # STORAGE:whisky_prim_bext
+  # STORAGE:whisky_mhd_bext
+  # STORAGE:whisky_mhdAvec_bext
+  # STORAGE:whisky_mhdAphi_bext
+  # STORAGE:whisky_psi_bext
+  # STORAGE:divclean_psiflux
+  # STORAGE:EOS_temps
+  # 
+  # schedule Primitive2ConservativeCells AT CCTK_POSTINITIAL BEFORE MoL_PostStep
+  # {
+  #   LANG: Fortran
+  # } "Convert to conserved variables"
+  #
+  #==============================================
+  
+  if (number_of_particles)
+  {
+    schedule WhiskyParticleInitial AT CCTK_Initial BEFORE HydroBase_Initial
+    {
+      OPTIONS: GLOBAL
+      LANG: Fortran
+    } "Initial data for the particle arrays"
+  
+    schedule WhiskyParticleRHS IN WhiskyRHS
+    {
+      OPTIONS: GLOBAL
+      LANG: Fortran
+    } "Update terms for the particles"
+  }
+  
+  ####################################################################
+  ### Do the source terms first, as this does not require the loop ###
+  ### over the different directions                                ###
+  ####################################################################
+  
+  schedule SourceTerms IN WhiskyRHS BEFORE FluxTerms
+  {
+    LANG: Fortran
+  } "Source term calculation"
+  
+  #################################################################
+  ### Initial setup for the loop over the different directions. ###
+  #################################################################
+  
+  schedule WhiskyStartLoop IN WhiskyRHS BEFORE FluxTerms
+  {
+    LANG: Fortran
+    OPTIONS: level
+  } "Set the flux_direction variable"
+  
+  ###################################################################
+  ### The group to calculate the update terms from the fluxes. We ###
+  ### do this as a loop over each direction to reduce coding and  ###
+  ### hopefully to reduce bugs. The parameter flux_direction runs ###
+  ### from (3->0) corresponding to (z->x) and stopping. At each   ###
+  ### step in the loop the data is reconstructed and then the     ###
+  ### fluxes are computed by the Riemann solve.                   ###
+  ###################################################################
+  
+  #######################################################
+  ### Switch between RSA FV and flux split FD methods ###
+  #######################################################
+  
+  if (CCTK_EQUALS(method_type, "RSA FV"))
+  {
+  
+    if ( CCTK_EQUALS(evolution_method,"Scotch_MHD_Avec") )
+    {
+      if (evolve_tracer)
+      {  
+        schedule group FluxTerms IN WhiskyRHS WHILE Whisky::flux_direction
+        {
+          STORAGE:whisky_prim_bext
+          STORAGE:whisky_con_bext
+          STORAGE:whisky_con_mhd_bext
+          STORAGE:whisky_mhd_bext
+          STORAGE:whisky_psi_bext
+          STORAGE:whisky_fluxes
+          STORAGE:whisky_mhd_fluxes
+          STORAGE:whisky_tracer_cons_bext
+          STORAGE:whisky_tracer_prim_bext
+          STORAGE:whisky_tracer_flux
+        } "Calculation of intercell fluxes"
+      }
+      else
+      {
+        schedule group FluxTerms IN WhiskyRHS WHILE Whisky::flux_direction
+        {
+          STORAGE:whisky_prim_bext
+          STORAGE:whisky_con_bext
+          STORAGE:whisky_con_mhd_bext
+          STORAGE:whisky_mhd_bext
+          STORAGE:whisky_psi_bext
+          STORAGE:whisky_fluxes
+          STORAGE:whisky_mhd_fluxes
+        } "Calculation of intercell fluxes"
+      }
+    } else if ( CCTK_EQUALS(evolution_method,"Scotch_MHD_Bvec") )
+    {
+      if (evolve_tracer)
+      {  
+        schedule group FluxTerms IN WhiskyRHS WHILE Whisky::flux_direction
+        {
+          STORAGE:whisky_prim_bext
+          STORAGE:whisky_con_bext
+          STORAGE:whisky_con_mhd_bext
+          STORAGE:whisky_mhd_bext
+          STORAGE:whisky_psi_bext
+          STORAGE:whisky_fluxes
+          STORAGE:whisky_mhd_fluxes
+          STORAGE:divclean_psiflux
+          STORAGE:whisky_tracer_cons_bext
+          STORAGE:whisky_tracer_prim_bext
+          STORAGE:whisky_tracer_flux
+        } "Calculation of intercell fluxes"
+      }
+      else
+      {
+        schedule group FluxTerms IN WhiskyRHS WHILE Whisky::flux_direction
+        {
+          STORAGE:whisky_prim_bext
+          STORAGE:whisky_con_bext
+          STORAGE:whisky_con_mhd_bext
+          STORAGE:whisky_mhd_bext
+          STORAGE:whisky_psi_bext
+          STORAGE:whisky_fluxes
+          STORAGE:whisky_mhd_fluxes
+          STORAGE:divclean_psiflux
+        } "Calculation of intercell fluxes"
+      }
+    }
+    else
+    {
+      if (evolve_tracer)
+      {  
+        schedule group FluxTerms IN WhiskyRHS WHILE Whisky::flux_direction
+        {
+          STORAGE:whisky_prim_bext
+          STORAGE:whisky_con_bext
+          STORAGE:whisky_fluxes
+          STORAGE:whisky_tracer_cons_bext
+          STORAGE:whisky_tracer_prim_bext
+          STORAGE:whisky_tracer_flux
+        } "Calculation of intercell fluxes"
+      }
+      else
+      {
+        schedule group FluxTerms IN WhiskyRHS WHILE Whisky::flux_direction
+        {
+          STORAGE:whisky_prim_bext
+          STORAGE:whisky_con_bext
+          STORAGE:whisky_fluxes
+        } "Calculation of intercell fluxes"
+      }
+    }
+      
+  ##############################################################
+  ### This is a wrapper call to the Prim2Con routines.       ###
+  ##############################################################
+  
+    # schedule conversion of variables after Reconstruction
+    if (CCTK_EQUALS(recon_vars, "primitive") || (CCTK_IsThornActive("ReconstructPPM"))) {
+  
+      schedule group Whisky_Prim2Con IN FluxTerms AFTER Reconstruct AS Whisky_Convert
+      {
+      } "Recover the conservative variables from the primitive variables"
+  
+    } else if (CCTK_EQUALS(recon_vars,"conservative")) {
+    
+      schedule group Whisky_Con2PrimBounds IN FluxTerms AFTER Reconstruct AS Whisky_Convert
+      {
+      } "Recover primitive variables from the conservative variables"
+  
+    }
+  
+    # recon_vars=="primitive" and initial data
+    if (CCTK_EQUALS(whisky_eos_type,"General")) 
+    {
+    
+      schedule Primitive2Conservative IN Whisky_Prim2Con AS Primitive2Conservative
+      {
+        LANG: Fortran
+      } "Recover the conservative variables from the primitive variables (general)"
+    
+    }
+    else if (CCTK_EQUALS(whisky_eos_type,"Polytype"))
+    {
+      
+        schedule Prim2ConservativePolytype IN Whisky_Prim2Con AS Primitive2Conservative
+        {
+          LANG: Fortran
+        } "Recover the conservative variables from the primitive variables (polytype)"
+    
+    } 
+  
+   
+  ##################################################
+  ### Set a trivial Riemann Problem for testing. ###
+  ##################################################
+  
+    if (set_trivial_rp_grid_function)
+    {
+      schedule Set_Trivial_Riemann_Problem_Grid_Function \
+      IN FluxTerms AFTER Reconstruct
+      {
+        LANG: C
+        SYNC: whisky_trivial_rp_gf_group
+      } "Set the gridfunction for the trp (for debugging only)"
+    }
+    
+  ######################################################
+  ### The Riemann solver thorns schedule themselves. ###
+  ######################################################
+  #we might want to create a group for them, though.
+  
+  }
+  else if (CCTK_EQUALS(method_type, "Flux split FD"))
+  {
+  
+    STORAGE:fs_alpha
+  
+    if (evolve_tracer)
+    {
+  
+      if ( CCTK_EQUALS(evolution_method,"Scotch_MHD_Bvec") )
+      {
+  
+        schedule group FluxTerms IN WhiskyRHS WHILE Whisky::flux_direction 
+        {
+          STORAGE: whisky_fluxes
+          STORAGE: whisky_mhd_fluxes
+          STORAGE: divclean_psiflux
+          STORAGE: whisky_tracer_flux
+        } "Calculation of intercell fluxes"
+  
+      }
+      else
+      {
+  
+        schedule group FluxTerms IN WhiskyRHS WHILE Whisky::flux_direction 
+        {
+          STORAGE: whisky_fluxes
+          STORAGE: whisky_tracer_flux
+        } "Calculation of intercell fluxes"
+  
+      }
+  
+      schedule Whisky_FSAlpha IN FluxTerms BEFORE Whisky_SplitFlux
+      {
+        LANG: Fortran
+      } "Compute the maximum characteristic speeds"
+  
+      schedule Whisky_SplitFlux IN FluxTerms AS Reconstruct
+      {
+        LANG: Fortran
+        STORAGE: flux_splitting
+        STORAGE: whisky_tracer_flux_splitting
+        SYNC: whisky_fluxes
+      } "Compute the fluxes using WENO5 FD + Lax-Friedrichs splitting"
+  
+    }
+    else
+    {
+  
+      if ( CCTK_EQUALS(evolution_method,"Scotch_MHD_Bvec") )
+      {
+  
+        schedule group FluxTerms IN WhiskyRHS WHILE Whisky::flux_direction 
+        {
+          STORAGE: whisky_fluxes
+          STORAGE: whisky_mhd_fluxes
+          STORAGE: divclean_psiflux
+        } "Calculation of intercell fluxes"
+  
+      }
+      else
+      {
+  
+        schedule group FluxTerms IN WhiskyRHS WHILE Whisky::flux_direction 
+        {
+          STORAGE: whisky_fluxes
+        } "Calculation of intercell fluxes"
+  
+      }
+  
+      schedule Whisky_FSAlpha IN FluxTerms BEFORE Whisky_SplitFlux
+      {
+        LANG: Fortran
+      } "Compute the maximum characteristic speeds"
+  
+      schedule Whisky_SplitFlux IN FluxTerms AS Reconstruct
+      {
+        LANG: Fortran
+        STORAGE: flux_splitting
+        SYNC: whisky_fluxes
+      } "Compute the fluxes using WENO5 FD + Lax-Friedrichs splitting"
+  
+    }
+  
+  }
+  
+  ###########################################################
+  ### After calculating the fluxes, calculate the update. ###
+  ###########################################################
+  
+  schedule UpdateCalculation IN FluxTerms AFTER Riemann
+  {
+    LANG: Fortran
+  } "Calculate the update term from the fluxes"
+    
+  #################################
+  ### Advance the loop counter. ###
+  #################################
+  
+  schedule WhiskyAdvanceLoop IN FluxTerms AFTER UpdateCalculation
+  {
+    LANG: Fortran
+    OPTIONS: level
+  } "Decrement the flux_direction variable"
+  
+  ###########################################################
+  ### If we're in the atmosphere or inside the excision   ###
+  ### region then we don't want to do any updating (in    ###
+  ### fact if we're inside the excision region we don't   ###
+  ### want to calculate the fluxes, but we'll worry about ###
+  ### that later). Just zero the update terms where       ###
+  ### certain conditions are violated.                    ###
+  ###########################################################
+  
+  schedule WhiskyUpdateAtmosphereMask IN WhiskyRHS AFTER FluxTerms
+  {
+    LANG: Fortran
+  } "Alter the update terms if inside the atmosphere region"
+
+  if ( suppress_atmosphere_movement ) {
+     schedule WhiskyDampAtmosphere IN WhiskyRHS AFTER FluxTerms
+     {
+       LANG: Fortran
+     } "Dampen evolution in atmosphere by exp(1-rho_min/rho). Useful if no atmosphere mask"
+  }
+
+  ###############################################################
+  ### After we've done the update, there's a few things to do ###
+  ###############################################################
+  
+  # This should not be used anymore and be removed after some time
+  schedule group Whisky_PostStep IN HydroBase_PostStep
+  {
+  } "Post step tasks for Whisky"
+  
+  #################################################################
+  ### After MoL has updated the conserved variables, we need to ###
+  ### convert back to primitive variables. This is a wrapper    ###
+  ### over the entire grid.                                     ###
+  #################################################################
+  
+  ########################################################
+  ### Find the refinement level that is being computed ###
+  ########################################################
+  
+  schedule Whisky_RefinementLevel IN MoL_PostStep BEFORE (SetMetricTemps,HydroBase_PostStep)
+  {
+    LANG: Fortran
+  } "Calculate current refinement level"
+  
+  schedule Whisky_RefinementLevel AT POSTREGRIDINITIAL 
+  {
+    LANG: Fortran
+  } "Calculate current refinement level"
+  
+  schedule Whisky_RefinementLevel AT INITIAL BEFORE (ADMBase_InitialData ADMBase_InitialGauge HydroBase_Initial)
+  {
+    LANG: Fortran
+  } "Calculate current refinement level"
+  
+  schedule Whisky_RefinementLevel IN FluxTerms BEFORE Reconstruct
+  {
+    LANG: Fortran
+  } "Calculate current refinement level"
+  
+  schedule Whisky_RefinementLevel AT CCTK_PostStep
+  {
+    LANG: Fortran
+  } "Calculate current refinement level"
+  
+  
+  #################################################################
+  ### Having finished all the updates, we apply the boundary    ###
+  ### conditions and synchronize the conservative and primitive ###
+  ### variables. All other grid functions are reset only in the ###
+  ### interior of the grid and are totally reset at every step, ###
+  ### and so synchronization is not necessary.                  ###
+  #################################################################
+  
+  #schedule Whisky_Boundaries IN HydroBase_PostStep AFTER Con2Prim
+  
+  if (evolve_tracer)
+  {
+    STORAGE:whisky_tracers[3]
+    STORAGE:whisky_cons_tracers[3]
+    STORAGE:whisky_tracer_rhs
+  }
+  
+  if (outflow_boundaries)
+  {
+    schedule Whisky_OutflowBoundaries IN HydroBase_PostStep BEFORE Whisky_Boundaries
+    {
+      LANG: Fortran
+    } "Outflow boundaries over only some of the domain"
+  }
+  
+  # This should not be used anymore and should be removed after some time
+  schedule group Do_Whisky_Boundaries IN HydroBase_Do_Boundaries
+  {
+  } "Whisky Boundary conditions group"
+  
+  if (evolve_tracer)
+  {
+    schedule Whisky_Boundaries IN HydroBase_Boundaries
+    {
+      LANG: Fortran
+      OPTIONS: LEVEL
+      SYNC: whisky_aux_scalar_var
+      SYNC: whisky_cons_scalar_var
+      SYNC: rho,press,eps,vel
+      SYNC: whisky_cons_vector_var
+      SYNC: whisky_cons_tracers
+      SYNC: whisky_tracers
+      SYNC: whisky_bfield_var
+      SYNC: Bvec
+      SYNC: Avec
+      SYNC: Aphi
+      SYNC: divclean_psi
+    } "Do the boundary conditions"
+  } else {
+    if(sync_primitives)
+    {
+      schedule Whisky_Boundaries IN HydroBase_Boundaries
+      {
+        LANG: Fortran
+        OPTIONS: LEVEL
+        SYNC: whisky_aux_scalar_var
+        SYNC: whisky_cons_scalar_var
+        SYNC: rho,press,eps,vel
+        SYNC: whisky_cons_vector_var
+        SYNC: whisky_bfield_var
+        SYNC: Bvec
+        SYNC: Avec
+        SYNC: Aphi
+        SYNC: divclean_psi
+      } "Do the boundary conditions"
+    } else
+    {
+      schedule Whisky_Boundaries IN HydroBase_Boundaries
+      {
+        LANG: Fortran
+        OPTIONS: LEVEL
+        SYNC: whisky_cons_scalar_var
+        SYNC: whisky_cons_vector_var
+        SYNC: SpaceMask::space_mask_group
+        SYNC: whisky_bfield_var
+        SYNC: Avec
+        SYNC: Aphi
+        SYNC: divclean_psi
+      } "Do the boundary conditions"
+  
+      # after a regrid Cactus relies on the boundary thorns to fill in the outer
+      # and symmetry boundaries (we need valid data for the initial guess in Con2Prim)
+      schedule group Whisky_PrimitiveBoundaries IN CCTK_POSTREGRID BEFORE MoL_PostStep
+      {
+      } "Apply boundary conditions to primitives"
+      schedule Whisky_SelectPrimitiveBoundaries IN Whisky_PrimitiveBoundaries
+      {
+        LANG: Fortran
+        OPTIONS: LEVEL
+        # do a sync to be very sure we have proper initial guesses everywhere
+        SYNC: whisky_aux_scalar_var
+        SYNC: rho,press,eps,vel
+      } "Select primitive variables for boudary conditions"
+      schedule group ApplyBCs AS Whisky_ApplyPrimitiveBCs in Whisky_PrimitiveBoundaries AFTER Whisky_SelectPrimitiveBoundaries
+      {
+      } "Apply boundary conditions to primitive variables"
+    }
+  }
+  
+  ################################################################
+  ### If a point has been marked as requiring resetting to the ###
+  ### atmosphere, this is where we do it.                      ###
+  ###                                                          ###
+  ### You didn't see this abuse of MoL. Nothing to see here,   ###
+  ### move along.                                              ###
+  ################################################################
+  
+  if (sync_primitives)
+  {
+    schedule Whisky_AtmosphereReset IN MoL_Evolution AFTER MoL_Step BEFORE HydroBase_Do_Boundaries AFTER MoL_RestoreSandR
+    {
+      LANG: Fortran
+    #  SYNC: whisky_cons_var
+    #  SYNC: whisky_prim_var
+    } "Reset the atmosphere"
+  }
+  else
+  {
+    schedule Whisky_AtmosphereReset IN MoL_Evolution AFTER MoL_Step AFTER HydroBase_Do_Boundaries AFTER MoL_RestoreSandR
+    {
+      LANG: Fortran
+    #  SYNC: whisky_cons_var
+    #  SYNC: whisky_prim_var
+    } "Reset the atmosphere"
+  }
+  
+  if (excision_atmosphere)
+  {
+    schedule Whisky_ExpandNonAtmosphere IN MoL_PreStep
+    {
+      LANG: Fortran
+    } "Expand the non-atmosphere region"
+  
+    schedule Whisky_CheckExpandedNonAtmosphere IN MoL_Evolution AFTER Whisky_AtmosphereReset BEFORE HydroBase_Boundaries
+    {
+      LANG: Fortran
+    } "Bring undead cells to live"
+  
+    # ScanForAtmosphere schedules itself in POSTRESTRICT
+  }
+  
+  if (kill_isolated_cells)
+  {
+    schedule WhiskyKillIsolatedCells IN HydroBase_PostStep AFTER HydroBase_Con2Prim
+    {
+      LANG: Fortran
+    } "Kill isolated cells"
+    schedule WhiskySelectMaskBCs IN HydroBase_PostStep AFTER WhiskyKillIsolatedCells
+    {
+      OPTIONS: Level
+      LANG: Fortran
+  
+      SYNC: SpaceMask::space_mask_group
+    } "Select SpaceMask boundary conditions"
+    schedule group ApplyBCs AS Whisky_ApplyMaskBCs IN HydroBase_PostStep AFTER Whisky_MaskSelectBCs
+    {
+    } "Apply boundary conditions to space mask"
+    schedule WhiskyBringCellsAlive IN HydroBase_PostStep AFTER Whisky_ApplyMaskBCs
+    {
+      LANG: Fortran
+    } "Bring new cells to live"
+  
+    schedule Whisky_ScanForDeadCells AT INITIAL AFTER Hydrobase_Initial BEFORE SetTmunu
+    {
+      LANG: Fortran
+    } "Set the alive mask"
+  
+    schedule Whisky_ScanForDeadCells AT POSTREGRID AFTER Whisky_SetupMask BEFORE MoL_PostStep
+    {
+      LANG: Fortran
+    } "Set the alive mask"
+  
+    schedule Whisky_ScanForDeadCells AT POSTRESTRICTINITIAL AFTER Whisky_SetupMask BEFORE HydroBase_PostStep
+    {
+      LANG: Fortran
+    } "Set the alive mask"
+  }
+  
+  
+  } # end of   if (whisky_evolve)
+    
+  ################################################################
+  ### Schedule calculation of Tmunu.  This is for using the    ###
+  ### AddtoTmunu Mechanism rather than the expensive include   ###
+  ### mechanism                                                ###
+  ################################################################
+  
+  if ( CCTK_EQUALS(evolution_method,"Scotch_HD") )
+  {
+     SCHEDULE Whisky_SetTmunu IN AddToTmunu
+     {
+       LANG: Fortran
+     } "Add Whisky's hydro stress energy tensor"
+  } else {
+     SCHEDULE Whisky_MHD_SetTmunu IN AddToTmunu
+     {
+       LANG: Fortran
+     } "Add Whisky's hydro stress energy tensor (MHD)"
+  }
+  
+  if (set_trivial_rp_grid_function)
+  {
+    STORAGE: whisky_trivial_rp_gf_group
+  }
+  
+  if (compute_DCandMaxima)
+  {
+    STORAGE: whisky_maxima_location
+    STORAGE: whisky_maxima_position
+    STORAGE: whisky_maxima_iteration
+    STORAGE: whisky_maxima_separation
+  
+    schedule Whisky_InitFindMaxima AT Initial
+    {
+      LANG:Fortran
+      OPTIONS: GLOBAL
+    } "Initialize the scalars for the routine that locates the maxima"
+  
+  
+    schedule Whisky_InitFindMaxima AT CCTK_POST_RECOVER_VARIABLES
+    {
+      LANG:Fortran
+      OPTIONS: GLOBAL
+    } "Initialize the scalars for the routine that locates the maxima"
+  
+  
+    STORAGE: maxrho_global
+    schedule GROUP Whisky_DCAndMaxima AT POSTSTEP #Analysis
+    {
+      STORAGE: whisky_maxima_location
+      STORAGE: whisky_maxima_position
+      STORAGE: whisky_maxima_separation
+    } "Find the maximum of the density and the star separation"
+    
+    if (use_coord_maxima)
+    {
+   
+      schedule Whisky_FindMaxima IN Whisky_DCAndMaxima
+      {
+        LANG: Fortran
+        OPTIONS: local  
+    } "Use the maximum of the density to set the position of the center of the star"
+      
+    }
+    else
+    {
+      
+      schedule Whisky_FindWeightedMaxima IN Whisky_DCAndMaxima
+      {
+        LANG: Fortran
+        OPTIONS: local  
+      } "Use the weighted maximum of the density to set the position used by DriftCorrect"
+      
+    }
+    
+    if (set_dc_centroid)
+    {
+      schedule Whisky_SetDCCentroid IN Whisky_DCAndMaxima AFTER Whisky_FindMaxima
+      {
+        LANG: Fortran
+        OPTIONS: GLOBAL
+      } "Set DriftCorrect"
+    }
+    
+    schedule Whisky_FindSeparation IN Whisky_DCAndMaxima AFTER Whisky_FindMaxima
+    {
+      LANG: Fortran
+      OPTIONS: GLOBAL
+      TRIGGERS: whisky_maxima_position
+      TRIGGERS: whisky_maxima_separation
+    } "Find the separation of a binary NS from the maxima"
+    
+  }
+  
+  # Check that rho >= whisky_rho_min
+  if (Check_Rho_Minimum)
+  {
+    schedule Whisky_Check_Rho_Minimum At ANALYSIS
+    {
+      LANG: Fortran
+      TRIGGERS: rho,press,eps
+    } "Check whether somewhere rho(i,j,k) < whisky_rho_min and produce a WARNING"
+    
+    schedule Whisky_RefinementLevel AT ANALYSIS BEFORE Whisky_Check_Rho_Minimum
+    {
+      LANG: Fortran
+      TRIGGERS: rho,press,eps
+    } "Calculate current refinement level"
+  }
+  
+  STORAGE:Whisky_CarpetWeights  
+  schedule Whisky_CarpetWeights AT basegrid AFTER MaskBase_SetupMask
+  {
+    LANG: C
+    OPTIONS: global loop-local
+  } "Copy the weight grid-function from CarpetReduce"
+  
+  schedule Whisky_CarpetWeights AT postregridinitial AFTER MaskBase_SetupMask
+  {
+    LANG: C
+    OPTIONS: global loop-local
+  } "Copy the weight grid-function from CarpetReduce"
+  
+  schedule Whisky_CarpetWeights AT postregrid AFTER MaskBase_SetupMask
+  {
+    LANG: C
+    OPTIONS: global loop-local
+  } "Copy the weight grid-function from CarpetReduce"
+  
+  schedule Whisky_CarpetWeights AT post_recover_variables AFTER MaskBase_SetupMask
+  {
+    LANG: C
+    OPTIONS: global loop-local
+  } "Copy the weight grid-function from CarpetReduce"
+  
+  if(whisky_clear_all_nans_everywhere)
+  {
+    STORAGE: whisky_nankind
+  
+    schedule Whisky_ClearNanMask in MaskBase_SetupMask
+    {
+      LANG: Fortran
+    } "clear nan flags after regridding etc."
+  
+    schedule Whisky_ClearNanMask in HydroBase_Initial AFTER Whisky_Initial
+    {
+      LANG: Fortran
+    } "clear nan flags after initial data"
+  
+    schedule Whisky_ClearNanMask in CCTK_PRESTEP
+    {
+      LANG: Fortran
+    } "clear nan flags before evolution"
+  
+    schedule Whisky_RemoveNaNsInRHS in MoL_PostRHS
+    {
+      LANG: Fortran
+    } "remove any nan in hydro RHS"
+  
+  # this catches all write access to the primitives (if we get Tmunu correctly that is)
+    schedule Whisky_RemoveAllNaNs in SetTmunu BEFORE AddToTmunu
+    {
+      LANG: Fortran
+    } "remove any nans in conservatives or primitives"
+  
+    schedule Whisky_RemoveAllNaNs in MoL_PreStep
+    {
+      LANG: Fortran
+    } "remove any nans in conservatives or primitives"
+  
+    schedule Whisky_CheckNanMask in CCTK_POSTSTEP
+    {
+      LANG: C
+      OPTIONS: level
+    } "check if we found NaNs and write out mask if we have"
+  }      
+  
+  # Monitor divB
+  if ( monitor_divB )
+  {
+  
+    schedule Whisky_recalc_DivB in MoL_PseudoEvolution
+    {
+      LANG: Fortran
+      SYNC: divB
+    } "Recalculate the div(B) for constraint monitoring"
+  
+  }
+
+} # ! timelevels==0 no-op

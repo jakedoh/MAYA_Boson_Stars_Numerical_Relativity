@@ -1,0 +1,321 @@
+ActiveThorns = "
+        Boundary
+        CartGrid3D
+        CoordBase
+        IOUtil
+        InitBase
+        MoL
+	time
+        SymBase
+
+        ADMAnalysis
+        ADMBase
+        ADMConstraints
+        ADMCoupling
+        ADMMacros
+        CoordGauge
+        SpaceMask
+        StaticConformal
+
+        NaNChecker
+
+        Carpet
+        CarpetIOASCII
+        CarpetIOBasic
+        CarpetIOScalar
+        CarpetLib
+        CarpetReduce
+	CarpetRegrid2
+        LoopControl
+
+        Exact
+        Formaline
+        GSL
+
+        Slab
+
+        GenericFD
+
+        CL_BSSN
+        CL_BSSN_Helper
+	SphericalSurface
+	TmunuBase
+	Dissipation
+
+        carpetiohdf5
+
+        localinterp
+        aeilocalinterp
+        carpetinterp
+        sphericalsurface
+        ahfinderdirect
+"
+
+# ReflectionSymmetry
+# output
+
+IO::out_dir = $parfile
+
+IOBasic::outInfo_every = 1
+IOBasic::outInfo_vars = "
+        Carpet::timing
+        CL_BSSN::H
+"
+
+IOScalar::one_file_per_group = yes
+IOScalar::outScalar_every    = 16
+IOScalar::outScalar_vars     = "
+        CL_BSSN::CL_log_confac
+        CL_BSSN::CL_metric
+        CL_BSSN::CL_trace_curv
+        CL_BSSN::CL_curv
+        CL_BSSN::CL_Gamma
+"
+#        ADMBase::metric
+#        ADMBase::curv
+#        ADMBase::lapse
+#        ADMBase::shift
+#        ADMAnalysis::trace_of_K
+#        ADMAnalysis::ricci_scalar
+#        ADMConstraints::Hamiltonian
+#        ADMConstraints::momentum
+#        CL_BSSN::Ham
+#        CL_BSSN::mom
+#        CL_BSSN::cons_detg
+#        CL_BSSN::cons_Gamma
+#        CL_BSSN::cons_traceA
+
+IOASCII::one_file_per_group = yes
+IOASCII::out1D_every        = 1
+IOASCII::out1D_vars         = "
+        ADMBase::metric
+        ADMBase::curv
+        ADMBase::lapse
+        ADMBase::shift
+        ADMAnalysis::trace_of_K
+        ADMAnalysis::ricci_scalar
+        ADMConstraints::Hamiltonian
+        ADMConstraints::momentum
+        CL_BSSN::CL_curv
+        CL_BSSN::CL_dlapse
+        CL_BSSN::CL_dlog_confac
+        CL_BSSN::CL_dmetric
+        CL_BSSN::CL_dshift
+        CL_BSSN::CL_dtshift
+        CL_BSSN::CL_Gamma
+        CL_BSSN::CL_lapse
+        CL_BSSN::CL_log_confac
+        CL_BSSN::CL_metric
+        CL_BSSN::CL_shift
+        CL_BSSN::CL_trace_curv
+        CL_BSSN::CL_curvrhs
+        CL_BSSN::CL_dlapserhs
+        CL_BSSN::CL_dlog_confacrhs
+        CL_BSSN::CL_dmetricrhs
+        CL_BSSN::CL_dshiftrhs
+        CL_BSSN::CL_dtshiftrhs
+        CL_BSSN::CL_Gammarhs
+        CL_BSSN::CL_lapserhs
+        CL_BSSN::CL_log_confacrhs
+        CL_BSSN::CL_metricrhs
+        CL_BSSN::CL_shiftrhs
+        CL_BSSN::CL_trace_curvrhs
+"
+
+
+#--- driver
+
+Cactus::cctk_itlast = 1
+#Cactus::terminate = time
+#Cactus::cctk_final_time = 200
+Carpet::use_buffer_zones      = yes
+
+CarpetLib::print_memstats_every      = 1024
+Carpet::output_timers_every          = 1024
+CarpetLib::print_timestats_every     = 1024
+Carpet::print_timestats_every        = 1
+Carpet::init_fill_timelevels         = yes
+InitBase::initial_data_setup_method  =  "init_some_levels"
+
+
+carpet::verbose = no
+carpet::veryverbose = no
+
+#--- Carpet prolongation order settings
+
+Carpet::prolongation_order_space                = 5
+Carpet::prolongation_order_time                 = 2
+
+
+# MoL time integration
+
+#MoL::ODE_Method = RK4
+#MoL::MoL_Intermediate_Steps 			= 	4
+#MoL::MoL_Num_Scratch_Levels			=	1
+MoL::ODE_Method = Generic
+MoL::Generic_Type = RK
+MoL::MoL_Intermediate_Steps 			= 	1
+MoL::MoL_Num_Scratch_Levels			=	0
+time::dtfac                             	= 	0.25
+
+#--- grid and symmetries
+
+driver::ghost_size            = 3
+grid::type = "CoordBase"
+CoordBase::domainsize = "minmax"
+CoordBase::xmin = 1.0
+CoordBase::ymin = -0.3
+CoordBase::zmin = -0.3
+CoordBase::xmax = 3.5
+CoordBase::ymax = 3.5
+CoordBase::zmax = 3.5
+CoordBase::dx   =  0.1
+CoordBase::dy   =  0.1
+CoordBase::dz   =  0.1
+
+#ReflectionSymmetry::reflection_x   = yes
+#ReflectionSymmetry::reflection_y   = yes
+#ReflectionSymmetry::reflection_z   = yes
+#ReflectionSymmetry::avoid_origin_x = no
+#ReflectionSymmetry::avoid_origin_y = no
+#ReflectionSymmetry::avoid_origin_z = no
+#
+#CoordBase::boundary_shiftout_x_lower = 1
+#CoordBase::boundary_shiftout_y_lower = 1
+#CoordBase::boundary_shiftout_z_lower = 1
+
+Carpet::domain_from_coordbase = yes
+
+CoordBase::boundary_size_x_lower = 3
+CoordBase::boundary_size_y_lower = 3
+CoordBase::boundary_size_z_lower = 3
+CoordBase::boundary_size_x_upper = 3
+CoordBase::boundary_size_y_upper = 3
+CoordBase::boundary_size_z_upper = 3
+
+
+carpet::max_refinement_levels           	= 1
+
+#--- initial data
+
+ADMBase::initial_data      = "exact"
+ADMBase::initial_lapse     = "exact"
+ADMBase::initial_shift     = "exact"
+ADMBase::initial_dtlapse   = "zero"
+ADMBase::initial_dtshift   = "zero"
+ADMBase::evolution_method = "CL_BSSN"
+ADMBase::lapse_evolution_method = "CL_BSSN"
+ADMBase::shift_evolution_method = "CL_BSSN"
+ADMBase::dtlapse_evolution_method = "CL_BSSN"
+ADMBase::dtshift_evolution_method = "CL_BSSN"
+#ADMBase::lapse_timelevels  = 3
+#ADMBase::shift_timelevels  = 3
+#ADMBase::metric_timelevels = 3
+
+Exact::exact_model = "Kerr/Kerr-Schild"
+Exact::Kerr_KerrSchild__mass = 1.0
+Exact::Kerr_KerrSchild__spin = 0.0
+Exact::Kerr_KerrSchild__epsilon = 1.0e-6
+#Exact::Kerr_KerrSchild__parabolic = yes
+#Exact::Kerr_KerrSchild__power     = 8
+#Exact::Kerr_KerrSchild__epsilon   = 1.0
+
+#--- CL_BSSN
+
+CL_BSSN::harmonicN       = 1      # 1+log
+CL_BSSN::harmonicF       = 2.0    # 1+log
+CL_BSSN::ShiftGammaCoeff = 0.75
+CL_BSSN::BetaDriver      = 0.5
+#CL_BSSN::LapseAdvectionCoeff = 1.0
+#CL_BSSN::ShiftAdvectionCoeff = 1.0
+
+CL_BSSN::CL_curv_bound        = "radiative"
+CL_BSSN::CL_dlapse_bound      = "radiative"
+CL_BSSN::CL_dlog_confac_bound = "radiative"
+CL_BSSN::CL_dmetric_bound     = "radiative"
+CL_BSSN::CL_dshift_bound      = "radiative"
+CL_BSSN::CL_dtshift_bound     = "radiative"
+CL_BSSN::CL_Gamma_bound       = "radiative"
+CL_BSSN::CL_lapse_bound       = "radiative"
+CL_BSSN::CL_log_confac_bound  = "radiative"
+CL_BSSN::CL_metric_bound      = "radiative"
+CL_BSSN::CL_shift_bound       = "radiative"
+CL_BSSN::CL_trace_curv_bound  = "radiative"
+
+ADMMacros::spatial_order = 4
+
+#--- Dissipation
+
+Dissipation::order = 5
+Dissipation::vars = "
+	CL_BSSN::CL_Gamma
+  	CL_BSSN::CL_lapse
+  	CL_BSSN::CL_shift
+  	CL_BSSN::CL_log_confac
+  	CL_BSSN::CL_metric
+  	CL_BSSN::CL_trace_curv
+  	CL_BSSN::CL_curv
+        CL_BSSN::CL_dtshift
+"
+
+#--- Analysis
+
+admconstraints::constraints_timelevels          =       3
+admconstraints::constraints_persist             =       yes
+admconstraints::bound                           =       "static"
+
+SphericalSurface::nsurfaces = 1
+SphericalSurface::maxntheta = 37
+SphericalSurface::maxnphi   = 76
+
+SphericalSurface::ntheta      [0] = 37
+SphericalSurface::nphi        [0] = 76
+SphericalSurface::nghoststheta[0] = 2
+SphericalSurface::nghostsphi  [0] = 2
+
+
+AHFinderDirect::find_every = 1 # 128
+
+AHFinderDirect::run_at_CCTK_POST_RECOVER_VARIABLES = no
+
+AHFinderDirect::move_origins            = no
+AHFinderDirect::reshape_while_moving    = no
+AHFinderDirect::predict_origin_movement = no
+AHFinderDirect::verbose_level           = "algorithm highlights"
+
+AHFinderDirect::geometry_interpolator_name = "Lagrange polynomial interpolation"
+AHFinderDirect::geometry_interpolator_pars = "order=4"
+AHFinderDirect::surface_interpolator_name  = "Lagrange polynomial interpolation"
+AHFinderDirect::surface_interpolator_pars  = "order=4"
+
+AHFinderDirect::output_h_every = 0
+
+AHFinderDirect::max_Newton_iterations__initial           = 50
+AHFinderDirect::max_allowable_Theta_growth_iterations    = 10
+AHFinderDirect::max_allowable_Theta_nonshrink_iterations = 10
+
+AHFinderDirect::N_horizons = 1
+
+AHFinderDirect::origin_x                             [1] = 0.0
+AHFinderDirect::initial_guess__coord_sphere__x_center[1] = 0.0
+AHFinderDirect::initial_guess__coord_sphere__radius  [1] =  2.0
+AHFinderDirect::which_surface_to_store_info          [1] = 0
+AHFinderDirect::reset_horizon_after_not_finding      [1] = no
+
+nanchecker::check_every                         =       1
+nanchecker::check_vars                          =       "
+CL_BSSN::CL_Gamma
+        CL_BSSN::CL_curv
+        CL_BSSN::CL_dlapse
+        CL_BSSN::CL_dlog_confac
+        CL_BSSN::CL_dmetric
+        CL_BSSN::CL_dshift
+        CL_BSSN::CL_dtshift
+        CL_BSSN::CL_Gamma
+        CL_BSSN::CL_lapse
+        CL_BSSN::CL_log_confac
+        CL_BSSN::CL_metric
+        CL_BSSN::CL_shift
+        CL_BSSN::CL_trace_curv
+"
+nanchecker::action_if_found                     =       "terminate"

@@ -1,0 +1,35 @@
+# Parameter definitions for thorn WaveToy2DF77
+# $Header$
+
+private:
+
+# Initial data
+
+real amplitude "Amplitude of initial Gaussian wave"
+{
+  0:* :: ""
+} 1.0
+
+real xcenter "x-position of center of Gaussian wave"
+{
+  *:* :: "Anywhere"
+} 0.5
+
+real ycenter "y-position of center of Gaussian wave"
+{
+  *:* :: "Anywhere"
+} 0.5
+
+real sigma "Width of Gaussian wave"
+{
+  *:* :: "Anything"
+} 0.02
+
+
+# Boundary
+
+keyword bound "Which boundary condition to apply"
+{
+  "zero"      :: "Set boundary values to zero"
+  "radiation" :: "Radiation/wave boundary conditions"
+} "zero"

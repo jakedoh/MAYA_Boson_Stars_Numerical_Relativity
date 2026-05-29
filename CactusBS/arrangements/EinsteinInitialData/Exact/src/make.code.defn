@@ -1,0 +1,31 @@
+# Main make.code.defn file for thorn Exact
+# $Header$
+
+# Source files in this directory
+SRCS = ParamCheck.c			\
+       Startup.c			\
+       decode_pars.F			\
+       initialize.F			\
+					\
+       slice_initialize.F		\
+       slice_evolve.F			\
+       slice_data.F			\
+					\
+       tmunu.F90			\
+					\
+       gauge.F			\
+       Bona_Masso_data.F		\
+					\
+       boost.F			\
+       metric.F			\
+					\
+       boundary.F			\
+       blended_boundary.F		\
+       xyz_blended_boundary.F  \
+       linear_extrap_one_bndry.F
+
+# Subdirectories containing source files to be compiled
+# n.b. ./include/ contains source fragments to be included in other
+#      thorns for calculating T_mu_nu, but these source fragments
+#      do *not* go in the SUBDIRS list here
+SUBDIRS = metrics

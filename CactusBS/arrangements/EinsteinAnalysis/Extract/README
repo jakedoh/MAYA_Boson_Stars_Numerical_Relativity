@@ -1,0 +1,13 @@
+Cactus Code Thorn Extract
+Author(s)    : Gabrielle Allen	
+Maintainer(s): Cactus team
+Licence      : LGPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+Calculate gauge invariant waveforms, using the Moncrief formalism,
+for cases when the spacetime approximates spherical symmetry.
+
+Calculate other quantities on a surface, such as ADM mass, momenta,
+and spins.

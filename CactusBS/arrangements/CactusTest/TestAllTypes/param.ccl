@@ -1,0 +1,21 @@
+# Parameter definitions for thorn TestAllTypes
+# $Header$
+
+CCTK_INT pint "int parameter"
+{
+  *:* :: ""
+} 1
+
+CCTK_REAL preal "real parameter"
+{
+  *:* :: ""
+} 1.0
+
+BOOLEAN pboolean "boolean parameter"
+{
+} yes
+
+STRING pstring "string parameter"
+{
+  .* :: ""
+} "a"

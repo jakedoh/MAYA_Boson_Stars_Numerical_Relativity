@@ -1,0 +1,12 @@
+# Schedule definitions for thorn IDScalarField
+
+schedule idscalarfield_setInitialScalarFields IN ADMBase_InitialData
+{
+   LANG: C 
+} "Set scalar field"
+
+schedule idscalarfield_ParamCheck AT CCTK_PARAMCHECK
+{
+  LANG: C
+  OPTIONS: global
+} "Check parameters"

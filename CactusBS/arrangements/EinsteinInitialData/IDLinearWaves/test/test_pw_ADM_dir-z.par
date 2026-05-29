@@ -1,0 +1,60 @@
+#########################################################
+!DESC "Linearized plane wave along z-line"
+#########################################################
+
+# Required thorns
+ActiveThorns = "boundary time pugh pughslab pughreduce CartGrid3D CoordBase SymBase ADMBase StaticConformal ADMMacros ADMAnalysis CoordGauge IDLinearWaves ioascii ioutil iobasic localreduce"
+
+# GENERAL 
+
+driver::global_nx  =  3     
+driver::global_ny  =  3     
+driver::global_nz  =  200     
+
+grid::type         =  "byspacing"
+grid::dxyz         =  0.01
+grid::domain     =  "full"
+time::dtfac    =  0.25   
+
+cactus::cctk_initial_time  =  0.     
+cactus::cctk_itlast        =  0
+
+
+# Einstein 
+
+admbase::metric_type       =  "static conformal"
+admbase::initial_data      = "planewaves"
+
+coordgauge::lapse_list           =  "geodesic"  
+
+# IDLinearwaves
+idlinearwaves::amplitude  = 0.001
+idlinearwaves::wavecenter = 0.0
+idlinearwaves::wavelength = 2.0
+idlinearwaves::wavepulse  = 1.0
+idlinearwaves::wavetheta  = 0.0
+idlinearwaves::wavephi    = 0.0
+idlinearwaves::wavesgoing = "both"
+
+# Output
+
+IO::out_dir               = $parfile
+IO::out_fileinfo         = "none"
+IO::parfile_write        = "no"
+
+IOBasic::outScalar_every =  10      
+IOBasic::outScalar_vars  = "admbase::gxx admbase::kxx 
+                            admanalysis::grr admbase::alp"
+IOASCII::out1D_every =  10      
+IOASCII::out1D_vars  = "admbase::gxx admbase::gxy admbase::gxz
+                        admbase::gyy admbase::gyz admbase::gzz
+                        admbase::kxx admbase::kxy admbase::kxz
+                        admbase::kyy admbase::kyz admbase::kzz"
+
+IOBasic::outInfo_every = 5
+IOBasic::outInfo_vars = "admbase::gxx"
+
+##################################################################
+
+# do not use the new scheme for names of output files
+IO::new_filename_scheme = "no"

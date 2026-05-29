@@ -1,0 +1,18 @@
+# Main make.code.defn file for thorn LlamaWaveToy
+
+# Source files in this directory
+SRCS =	boundaries.F90		\
+        cons.F90		\
+        energy.F90              \
+        error.F90		\
+        init.F90		\
+        init_metric.F90		\
+        inverse_metric.F90	\
+        min_spacing.F90		\
+        register.c		\
+        sYlm.cc			\
+        outerboundary.F90	\
+        rhs.F90
+
+# Subdirectories containing source files
+SUBDIRS = 

@@ -1,0 +1,13 @@
+# Parameter definitions for thorn NPScalars_Proca
+
+shares: ProcaBase
+USES CCTK_REAL mu
+
+private:
+
+CCTK_INT NP_order "Second or fourth order accuracy?" STEERABLE=recover
+{
+  2    :: "Second order"
+  4    :: "Fourth order"
+  6    :: "Sixth  order"
+} 4

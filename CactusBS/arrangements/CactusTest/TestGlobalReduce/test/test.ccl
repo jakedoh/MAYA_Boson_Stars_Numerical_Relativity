@@ -1,0 +1,15 @@
+# fix the abs and rel tolerance for guassianSum
+# being a numerical integration routine, it is 
+# approximate to about 1e-7 
+
+TEST gaussianSum
+{
+  ABSTOL 1e-5
+  RELTOL 1e-5
+}
+
+TEST gaussianSum_dest0
+{
+  ABSTOL 1e-5
+  RELTOL 1e-5
+}

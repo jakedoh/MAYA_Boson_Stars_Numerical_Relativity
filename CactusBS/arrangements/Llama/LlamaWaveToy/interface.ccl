@@ -1,0 +1,267 @@
+# Interface definition for thorn LlamaWaveToy
+
+IMPLEMENTS: LlamaWaveToy
+
+INHERITS: grid Coordinates GlobalDerivative SummationByParts Interpolate
+
+CCTK_INT FUNCTION     \
+    MultiPatch_GetMap \
+        (CCTK_POINTER_TO_CONST IN cctkGH)
+REQUIRES FUNCTION MultiPatch_GetMap
+
+CCTK_INT FUNCTION                         \
+    MultiPatch_GetBbox                    \
+        (CCTK_POINTER_TO_CONST IN cctkGH, \
+         CCTK_INT IN size,                \
+         CCTK_INT OUT ARRAY bbox)
+REQUIRES FUNCTION MultiPatch_GetBbox 
+
+
+SUBROUTINE globalDiff_gv ( CCTK_POINTER_TO_CONST IN cctkGH, \
+                           CCTK_INT IN dir, \
+                           CCTK_REAL IN ARRAY var, \
+                           CCTK_REAL OUT ARRAY dvar, \
+                           CCTK_REAL IN ARRAY J_dxda, \
+                           CCTK_REAL IN ARRAY J_dxdb, \
+                           CCTK_REAL IN ARRAY J_dxdc, \
+                           CCTK_REAL IN ARRAY J_dyda, \
+                           CCTK_REAL IN ARRAY J_dydb, \
+                           CCTK_REAL IN ARRAY J_dydc, \
+                           CCTK_REAL IN ARRAY J_dzda, \
+                           CCTK_REAL IN ARRAY J_dzdb, \
+                           CCTK_REAL IN ARRAY J_dzdc, \
+                           CCTK_INT IN table_handle )
+USES FUNCTION globalDiff_gv
+
+
+SUBROUTINE globalDiff2_gv( CCTK_POINTER_TO_CONST IN cctkGH, \
+                           CCTK_INT IN dir1, \
+                           CCTK_INT IN dir2, \
+                           CCTK_REAL IN ARRAY var, \
+                           CCTK_REAL OUT ARRAY dvar, \
+                           CCTK_REAL IN ARRAY J_dadx, \
+                           CCTK_REAL IN ARRAY J_dbdx, \
+                           CCTK_REAL IN ARRAY J_dcdx, \
+                           CCTK_REAL IN ARRAY J_dady, \
+                           CCTK_REAL IN ARRAY J_dbdy, \
+                           CCTK_REAL IN ARRAY J_dcdy, \
+                           CCTK_REAL IN ARRAY J_dadz, \
+                           CCTK_REAL IN ARRAY J_dbdz, \
+                           CCTK_REAL IN ARRAY J_dcdz, \
+                           CCTK_REAL IN ARRAY dJ_dadxdx, \
+                           CCTK_REAL IN ARRAY dJ_dbdxdx, \
+                           CCTK_REAL IN ARRAY dJ_dcdxdx, \
+                           CCTK_REAL IN ARRAY dJ_dadxdy, \
+                           CCTK_REAL IN ARRAY dJ_dbdxdy, \
+                           CCTK_REAL IN ARRAY dJ_dcdxdy, \
+                           CCTK_REAL IN ARRAY dJ_dadxdz, \
+                           CCTK_REAL IN ARRAY dJ_dbdxdz, \
+                           CCTK_REAL IN ARRAY dJ_dcdxdz, \
+                           CCTK_REAL IN ARRAY dJ_dadydy, \
+                           CCTK_REAL IN ARRAY dJ_dbdydy, \
+                           CCTK_REAL IN ARRAY dJ_dcdydy, \
+                           CCTK_REAL IN ARRAY dJ_dadydz, \
+                           CCTK_REAL IN ARRAY dJ_dbdydz, \
+                           CCTK_REAL IN ARRAY dJ_dcdydz, \
+                           CCTK_REAL IN ARRAY dJ_dadzdz, \
+                           CCTK_REAL IN ARRAY dJ_dbdzdz, \
+                           CCTK_REAL IN ARRAY dJ_dcdzdz, \
+                           CCTK_INT IN table_handle )
+USES FUNCTION globalDiff2_gv 
+
+
+
+CCTK_INT FUNCTION             \
+   MoLRegisterEvolvedGroup    \
+   (CCTK_INT IN EvolvedIndex, \
+    CCTK_INT IN RHSIndex)
+REQUIRES FUNCTION MoLRegisterEvolvedGroup
+
+
+CCTK_INT FUNCTION             \
+   MoLRegisterEvolved    \
+   (CCTK_INT IN EvolvedIndex, \
+    CCTK_INT IN RHSIndex)
+REQUIRES FUNCTION MoLRegisterEvolved
+
+
+
+CCTK_INT FUNCTION                        \
+   Boundary_SelectGroupForBC             \
+       (CCTK_POINTER_TO_CONST IN cctkGH, \
+        CCTK_INT IN faces,               \
+        CCTK_INT IN boundary_width,      \
+        CCTK_INT IN table_handle,        \
+        CCTK_STRING IN group_name,       \
+        CCTK_STRING IN bc_name)
+REQUIRES FUNCTION Boundary_SelectGroupForBC
+
+
+CCTK_INT FUNCTION                        \
+   Boundary_SelectVarForBC             \
+       (CCTK_POINTER_TO_CONST IN cctkGH, \
+        CCTK_INT IN faces,               \
+        CCTK_INT IN boundary_width,      \
+        CCTK_INT IN table_handle,        \
+        CCTK_STRING IN var_name,       \
+        CCTK_STRING IN bc_name)
+REQUIRES FUNCTION Boundary_SelectVarForBC
+
+CCTK_INT FUNCTION                            \
+    Boundary_SelectedGVs                     \
+        (CCTK_POINTER_TO_CONST IN cctkGH,    \
+         CCTK_INT IN  array_size,            \
+         CCTK_INT ARRAY OUT var_indicies,    \
+         CCTK_INT ARRAY OUT faces,           \
+         CCTK_INT ARRAY OUT boundary_widths, \
+         CCTK_INT ARRAY OUT table_handles,   \
+         CCTK_STRING IN  bc_name)
+REQUIRES FUNCTION Boundary_SelectedGVs
+
+
+
+CCTK_INT FUNCTION \
+    SymmetryTableHandleForGrid (CCTK_POINTER_TO_CONST IN cctkGH)
+REQUIRES FUNCTION SymmetryTableHandleForGrid
+
+CCTK_POINTER_TO_CONST FUNCTION SymmetryNameOfHandle (CCTK_INT IN sym_handle)
+REQUIRES FUNCTION SymmetryNameOfHandle
+
+CCTK_INT FUNCTION SymmetryHandleOfName (CCTK_STRING IN sym_name)
+REQUIRES FUNCTION SymmetryHandleOfName
+
+
+
+CCTK_REAL FUNCTION GetScalProdCoeff ()
+USES FUNCTION GetScalProdCoeff
+
+SUBROUTINE Diff_gv ( CCTK_POINTER_TO_CONST IN cctkGH, \
+                     CCTK_INT IN dir, \
+                     CCTK_REAL IN ARRAY var, \
+                     CCTK_REAL OUT ARRAY dvar, \
+                     CCTK_INT IN table_handle )
+USES FUNCTION Diff_gv
+
+
+
+REAL scalar TYPE=gf TIMELEVELS=2 TAGS='tensortypealias="scalar"'
+{
+  u
+} "The scalar of the scalar wave equation fame"
+
+REAL density TYPE=gf TIMELEVELS=2 TAGS='tensortypealias="scalar"'
+{
+  rho
+} "Time derivative of u"
+
+REAL dx_scalar TYPE=gf TIMELEVELS=2 TAGS='tensortypealias="scalar"'
+{
+  dx_u, dy_u, dz_u
+} "Spatial derivatives of u"
+
+
+REAL dxx_scalar TYPE=gf TIMELEVELS=2 TAGS='tensortypealias="scalar"'
+{
+  dxx_u, dyy_u, dzz_u, dxy_u, dxz_u, dyz_u
+} "Spatial derivatives of u"
+
+
+REAL dx_density TYPE=gf TIMELEVELS=2 TAGS='tensortypealias="scalar"'
+{
+  dx_rho, dy_rho, dz_rho
+} "Spatial derivatives of rho"
+
+
+
+REAL velocity TYPE=gf TIMELEVELS=2 TAGS='tensortypealias="scalar"'
+{
+  vx vy vz
+} "Spatial derivative of u"
+
+REAL debug TYPE=gf TIMELEVELS=1 TAGS='tensortypealias="scalar"'
+{
+  vxdebug, vydebug, vzdebug
+} "Spatial derivative of u"
+
+
+
+REAL scalardot TYPE=gf TAGS='tensortypealias="scalar" Prolongation="None"'
+{
+  udot
+} "RHS of u"
+
+REAL densitydot TYPE=gf TAGS='tensortypealias="scalar" Prolongation="None"'
+{
+  rhodot
+} "RHS of rho"
+
+REAL velocitydot TYPE=gf TAGS='tensortypealias="scalar" Prolongation="None"'
+{
+  vxdot vydot vzdot
+} "RHS ov v"
+
+
+
+REAL constraints TYPE=gf TAGS='tensortypealias="scalar" tensorparity=-1 Prolongation="None"'
+{
+  wx wy wz
+} "Integrability condition"
+
+REAL difference_v TYPE=gf TAGS='tensortypealias="scalar" Prolongation="None"'
+{
+  diff_vx diff_vy diff_vz
+} "Difference between v_i and d/dx^i u"
+
+REAL velocity_squared TYPE=gf TAGS='tensortypealias="scalar" Prolongation="None"'
+{
+  v2
+} "Velocity squared"
+
+
+
+REAL scalarenergy TYPE=gf TAGS='tensortypealias="scalar" Prolongation="None"'
+{
+  energy
+} "Energy of the scalar field"
+
+
+
+REAL errors TYPE=gf TAGS='tensortypealias="scalar" Prolongation="None"'
+{
+  error error_rho error_vx error_vy error_vz exact exact_rho
+} "Error of the solution"
+
+REAL errorsperiodic TYPE=gf TAGS='tensortypealias="scalar" Prolongation="None"'
+{
+  errorperiodic, errorperiodic_rho
+} "Error for a solution which is known to be periodic"
+
+
+
+REAL metric TYPE=gf TAGS='tensortypealias="scalar" Prolongation="None"'
+{
+  gxx gxy gxz gyy gyz gzz
+} "Spatial background metric"
+
+
+REAL inverse_metric TYPE=gf TAGS='tensortypealias="scalar" Prolongation="None"'
+{
+  guxx guxy guxz guyy guyz guzz
+} "Inverse of the spatial background metric"
+
+REAL lapse TYPE=gf TAGS='tensortypealias="scalar" Prolongation="None"'
+{
+  alpha
+} "Spatial background metric"
+
+REAL shift TYPE=gf TAGS='tensortypealias="scalar" Prolongation="None"'
+{
+  betax betay betaz
+} "Spatial background metric"
+
+REAL volume_element TYPE=gf TAGS='tensortypealias="scalar" Prolongation="None"'
+{
+  epsilon
+} "Volume element due to the spatial background metric"
+
+REAL min_spacing TYPE=gf TAGS='tensortypealias="scalar" Prolongation="None"' "Minimum grid spacing"

@@ -1,0 +1,27 @@
+# Schedule definition for thorn OpenCLRunTime
+
+SCHEDULE OpenCLRunTime_Setup AT startup
+{
+  LANG: C
+} "Set up OpenCL device"
+
+SCHEDULE OpenCLRunTime_DeviceInfo AT wragh
+{
+  LANG: C
+} "Output OpenCL device information"
+
+SCHEDULE OpenCLRunTime_Autoconf AT wragh AFTER OpenCLRunTime_DeviceInfo
+{
+  LANG: C
+} "Determine whether certain features are supported"
+
+SCHEDULE OpenCLRunTime_SetupDeviceGH AT basegrid AFTER (SpatialSpacings TemporalSpacings) BEFORE SpatialCoordinates
+{
+  LANG: C
+} "Set up device grid structure"
+
+SCHEDULE OpenCLRunTime_Statistics AT terminate
+{
+  LANG: C
+  OPTIONS: global
+} "Output profiling information"

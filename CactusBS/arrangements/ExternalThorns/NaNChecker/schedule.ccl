@@ -1,0 +1,31 @@
+# Schedule definitions for thorn NaNChecker
+# $Header: /cactusdevcvs/CactusUtils/NaNChecker/schedule.ccl,v 1.9 2008/11/24 10:45:49 tradke Exp $
+
+if (*check_vars && check_every > 0)
+{
+  STORAGE: NaNmask NaNsFound
+
+  schedule NaNChecker_ResetCounter at INITIAL
+  {
+    LANG:    C
+    OPTIONS: global
+  } "Reset the NaNChecker::NaNsFound counter"
+
+  schedule NaNChecker_ResetCounter at PRESTEP
+  {
+    LANG:    C
+    OPTIONS: global
+  } "Reset the NaNChecker::NaNsFound counter"
+
+  schedule NaNChecker_NaNCheck at POSTSTEP
+  {
+    LANG:    C
+    OPTIONS: local
+  } "Check for NaNs and count them in NaNChecker::NaNsFound"
+
+  schedule NaNChecker_TakeAction at POSTSTEP after NaNChecker_NaNCheck
+  {
+    LANG:    C
+    OPTIONS: global loop-level
+  } "Output NaNChecker::NaNmask and take action according to NaNChecker::action_if_found"
+}

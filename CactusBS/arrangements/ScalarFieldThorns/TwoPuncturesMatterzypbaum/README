@@ -1,0 +1,22 @@
+CVS info   : $Header: /numrelcvs/HerrmannCVS/TwoPunctures/README,v 1.1 2004/08/04 13:15:01 herrmann Exp $
+
+Cactus Code Thorn TwoPunctures
+Thorn Author(s)     : Marcus Ansorg <marcus.ansorg@aei.mpg.de>
+                    : Erik Schnetter <schnetter@aei.mpg.de>
+Thorn Maintainer(s) : Marcus Ansorg <marcus.ansorg@aei.mpg.de>
+                    : Erik Schnetter <schnetter@aei.mpg.de>
+
+--------------------------------------------------------------------------
+
+Purpose of the thorn:
+
+Create initial for two puncture black holes using a single domain
+spectral method.  This method is described in
+
+Marcus Ansorg, Bernd Brügmann, Wolfgang Tichy: A single-domain
+spectral method for black hole puncture data, gr-qc/0404056
+
+-----
+
+Modified to add a Teukolsky wave: 
+	Tanja Bode <tbode@gravity.psu.edu>

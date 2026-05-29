@@ -1,0 +1,9 @@
+Cactus Code Thorn ReflectionSymmetry
+Author(s)    : Erik Schnetter <schnetter@cct.lsu.edu>
+Maintainer(s): Erik Schnetter <schnetter@cct.lsu.edu>
+Licence      : GPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+Provide reflection symmetries, i.e., bitant, quadrant, and octant mode.

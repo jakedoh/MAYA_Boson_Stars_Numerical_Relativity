@@ -1,0 +1,11 @@
+# Configuration definitions for thorn SOCKET
+# $Header$
+
+# This may disappear if we can function alias the calls
+PROVIDES SOCKET
+{
+  SCRIPT
+  LANG
+}
+
+

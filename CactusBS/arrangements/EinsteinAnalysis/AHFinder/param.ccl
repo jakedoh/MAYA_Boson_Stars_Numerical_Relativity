@@ -1,0 +1,545 @@
+# Parameter definitions for thorn AHFinder
+# $Header$
+
+
+#################################
+###   RESTRICTED PARAMETERS   ###
+#################################
+
+restricted:
+
+BOOLEAN ahf_active "Activate AHFinder?" STEERABLE = ALWAYS
+{
+} "no"
+
+BOOLEAN ahf_persists "Do the finder grid functions stay around?"
+{
+} "no"
+
+
+
+##############################
+###   PRIVATE PARAMETERS   ###
+##############################
+
+private:
+
+
+############################
+### General parameters   ###
+############################
+
+BOOLEAN ahf_ReportAlways "Report for all surfaces found (yes) or just for apparent horizons (no)"
+{
+} "no"
+
+BOOLEAN ahf_find3 "Searching for 3 surfaces?"
+{
+} "no"
+
+BOOLEAN ahf_trapped_surface "Minimize (expansion + delta) to find trapped surface?" STEERABLE = ALWAYS
+{
+} "no"
+
+INT ahf_findevery "How often to look for horizons" STEERABLE = ALWAYS
+{
+1: :: "Set to 1 for searching each iteration"
+} 1
+
+INT ahf_findafter "After how many iterations look for horizons" STEERABLE = ALWAYS
+{
+0: :: "Any positive integer"
+} 0
+
+REAL ahf_findaftertime "After how much time look for horizons"
+{
+0.0: :: "Any positive real number. If non-zero overides ahf_findafter"
+} 0.0
+
+REAL trapped_surface_delta "find (expansion = delta) surface" STEERABLE = ALWAYS
+{
+ : :: "Just a real number"
+} 0.0
+
+
+########################################
+### Parameters for surface expansion ###
+########################################
+
+BOOLEAN ahf_phi "Expand also in phi? (seach for non-axisymmetric surface)" STEERABLE = ALWAYS
+{
+} "no"
+
+BOOLEAN ahf_offset "Center offset from origin?"
+{
+} "no"
+
+BOOLEAN ahf_wander "Allow the center to wander?"
+{
+} "no"
+
+INT ahf_lmax "Maximum number of terms in theta expansion"
+{
+0:19 :: "Range from 0 to 19"
+} 8
+
+REAL ahf_xc "x-coordinate of center of expansion" STEERABLE = ALWAYS
+{
+ : :: "Anything"
+} 0.0
+
+REAL ahf_yc "y-coordinate of center of expansion" STEERABLE = ALWAYS
+{
+ : :: "Anything"
+} 0.0
+
+REAL ahf_zc "z-coordinate of center of expansion" STEERABLE = ALWAYS
+{
+ : :: "Anything"
+} 0.0
+
+REAL ahf_xc_0 "x-coordinate of center of expansion for first surface with find3" STEERABLE = ALWAYS
+{
+ : :: "Anything"
+} 0.0
+
+REAL ahf_yc_0 "y-coordinate of center of expansion for first surface with find3" STEERABLE = ALWAYS
+{
+ : :: "Anything"
+} 0.0
+
+REAL ahf_zc_0 "z-coordinate of center of expansion for first surface with find3" STEERABLE = ALWAYS
+{
+ : :: "Anything"
+} 0.0
+
+REAL ahf_xc_1 "x-coordinate of center of expansion for second surface with find3" STEERABLE = ALWAYS
+{
+ : :: "Anything"
+} 0.0
+
+REAL ahf_yc_1 "y-coordinate of center of expansion for second surface with find3" STEERABLE = ALWAYS
+{
+ : :: "Anything"
+} 0.0
+
+REAL ahf_zc_1 "z-coordinate of center of expansion for second surface with find3" STEERABLE = ALWAYS
+{
+ : :: "Anything"
+} 0.0
+
+REAL ahf_xc_2 "x-coordinate of center of expansion for third surface with find3" STEERABLE = ALWAYS
+{
+ : :: "Anything"
+} 0.0
+
+REAL ahf_yc_2 "y-coordinate of center of expansion for third surface with find3" STEERABLE = ALWAYS
+{
+ : :: "Anything"
+} 0.0
+
+REAL ahf_zc_2 "z-coordinate of center of expansion for third surface with find3" STEERABLE = ALWAYS
+{
+ : :: "Anything"
+} 0.0
+
+
+########################################
+### Parameters for surface integrals ###
+########################################
+
+INT ahf_ntheta "Number of subdivisions in theta" STEERABLE = ALWAYS
+{
+ 1: :: "Any sensible integer"
+} 100
+
+INT ahf_nphi "Number of subdivisions in phi" STEERABLE = ALWAYS
+{
+ 1: :: "Any sensible integer"
+} 100
+
+
+#########################################
+### Parameters to indicate symmetries ###
+#########################################
+
+# IMPORTANT: This symmetries refer to the surface itself, and NOT the grid.
+
+# Notice that octant = "yes"  enforces reflection symmetries on all
+# three coordinate planes, while  octant = "high"  enforces also the
+# extra symmetry of rotation of pi/2 around the z axis.
+
+BOOLEAN ahf_refx "Reflection symmetry x->-x?" STEERABLE = ALWAYS
+{
+} "no"
+
+BOOLEAN ahf_refy "Reflection symmetry y->-y?" STEERABLE = ALWAYS
+{
+} "no"
+
+BOOLEAN ahf_refz "Reflection symmetry z->-z?" STEERABLE = ALWAYS
+{
+} "no"
+
+BOOLEAN ahf_cartoon "Cartoon mode?" STEERABLE = ALWAYS
+{
+} "no"
+
+KEYWORD ahf_octant "Octant symmetry?" STEERABLE = ALWAYS
+{
+  "no"   :: "No octant symmetry"
+  "yes"  :: "Octant symmetry: reflection symmetry on all three coordinate planes"
+  "high" :: "Octant symmetry + symmetry of rotation of pi/2 around z axis"
+} "no"
+
+
+#############################################
+### Parameters for minimization algorithm ###
+#############################################
+
+BOOLEAN ahf_minarea "Minimize area instead of expansion?"
+{
+} "no"
+
+INT ahf_maxiter "Maximum number of iterations of POWELL"
+{
+ : :: "Any sensible integer value"
+} 10
+
+REAL ahf_tol "Tolerance for minimization routines"
+{
+0: :: "A sensible positive number"
+} 0.1
+
+
+####################################
+### Parameters for initial guess ###
+####################################
+
+BOOLEAN ahf_sloppyguess "Use sphere as initial guess?"
+{
+} "no"
+
+BOOLEAN ahf_guess_absmin "Use absolute min to start minimization?"
+{
+} "no"
+
+BOOLEAN ahf_guessold "Use old horizon as initial guess?" STEERABLE = ALWAYS
+{
+} "no"
+
+BOOLEAN ahf_inner "Look for inner horizon?"
+{
+} "no"
+
+BOOLEAN ahf_manual_guess "Use specified coefficients for guess?"
+{
+} "no"
+
+INT ahf_nn0 "Number of subdivisions of c0(0) for initial guess"
+{
+ : :: "Some positive integer"
+} 10
+
+INT ahf_nn2 "Number of subdivisions of c0(2) for initial guess"
+{
+ : :: "Some positive integer"
+} 10
+
+REAL  ahf_l0_guess "Manual guess for l=0 component"
+{
+ : :: "Anything"
+} 1.0
+
+REAL  ahf_l2_guess "Manual guess for l=2 component"
+{
+ : :: "Anything"
+} 0.0
+
+REAL  ahf_l4_guess "Manual guess for l=4 component"
+{
+ : :: "Anything"
+} 0.0
+
+REAL  ahf_l6_guess "Manual guess for l=6 component"
+{
+ : :: "Anything"
+} 0.0
+
+REAL  ahf_l8_guess "Manual guess for l=8 component"
+{
+ : :: "Anything"
+} 0.0
+
+REAL  ahf_l10_guess "Manual guess for l=10 component"
+{
+ : :: "Anything"
+} 0.0
+
+REAL  ahf_l12_guess "Manual guess for l=12 component"
+{
+ : :: "Anything"
+} 0.0
+
+REAL  ahf_l14_guess "Manual guess for l=14 component"
+{
+ : :: "Anything"
+} 0.0
+
+REAL  ahf_l16_guess "Manual guess for l=16 component"
+{
+ : :: "Anything"
+} 0.0
+
+REAL  ahf_l18_guess "Manual guess for l=18 component"
+{
+ : :: "Anything"
+} 0.0
+
+REAL ahf_r0 "Radius of initial sphere (0 forces largest sphere)" STEERABLE = ALWAYS
+{
+ : :: "Anything"
+} 0.0
+
+REAL ahf_r0_0 "Radius of first initial sphere for find3 (0 forces largest sphere)" STEERABLE = ALWAYS
+{
+ : :: "Anything"
+} 0.0
+
+REAL ahf_r0_1 "Radius of second initial sphere for find3 (0 forces largest sphere)" STEERABLE = ALWAYS
+{
+ : :: "Anything"
+} 0.0
+
+REAL ahf_r0_2 "Radius of third initial sphere for find3 (0 forces largest sphere)" STEERABLE = ALWAYS
+{
+ : :: "Anything"
+} 0.0
+
+
+
+#####################################
+### Parameters for flow algorithm ###
+#####################################
+
+BOOLEAN ahf_flow "Use flow instead of minimization?"  STEERABLE = ALWAYS
+{
+} "no"
+
+INT ahf_flowiter "Maximum number of iterations for flow" STEERABLE = ALWAYS
+{
+0: :: "Anything"
+} 200
+
+REAL ahf_flowa "alpha parameter for flow"
+{
+ : ::  "Anything"
+} 0.01
+
+REAL ahf_flowb "beta parameter for flow"
+{
+ : :: "Anything"
+} 0.5
+
+REAL ahf_flowh "Weight of H flow"
+{
+ : :: "Anything"
+} 0.0
+
+REAL ahf_flowc "Weight of C flow"
+{
+ : :: "Anything"
+} 1.0
+
+REAl ahf_flown "Weight of N flow"
+{
+ : :: "Anything"
+} 0.0
+
+REAL ahf_flowtol "Tolerance for flow"
+{
+ : :: "Anything"
+} 0.0001
+
+REAL ahf_maxchange "Maximum relative difference between 1 big and 2 small steps"
+{
+ : :: "Anything"
+} 0.1
+
+REAL ahf_minchange "Minimum relative difference between 1 big and 2 small steps"
+{
+ : :: "Anything"
+} 0.01
+
+
+######################################
+### Parameters related to centroid ###
+######################################
+INT horizon_to_announce_centroid \
+  "For which horizon should we announce the centroid to driftcorrect"
+{
+  0   :: "don't announce the centroid"
+  1:3 :: "announce this horizon's centroid each time we find it"
+} 0
+
+INT horizon_to_output_centroid \
+  "For which horizon should we output the centroid"
+{
+  0   :: "don't output any centroids"
+  1:3 :: "output this horizon's centroid each time we find it"
+} 0
+
+#############################
+### Parameters for output ###
+#############################
+
+BOOLEAN ahf_logfile "Write log file?"
+{
+} "no"
+
+BOOLEAN ahf_verbose "Print messages to screen?"
+{
+} "yes"
+
+BOOLEAN ahf_veryverbose "Print messages at each iteration step to screen?"
+{
+} "no"
+
+BOOLEAN ahf_guessverbose "Print info on initial guess?"
+{
+} "no"
+
+BOOLEAN ahf_1Doutput "1D output of grid functions?"
+{
+} "no"
+
+BOOLEAN ahf_2Doutput "2D output of grid functions?" STEERABLE = ALWAYS
+{
+} "no"
+
+BOOLEAN ahf_3Doutput "3D output of grid functions?" STEERABLE = ALWAYS
+{
+} "no"
+
+BOOLEAN ahf_HDF5output "HDF5 output of AHFinder data?" STEERABLE = ALWAYS
+{
+} "no"
+
+BOOLEAN ahf_areamap "Find area map?"
+{
+} "no"
+
+BOOLEAN ahf_gaussout "Output gaussian curvature of horizon?" STEERABLE = ALWAYS
+{
+} "yes"
+
+
+
+###########################
+### Parameters for mask ###
+###########################
+
+KEYWORD ahf_mask "Use mask?" STEERABLE = ALWAYS
+{
+"off"    :: "Mask is off"
+"strong" :: "Mask set only for definite horizons"
+"weak"   :: "Mask set for both definite and probable horizons"
+} "off"
+
+KEYWORD ahf_masktype "Type of mask" STEERABLE = ALWAYS
+{
+"lego" :: "Mask is a lego sphere"
+"cube" :: "Mask is a cube"
+"poly" :: "Mask is a polyhedra"
+} "cube"
+
+REAL ahf_mask_time "Time after which to start setting the mask"
+{
+: :: "Anything goes. Negative number means setting the mask as soon as possible"
+} -1.0
+
+BOOLEAN ahf_mask_0 "Mask for first horizon with find3?"
+{
+} "yes"
+
+BOOLEAN ahf_mask_1 "Mask for second horizon with find3?"
+{
+} "yes"
+
+BOOLEAN ahf_mask_2 "Mask for third horizon with find3?"
+{
+} "yes"
+
+INT ahf_maskbuffer "Number of grid points in mask buffer zone" STEERABLE = ALWAYS
+{
+0 :: "Positive please"
+} 5
+
+REAL ahf_maskshrink "Shrink factor for mask" STEERABLE = ALWAYS
+{
+0.0:1.0 :: "Must be positive and not larger than 1"
+} 0.8
+
+REAL ahf_shiftcoeff "Coefficient for shift"
+{
+: :: "Anything goes"
+} 0.0
+
+INT interpolation_order "Order for interpolation" STEERABLE = ALWAYS
+{
+  1:4 :: "Choose between first and fourth order interpolation"
+} 2
+
+STRING interpolation_operator "Name of interpolation operator to use" STEERABLE = ALWAYS
+{
+  ".+" :: "A valid name for a registered interpolation operator"
+} "uniform cartesian"
+
+###############################################
+###   PARAMETERS SHARED FROM OTHER THORNS   ###
+###############################################
+
+
+###############
+### FROM IO ###
+###############
+
+shares: IO
+
+USES STRING out_dir
+
+
+#################
+### FROM GRID ###
+#################
+
+shares: grid
+
+USES KEYWORD domain
+USES KEYWORD quadrant_direction
+USES KEYWORD bitant_plane
+
+
+####################
+### FROM ADMBase ###
+####################
+
+shares: admbase
+
+USES KEYWORD metric_type
+
+######################
+### FROM ADMMacros ###
+######################
+
+shares: ADMMacros
+
+USES INT spatial_order
+
+######################
+### FROM SpaceMask ###
+######################
+
+shares: spacemask
+
+USES BOOLEAN use_mask

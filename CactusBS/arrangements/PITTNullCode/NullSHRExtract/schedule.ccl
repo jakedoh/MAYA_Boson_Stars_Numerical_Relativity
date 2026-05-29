@@ -1,0 +1,267 @@
+# Schedule definitions for thorn NullSHRExtract 
+# $Header:$
+
+if (CCTK_EQUALS(boundary_data,"SHRE")) 
+{
+  STORAGE: SHRE_gij[3], SHRE_git[3] SHRE_beta[3], SHRE_alpha[3]
+  STORAGE: SHRE_dgij[3], SHRE_dgit[3] SHRE_dbeta[3], SHRE_dalpha[3]
+  STORAGE: WT_r0, WT_r1[3], WT_dj0_vect 
+
+  STORAGE: NullVars::realcharfuncs[2]
+  STORAGE: NullVars::cmplxcharfuncs_basic[2]
+  STORAGE: NullVars::null_mask
+
+  if (first_order_scheme) {
+       STORAGE: NullVars::cmplxcharfuncs_aux[2]
+  }
+
+  STORAGE: WT_CmpxCoord
+  STORAGE: WT_scalars, WT_3vectors, WT_4vectors, WT_d4vectors
+  STORAGE: WT_dsigma_vect, WT_g1_vect, WT_gup_vect
+  STORAGE: WT_jac, WT_affine_metric, WT_deta0_vect
+  STORAGE: x_wt[2], j_wt[2], j_l, beta_wt[2], beta_l
+  STORAGE: q_wt[2], u_wt[2], u_l, u_x_wt, w_wt[2], w_l
+
+  # Actual reconstruction scheduling depends on when 
+  # SphericalHarmonicReconRead is scheduled (see below)
+  if (CCTK_EQUALS(WT_metric, "Full")) {
+    schedule NullSHRE_FullMetricRecon IN MetricReconstruction 
+    {
+      LANG: Fortran
+      OPTIONS: global
+    }"Current extraction of Full Metric and its Derivatives on the Sphere"
+  } 
+
+
+
+######## INITIALIZATION ###################
+
+   STORAGE: NYlm, SYlm, N1Ylm, S1Ylm
+   STORAGE: Clm, drClm, dtClm
+
+   schedule NullSHRE_PreCalcNSYlm AT CCTK_INITIAL \
+                                  BEFORE NullEvol_BoundaryInit \
+                                  BEFORE NullEvol_Initial
+   {
+      LANG: Fortran
+   } "Precalculate spherical harmonics in (p,q) coordinates"
+
+   schedule NullSHRE_PreCalcNSYlm AT CCTK_POST_RECOVER_VARIABLES
+   {
+      LANG: Fortran
+   } "Precalculate spherical harmonics in (p,q) coordinates"
+
+   if (CCTK_EQUALS(WT_metric, "SchIEF")) {
+     STORAGE: NTYlm, STYlm, NT1Ylm, ST1Ylm
+
+     schedule NullSHRE_SchPreCalc AT CCTK_INITIAL \
+                                  AFTER NullSHRE_PreCalcNSYlm
+     {
+       LANG: Fortran
+       OPTIONS: global
+     }"Computes the Schwarzchild Metric Spherical Harmonic Coefficients"
+
+   }
+
+   schedule GROUP NullSHRExtractInitial in NullEvol_BoundaryInit
+   {
+     STORAGE: WT_CmpxCoord
+     STORAGE: WT_scalars, WT_3vectors, WT_4vectors, WT_d4vectors
+     STORAGE: WT_dsigma_vect, WT_g1_vect, WT_gup_vect
+     STORAGE: WT_jac, WT_affine_metric, WT_deta0_vect
+     STORAGE: x_wt[2], j_wt[2], j_l, beta_wt[2], beta_l
+     STORAGE: u_wt[2], u_l, u_x_wt, w_wt[2], w_l, q_wt[2]
+   }"Group of the waveform extraction initialization"
+
+   if (CCTK_EQUALS(WT_metric, "Full")) {
+      schedule GROUP SphericalHarmonicReconRead IN NullEvol_BoundaryInit \
+                                                BEFORE NullSHRExtractInitial
+      {
+      }"Schedule group for reconstructing initial world-tube data"
+   } 
+
+   if (CCTK_EQUALS(WT_metric, "SchIEF")) {
+     STORAGE: TClm, TCtlm, TCrlm
+
+     schedule NullSHRE_SchReadClm IN NullSHRExtractInitial \
+                                  BEFORE NullSHRE_SchMetricRecon \
+				  BEFORE NullSHRE_MetricReconPast 
+     {
+       LANG: Fortran
+       OPTIONS: global
+     }"Computes the Schwarzchild Spherical Harmonic Coefficients"
+
+     schedule NullSHRE_SchMetricRecon IN NullSHRExtractInitial \
+                                      AFTER NullSHRE_SchReadClm \
+				      BEFORE NullSHRE_MetricReconPast 
+     {
+       LANG: Fortran
+       OPTIONS: global
+     }"Schwarzchild Metric and its Derivatives on the Sphere"
+ 
+     if (ana_metric) {
+       schedule NullSHRE_AnaSchMetricRecon \
+                      IN NullSHRExtractInitial \
+                      AFTER NullSHRE_SchMetricRecon \
+		      BEFORE NullSHRE_MetricReconPast 
+       {
+         LANG: Fortran
+         OPTIONS: global
+       }"Analytic Schwarzchild Metric and its Derivatives on the Sphere"
+     }
+ 
+   }
+
+####### INITIAL WORLDTUBE DATA #######################
+
+   schedule NullSHRE_MetricReconPast IN NullSHRExtractInitial \
+                                     BEFORE NullSHRE_Pointing_p_p 
+   {
+     LANG: Fortran
+     OPTIONS: global
+   }"Copy current metric to Past Levels"
+
+   schedule NullSHRE_Pointing_p_p IN NullSHRExtractInitial \
+                                  BEFORE NullSHRE_InitialWT_p_p 
+   {
+     LANG: Fortran
+     OPTIONS: global
+   }"Target P-P Level Variables for the pointers used in initialization"
+
+   schedule NullSHRE_InitialWT IN NullSHRExtractInitial \
+                               AFTER NullSHRE_Pointing_p_p \
+                               AS NullSHRE_InitialWT_p_p
+   {
+     LANG: Fortran 
+     OPTIONS: global
+   }"Extracted variables on the world tube for the p_p_Init level only up to rl"
+ 
+   schedule NullSHRE_Pointing_p IN NullSHRExtractInitial \
+                                AFTER NullSHRE_InitialWT_p_p \
+                                BEFORE NullSHRE_InitialWT_p
+   {
+     LANG: Fortran
+     OPTIONS: global
+   }"Target P-Level Variables for the pointers used in initialization"
+
+   schedule NullSHRE_InitialWT IN NullSHRExtractInitial \
+                               AFTER NullSHRE_Pointing_p \
+                               AS NullSHRE_InitialWT_p
+   {
+     LANG: Fortran 
+     OPTIONS: global
+   }"Extracted variables on the world tube for the p-Init level only up to rl"
+ 
+   schedule NullSHRE_Pointing IN NullSHRExtractInitial \
+                              AFTER NullSHRE_InitialWT_p \
+                              BEFORE NullSHRE_InitialWT
+   {
+     LANG: Fortran
+     OPTIONS: global
+   }"Gives the target Variables for the pointers used in initialization"
+
+   schedule NullSHRE_ExtractWT IN NullSHRExtractInitial \
+                               AFTER NullSHRE_Pointing 
+   {
+     LANG: Fortran 
+     OPTIONS: global
+   }"Computes the extracted variables on the world tube for the Initial level"
+
+  
+
+####### INITIALIZATION ENDS, EXTRACTION STARTS ##############
+
+   schedule GROUP NullSHRExtract in NullEvol_Boundary
+   {
+   }"Group of the waveform extraction current level"
+
+   if (CCTK_EQUALS(WT_metric, "Full")) {
+      schedule GROUP SphericalHarmonicReconRead IN NullEvol_Boundary \
+                                             BEFORE NullSHRExtract
+      {
+      } "Schedule group for reconstructing current world-tube data"
+
+   }
+
+   if (CCTK_EQUALS(WT_metric, "SchIEF")) {
+
+     schedule NullSHRE_SchReadClm IN NullSHRExtract \
+                                  BEFORE NullSHRE_SchMetricRecon \
+                                  BEFORE NullSHRE_Pointing 
+     {
+       LANG: Fortran
+       OPTIONS: global
+     }"Current Schwarzchild Spherical Harmonic Coefficients"
+
+     schedule NullSHRE_SchMetricRecon IN NullSHRExtract \
+                                      AFTER NullSHRE_SchReadClm \
+                                      BEFORE NullSHRE_Pointing 
+     {
+       LANG: Fortran
+       OPTIONS: global
+     }"Current Schwarzchild Metric and its Derivatives on the Sphere"
+ 
+     if (ana_metric) {
+       schedule NullSHRE_AnaSchMetricRecon IN NullSHRExtract \
+                                           AFTER NullSHRE_SchMetricRecon \
+                                           BEFORE NullSHRE_Pointing 
+       {
+         LANG: Fortran
+         OPTIONS: global
+       }"Current Analytic Schwarzchild Metric and its Derivatives on the Sphere"
+     }
+ 
+   }
+
+   schedule NullSHRE_Pointing IN NullSHRExtract \
+                              BEFORE NullSHRE_ExtractWT
+   {
+     LANG: Fortran
+     OPTIONS: global
+   }"Gives the target variables for the pointers used in extraction"
+
+   schedule NullSHRE_ExtractWT IN NullSHRExtract \
+                               AFTER NullSHRE_Pointing 
+   {
+     LANG: Fortran 
+     OPTIONS: global
+   }"Computes the extracted variables on the world tube for the Current level"
+
+########################error analysis
+
+#   if (CCTK_EQUALS(WT_metric, "SchIEF")) {
+#   schedule NullSHRE_NullSHRE_ErrorSch AT ANALYSIS
+#   {
+#     LANG: Fortran
+#     TRIGGER: SHRE_gij_e, SHRE_git_e, SHRE_beta_e, SHRE_alpha_e
+#     STORAGE: SHRE_gij_e, SHRE_git_e, SHRE_beta_e, SHRE_alpha_e
+#     TRIGGER: SHRE_dgij_e, SHRE_dgit_e, SHRE_dbeta_e, SHRE_dalpha_e
+#     STORAGE: SHRE_dgij_e, SHRE_dgit_e, SHRE_dbeta_e, SHRE_dalpha_e
+#   } "error analysis for the Schwarzchild Metric"
+#
+#}
+
+if (WT_spherical_harmonics)
+{
+
+  schedule NullSHRE_WTSphHarm AT ANALYSIS
+  {
+    LANG: Fortran
+    OPTIONS: global
+  } "If requested, output spherical harmonics of the quantities computed on the Worldtube"
+
+}
+
+if (WT_spherical_harmonics_on_nullgrid)
+{
+
+  schedule wt_WriteSphHarmWT AT ANALYSIS
+  {
+    LANG: Fortran
+    OPTIONS: global
+  } "If requested, output spherical harmonics of the quantities computed on the nullgrid just off the Worldtube"
+
+}
+
+
+}

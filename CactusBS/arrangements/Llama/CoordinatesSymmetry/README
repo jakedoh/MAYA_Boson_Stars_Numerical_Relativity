@@ -1,0 +1,11 @@
+Cactus Code Thorn CoordinatesSymmetry
+Author(s)    : Christian Reisswig <reisswig@tapir.caltech.edu>, Erik Schnetter <schnetter@cct.lsu.edu>
+Maintainer(s): Christian Reisswig <reisswig@tapir.caltech.edu>, Erik Schnetter <schnetter@cct.lsu.edu>
+Licence      : GPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+Provide various symmetries, i.e., bitant, quadrant, and octant mode.
+
+This thorn is adapted from Cactus to work with Llama symmetries.

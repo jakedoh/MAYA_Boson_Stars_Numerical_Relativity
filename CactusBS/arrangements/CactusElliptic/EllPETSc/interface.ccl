@@ -1,0 +1,11 @@
+# Interface definition for thorn EllPETSc
+
+implements: ellpetsc
+inherits: ellbase driver
+
+USES INCLUDE HEADER: EllBase.h
+
+CCTK_REAL petscworkspace type=GF
+{
+  wsp
+} "Workspace for the elliptic PETSc solver"

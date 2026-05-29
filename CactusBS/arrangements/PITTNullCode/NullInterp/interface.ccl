@@ -1,0 +1,50 @@
+# Interface definition for thorn NullInterp
+# $Header$
+
+implements: NullInterp
+inherits: NullGrid
+
+##################################################################
+# TEMPORARIES - NULLINTERP
+##################################################################
+
+private:
+
+CCTK_REAL tmp_mask TYPE=array dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+  tmp_maskn, tmp_masks
+} " temporary arrays  -- for parallel work"
+
+
+public:
+
+CCTK_REAL evolution_radius TYPE=scalar "radius of evolution domain"
+
+CCTK_COMPLEX tmp_cgf TYPE=array dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+  tmp_cgfn, tmp_cgfs
+} " temporary arrays  -- for parallel work"
+
+CCTK_REAL tmp_rgf TYPE=array dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+  tmp_rgfn, tmp_rgfs
+} " temporary arrays  -- for parallel work"
+
+CCTK_COMPLEX tmp_cgf3 TYPE=array dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+  tmp_cgfn1, tmp_cgfs1,
+  tmp_cgfn2, tmp_cgfs2,
+  tmp_cgfn3, tmp_cgfs3
+} " temporary arrays  -- for parallel work"

@@ -1,0 +1,179 @@
+# Schedule definitions for thorn NoExcision
+# $Header$
+
+STORAGE: reduction_mask
+
+if (CCTK_EQUALS(method,"old")) {
+  SCHEDULE NoExcision_Overwrite IN ADMBase_PostInitial
+  {
+    LANG: Fortran
+    WRITES: ADMBASE::metric(everywhere), ADMBASE::curv(everywhere)
+  } "Overwrite regions with Minkowski"
+}
+
+if (CCTK_Equals(method,"new")) {
+  schedule NoExcision_SetSym at CCTK_BASEGRID
+  {
+    LANG: Fortran
+    WRITES: ADMBASE::metric(everywhere), ADMBASE::curv(everywhere)
+  } "Register the symmetries for the conjugate gradient functions."
+}
+
+if (smooth_regions) {
+  if (CCTK_Equals(method,"old")) {
+    SCHEDULE NoExcision_Smooth IN ADMBase_PostInitial AFTER NoExcision_Overwrite
+    {
+      LANG: Fortran
+    } "Smooth regions"
+  } else {
+    
+    if (use_user_regions) {
+      SCHEDULE NoExcision_Set_Zero IN ADMBase_PostInitial BEFORE NoExcision_CGSmoothing
+      {
+        LANG: Fortran
+      } "Set variables to zero in user defined regions"
+    }
+
+    SCHEDULE GROUP NoExcision_CGSmoothing IN ADMBase_PostInitial
+    {
+      STORAGE: cg_res_metric, cg_res_curv, cg_res_shift, cg_res_lapse
+      STORAGE: cg_d_metric, cg_d_curv, cg_d_shift, cg_d_lapse
+      STORAGE: cg_q_metric, cg_q_curv, cg_q_shift, cg_q_lapse
+      STORAGE: cg_red_all
+      STORAGE: smask
+      STORAGE: loop_control
+
+    } "Conjugate Gradient smoothing"
+
+    SCHEDULE CopyMask IN NoExcision_CGSmoothing
+    {
+      LANG: C
+      OPTIONS: global loop-local
+    } "Copy the weight function from CarpetReduce"
+
+    SCHEDULE NoExcision_CGInit_1 IN NoExcision_CGSmoothing AFTER CopyMask
+    {
+      LANG: Fortran
+      READS: admbase::metric, admbase::curv, admbase::alp, admbase::shift
+      READS: red_mask
+      WRITES: cg_res_shift(Everywhere), cg_res_lapse(Everywhere),
+              cg_d_metric(Everywhere), cg_d_curv(Everywhere), cg_red_all(Everywhere),
+              cg_d_lapse(Everywhere), cg_d_shift(Everywhere)
+      WRITES: cg_q_metric(Everywhere), cg_q_shift(Everywhere),
+              cg_q_curv(Everywhere), cg_q_lapse(Everywhere)
+      WRITES: loop_control
+      WRITES: nes_mask(Everywhere), cg_res_metric(Everywhere), cg_res_curv(Everywhere)
+    } "Initialise the conjugate gradient method 1"
+
+    SCHEDULE NoExcision_CGApplySym AS NoExcision_CGApplySym_p1 IN NoExcision_CGSmoothing AFTER NoExcision_CGInit_1
+    {
+      LANG: Fortran
+      SYNC: cg_d_metric
+      SYNC: cg_d_curv
+      SYNC: cg_d_shift
+      SYNC: cg_d_lapse
+      SYNC: cg_res_metric
+      SYNC: cg_res_curv
+      SYNC: cg_res_shift
+      SYNC: cg_res_lapse
+      SYNC: cg_red_all
+    } "Select variables for boundary conditions 1"
+
+    SCHEDULE GROUP ApplyBCs AS NoExcision_CGApplyBCs_p1 IN NoExcision_CGSmoothing AFTER NoExcision_CGApplySym_p1
+    {
+    } "Apply boundary conditions (Symmetries) 1"
+
+    SCHEDULE NoExcision_CGInit_2 IN NoExcision_CGSmoothing AFTER NoExcision_CGApplySym_p1
+    {
+      LANG: Fortran
+      READS: admbase::alp(Everywhere), admbase::gxx(Everywhere)
+      OPTIONS: level
+    } "Initialise the conjugate gradient method 2"
+
+    SCHEDULE GROUP NoExcision_Smoothing IN NoExcision_CGSmoothing AFTER NoExcision_CGInit_2 while NoExcision::loop_control
+    {
+    } "Smooth regions"
+
+    SCHEDULE NoExcision_CG_1 IN NoExcision_Smoothing
+    {
+      LANG: Fortran
+    } "Conjugate gradients step 1"
+
+    SCHEDULE NoExcision_CGApplySym AS NoExcision_CGApplySym_p2 IN NoExcision_Smoothing AFTER NoExcision_CG_1
+    {
+      LANG: Fortran
+      SYNC: cg_q_metric
+      SYNC: cg_q_curv
+      SYNC: cg_q_shift
+      SYNC: cg_q_lapse
+      SYNC: cg_red_all
+    } "Select variables for boundary conditions 2"
+
+    SCHEDULE GROUP ApplyBCs AS NoExcision_CGApplyBCs_p2 IN NoExcision_Smoothing AFTER NoExcision_CGApplySym_p2
+    {
+    } "Apply boundary conditions (Symmetries) 2"
+
+    SCHEDULE NoExcision_CG_2 IN NoExcision_Smoothing AFTER NoExcision_CG_1
+    {
+      LANG: Fortran
+      OPTIONS: level
+    } "Conjugate gradients step 2"
+
+    SCHEDULE NoExcision_CG_3 IN NoExcision_Smoothing
+    {
+      LANG: Fortran
+    } "Conjugate gradients step 3"
+
+    SCHEDULE NoExcision_CGApplySym AS NoExcision_CGApplySym_p3 IN NoExcision_Smoothing AFTER NoExcision_CG_3
+    {
+      LANG: Fortran
+      SYNC: cg_res_metric
+      SYNC: cg_res_curv
+      SYNC: cg_res_shift
+      SYNC: cg_res_lapse
+      SYNC: metric
+      SYNC: curv
+      SYNC: shift
+      SYNC: lapse
+      SYNC: cg_red_all
+    } "Select variables for boundary conditions 3"
+
+    SCHEDULE GROUP ApplyBCs AS NoExcision_CGApplyBCs_p3 IN NoExcision_Smoothing AFTER NoExcision_CGApplySym_p3
+    {
+    } "Apply boundary conditions (Symmetries) 3"
+
+    SCHEDULE NoExcision_CG_4 IN NoExcision_Smoothing AFTER NoExcision_CG_1
+    {
+      LANG: Fortran
+      OPTIONS: level
+    } "Conjugate gradients step 4"
+
+    SCHEDULE NoExcision_CG_5 IN NoExcision_Smoothing
+    {
+      LANG: Fortran
+    } "Conjugate gradients step 5"
+
+    SCHEDULE NoExcision_CGApplySym AS NoExcision_CGApplySym_p4 IN NoExcision_CGSmoothing AFTER NoExcision_CG_5
+    {
+      LANG: Fortran
+      SYNC: cg_d_metric
+      SYNC: cg_d_curv
+      SYNC: cg_d_shift
+      SYNC: cg_d_lapse
+    } "Select variables for boundary conditions 4"
+
+    SCHEDULE GROUP ApplyBCs AS NoExcision_CGApplyBCs_p4 IN NoExcision_CGSmoothing AFTER NoExcision_CGApplySym_p4
+    {
+    } "Apply boundary conditions (Symmetries) 4"
+  }
+}
+
+#SCHEDULE NoExcision_OverwriteBSSN AT poststep
+#{
+#  LANG: Fortran
+#} "Overwrite regions with Minkowski"
+
+SCHEDULE NoExcision_Reduce IN MoL_PostRHS
+{
+  LANG: C
+} "Reduce RHS"

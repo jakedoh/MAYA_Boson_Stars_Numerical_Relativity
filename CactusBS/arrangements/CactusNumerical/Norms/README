@@ -1,0 +1,26 @@
+CVS info   : $Header$
+
+Cactus Code Thorn Norms
+Thorn Author(s)     : Frank Herrmann <herrmann@aei.mpg.de>
+                    : Erik Schnetter <schnetter@aei.mpg.de>
+Thorn Maintainer(s) : Frank Herrmann <herrmann@aei.mpg.de>
+                    : Erik Schnetter <schnetter@aei.mpg.de>
+--------------------------------------------------------------------------
+
+Purpose of the thorn:
+
+Compute norms of the state vector, e.g. for Mexico tests.  These are
+special norms that make a difference between variables which have a
+second derivative taken and variables which have not; see
+gr-qc/0503056.  These norms include the gradients of those variables
+that have a second derivative taken.  In doing so, they take all
+wavelenghts into account -- in contrast, a norm that would be based
+simply on using centered differences to calculate gradients would not.
+
+
+
+References:
+
+Gioel Calabrese, Ian Hinder, Sascha Husa: Numerical stability for
+finite difference approximations of Einstein's equations,
+gr-qc/0503056 (2005)

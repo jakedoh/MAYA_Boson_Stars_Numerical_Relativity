@@ -1,0 +1,99 @@
+# Parameter definitions for thorn AHMask
+# $Header:$
+
+CCTK_INT number_of_centres "How many centres to refine about" STEERABLE=always
+{
+0:3 :: "whatever"
+} 0
+
+CCTK_KEYWORD centre_from[3] "What controls the centre" STEERABLE=always
+{
+  "parameter"         :: "use parameters centre_x/y/z"
+  "spherical surface" :: "use spherical surfaces"
+} "parameter"
+
+CCTK_REAL centre_x[3] "x center" STEERABLE=always
+{
+ *:* :: "whatever"
+} 0
+
+CCTK_REAL centre_y[3] "x center" STEERABLE=always
+{
+ *:* :: "whatever"
+} 0
+
+CCTK_REAL centre_z[3] "x center" STEERABLE=always
+{
+ *:* :: "whatever"
+} 0
+
+CCTK_INT surface_index[3] "Which spherical surface to use" STEERABLE=always
+{
+ *:* :: "whatever"
+} -1
+
+CCTK_REAL centre_0_radius "radius for this centre" STEERABLE=always
+{
+  -1:* :: "-1: not set. 0: no radius. >0: radius."
+} -1
+
+CCTK_REAL centre_1_radius "radius for this centre" STEERABLE=always
+{
+  -1:* :: "-1: not set. 0: no radius. >0: radius."
+} -1
+
+CCTK_REAL centre_2_radius "radius for this centre" STEERABLE=always
+{
+  -1:* :: "-1: not set. 0: no radius. >0: radius."
+} -1
+
+CCTK_INT verbose "Output debugging information" STEERABLE=always
+{
+  0:* :: "0 is no output"
+} 0
+
+BOOLEAN create_buffered_mask "Set masked weights that also remove the buffer zone" STEERABLE=recover
+{
+} "no"
+
+# from AHFinderDirect. In contrast to AHFInderDirect we *do* register this grid
+# function during CCTK_Startup. However if the user decides to change the
+# bitfield later on she has to make sure that the new mask is properly
+# registered. If you use a different thorn than AHMask then you will have to
+# make sure to schedule Set_Weights each time the underlying mask is changed
+# 
+# REMEMBER to set both AHFinderDirect::new_style_mask *and*
+# set_mask_for_all_horizons to true!
+boolean use_space_mask "incorporate values of a AHFinderDirect like space mask" STEERABLE=always
+{
+} "no"
+
+string space_mask_gridfn_name "name of the mask grid function" STEERABLE=always
+{
+  ".+" :: "any valid Cactus grid function name"
+} "SpaceMask::space_mask"
+
+string mask_bitfield_name "name of the mask bit field ('type') as registered with SpaceMask" STEERABLE=always
+{
+  ".+" :: "any valid bit field ('type') name registered with the SpaceMask thorn"
+} "mask"
+
+# outside is the only one we actually use
+string space_mask_inside_value  "set the specified bit field of the mask to this named state at grid points in the 'inside' region" STEERABLE=always
+{
+  ".+" :: "any state name registered with the SpaceMask thorn"
+} "inside"
+
+string space_mask_buffer_value "set the specified bit field of the mask to this named state at grid points in the 'buffer' region" STEERABLE=always
+{
+  ".+" :: "any state name registered with the SpaceMask thorn"
+} "buffer"
+
+string space_mask_outside_value "set the specified bit field of the mask to this named state at grid points in the 'outside' region" STEERABLE=always
+{
+  ".+" :: "any state name registered with the SpaceMask thorn"
+} "outside" 
+
+SHARES: SphericalSurface
+
+USES CCTK_INT nsurfaces

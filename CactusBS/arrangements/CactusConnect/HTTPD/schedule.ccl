@@ -1,0 +1,44 @@
+# Schedule definitions for thorn HTTPD
+# $Header$
+
+SCHEDULE GROUP HTTP_Startup AT startup
+{
+  OPTIONS: GLOBAL
+} "HTTP daemon startup group"
+
+SCHEDULE HTTP_StartServer in HTTP_Startup
+{
+  LANG: C
+  OPTIONS: GLOBAL
+} "Start HTTP server"
+
+SCHEDULE GROUP HTTP_SetupPages in HTTP_Startup AFTER HTTP_StartServer
+{
+} "Group to setup stuff which needs to be done between starting the server and the first time it serves pages"
+
+SCHEDULE HTTP_FirstServ in HTTP_Startup AFTER HTTP_SetupPages
+{
+  LANG: C
+  OPTIONS: GLOBAL
+} "Serve first pages at startup"
+
+SCHEDULE HTTP_Work AT poststep BEFORE IOUtil_UpdateParFile
+{
+  LANG: C
+  OPTIONS: GLOBAL
+} "Working routine"
+
+if(provide_pages)
+{
+  SCHEDULE HTTP_ContentWork AT poststep
+  {
+    LANG: C
+    OPTIONS: GLOBAL
+  } "Content Working routine"
+}
+
+SCHEDULE HTTP_Shutdown AT shutdown
+{
+  LANG: C
+  OPTIONS: GLOBAL
+} "HTTP daemon shutdown"

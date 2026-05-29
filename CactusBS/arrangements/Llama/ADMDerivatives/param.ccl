@@ -1,0 +1,43 @@
+# Parameter definitions for thorn ADMDerivatives
+# $Header:$
+
+
+BOOLEAN store_radial_derivatives "Switch calculation of radial derivatives of ADM lapse, shift, 3-metric on/off" \
+  STEERABLE=recover
+{
+} yes
+
+
+BOOLEAN store_cartesian_derivatives "Switch calculation of cartesian derivatives of ADM lapse, shift, 3-metric on/off" \
+  STEERABLE=recover
+{
+} no
+
+
+
+BOOLEAN store_time_derivatives "Switch calculation of time derivatives of ADM lapse, shift, 3-metric on/off" \
+  STEERABLE=recover
+{
+} yes
+
+
+CCTK_INT spatial_deriv_order "Order of spatial derivatives"
+{
+  -1   :: "Use whatever is specified by SummationByParts"
+  2:8  :: "Use this order"
+} -1
+    
+
+
+CCTK_INT timelevels "Number of timelevels for all variables"
+{
+  1 :: "Only one active level"
+  3 :: "Useful for time interpolation"
+} 1
+
+
+
+
+BOOLEAN synchronize "switch off synchronization -- experimental"
+{
+} yes

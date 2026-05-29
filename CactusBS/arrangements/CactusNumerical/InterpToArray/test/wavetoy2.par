@@ -1,0 +1,88 @@
+!DESC "Test InterpToArray with WaveToy initial data"
+
+ActiveThorns = "
+        Boundary
+        CartGrid3D
+        CoordBase
+        IDScalarWaveC
+        CarpetIOASCII
+        CarpetIOBasic
+        CarpetIOScalar
+        IOUtil
+        InterpToArray
+        LocalReduce
+        Carpet
+        CarpetLib
+        GSL
+        LoopControl
+        InitBase
+        CarpetInterp2
+        CarpetReduce
+        CarpetSlab
+        SymBase
+        WaveToyC
+"
+
+Cactus::cctk_itlast = 0
+
+driver::global_nx  = 15
+driver::global_ny  = 15
+driver::global_nz  = 15
+driver::ghost_size =  2
+
+grid::type = "byspacing"
+grid::dxyz = 0.6
+
+IDScalarWave::initial_data = "Gaussian"
+IDScalarWave::sigma        = 2.8
+IDScalarWave::radius       = 5.0
+
+
+
+InterpToArray::use_carpetinterp2  = "yes"
+InterpToArray::carpetinterp2_interpolator_order = 2
+
+InterpToArray::narrays2d          = 1
+InterpToArray::array2d_vars[0]    = "wavetoy::phi"
+InterpToArray::array2d_x0         = -1.0
+InterpToArray::array2d_y0         = -1.0
+InterpToArray::array2d_z0         = -1.0
+InterpToArray::array2d_dx_i       =  0.5
+InterpToArray::array2d_dy_j       =  0.4
+InterpToArray::array2d_dz_j       =  0.1
+InterpToArray::array2d_npoints_i  =  3
+InterpToArray::array2d_npoints_j  =  4
+
+InterpToArray::nparrays3d         = 1
+InterpToArray::parray3d_vars[0]   = "wavetoy::phi"
+InterpToArray::parray3d_x0        = -1.0
+InterpToArray::parray3d_y0        = -1.0
+InterpToArray::parray3d_z0        = -1.0
+InterpToArray::parray3d_dx_i      =  0.5
+InterpToArray::parray3d_dy_j      =  0.5
+InterpToArray::parray3d_dz_k      =  0.5
+InterpToArray::parray3d_npoints_i =  3
+InterpToArray::parray3d_npoints_j =  4
+InterpToArray::parray3d_npoints_k =  5
+
+
+
+IO::out_dir       = $parfile
+IO::parfile_write = "no"
+IO::out_fileinfo  = "none"
+
+IOScalar::outScalar_reductions = "norm1 norm2 minimum maximum norm_inf"
+IOScalar::outScalar_every      = 1
+IOScalar::outScalar_vars       = "
+        InterpToArray::arrays2d[0]
+        InterpToArray::parrays3d[0]
+"
+
+IOASCII::out1D_every = 1
+IOASCII::compact_format = "yes"
+IOASCII::output_ghost_points = "no"
+IOASCII::out1D_vars  = "
+        InterpToArray::scalars
+        InterpToArray::arrays2d
+        InterpToArray::parrays3d
+"

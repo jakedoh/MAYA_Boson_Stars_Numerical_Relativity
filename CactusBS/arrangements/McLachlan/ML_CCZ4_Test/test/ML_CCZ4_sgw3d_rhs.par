@@ -1,0 +1,150 @@
+
+ActiveThorns = "CoordBase SymBase Boundary NanChecker CartGrid3d Time MoL CarpetIOBasic CarpetIOScalar IOUtil Carpet CarpetLib CarpetReduce CarpetInterp CarpetSlab CarpetIOASCII ADMBase StaticConformal SpaceMask Slab Periodic Exact GenericFD CoordGauge LoopControl ML_CCZ4 ML_CCZ4_Helper GenericFD TMuNuBase SphericalSurface ADMMacros TimerReport"
+
+ADMBase::evolution_method         = "ML_CCZ4"
+ADMBase::lapse_evolution_method   = "ML_CCZ4"
+ADMBase::shift_evolution_method   = "ML_CCZ4"
+ADMBase::dtlapse_evolution_method = "ML_CCZ4"
+ADMBase::dtshift_evolution_method = "ML_CCZ4"
+
+# We use the BBH gauge to ensure it is regression-tested.  Also, there
+# is no harmonic shift in McLachlan
+ML_CCZ4::harmonicN           = 1      # 1+log
+ML_CCZ4::harmonicF           = 2.0    # 1+log
+ML_CCZ4::ShiftGammaCoeff     = 1.0
+ML_CCZ4::BetaDriver          = 2.0
+ML_CCZ4::advectLapse = 1
+ML_CCZ4::advectShift = 1
+ML_CCZ4::GammaShift          = 1.0
+ML_CCZ4::dampk1              = 1.0
+
+ML_CCZ4::MinimumLapse        = 1.0e-8
+ML_CCZ4::conformalMethod     = 1 # 1 for W, 0 for phi
+ML_CCZ4::rhs_boundary_condition     = "scalar"   # was "static"
+
+ML_CCZ4::apply_dissipation   = "always"
+ML_CCZ4::EpsDiss             = 0.1
+
+Boundary::radpower                     = 2
+
+#############################################################
+# Grid
+#############################################################
+
+CoordBase::domainsize                   = minmax
+
+CoordBase::boundary_size_x_lower        = 3
+CoordBase::boundary_size_y_lower        = 3
+CoordBase::boundary_size_z_lower        = 3
+CoordBase::boundary_shiftout_x_lower    = 1
+CoordBase::boundary_shiftout_y_lower    = 1
+CoordBase::boundary_shiftout_z_lower    = 1
+
+CoordBase::boundary_size_x_upper        = 3
+CoordBase::boundary_size_y_upper        = 3
+CoordBase::boundary_size_z_upper        = 3
+CoordBase::boundary_shiftout_x_upper    = 0
+CoordBase::boundary_shiftout_y_upper    = 0
+CoordBase::boundary_shiftout_z_upper    = 0
+
+CartGrid3D::type                        = "coordbase"
+CartGrid3D::domain                      = "full"
+CartGrid3D::avoid_origin                = "no"
+
+Periodic::periodic = "yes"
+
+CoordBase::xmin                         = 0
+CoordBase::ymin                         = 0
+CoordBase::zmin                         = 0
+
+CoordBase::xmax                         = 1
+CoordBase::ymax                         = 1
+CoordBase::zmax                         = 1
+
+CoordBase::dx                           = 0.1
+CoordBase::dy                           = 0.1
+CoordBase::dz                           = 0.1
+
+#############################################################
+# Carpet
+#############################################################
+
+Carpet::ghost_size                      = 3
+Carpet::domain_from_coordbase           = "yes"
+Carpet::init_3_timelevels               = "no"
+Carpet::poison_new_timelevels           = yes
+
+#############################################################
+# Timers
+#############################################################
+
+# Do not commit these as testsuite output as they will change on
+# different machines.  They are useful for performance monitoring in
+# automated build and test systems.
+TimerReport::output_all_timers_readable = yes
+TimerReport::n_top_timers               = 40
+TimerReport::output_schedule_timers     = no
+
+#############################################################
+# Time integration
+#############################################################
+
+Cactus::terminate                         = "iteration"
+Cactus::cctk_itlast                       = 0
+# Use 0.5 for RK4 and 0.25 for ICN
+Time::dtfac                           = 0.5
+
+MethodOfLines::ode_method             = "RK4"
+MethodOfLines::MoL_Intermediate_Steps = 4
+
+#MethodOfLines::ode_method             = "generic"
+#MethodOfLines::generic_type             = "RK"
+#MethodOfLines::MoL_Intermediate_Steps = 1
+
+MethodOfLines::MoL_Num_Scratch_Levels = 1
+MethodOfLines::MoL_NaN_Check          = "no"
+MethodOfLines::initial_data_is_crap   = "no"
+
+#############################################################
+# Initial data
+#############################################################
+
+ADMBase::initial_data = "exact"
+ADMBase::initial_lapse = "exact"
+ADMBase::initial_shift = "exact"
+ADMBase::initial_dtlapse = "exact"
+ADMBase::initial_dtshift = "exact"
+
+Exact::exact_model = "Minkowski/shifted gauge wave"
+Exact::Minkowski_gauge_wave__what_fn = "sin"
+Exact::Minkowski_gauge_wave__amplitude = 0.1
+Exact::Minkowski_gauge_wave__omega = 1
+Exact::Minkowski_gauge_wave__lambda = 0.577350269189626
+
+Exact::rotation_euler_psi = -1.9216757376671543544
+Exact::rotation_euler_theta = 0.66214523564555227398
+Exact::rotation_euler_phi = 1.2199169159226388841
+
+Exact::exact_order = 4
+Exact::exact_eps = 1e-2 # This is large to ensure regression tests are insensitive to roundoff
+
+#############################################################
+# Output
+#############################################################
+
+IO::out_dir                   = $parfile
+IO::out_fileinfo              = "none"
+IO::parfile_write             = "no"
+CarpetIOBasic::outInfo_every        = 1
+CarpetIOBasic::outInfo_vars         = "ADMBase::alp"
+
+IOASCII::out1D_every                    = 1
+IOASCII::out_precision        = 19
+IOASCII::out1D_d                        = no
+IOASCII::out1D_x                        = yes
+IOASCII::out1D_y                        = yes
+IOASCII::out1D_z                        = yes
+IOASCII::out1D_vars                     = "ADMBase::gxx ADMBase::kxx ML_CCZ4::ML_cons_detg ML_CCZ4::ML_cons_Gamma ML_CCZ4::ML_cons_traceA ML_CCZ4::ML_curv ML_CCZ4::ML_dtlapse ML_CCZ4::ML_dtshift ML_CCZ4::ML_Gamma ML_CCZ4::ML_lapse ML_CCZ4::ML_log_confac ML_CCZ4::ML_metric ML_CCZ4::ML_shift ML_CCZ4::ML_trace_curv ML_CCZ4::ML_Theta ML_CCZ4::ML_curvrhs ML_CCZ4::ML_dtlapserhs ML_CCZ4::ML_dtshiftrhs ML_CCZ4::ML_Gammarhs ML_CCZ4::ML_lapserhs ML_CCZ4::ML_log_confacrhs ML_CCZ4::ML_metricrhs ML_CCZ4::ML_shiftrhs ML_CCZ4::ML_trace_curvrhs ML_CCZ4::ML_Thetarhs"
+
+CarpetIOASCII::compact_format = yes
+CarpetIOASCII::output_ghost_points = no

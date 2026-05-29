@@ -1,0 +1,102 @@
+# Schedule definitions for thorn ADMDerivatives
+# $Header:$
+
+
+if (store_radial_derivatives)
+{
+  if (timelevels == 1)
+  {
+    STORAGE: dr_lapse[1]
+    STORAGE: dr_shift[1]
+    STORAGE: dr_metric[1]
+  }
+  if (timelevels == 3)
+  {
+    STORAGE: dr_lapse[3]
+    STORAGE: dr_shift[3]
+    STORAGE: dr_metric[3]
+  }
+}
+
+if (store_time_derivatives)
+{
+  if (timelevels == 1)
+  {
+    STORAGE: dt_metric[1]
+  }
+  if (timelevels == 3)
+  {
+    STORAGE: dt_metric[3]
+  }
+}
+
+
+if (store_cartesian_derivatives)
+{
+  STORAGE: dx_vars
+}
+
+
+SCHEDULE GROUP ADMDerivatives_Group AT CCTK_POSTSTEP
+{
+} "Group for ADMDerivatives computations."
+
+
+SCHEDULE GROUP ADMDerivatives_Group AT CCTK_POST_RECOVER_VARIABLES
+{
+} "Group for ADMDerivatives computations."
+
+
+SCHEDULE ADMDerivatives_CalcDerivatives IN ADMDerivatives_Group
+{
+  LANG: C
+  OPTIONS: LOCAL
+} "Calculate requested derivatives of ADM lapse, shift, 3-metric"
+
+
+
+if (synchronize)
+{
+
+# This bin applies all (Cactus) boundary and symmetry conditions
+SCHEDULE GROUP ApplyBCs as ADMDerivatives_ApplyBCs IN ADMDerivatives_Group AFTER (ADMDerivatives_radial_SelectBC ADMDerivatives_cartesian_SelectBC ADMDerivatives_time_SelectBC)
+{
+} "Apply boundary conditions controlled by thorn Boundary"
+
+
+if (store_radial_derivatives)
+{
+  SCHEDULE ADMDerivatives_radial_SelectBC IN ADMDerivatives_Group AFTER ADMDerivatives_CalcDerivatives
+  {
+    OPTIONS: LEVEL
+    LANG: C
+    SYNC: ADMDerivatives::dr_lapse
+    SYNC: ADMDerivatives::dr_shift
+    SYNC: ADMDerivatives::dr_metric
+  } "Selecting BC for metric radial derivatives"   
+}
+
+if (store_cartesian_derivatives)
+{
+  SCHEDULE ADMDerivatives_cartesian_SelectBC IN ADMDerivatives_Group AFTER ADMDerivatives_CalcDerivatives
+  {
+    OPTIONS: LEVEL
+    LANG: C
+    SYNC: ADMDerivatives::dx_vars
+  } "Selecting BC for metric cartesian derivatives"   
+}
+
+
+if (store_time_derivatives)
+{
+  SCHEDULE ADMDerivatives_time_SelectBC IN ADMDerivatives_Group AFTER ADMDerivatives_CalcDerivatives
+  {
+    OPTIONS: LEVEL
+    LANG: C
+    SYNC: ADMDerivatives::dt_metric
+  } "Selecting BC for metric time derivatives"   
+}
+
+}
+
+

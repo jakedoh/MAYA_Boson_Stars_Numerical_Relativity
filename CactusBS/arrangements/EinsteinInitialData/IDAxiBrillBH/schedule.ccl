@@ -1,0 +1,27 @@
+# Schedule definitions for thorn IDAxiBrillBH
+# $Header$
+
+if (CCTK_Equals(initial_data,"axibrillbh")) 
+{
+  schedule IDAxiBrillBH_ParamChecker at CCTK_PARAMCHECK
+  {
+    LANG: C
+    OPTIONS: global
+  } "Check that the metric_type is recognised"
+
+  schedule IDAxiBrillBH in ADMBase_InitialData
+  {
+    LANG: Fortran
+    WRITES: ADMBASE::metric(everywhere), ADMBASE::curv(everywhere),
+            ADMBASE::lapse(everywhere), ADMBASE::shift(everywhere)
+    WRITES: StaticConformal::confac(everywhere),
+            StaticConformal::confac_1derivs(everywhere),
+            StaticConformal::confac_2derivs(everywhere),
+            StaticConformal::conformal_state(everywhere)
+    READS: Grid::coordinates(everywhere)
+
+    STORAGE: StaticConformal::confac
+    STORAGE: StaticConformal::confac_1derivs
+    STORAGE: StaticConformal::confac_2derivs
+  } "Construct IDAxiBrillBH"  
+}

@@ -1,0 +1,5 @@
+# Source files in this directory
+SRCS = RunStats.c MemStats.c
+
+# Subdirectories containing source files
+SUBDIRS = 

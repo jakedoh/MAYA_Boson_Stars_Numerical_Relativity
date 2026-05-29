@@ -1,0 +1,5 @@
+# Main make.code.defn file for thorn IOJpeg
+# $Header$
+
+# Source files in this directory
+SRCS = Startup.c Output.c Write.c ChooseOutput.c JPEG.c

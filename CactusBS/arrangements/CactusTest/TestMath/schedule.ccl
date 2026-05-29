@@ -1,0 +1,11 @@
+# Schedule definitions for thorn TestMath
+
+SCHEDULE TestMath_C AT initial
+{
+  LANG: C
+} "Test C math functions"
+
+SCHEDULE TestMath_CC AT initial
+{
+  LANG: C
+} "Test C++ math functions"

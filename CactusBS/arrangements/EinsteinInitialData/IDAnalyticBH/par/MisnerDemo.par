@@ -1,0 +1,67 @@
+#------------------------------------------------------------------------------
+#
+# Parameter file for evolutions of colliding black holes (Misner)
+#
+# For use with Cactus 4.0 (Beta 4)
+#
+# For help on running Cactus, either run the Cactus exectuable with the 
+#   command line option -help, or consult the documentation at
+#   www.cactuscode.org
+#
+# Max Planck Institute for Gravitational Physics, Potsdam, Germany, 1999
+#
+#------------------------------------------------------------------------------
+
+!DESC "Evolution of Colliding Black Holes: Demo"
+
+# These thorns must be compiled
+
+ActiveThorns = "Boundary LocalReduce ADM CartGrid3D CoordBase SymBase ADMBase StaticConformal CoordGauge ADMAnalysis ADMMacros IDanalyticBH IOBasic IOUtil IOASCII PsiKadelia Pugh PughReduce PughSlab Time"
+ 
+#------------------------------------------------------------------------------
+
+# Number of grid points in each direction (must be around 100 or larger)
+ 
+driver::global_nsize       = 100
+
+# How many iterations 
+
+cactus::cctk_final_time    = 30.0
+
+# What output and how often
+
+IOBasic::outInfo_vars      = "admbase::alp"
+IOBasic::outInfo_every     = 10
+IOASCII::out1D_vars        = "admbase::alp admanalysis::grr psikadelia::psi0re"
+IOASCII::out1D_every       = 10
+
+#------------------------------------------------------------------------------
+# 
+# Evolution and initial data
+#
+#------------------------------------------------------------------------------
+
+IO::out_dir                 = "MisnerDemo"
+
+grid::domain               = "full"
+grid::type                 = "byrange"
+grid::xyzmin               = -10.0
+grid::xyzmax               =  10.0
+
+cactus::cctk_initial_time  = 0.
+
+time::dtfac                = 0.25 
+ 
+admbase::metric_type      = "static conformal"
+admbase::evolution_method = "ADM"
+admbase::lapse_evolution_method = "1+log"
+admbase::initial_data     = "misner_bh"  
+
+idanalyticbh::mu           = 2.2
+
+adm::harmonic_f            = 2.0
+adm::bound                 = "radiative"      
+adm::method                = "stagleap"
+
+#------------------------------------------------------------------------------
+

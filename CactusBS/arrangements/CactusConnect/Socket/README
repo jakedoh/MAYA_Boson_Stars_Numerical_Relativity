@@ -1,0 +1,11 @@
+Cactus Code Thorn Socket
+Author(s)    : Tom Goodale
+               Thomas Radke
+               John Shalf
+Maintainer(s): Cactus team
+Licence      : LGPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+This thorn provides platform-independent socket calls.

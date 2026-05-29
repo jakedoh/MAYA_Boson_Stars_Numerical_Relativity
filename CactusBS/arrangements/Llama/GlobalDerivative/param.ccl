@@ -1,0 +1,52 @@
+# Parameter definitions for thorn GlobalDerivative
+# $Header$
+
+
+restricted:
+
+INT fd_order_on_non_Cart_maps "Order of accuracy of spatial derivatives on non-Cartesian patches." STEERABLE=always
+{
+  -1   :: "use same FD order everywhere"
+   2:* :: "use different FD order on non-Cartesian patches"
+} -1
+
+
+BOOLEAN use_dissipation "Use global dissipation"
+{
+} no
+
+
+
+REAL epsdis_for_level[32] "Epsdis for a specific refinement level" \
+  STEERABLE=always
+{
+  : :: "Negative indicates use default"
+} -1.0
+
+
+INT order_for_level[32] "Order of accuracy for a specific refinement level" \
+   STEERABLE=always
+{
+  -1   :: "Use default as specified in SBP::order"
+  2:8  :: "2nd, 4th, 6th and 8th order"
+} -1
+
+
+INT force_diss_order "Force this order of accuracy for dissipation operator"
+{
+  -1  :: "Use default as specified in SBP::order"
+  2:8 :: "2nd, 4th, 6th and 8th order"
+} -1
+
+SHARES: SummationByParts
+
+USES KEYWORD norm_type
+USES INT order "Order of accuracy"
+USES BOOLEAN use_variable_deltas
+USES BOOLEAN poison_dissipation
+USES KEYWORD dissipation_type
+USES REAL epsdis
+USES REAL diss_fraction[3]
+USES REAL h_scaling[3]
+USES STRING vars
+

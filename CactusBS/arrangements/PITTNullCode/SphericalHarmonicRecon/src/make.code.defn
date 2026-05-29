@@ -1,0 +1,10 @@
+# Main make.code.defn file for thorn SphericalHarmonicRecon
+# $Header:$
+
+# Source files in this directory
+SRCS = Chebyshev.cc Recon.cc
+
+# Subdirectories containing source files
+SUBDIRS = 
+
+#CXXFLAGS += -Wall

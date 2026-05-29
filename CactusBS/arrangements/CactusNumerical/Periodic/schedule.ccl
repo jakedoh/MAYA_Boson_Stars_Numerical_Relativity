@@ -1,0 +1,11 @@
+# Schedule definitions for thorn Periodic
+
+SCHEDULE Periodic_RegisterBC IN SymmetryRegister
+{
+  LANG: C
+} "Register periodic boundary conditions"
+
+SCHEDULE Periodic_ApplyBC IN BoundaryConditions
+{
+  LANG: C
+} "Apply periodic boundary conditions"

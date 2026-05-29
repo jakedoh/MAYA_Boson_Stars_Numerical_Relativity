@@ -1,0 +1,6 @@
+# Interface definition for thorn Socket
+# $Header$
+
+implements: Socket
+
+INCLUDE HEADER: SocketUtils.h in SocketUtils.h

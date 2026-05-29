@@ -1,0 +1,8 @@
+# Interface definition for thorn httpd_utils
+# $Header$
+
+implements: http_utils
+
+USES INCLUDE HEADER: http_Auth.h
+USES INCLUDE HEADER: http_Content.h
+

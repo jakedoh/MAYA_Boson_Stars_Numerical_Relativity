@@ -1,0 +1,35 @@
+Cactus Code Thorn ADMMass
+Author(s)    : Frank Löffler
+Maintainer(s): Frank Löffler 
+Licence      : GPLv2+
+--------------------------------------------------------------------------
+
+1. Purpose
+
+This thorn can be used to calculate different approximations of the ADM mass
+on a finite grid.
+
+It requires C99 to compile. For gcc or icc, add -std=c99 to the compiler
+options.
+
+Copyright
+---------
+
+This thorn is copyright (C) 2005
+by Frank Loeffler <frank.loeffler@aei.mpg.de>
+
+This thorn is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This thorn is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this thorn (see the file COPYING in this directory);
+if not, write to the Free Software Foundation, Inc., 59 Temple
+Place, Suite 330, Boston, MA  02111-1307  USA
+

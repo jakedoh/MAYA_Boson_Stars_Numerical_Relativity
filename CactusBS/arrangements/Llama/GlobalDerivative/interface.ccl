@@ -1,0 +1,115 @@
+# Interface definition for thorn GlobalDerivative
+# $Header$
+
+implements:  GlobalDerivative
+inherits:  grid SummationByParts Coordinates
+
+includes: GlobalDerivative.h in GlobalDerivative.h
+includes: AllDerivative.h in AllDerivative.h
+includes: AllDerivative_8th.h in AllDerivative_8th.h
+includes: Jacobian.h in Jacobian.h
+
+
+SUBROUTINE globalDiff_gv ( CCTK_POINTER_TO_CONST IN cctkGH, \
+                           CCTK_INT IN dir, \
+                           CCTK_REAL IN ARRAY var, \
+                           CCTK_REAL OUT ARRAY dvar, \
+                           CCTK_REAL IN ARRAY J_dadx, \
+                           CCTK_REAL IN ARRAY J_dbdx, \
+                           CCTK_REAL IN ARRAY J_dcdx, \
+                           CCTK_REAL IN ARRAY J_dady, \
+                           CCTK_REAL IN ARRAY J_dbdy, \
+                           CCTK_REAL IN ARRAY J_dcdy, \
+                           CCTK_REAL IN ARRAY J_dadz, \
+                           CCTK_REAL IN ARRAY J_dbdz, \
+                           CCTK_REAL IN ARRAY J_dcdz, \
+                           CCTK_INT IN table_handle )
+PROVIDES FUNCTION globalDiff_gv WITH globalDiffGv LANGUAGE C
+
+
+
+
+SUBROUTINE globalDiff2_gv( CCTK_POINTER_TO_CONST IN cctkGH, \
+                           CCTK_INT IN dir1, \
+                           CCTK_INT IN dir2, \
+                           CCTK_REAL IN ARRAY var, \
+                           CCTK_REAL OUT ARRAY dvar, \
+                           CCTK_REAL IN ARRAY J_dadx, \
+                           CCTK_REAL IN ARRAY J_dbdx, \
+                           CCTK_REAL IN ARRAY J_dcdx, \
+                           CCTK_REAL IN ARRAY J_dady, \
+                           CCTK_REAL IN ARRAY J_dbdy, \
+                           CCTK_REAL IN ARRAY J_dcdy, \
+                           CCTK_REAL IN ARRAY J_dadz, \
+                           CCTK_REAL IN ARRAY J_dbdz, \
+                           CCTK_REAL IN ARRAY J_dcdz, \
+                           CCTK_REAL IN ARRAY dJ_dadxdx, \
+                           CCTK_REAL IN ARRAY dJ_dbdxdx, \
+                           CCTK_REAL IN ARRAY dJ_dcdxdx, \
+                           CCTK_REAL IN ARRAY dJ_dadxdy, \
+                           CCTK_REAL IN ARRAY dJ_dbdxdy, \
+                           CCTK_REAL IN ARRAY dJ_dcdxdy, \
+                           CCTK_REAL IN ARRAY dJ_dadxdz, \
+                           CCTK_REAL IN ARRAY dJ_dbdxdz, \
+                           CCTK_REAL IN ARRAY dJ_dcdxdz, \
+                           CCTK_REAL IN ARRAY dJ_dadydy, \
+                           CCTK_REAL IN ARRAY dJ_dbdydy, \
+                           CCTK_REAL IN ARRAY dJ_dcdydy, \
+                           CCTK_REAL IN ARRAY dJ_dadydz, \
+                           CCTK_REAL IN ARRAY dJ_dbdydz, \
+                           CCTK_REAL IN ARRAY dJ_dcdydz, \
+                           CCTK_REAL IN ARRAY dJ_dadzdz, \
+                           CCTK_REAL IN ARRAY dJ_dbdzdz, \
+                           CCTK_REAL IN ARRAY dJ_dcdzdz, \
+                           CCTK_INT IN table_handle )
+PROVIDES FUNCTION globalDiff2_gv WITH globalDiff2Gv LANGUAGE C
+
+
+
+
+
+
+### From LSUThorns/SummationByParts
+
+SUBROUTINE Diff_coeff ( CCTK_POINTER_TO_CONST IN cctkGH, \
+                        CCTK_INT IN dir, \
+                        CCTK_INT IN nsize, \
+                        CCTK_INT OUT ARRAY imin, \
+                        CCTK_INT OUT ARRAY imax, \
+                        CCTK_REAL OUT ARRAY q, \
+                        CCTK_INT IN table_handle )
+uses function Diff_coeff
+
+
+SUBROUTINE Diff2_coeff ( CCTK_POINTER_TO_CONST IN cctkGH, \
+                         CCTK_INT IN dir, \
+                         CCTK_INT IN nsize, \
+                         CCTK_INT OUT ARRAY imin, \
+                         CCTK_INT OUT ARRAY imax, \
+                         CCTK_REAL OUT ARRAY q, \
+                         CCTK_INT IN table_handle )
+USES FUNCTION Diff2_coeff
+
+
+
+private:
+
+CCTK_INT FUNCTION MoLQueryEvolvedRHS (CCTK_INT IN EvolvedIndex)
+USES FUNCTION MoLQueryEvolvedRHS
+
+
+CCTK_INT FUNCTION MultiPatch_GetMap (CCTK_POINTER_TO_CONST IN cctkGH)
+USES FUNCTION MultiPatch_GetMap
+
+CCTK_INT FUNCTION MultiPatch_GetMaps (CCTK_POINTER_TO_CONST IN cctkGH)
+USES FUNCTION MultiPatch_GetMaps
+
+CCTK_INT FUNCTION                         \
+    MultiPatch_GetBbox                    \
+    (CCTK_POINTER_TO_CONST IN cctkGH, \
+     CCTK_INT IN size,                \
+     CCTK_INT OUT ARRAY bbox)
+USES FUNCTION MultiPatch_GetBbox
+
+
+

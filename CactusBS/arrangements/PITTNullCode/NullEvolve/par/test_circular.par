@@ -1,0 +1,78 @@
+#------------------------------------------------------------------------------
+# Boosted BH testbed "run" analytically by the Abigel code
+# WARNING: THIS PARAM FILE IS NOT READY FOR USE.
+#------------------------------------------------------------------------------
+
+ActiveThorns = "Fortran SymBase CoordBase CartGrid3D IOASCII IOBasic IOUtil Pugh PughReduce PughSlab PUGHInterp Time"
+ActiveThorns = "AEILocalInterp NullGrid NullInterp NullVars NullEvolve NullExact NullNews NullDecomp NullConstr"
+ActiveThorns = "NaNChecker"
+
+cactus::cctk_initial_time		= 0
+cactus::cctk_itlast			= 10
+Time::timestep_method                   = "given"
+
+IO::out_dir				= $.
+
+
+#------------------------------------------------------------------------------
+
+NullEvolve::initial_J_data = "exact"
+NullEvolve::boundary_data = "exact"
+#NullEvolve::full_initial_data = "yes"
+NullInterp::stereo_patch_type = "circular"
+
+NullInterp::poison_test = yes
+
+nullexact::testbed_ID = 2  # i.e., linearized
+nullexact::amplitude = 1.e-3
+nullexact::l_in_Ylm =2 #At present, must be 2 or 3
+nullexact::m_in_Ylm=0
+nullexact::Constant_C1r=3.e-3
+nullexact::Constant_C1i=0
+nullexact::Constant_C2r=1.e-3
+nullexact::Constant_C2i=0
+nullexact::omm=1
+nullexact::beta0r=0
+nullexact::beta0i=0
+
+NullInterp::evolution_stencil_width = 1
+NullNews::debug_skip_bondinews = no
+#------------------------------------------------------------------------------
+
+#------------------------------------------------------------------------------
+
+NullGrid::qsize = 1.4
+NullGrid::null_rwt = 9
+NullGrid::null_xin = 0.4
+NullInterp::buffer_size = 4
+
+IOBasic::outInfo_every			= 1
+IOBasic::outInfo_reductions		= "norm_inf"
+IOBasic::outInfo_vars	= "NullVars::wcs[15] NullVars::ucs[15] NullVars::jcs[15] Nullvars::bcs[15]"
+
+
+IOASCII::out2D_every			= 1
+IOASCII::out2D_vars = "NullVars::wcs[15] NullVars::ucs[15] NullVars::jcs[15] Nullvars::bcs[15] NullVars::wcs[4] NullVars::ucs[4] NullVars::jcs[4] Nullvars::bcs[4] NullGrid::active_mask NullGrid::guard_mask"
+
+
+IOASCII::out3D_every			= 1
+ioascii::out_format = ".19f"
+
+Time::timestep     = 0.025
+
+NullGrid::null_np = 34
+NullGrid::null_nq = 34
+NullGrid::null_nx = 16
+
+NullEvolve::first_order_scheme = "no"
+# NullEvolve::debug_verbose = yes
+
+driver::global_nx = 20
+driver::global_ny = 20
+driver::global_nz = 16
+PUGH::ghost_size = 2
+
+# NaNChecker::action_if_found = "terminate"
+# NaNChecker::check_every = 1
+# NaNChecker::check_vars = "nullvars::realcharfuncs"
+# NaNChecker::report_max = 1

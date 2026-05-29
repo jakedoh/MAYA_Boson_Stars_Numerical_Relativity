@@ -1,0 +1,55 @@
+# Schedule definitions for thorn SphericalHarmonicRecon
+# $Header:$
+
+
+# You should schedule any routine that will use the metric
+# coefficients in GROUP MetricReconstruction. Any routine that
+# calls GetCurrentExtractionCoefs should be scheduled in this group
+SCHEDULE GROUP MetricReconstruction IN \
+        SphericalHarmonicReconRead \
+        AFTER SphericalHarmonicReconGeneric_ReadData \
+        BEFORE SphericalHarmonicReconGeneric_PostStep
+{
+} "Group for use by external thorns to use the metric"
+
+
+if(adjust_timestep) {
+  SCHEDULE SphericalHarmonicReconGeneric_SetTimeStep at CCTK_EVOL \
+  after NullEvol_Step after NullNews_ScriVals
+  {
+    LANG: C
+    OPTIONS: global
+  } "Set the time-step"
+}
+SCHEDULE SphericalHarmonicReconGeneric_ReadData IN SphericalHarmonicReconRead
+{
+  LANG: C
+} "Read the world tube data and set the data flag to read"
+
+SCHEDULE SphericalHarmonicReconGeneric_PostStep \
+    IN SphericalHarmonicReconRead AFTER \
+    SphericalHarmonicReconGeneric_ReadData
+{
+  LANG: C
+  OPTIONS: GLOBAL
+} "set data flag to unread"
+
+SCHEDULE SphericalHarmonicReconGeneric_Startup at CCTK_INITIAL
+{
+  LANG: C
+  OPTIONS: GLOBAL
+} "startup"
+
+SCHEDULE SphericalHarmonicReconGeneric_Startup at CCTK_POST_RECOVER_VARIABLES
+{
+  LANG: C
+  OPTIONS: GLOBAL
+} "startup after recovery"
+
+
+
+SCHEDULE SphericalHarmonicReconGeneric_Shutdown at CCTK_TERMINATE
+{
+  LANG: C
+  OPTIONS: GLOBAL
+} "Shut down"

@@ -1,0 +1,9 @@
+# Main make.code.defn file for thorn NullPsiInt
+# $Header:$
+
+# Source files in this directory
+SRCS = NullPsiInt_dotNewsPsi.F90 NullPsiInt_MoLRegister.c \
+	NullPsiInt_InitMoL.F90 
+
+# Subdirectories containing source files
+SUBDIRS = 

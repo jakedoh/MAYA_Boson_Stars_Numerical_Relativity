@@ -1,0 +1,6 @@
+# Schedule definitions for thorn TATelliptic
+
+SCHEDULE TATelliptic_register_monitor AT startup
+{
+  LANG: C
+} "Register the pseudo solver"

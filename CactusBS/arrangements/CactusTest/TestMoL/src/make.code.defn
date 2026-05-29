@@ -1,0 +1,5 @@
+# Source files in this directory
+SRCS = Register.c RHS.c Init.c
+
+# Subdirectories containing source files
+SUBDIRS = 

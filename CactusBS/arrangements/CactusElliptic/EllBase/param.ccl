@@ -1,0 +1,11 @@
+# Parameter definitions for thorn EllBase
+# $Header$
+
+restricted:
+
+KEYWORD elliptic_verbose "elliptic verbosity"
+{
+  "yes"  :: "be verbose in elliptic"
+  "no"   :: "silence in elliptic"
+  "debug":: "even more verbose in elliptic"
+} "no"

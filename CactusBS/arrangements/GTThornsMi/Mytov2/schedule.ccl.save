@@ -1,0 +1,51 @@
+# Schedule definitions for thorn MyTov
+#  STORAGE: mytov_GF
+
+
+schedule main at CCTK_INITIAL
+schedule main in ADMBase_InitialData
+{
+  LANG:         Fortran
+} "Initial data myTOV star"
+
+#schedule evolve in ADMBase_InitialData
+schedule evolve at CCTK_INITIAL
+{
+  LANG:         Fortran
+} "Initial data myTOV star"
+
+
+
+if (CCTK_Equals(initial_data,"mytov")) 
+{
+#schedule initial_tov in ADMBase_InitialData
+schedule initial_tov at CCTK_INITIAL
+{
+  LANG:         Fortran
+} "Initial data myTOV star"
+}
+
+#schedule calcrhs in ADMBase_InitialData
+schedule calcrhs at CCTK_INITIAL
+{
+  LANG:		Fortran
+} "rhs calculation"
+
+
+############Esta parte esta comentada porque es para la Hidro, primero quiero que funcione la 
+############Geometria la copie de el TOV SOlver del ET.
+
+#schedule GROUP MyTOV_Initial_Data IN HydroBase_Initial
+#{
+#  STORAGE: MyTOV_Scalars
+#  STORAGE: MyTOV_Arrays
+#  SYNC: rho
+#  SYNC: press
+#  SYNC: eps
+#  SYNC: vel
+#  SYNC: w_lorentz
+#} "Group for the MyTOV initial data"
+
+
+
+

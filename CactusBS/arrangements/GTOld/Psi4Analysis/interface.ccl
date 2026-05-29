@@ -1,0 +1,37 @@
+# Interface definition for thorn IntegratePsi4
+# $Header:$
+
+implements: Psi4Analysis
+inherits: WeylScal4 SphericalSurface
+
+CCTK_REAL intpsi4_group[number_of_detectors] TYPE=ARRAY DIM=2 SIZE=maxntheta,maxnphi DISTRIB=CONSTANT
+{
+  int_psi4r_dt, int_psi4i_dt,
+  int2_psi4r_dt2, int2_psi4i_dt2
+} "integrate psi4 dt on 2d surface for each detector"
+
+CCTK_REAL surface_arrays TYPE=ARRAY DIM=2 SIZE=maxntheta,maxnphi DISTRIB=CONSTANT
+{
+  psi4_2d_re, psi4_2d_im
+} "2d quantities psi4 at detector position"
+
+CCTK_REAL scalars_real TYPE=SCALAR
+{
+  rdet
+} "real scalars"
+
+CCTK_REAL detector_scalars[number_of_detectors] TYPE=SCALAR
+{
+  lastt, 
+  energy, 
+  Px, Py, Pz,
+  Jx, Jy, Jz
+} "real scalars for each detector"
+
+CCTK_INT scalars_int TYPE=SCALAR
+{
+  psi4analysis_files_exist,
+  current_detector,
+  do_nothing,
+  ntheta,nphi
+} "integer scalars"

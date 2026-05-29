@@ -1,0 +1,418 @@
+# make.configuration.deps file for thorn Formaline   -*-Makefile-*-
+
+
+
+# Some configury magic
+
+# Is this gnu tar? If so, set this to 2, otherwise to 1. This is used
+# to treat an exit code of 1 from gnu tar as non-fatal. This exit code
+# indicates that files changed while reading, which can happen if the
+# atime changed. (An atime change means that another program read the
+# file, which is inconsequential.)
+TAR_ERROR_THRESHOLD := $(shell $(TAR) --version 2>/dev/null | grep -q 'GNU tar' && echo "2" || echo "1")
+
+# Does tr support -C, or should we use -c instead?
+TR_C := $(shell tr -C 'a' 'b' < /dev/null > /dev/null 2> /dev/null && echo 'tr -C' || echo 'tr -c')
+
+
+
+################################################################################
+
+
+
+# Create a tarball of the source code whenever this thorn is linked
+# into an executable
+
+TARBALL_DIR = $(SCRATCH_BUILD)/Formaline
+FORMALINE_BIN_DIR = $(SCRATCH_BUILD)/Formaline/bin
+CACTUS_CONFIGS_DIR ?= $(CCTK_HOME)/configs
+
+# The Formaline utilities (the perl scripts needed to create tarballs
+# and execute git commands) are installed when Formaline's thorn
+# library is built (see make.code.deps). To ensure that the utilities
+# are available, we thus add a dependency on the thorn library.
+#install-Formaline-utils: $(CCTK_LIBDIR)/$(LIBNAME_PREFIX)$(CCTK_LIBNAME_PREFIX)Formaline$(LIBNAME_SUFFIX)
+#.PHONY: install-Formaline-utils
+FORMALINE-UTILS = $(CCTK_LIBDIR)/$(LIBNAME_PREFIX)$(CCTK_LIBNAME_PREFIX)Formaline$(LIBNAME_SUFFIX)
+# NOTE: This dependency means that all tarballs and the git repo are
+# recreated from scratch when lib_thornFormaline.a changes!
+
+
+
+#CACTUSLIBLINKLINE += $(CCTK_LIBDIR)/$(LIBNAME_PREFIX)$(CCTK_LIBNAME_PREFIX)Formaline-cactus-source$(LIBNAME_SUFFIX)
+CACTUSLIBLINKLINE += -l$(CCTK_LIBNAME_PREFIX)Formaline-cactus-source
+
+FRM-LIB = $(CCTK_LIBDIR)/$(LIBNAME_PREFIX)$(CCTK_LIBNAME_PREFIX)Formaline-cactus-source$(LIBNAME_SUFFIX)
+
+$(EXEDIR)$(DIRSEP)$(EXE): $(FRM-LIB)
+
+FRM-OBJS = $(TARBALL_DIR)/cactus-meta.o $(TARBALL_DIR)/build-id.o $(TARBALL_DIR)/config-Cactus.o $(TARBALL_DIR)/flesh-Cactus.o $(patsubst %,$(TARBALL_DIR)/thorn-%.o,$(notdir $(THORNS)))
+FRM-OBJS-other = $(TARBALL_DIR)/config-Cactus-????.o $(TARBALL_DIR)/flesh-Cactus-????.o $(patsubst %,$(TARBALL_DIR)/thorn-%-????.o,$(notdir $(THORNS)))
+
+$(FRM-LIB): $(FRM-OBJS)
+#	$(AR) $(ARFLAGS) $@ $^
+	$(MAKE) -f $(MAKE_DIR)/make.configuration $(FRM-LIB).objectlist.custom
+	$(RM) $@ 2>/dev/null
+	xargs -n $(FRM-OBJS-words-max) $(AR) $(ARFLAGS) $@ < $(FRM-LIB).objectlist
+	$(RM) $(FRM-LIB).objectlist
+	if test "x$(USE_RANLIB)" = "xyes"; then $(RANLIB) $(RANLIBFLAGS) $@; fi
+	@echo $(DIVIDER)
+
+.PRECIOUS: $(FRM-LIB)
+
+
+
+# Unique ID for the build
+
+# (force a new ID to be created every time)
+# (do this after the thorn's library has been built, so that the
+#  script gethostname.pl has been copied to the scratch directory)
+# (generates also $(TOP)/CONFIG-ID)
+.PRECIOUS: $(TOP)/BUILD-ID
+$(TOP)/BUILD-ID: $(TARBALL_DIR)/cactus-meta.c | $(FORMALINE-UTILS)
+	config=`echo "$(EXE:cactus_%=%)" | $(TR_C) -d '[:alnum:]+-._]'` && \
+	hostname=`$(FORMALINE_BIN_DIR)/gethostname.pl` && \
+	user="$$USER" && \
+	dirname=`echo "$(subst /,-,$(CCTK_HOME:/%=%))" | $(TR_C) -d '[:alnum:]+-._]'` && \
+	timestamp=`date -u +%Y.%m.%d-%H.%M.%S` && \
+	pid="$$$$" && \
+	build_id="build-$$config-$$hostname-$$user-$$timestamp-$$pid" && \
+	echo "$$build_id" > $@ && \
+	config_id="config-$$config-$$hostname-$$dirname" && \
+	echo "$$config_id" > $(TOP)/CONFIG-ID
+
+
+
+.PRECIOUS: $(TARBALL_DIR)/build-id.o
+$(TARBALL_DIR)/build-id.o: $(TARBALL_DIR)/build-id.c
+	cd $(TARBALL_DIR) && $(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $^
+
+.PRECIOUS: $(TARBALL_DIR)/build-id.c
+$(TARBALL_DIR)/build-id.c: $(TOP)/BUILD-ID
+	{ \
+	echo '/* This is an auto-generated file -- do not edit */' && \
+	build_id="$$(cat $(TOP)/BUILD-ID)" && \
+	echo 'char const * const build_id = "'$$build_id'";' && \
+	config_id="$$(cat $(TOP)/CONFIG-ID || echo 'NO-CONFIG-ID')" && \
+	echo 'char const * const config_id = "'$$config_id'";'; \
+	} > $@.tmp
+	mv $@.tmp $@
+
+
+
+# Meta information
+$(TARBALL_DIR)/cactus-meta.o: $(TARBALL_DIR)/cactus-meta.c
+	cd $(TARBALL_DIR) && $(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $^
+
+$(TARBALL_DIR)/cactus-meta.c: $(TARBALL_DIR)/config-Cactus.c $(TARBALL_DIR)/flesh-Cactus.c $(patsubst %,$(TARBALL_DIR)/thorn-%.c,$(notdir $(THORNS))) | $(FORMALINE-UTILS)
+	$(FORMALINE_BIN_DIR)/makemetablob.pl CactusConfig Cactus $(notdir $(THORNS)) > $@.tmp
+	mv $@.tmp $@
+
+.SECONDARY: $(TARBALL_DIR)/cactus-meta.o
+
+
+
+###############################################################################
+# Configuration files
+###############################################################################
+
+# Note: Build first the source files %-????.c, then the source file
+# $^, so that interruptions or build errors lead to a re-build
+$(TARBALL_DIR)/config-Cactus.o: $(TARBALL_DIR)/config-Cactus.c
+	@echo "Creating Formaline tarball for the configuration options"
+	cd $(TARBALL_DIR) && \
+	$(RM) -f $(^:%.c=%-????.o) && \
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $(^:%.c=%-????.c) && \
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $^ && \
+        $(RM) -f $(^:%.c=%-????.c)
+
+$(TARBALL_DIR)/config-Cactus.c: $(TARBALL_DIR)/config-Cactus.files $(CCTK_HOME)/arrangements/CactusUtils/Formaline/src/util/VERSION | $(FORMALINE-UTILS)
+        # cannot use a pipe for tar output since that makes it impossible to
+        # catch tar failures
+        # using multiple make recipes and .INTERMEDIATE files can cause make
+        # 3.81 to hang due to a make bug
+	if ( cd $(CACTUS_CONFIGS_DIR) && ( $(TAR) czf $(TARBALL_DIR)/config-Cactus.tar.gz -T $< || [ $$? -lt $(TAR_ERROR_THRESHOLD) ] ) ) ; then \
+	    $(RM) -f $(@:%.c=%-????.c) && \
+	    $(FORMALINE_BIN_DIR)/makeblob.pl $(@:%.c=%) '' CactusConfig < $(TARBALL_DIR)/config-Cactus.tar.gz && \
+            rm $(TARBALL_DIR)/config-Cactus.tar.gz ; \
+        else \
+            exit $$? ; \
+        fi
+
+# This dependency means that the tarball for the configuration options
+# is only updated if the flesh is actually recompiled. This does not
+# catch changes to files that do not influence the executable.
+$(TARBALL_DIR)/config-Cactus.files: $(CCTK_LIBDIR)/$(LIBNAME_PREFIX)$(CCTK_LIBNAME_PREFIX)$(FLESHLIB)$(LIBNAME_SUFFIX) $(TARBALL_DIR)/config-Cactus.ccldeps $(CONFIG)/make.thornlist
+	mkdir -p $(TARBALL_DIR)/configs/$(notdir $(TOP))
+	{ \
+		cd $(CACTUS_CONFIGS_DIR)/$(notdir $(TOP)) && \
+		cp -r OptionList properties.ini RunScript ScriptFile SubmitScript ThornList config-data config-info $(TARBALL_DIR)/configs/$(notdir $(TOP)) 2>/dev/null; \
+	} || true
+	cd $(TARBALL_DIR)/configs && \
+	find $(notdir $(TOP))/. \
+		-name 'CVS' -prune -o \
+		-name '_darcs' -prune -o \
+		-name '.git' -prune -o \
+		-name '.hg' -prune -o \
+		-name '.svn' -prune -o \
+		-name '*.log' -prune -o \
+		-name '*.log.gz' -prune -o \
+		-name '.?*' -prune -o \
+		-name '*~' -prune -o \
+		! -type d \
+		-print | sed -e 's+/[.]/+/+g' > $@.tmp
+	mv $@.tmp $@
+	$(RM) -rf $(TARBALL_DIR)/configs
+
+-include $(TARBALL_DIR)/config-Cactus.ccldeps
+# Make aborts if these dependencies vanish.  Therefore mention only files
+# here that cannot go away.
+$(TARBALL_DIR)/config-Cactus.ccldeps:
+	mkdir -p $(TARBALL_DIR)
+	{ \
+	        echo "$(@:%.ccldeps=%.files) \\"; \
+	        echo "$@: \\"; \
+	        echo " $(CCTK_HOME)/src/interface.ccl \\"; \
+	        echo " $(CCTK_HOME)/src/param.ccl \\"; \
+	        echo " $(CCTK_HOME)/src/schedule.ccl"; \
+	} > $@.tmp
+	mv $@.tmp $@
+
+.PRECIOUS: $(TARBALL_DIR)/config-Cactus.ccldeps $(TARBALL_DIR)/config-Cactus.files
+.SECONDARY: $(TARBALL_DIR)/config-Cactus.c $(TARBALL_DIR)/config-Cactus.o
+
+
+
+###############################################################################
+# Flesh
+###############################################################################
+
+# Note: Build first the source files %-????.c, then the source file
+# $^, so that interruptions or build errors lead to a re-build
+$(TARBALL_DIR)/flesh-Cactus.o: $(TARBALL_DIR)/flesh-Cactus.c
+	@echo "Creating Formaline tarball for the flesh"
+	cd $(TARBALL_DIR) && \
+	$(RM) -f $(^:%.c=%-????.o) && \
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $(^:%.c=%-????.c) && \
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $^ && \
+	$(RM) -f $(^:%.c=%-????.c)
+
+$(TARBALL_DIR)/flesh-Cactus.c: $(TARBALL_DIR)/flesh-Cactus.files $(CCTK_HOME)/arrangements/CactusUtils/Formaline/src/util/VERSION | $(FORMALINE-UTILS)
+        # cannot use a pipe for tar output since that makes it impossible to
+        # catch tar failures
+        # using multiple make recipes and .INTERMEDIATE files can cause make
+        # 3.81 to hang due to a make bug
+	if ( cd $(CCTK_HOME) && ( $(TAR) czf $(TARBALL_DIR)/flesh-Cactus.tar.gz -T $< || [ $$? -lt $(TAR_ERROR_THRESHOLD) ] ) ) ; then \
+	    $(RM) -f $(@:%.c=%-????.c) && \
+	    $(FORMALINE_BIN_DIR)/makeblob.pl $(@:%.c=%) '' Cactus < $(TARBALL_DIR)/flesh-Cactus.tar.gz && \
+            $(RM) $(TARBALL_DIR)/flesh-Cactus.tar.gz ; \
+        else \
+            exit $$? ; \
+        fi
+
+
+# This dependency means that the tarball for the flesh is only updated
+# if the flesh is actually recompiled.  This does not catch changes to
+# files that do not influence the executable.
+$(TARBALL_DIR)/flesh-Cactus.files: $(CCTK_LIBDIR)/$(LIBNAME_PREFIX)$(CCTK_LIBNAME_PREFIX)$(FLESHLIB)$(LIBNAME_SUFFIX) $(TARBALL_DIR)/flesh-Cactus.ccldeps #$(CONFIG)/make.thornlist
+	cd $(CCTK_HOME) && \
+	find CONTRIBUTORS COPYRIGHT Makefile lib/. src/. \
+		-name 'CVS' -prune -o \
+		-name '_darcs' -prune -o \
+		-name '.git' -prune -o \
+		-name '.hg' -prune -o \
+		-name '.svn' -prune -o \
+		-name '*.log' -prune -o \
+		-name '*.log.gz' -prune -o \
+		-name '.?*' -prune -o \
+		-name '*~' -prune -o \
+		! -type d \
+		-print | sed -e 's+/[.]/+/+g' > $@.tmp
+	mv $@.tmp $@
+
+-include $(TARBALL_DIR)/flesh-Cactus.ccldeps
+# Make aborts if these dependencies vanish.  Therefore mention only files
+# here that cannot go away.
+$(TARBALL_DIR)/flesh-Cactus.ccldeps:
+	mkdir -p $(TARBALL_DIR)
+	{ \
+	        echo "$(@:%.ccldeps=%.files) \\"; \
+	        echo "$@: \\"; \
+	        echo " $(CCTK_HOME)/src/interface.ccl \\"; \
+	        echo " $(CCTK_HOME)/src/param.ccl \\"; \
+	        echo " $(CCTK_HOME)/src/schedule.ccl"; \
+	} > $@.tmp
+	mv $@.tmp $@
+
+.PRECIOUS: $(TARBALL_DIR)/flesh-Cactus.ccldeps $(TARBALL_DIR)/flesh-Cactus.files
+.SECONDARY: $(TARBALL_DIR)/flesh-Cactus.c $(TARBALL_DIR)/flesh-Cactus.o
+
+
+
+###############################################################################
+# Thorns
+###############################################################################
+
+# Note: Build first the source files %-????.c, then the source file
+# $^, so that interruptions or build errors lead to a re-build
+$(TARBALL_DIR)/thorn-%.o: $(TARBALL_DIR)/thorn-%.c
+	@echo "Creating Formaline tarball for thorn $*"
+	cd $(TARBALL_DIR) && \
+	$(RM) -f $(patsubst $(TARBALL_DIR)/%, %, $(^:%.c=%-????.o)) && \
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $(patsubst $(TARBALL_DIR)/%, %, $(^:%.c=%-????.c)) && \
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $(patsubst $(TARBALL_DIR)/%, %, $^) && \
+        $(RM) -f $(patsubst $(TARBALL_DIR)/%, %, $(^:%.c=%-????.c))
+
+$(TARBALL_DIR)/thorn-%.c: $(TARBALL_DIR)/thorn-%.files $(CCTK_HOME)/arrangements/CactusUtils/Formaline/src/util/VERSION | $(FORMALINE-UTILS)
+        # cannot use a pipe for tar output since that makes it impossible to
+        # catch tar failures
+        # using multiple make recipes and .INTERMEDIATE files can cause make
+        # 3.81 to hang due to a make bug
+	if ( cd $(CCTK_HOME) && ( $(TAR) czf $(@:%.c=%.tar.gz) -T $< || [ $$? -lt $(TAR_ERROR_THRESHOLD) ] ) ) ; then \
+	    cd $(TARBALL_DIR) && $(RM) -f $(@:$(TARBALL_DIR)/%.c=%-????.c) && \
+	    $(FORMALINE_BIN_DIR)/makeblob.pl $(@:%.c=%) $(patsubst %/,%,$(dir $(filter %/$(@:$(TARBALL_DIR)/thorn-%.c=%),$(THORNS)))) $(@:$(TARBALL_DIR)/thorn-%.c=%) < $(@:%.c=%.tar.gz) && \
+            rm $(@:%.c=%.tar.gz) ; \
+        else \
+            exit $$? ; \
+        fi
+
+
+# This dependency means that the tarball for a thorn is only updated
+# if the thorn is actually recompiled.  This does not catch changes to
+# files that do not influence the executable.
+$(TARBALL_DIR)/thorn-%.files: $(CCTK_LIBDIR)/$(LIBNAME_PREFIX)$(CCTK_LIBNAME_PREFIX)%$(LIBNAME_SUFFIX) $(TARBALL_DIR)/thorn-%.ccldeps
+	cd $(CCTK_HOME) && \
+	find arrangements/$(filter %/$*,$(THORNS))/. \
+		-name 'data' -prune -o \
+		-name 'doc' -prune -o \
+		-name 'par' -prune -o \
+		-name 'test' -prune -o \
+		-name 'CVS' -prune -o \
+		-name '*.log' -prune -o \
+		-name '*.log.gz' -prune -o \
+		-name '.?*' -prune -o \
+		-name '*~' -prune -o \
+		! -type d \
+		-print | sed -e 's+/[.]/+/+g' > $@.tmp
+	mv $@.tmp $@
+
+-include $(patsubst %,$(TARBALL_DIR)/thorn-%.ccldeps,$(notdir $(THORNS)))
+# Make aborts if these dependencies vanish.  Therefore mention only files
+# here that cannot go away.
+$(TARBALL_DIR)/thorn-%.ccldeps:
+	mkdir -p $(TARBALL_DIR)
+	{ \
+	        echo "$(@:%.ccldeps=%.files) \\"; \
+	        echo "$@: \\"; \
+	        echo " $(CCTK_HOME)/arrangements/$(filter %/$*,$(THORNS))/interface.ccl \\"; \
+	        echo " $(CCTK_HOME)/arrangements/$(filter %/$*,$(THORNS))/param.ccl \\"; \
+	        echo " $(CCTK_HOME)/arrangements/$(filter %/$*,$(THORNS))/schedule.ccl"; \
+	} > $@.tmp
+	mv $@.tmp $@
+
+.PRECIOUS: $(TARBALL_DIR)/thorn-%.ccldeps $(TARBALL_DIR)/thorn-%.files
+.SECONDARY: $(TARBALL_DIR)/thorn-%.c $(TARBALL_DIR)/thorn-%.o
+
+
+
+###############################################################################
+# Helpers
+###############################################################################
+
+# Create a file containing the names of all object files.
+
+# Since the list may be too long to be passed to a shell, it is split
+# into a set of rules which add lines to a file.  This file can later
+# be used via xargs.
+
+FRM-OBJS-words = $(words $(FRM-OBJS))
+
+ifeq ($(shell uname),AIX)
+# Be conservative about the maximum number of objects that can be
+# handled at once.  AIX has a command line length limit of about
+# 32000.  Each object's path name may be about 100 characters long.
+FRM-OBJS-words-max = 200
+else ifneq ($(findstring CYGWIN_NT,$(shell uname)),)
+# Ditto
+FRM-OBJS-words-max = 200
+else
+# Assume that the system has no limit to speak of
+FRM-OBJS-words-max = 10000
+endif
+
+ifeq ($(shell test $(FRM-OBJS-words) -le $(FRM-OBJS-words-max) && echo 1), 1)
+
+# The list is short.  Create the file directly, which is faster.
+
+.PHONY: $(FRM-LIB).objectlist.custom
+$(FRM-LIB).objectlist.custom:
+	echo $(FRM-OBJS) $(FRM-OBJS-other) > $(FRM-LIB).objectlist
+
+else
+
+# The list is long.  Create it one object file a time.
+
+.PHONY: $(FRM-LIB).objectlist.custom
+$(FRM-LIB).objectlist.custom:
+	$(shell : > $(FRM-LIB).objectlist.tmp)
+	$(foreach obj, $(FRM-OBJS) $(FRM-OBJS-other), $(shell echo $(obj) >> $(FRM-LIB).objectlist.tmp))
+	mv $(FRM-LIB).objectlist.tmp $(FRM-LIB).objectlist
+
+endif
+
+
+
+###############################################################################
+# Git repository of source code
+###############################################################################
+
+# Does git exist, or should we do nothing instead?
+GIT-CMD := $(shell env PATH="$(SCRATCH_BUILD)/external/git/bin:$(SCRATCH_BUILD)/git-1.6.6.1/bin:$(SCRATCH_BUILD)/git-1.6.0.6/bin:$$HOME/git/bin:$$PATH" which git)
+HAVE-GIT := $(shell '$(GIT-CMD)' --version > /dev/null 2>&1 && echo 'true' || echo 'false')
+GIT := $(shell $(HAVE-GIT) && echo '$(FORMALINE_BIN_DIR)/git-lock.pl $(GIT-CMD)' || { echo 'Formaline: WARNING: git command not found' >&2 && echo 'true'; })
+
+
+
+ifeq ($(HAVE-GIT),true)
+
+main: $(TOP)/build/Formaline/git-store-source
+
+GIT-TAG-DIR     = $(SCRATCH_BUILD)/Formaline
+GIT-BIN         = $(FORMALINE_BIN_DIR)
+GIT-REPO        = $(TOP)/configjar.git
+GIT-MASTER-REPO = $(CCTK_HOME)/cactusjar.git
+GIT-LOCAL-REPO  = $(CCTK_HOME)/../CactusSourceJar.git
+
+GIT-THORNS      = $(notdir $(THORNS))
+
+BUILD-ID-FILE   = $(TOP)/BUILD-ID
+CONFIG-ID-FILE  = $(TOP)/CONFIG-ID
+
+$(TOP)/build/Formaline/git-store-source: $(BUILD-ID-FILE) $(TARBALL_DIR)/flesh-Cactus.files \
+	$(GIT-THORNS:%=$(TARBALL_DIR)/thorn-%.files) \
+	$(TARBALL_DIR)/config-Cactus.files | $(FORMALINE-UTILS)
+	export 'CCTK_HOME=$(CCTK_HOME)' && \
+	if [ -e '$(CCTK_HOME)/cactus.config' ]; then \
+		. '$(CCTK_HOME)/cactus.config'; \
+	fi && \
+	export 'GIT_SSH=$(GIT-BIN)/git-ssh.sh' && \
+	export 'CACTUS_CENTRAL_SSH_ID' && \
+	export CACTUS_CONFIGS_DIR=$(CACTUS_CONFIGS_DIR) && \
+	{ \
+		cat /dev/null $(filter-out $(TARBALL_DIR)/config-Cactus.files,$?)  && \
+		$(if $(filter $(TARBALL_DIR)/config-Cactus.files,$?), \
+	             sed 's|^|$(CACTUS_CONFIGS_DIR)/|' '$(TARBALL_DIR)/config-Cactus.files', \
+	             :) && \
+		echo '$(CACTUS_CONFIGS_DIR)/$(notdir $(TOP))/BUILD-ID' && \
+		echo '$(CACTUS_CONFIGS_DIR)/$(notdir $(TOP))/CONFIG-ID'; \
+	} | \
+	'$(GIT-BIN)/update-git-repo.pl' '$(GIT-CMD)' '$(GIT-REPO)' \
+		'$(GIT-MASTER-REPO)' '$(GIT-LOCAL-REPO)' "$$CACTUS_CENTRAL_GIT_REPO" \
+		`cat $(BUILD-ID-FILE)` `cat $(CONFIG-ID-FILE)` && \
+	echo >$(TOP)/build/Formaline/git-store-source
+	echo "Formaline: Done."
+	echo "Formaline: (Formaline has finished updating the git repositories."
+	echo "Formaline:  If the build process seems to hang, some other command"
+	echo "Formaline:  is still running, e.g. the final link stage.)"
+
+endif

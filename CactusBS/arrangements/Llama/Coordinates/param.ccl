@@ -1,0 +1,425 @@
+restricted:
+
+keyword coordinate_system "Available patch systems"
+{
+  "Cartesian"         :: "Cartesian coordinates (unit Jacobian)"
+  "TwoPatchCartesian" :: "Two Cartesian patches with one common face"
+  "TwoPatchDistorted" :: "One Cartesian and one distorted patch, overlapping"
+  "Thornburg04"       :: "Jonathan's AHFinderDirect coordinates"
+  "Thornburg13"       :: "Jonathan's AHFinderDirect coordinates as a 13 patch system (Do not use with radial stretch)"
+  "Thornburg04nc"     :: "Jonathan's system without a central Cartesian patch"
+  "CylinderInBox"     :: "A hollow (spherical) cylinder in a (Cartesian) box"
+  "Sphere+Column"     :: "Excision type overlapping sphere + column grid"
+  "Cylinder+Column"   :: "Cylindrical grid + central column"
+} "Cartesian"
+
+
+private:
+
+keyword symmetry "Select a symmetry"
+{
+  "full"        :: "full domain"
+  "+z bitant"   :: "bitant mode (positive z)"
+  "+xyz octant" :: "octant mode (positive xyz)"
+} "full"
+
+boolean verbose "Output information periodically"
+{
+} "yes"
+
+
+# Choices about storage
+
+# "'No' is currently not implemented here, but needed for a Coordinate abstraction layer:"
+boolean store_jacobian "Numerically evaluate and store the transformation da^i/dx^k  (a: local, x: global)"
+{
+} "yes"
+
+boolean store_inverse_jacobian "Numerically evaluate and store the transformation dx^i/da^k  (a: local, x: global)"
+{
+} "no"
+
+# "'No'" is currently not implemented here, but needed for a Coordinate abstraction layer:"
+boolean store_jacobian_derivative "Store the derivative of the Jacobian d^2[global]/d[local]^2"
+{
+} "yes"
+
+
+boolean store_volume_form "Store determinant of Jacobian"
+{
+} "no"
+
+
+# Choices about inter-patch and outer boundaries
+
+int patch_boundary_size "Number of inter-patch boundary points which are filled via interpolation (should be >= nghostzones)"
+{
+  0:* :: ""
+} 1
+
+boolean stagger_patch_boundaries "Stagger the grid at the inter-patch boundaries?"
+{
+} "no"
+
+int additional_overlap_size "Additional overlap between patches; this overlap is evolved, not interpolated"
+{
+  0:* :: ""
+} 0
+
+boolean register_symmetry "Register patch boundaries as symmetries"
+{
+} "yes"
+
+int outer_boundary_size "Number of outer boundary points"
+{
+  0:* :: ""
+} 1
+
+boolean internal_outer_boundaries "Do the outer boundary points extend inwards?"
+{
+} "no"
+
+boolean stagger_outer_boundaries "Stagger the grid at the outer boundaries"
+{
+} "no"
+
+int shiftout_outer_boundaries "Offset between the boundary location and the first outer boundary point"
+{
+  *:* :: ""
+} 0
+
+int additional_symmetry_size "Additional shiftout for symmetry boundaries"
+{
+  0:1 :: "Must be 0 for staggered boundaries (cell-centered AMR); otherwise 1"
+} 0
+
+
+int nMonteCarloParticles "Number of Monte-Carlo particles for determining fraction of cells that are on the nominal grid. This is used for the computation of the volume form."
+{
+  0:*  :: "the larger the better"
+} 500000
+
+
+int MonteCarloSeed "A seed for random number generator to get Monte Carlo particle distribution."
+{
+  0:*  :: "Something positive"
+} 1
+
+
+# Setup of the one-patch system
+
+int ncells_x "Number of cells in the x direction"
+{
+  0:* :: ""
+} 10
+
+int ncells_y "Number of cells in the x direction"
+{
+  0:* :: ""
+} 10
+
+int ncells_z "Number of cells in the x direction"
+{
+  0:* :: ""
+} 10
+
+real patch_xmin "xmin for the patch"
+{
+  *:* :: ""
+} 0.0
+real patch_ymin "ymin for the patch"
+{
+  *:* :: ""
+} -0.5
+real patch_zmin "zmin for the patch"
+{
+  *:* :: ""
+} -0.5
+
+real patch_xmax "xmin for the patch"
+{
+  *:* :: ""
+} 1.0
+real patch_ymax "ymin for the patch"
+{
+  *:* :: ""
+} 0.5
+real patch_zmax "zmin for the patch"
+{
+  *:* :: ""
+} 0.5
+
+
+
+# Setup of the two-patch system
+
+int patch_one_ncells_x "Number of cells in the x direction for patch one"
+{
+  0:* :: ""
+} 10
+
+int patch_one_ncells_y "Number of cells in the y direction for patch one"
+{
+  0:* :: ""
+} 10
+
+int patch_one_ncells_z "Number of cells in the z direction for patch one"
+{
+  0:* :: ""
+} 10
+
+real patch_one_xmin "xmin for patch one"
+{
+  *:* :: ""
+} 0.0
+real patch_one_ymin "ymin for patch one"
+{
+  *:* :: ""
+} -0.5
+real patch_one_zmin "zmin for patch one"
+{
+  *:* :: ""
+} -0.5
+
+real patch_one_xmax "xmin for patch one"
+{
+  *:* :: ""
+} 1.0
+real patch_one_ymax "ymin for patch one"
+{
+  *:* :: ""
+} 0.5
+real patch_one_zmax "zmin for patch one"
+{
+  *:* :: ""
+} 0.5
+
+####
+
+int patch_two_ncells_x "Number of cells in the x direction for patch two"
+{
+  0:* :: ""
+} 10
+
+int patch_two_ncells_y "Number of cells in the y direction for patch two"
+{
+  0:* :: ""
+} 10
+
+int patch_two_ncells_z "Number of cells in the z direction for patch two"
+{
+  0:* :: ""
+} 10
+
+real patch_two_xmin "xmin for patch two"
+{
+  *:* :: ""
+} -1.0
+real patch_two_ymin "ymin for patch two"
+{
+  *:* :: ""
+} -0.5
+real patch_two_zmin "zmin for patch two"
+{
+  *:* :: ""
+} -0.5
+
+real patch_two_xmax "xmin for patch two"
+{
+  *:* :: ""
+} 0.0
+real patch_two_ymax "ymin for patch two"
+{
+  *:* :: ""
+} 0.5
+real patch_two_zmax "zmin for patch two"
+{
+  *:* :: ""
+} 0.5
+
+
+
+### Setup of the TwoPatchDistorted system
+
+# Parameters are the same as for the two-patch system. Note that the
+# common boundary is always the right \partial_a (right \partial x) boundary 
+# of patch 1, and also the right \partial_a (_left_ \partial_x!) boundary 
+# of patch 2.
+
+
+
+### Setup of the 7-patch system
+
+real h_cartesian "Inner cube resolution"
+{
+  0:* :: "positive"
+} 0.0
+
+real h_radial "Radial resolution"
+{
+  0:* :: "positive"
+} 0.0  
+
+
+real sphere_inner_radius "Inner radius for the spherical grids"
+{
+  0:* :: "positive"
+} 0.0
+
+real sphere_outer_radius "Location of the physical outer boundary."
+{
+  0:* :: "positive"
+} 0.0
+
+# Make this even to ensure a grid point on the axis
+int n_angular "Number of grid cells in the angular directions on the outer grids"
+{
+  0:*:2 :: "even numbers required when bitant symmetry is used with non-staggered boundaries"
+  1:*:2 :: "odd numbers required when bitant symmetry is used with non-staggered boundaries"
+} 0
+
+
+
+### Parameters that are specific to the Thornburg13 patch system
+
+real h_radial_inner "Radial resolution for patches 1-6 of Thornburg13"
+{
+  0:* :: "positive"
+} 0.0  
+
+real h_radial_outer "Radial resolution for patches 7-13 of Thornburg13"
+{
+  0:* :: "positive"
+} 0.0  
+
+real sphere_medium_radius "Medium radius for the 13 patch system spherical grids"
+{
+  0:* :: "positive"
+} 0.0
+
+int n_angular_inner "Number of gridpoints in angular directions on the patches 1-6"
+{
+  0:* :: "positive"
+} 0
+
+int n_angular_outer "Number of gridpoints in angular directions on the patches 7-13"
+{
+  0:* :: "positive"
+} 0
+
+### Cubical Inner boundary: Currently only works with Thornburg13. Not fully tested. (Do not use with radial stretch)
+boolean cubical_inner_boundary "give the inner boundary a cubical shape"
+{
+} "no"
+
+
+
+### Radial coordinate stretch
+
+boolean radial_stretch "Stretch the radial coordinate"
+{
+} "no"
+
+
+real stretch_rmin_1 "Inner radius of first stretching region"
+{
+  0:* :: "positive"
+} 1e10
+
+real stretch_rmax_1 "Outer radius of first stretching region"
+{
+  0:* :: "positive"
+} 2e10
+
+real h_radial_1 "Intended radial resolution of the first stretched domain"
+{
+  * :: "negative turns off stretching"
+} -1
+
+
+
+# Setup of the Cylinder-in-Box system
+
+# h_cartesian
+# h_radial
+# n_angular
+
+real box_radius "Half-size of Cartesian box"
+{
+  0:* :: ""
+} 3.0
+
+real cylinder_radius "Inner radius of cylinder"
+{
+  0:* :: ""
+} 1.0
+
+real transition_radius "Transition radius between box and cylinder"
+{
+  (0:* :: ""
+} 2.0
+
+
+
+# Setup of the Sphere+Column system
+
+# h_radial
+# h_radial_1
+# stretch_rmin_1
+# stretch_rmax_1
+# sphere_inner_radius
+# sphere_outer_radius
+
+real theta_min "Minimal polar angle to cover by the spherical grid patch, in degrees"
+{
+  (0:90) :: "positive please"
+} 10
+
+int n_angular_phi "Number of angular points in the phi direction"
+{
+  0:* :: "positive"
+} 40
+ 
+int n_angular_theta "Number of angular points in the theta direction"
+{
+  0:* :: "positive"
+} 10
+ 
+int n_xy "Number of points in xy-direction on the column patches"
+{
+  0:* :: "positive"
+} 10
+
+
+# Setup of the Cylinder+Column system
+
+# h_cartesian
+# h_radial
+# n_angular_phi
+# n_xy
+
+real cylinder_inner_radius "Inner radius of the cylinder"
+{
+  0:* :: ""
+} 1.0
+
+real cylinder_outer_radius "Outer radius of the cylinder"
+{
+  0:* :: ""
+} 2.0
+
+real cylinder_zmin "Minimum z for cylinder and column"
+{
+  *:* :: ""
+} -2.0
+
+real cylinder_zmax "Maximum z for cylinder and column"
+{
+  *:* :: ""
+} 2.0
+
+real h_z "Spacing in z direction"
+{
+  0:* :: ""
+} 0.1
+

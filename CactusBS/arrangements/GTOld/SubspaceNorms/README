@@ -1,0 +1,15 @@
+Cactus Code Thorn SubspaceNorms 
+Author(s)    : Tanja Bode <tanja.bode@physics.gatech.edu>
+Maintainer(s): Tanja Bode <tanja.bode@physics.gatech.edu>
+Licence      : GPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+Calculate norms within subregions (Subspaces) of hypersurfaces.
+This takes general scalars, vectors, and tensors, and computes the
+norms over coordinate spheres, weighting appropriately.
+
+Sample use: quantifying violations of an assumed stress energy tensor
+form over the inner region of the grid yet outside the BH, ignoring
+refinement boundary points which are noisier.

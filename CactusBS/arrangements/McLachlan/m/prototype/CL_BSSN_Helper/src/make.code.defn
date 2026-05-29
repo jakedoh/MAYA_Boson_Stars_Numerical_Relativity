@@ -1,0 +1,2 @@
+# -*-Makefile-*-
+SRCS = ExtrapolateGammas.c NewRad.c RegisterConstrained.c RegisterSlicing.c SelectBCsADMBase.c SetGroupTags.c

@@ -1,0 +1,9 @@
+# Main make.code.defn file for thorn Include1
+# $Header$
+
+# Source files in this directory
+SRCS = PrintInclude.c 
+
+# Subdirectories containing source files
+SUBDIRS = 
+

@@ -1,0 +1,24 @@
+# Schedule definitions for thorn SwitchGrids
+
+schedule SwitchGrids_ParamCheck at CCTK_PARAMCHECK
+{
+  lang: C
+} "Check SwitchGrids parameters"
+
+schedule SwitchGrids_Switch at PreRegridInitial BEFORE RegridBoxesInitial
+{
+  lang: C
+  OPTIONS: global
+} "Turn grids on or off"
+
+schedule SwitchGrids_Switch at PreRegrid BEFORE RegridBoxesEvol
+{
+  lang: C
+  OPTIONS: global
+} "Turn grids on or off"
+
+schedule SwitchGrids_Switch at CCTK_POST_RECOVER_VARIABLES
+{
+  lang: C
+  OPTIONS: global
+} "Turn grids on or off"

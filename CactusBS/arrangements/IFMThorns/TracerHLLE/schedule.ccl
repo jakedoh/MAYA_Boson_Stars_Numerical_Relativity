@@ -1,0 +1,7 @@
+# Schedule definitions for thorn TracerHLLE
+# $Header:$
+
+schedule Whisky_HLLE_Tracer IN FluxTerms AFTER Riemann AS Tracer
+{
+  LANG: Fortran
+} "Solve the local Riemann problems"

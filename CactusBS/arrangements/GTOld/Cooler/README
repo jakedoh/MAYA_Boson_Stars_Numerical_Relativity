@@ -1,0 +1,12 @@
+Cactus Code Thorn Cooler
+Author(s)    : Tanja Bode <tanja.bode@physics.gatech.edu>
+Maintainer(s): Tanja Bode <tanja.bode@physics.gatech.edu>
+Licence      : Private
+--------------------------------------------------------------------------
+
+1. Purpose
+
+This thorn is a vehicle for cooling a hydrodynamic gas cloud.
+Currently it only implements simple radiative cooling in the form
+of a cooling function to decrease the internal energy.
+

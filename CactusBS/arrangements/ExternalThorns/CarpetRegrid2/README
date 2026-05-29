@@ -1,0 +1,15 @@
+Cactus Code Thorn CarpetRegrid2
+Author(s)    : Erik Schnetter <schnetter@cct.lsu.edu>
+Maintainer(s): Erik Schnetter <schnetter@cct.lsu.edu>
+Licence      : GPLv2+
+--------------------------------------------------------------------------
+
+1. Purpose
+
+Set up refined regions by specifying a set of centres and radii about
+them.  The refined regions are then the conjunction of these regions.
+
+GT Modifications:
+  * Introduce option to override grid merging logic from computational-cost
+    driven merging to overlap-driven merging, based on Maxwell release version.
+        -- Tanja Bode, 4/2012

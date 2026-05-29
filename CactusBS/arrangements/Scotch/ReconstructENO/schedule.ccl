@@ -1,0 +1,38 @@
+# Schedule definitions for thorn ReconstructENO
+# $Header:$
+
+if(CCTK_Equals(recon_method, "eno")) {
+
+SCHEDULE ENO_ParamCheck AT PARAMCHECK
+{
+  LANG: Fortran
+} "Check parameters"
+
+SCHEDULE ENO_Setup AT CCTK_Basegrid
+{
+  LANG:Fortran
+} "Coefficients for ENO reconstruction"
+
+SCHEDULE ENO_Shutdown AT CCTK_Terminate BEFORE Driver_Terminate
+{
+  LANG:Fortran
+} "Deallocate ENO coefficients"
+
+
+if (CCTK_Equals(whisky_eos_type,"General")) {
+
+	SCHEDULE ENO_Reconstruct IN FluxTerms AS Reconstruct
+	{
+	  LANG: Fortran
+	} "Reconstruct gridfunctions at the cell boundaries"
+
+} else if (CCTK_Equals(whisky_eos_type,"Polytype") ) {
+
+	SCHEDULE ENO_Polytype IN FluxTerms AS Reconstruct
+	{
+	  LANG: Fortran
+	} "Reconstruct gridfunctions at the cell boundaries"
+
+}
+
+}

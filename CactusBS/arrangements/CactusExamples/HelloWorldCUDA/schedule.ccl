@@ -1,0 +1,11 @@
+# Schedule definitions for thorn HelloWorldCUDA
+
+SCHEDULE HelloWorldCUDA_initial AT initial
+{
+  LANG: C
+} "Output device configuration"
+
+SCHEDULE HelloWorldCUDA_evol AT evol
+{
+  LANG: C
+} "Output message"

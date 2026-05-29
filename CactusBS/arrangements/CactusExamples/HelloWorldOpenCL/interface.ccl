@@ -1,0 +1,5 @@
+# Interface definition for thorn HelloWorldOpenCL
+
+IMPLEMENTS: HelloWorldOpenCL
+
+USES INCLUDE: OpenCLRunTime.h

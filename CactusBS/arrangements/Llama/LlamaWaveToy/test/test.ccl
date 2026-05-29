@@ -1,0 +1,7 @@
+
+ABSTOL 1e-9
+
+TEST llamawavetoy_7patch
+{
+  NPROCS 1
+}

@@ -1,0 +1,51 @@
+# Interface definition
+# $Header:$
+
+implements: ADM_EJP
+inherits: ADMBase SphereIntegrate
+
+USES INCLUDE: sphereintegrate.h
+
+CCTK_REAL surface_arrays TYPE=ARRAY DIM=2 SIZE=ntheta,nphi DISTRIB=CONSTANT
+{
+  dx_gxx,dy_gxx,dz_gxx,
+  dx_gxy,dy_gxy,dz_gxy,
+  dx_gxz,dy_gxz,dz_gxz,
+  dx_gyy,dy_gyy,dz_gyy,
+  dx_gyz,dy_gyz,dz_gyz,
+  dx_gzz,dy_gzz,dz_gzz,
+  gxx2d,gxy2d,gxz2d,gyy2d,gyz2d,gzz2d,
+  kxx2d,kxy2d,kxz2d,kyy2d,kyz2d,kzz2d,
+  alpha2d,betax2d,betay2d,betaz2d,
+  dx_betax2d,dy_betax2d,dz_betax2d,
+  dx_betay2d,dy_betay2d,dz_betay2d,
+  dx_betaz2d,dy_betaz2d,dz_betaz2d
+} "2d quantities at detector location"
+
+CCTK_REAL scalars_real TYPE=SCALAR
+{
+  rdet
+} "real scalars"
+
+CCTK_REAL detector_scalars[number_of_detectors] TYPE=SCALAR
+{
+  lastt,
+  energy, 
+  Px, Py, Pz,
+  Jx, Jy, Jz
+  Erad,
+  Pxrad,Pyrad,Pzrad,
+  Sxrad,Syrad,Szrad
+} "real scalars for each detector"
+
+CCTK_INT detector_ints[number_of_detectors] TYPE=SCALAR
+{
+   out_det_ev
+} "integer scalars for each detector"
+
+CCTK_INT scalars_int TYPE=SCALAR
+{
+  adm_ejp_files_exist,
+  current_detector,
+  do_nothing
+} "integer scalars"

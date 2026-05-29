@@ -1,0 +1,27 @@
+ 
+ Eth1 := proc(f, s, e) 
+          return 1/2*(1+q^2+p^2)*(diff(f,q)+e*I*diff(f,p))+(e*q+I*p)*s*f
+ end proc:
+ Eth2 := proc(f, s, e1, e2)
+          return Eth1(Eth1(f, s, e1), s+e1, e2);
+ end proc:
+ Eth3 := proc(f, s, e1, e2, e3)
+          return Eth1(Eth1(Eth1(f, s, e1), s+e1, e2), s+e1+e2, e3);
+ end proc:
+ eth3g_out := collect(subs(
+ diff(f(q,p),q,q,q) = c3*fqqq,  
+ diff(f(q,p),q,q,p) = c3*fqqp,  
+ diff(f(q,p),q,p,p) = c3*fqpp,  
+ diff(f(q,p),p,p,p) = c3*fppp,
+ diff(f(q,p),q,q) = c2*fqq,
+ diff(f(q,p),q,p) = c2*fqp,
+ diff(f(q,p),p,p) = c2*fpp,
+ diff(f(q,p),q) = c1*fq,
+ diff(f(q,p),p) = c1*fp,
+ f(q,p) = f,
+ 1+q^2+p^2 = pp, I = ii, 
+ Eth3g(f(q,p),s,e1,e2,e3)), [c3,c2,c1],simplify);
+
+ writeto("eth3.f77");
+ CodeGeneration[Fortran](eth3g_out);
+ writeto(terminal);

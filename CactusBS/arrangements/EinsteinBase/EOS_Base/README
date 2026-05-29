@@ -1,0 +1,79 @@
+Cactus Code Thorn EOS_Base
+Author(s)    : Tom Goodale
+Maintainer(s): Cactus team
+Licence      : LGPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+This thorn provides a registration mechanism for various EOS.
+
+These EOS can then be used by hydrodynamical routines.
+
+Usage:
+
+Creation of EOS:
+
+A thorn providing an EOS should register that it does so by creating
+an EOS handle with
+
+int EOS_RegisterMethod(const char *name)
+
+which returns a handle by which this EOS is referenced.
+
+This handle can also be obtained at any time by calling
+
+int EOS_Handle(const char *name)
+
+Once the handle is created it can be used to register individual EOS
+functions.  There are five of these
+
+EOS_RegisterPressure         (int handle, CCTK_REAL (*func)(CCTK_REAL, CCTK_REAL))
+
+   registers a function which returns pressure 
+   as a function of rest mass density and specific internal energy
+
+EOS_RegisterSpecificIntEnergy(int handle, CCTK_REAL (*func)(CCTK_REAL, CCTK_REAL))
+
+   registers a function which returns specific internal energy  
+   as a function of rest mass density and pressure
+
+EOS_RegisterRestMassDens     (int handle, CCTK_REAL (*func)(CCTK_REAL, CCTK_REAL))
+
+   registers a function which returns rest mass density  
+   as a function of specific internal energy and pressure
+
+EOS_RegisterDPressByDRho     (int handle, CCTK_REAL (*func)(CCTK_REAL, CCTK_REAL))
+
+   registers a function which returns the derivative of pressure by
+   rest mass density
+   as a function of rest mass density and specific internal energy
+
+EOS_RegisterDPressByDEps     (int handle, CCTK_REAL (*func)(CCTK_REAL, CCTK_REAL))
+
+   registers a function which returns the derivative of pressure by
+   specific internal energy
+   as a function of rest mass density and specific internal energy
+
+Usage from Fortran:
+
+The Fortran usage is the same as the C usage.  If you register a
+function from Fortran it is assumed to be a Fortran function.
+
+
+Use of EOS by Hydrodynamics thorns:
+
+There are five corresponding calling functions:
+
+pressure = EOS_Pressure(handle, rho, eps)
+eps      = EOS_SpecificIntEnergy(handle, rho, pressure)
+rho      = EOS_RestMassDens(handle, eps, pressure)
+dpdrho   = EOS_DPressByDRho(handle, rho, eps)
+dpdeps   = EOS_DPressByDEps(handle, rho, eps)
+
+each of these takes a handle as first argument, which should be
+retrieved with
+
+handle = EOS_Handle(name)
+
+where 'name' is the name of the EOS.

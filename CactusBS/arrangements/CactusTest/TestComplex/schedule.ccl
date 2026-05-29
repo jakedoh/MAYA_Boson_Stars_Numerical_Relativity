@@ -1,0 +1,22 @@
+# Schedule definitions for thorn TestComplex
+# $Header$
+
+STORAGE: cvars3d[2]
+STORAGE: carrays3d carrays2d carrays1d cscalars
+STORAGE: cmplx_output
+
+schedule InitComplex3D at INITIAL
+{
+  LANG: Fortran
+} "Initialise 3D complex grid functions"
+
+schedule EvolveComplex3D at EVOL
+{
+  LANG: Fortran
+  SYNC: cvars3d
+} "Evolve 3D complex grid functions"
+
+schedule TestComplexPower at CCTK_POSTINITIAL
+{
+  LANG: C
+} "Do a simple complex power operation"

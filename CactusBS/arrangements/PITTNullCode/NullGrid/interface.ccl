@@ -1,0 +1,103 @@
+# Interface definition for thorn NuulGrid
+# $Header$
+
+implements: NullGrid
+
+public:
+
+##################################################################
+# RADIAL GRID -- COMPACTIFIED OR NOT, STAGGERED OR NOT
+##################################################################
+
+CCTK_REAL RadCrd DIM=1 TYPE=ARRAY SIZE=N_radial_pts DISTRIB=constant
+{
+  null_xb, null_xbh, null_rb, null_rbh
+}  "radial gridfunctions"
+
+##################################################################
+# REAL CONSTANTS DESCRIBING THE GRID
+##################################################################
+
+CCTK_REAL NullSclr TYPE=SCALAR
+{
+ null_dx, qsize
+} "scalars"
+
+##################################################################
+# INTEGER CONSTANTS DESCRIBING THE GRID
+##################################################################
+
+CCTK_INT NullGrParArrI DIM=1 TYPE=ARRAY SIZE=2 DISTRIB=constant
+{
+  null_lsh, null_gsh, null_lbnd, null_ubnd
+} "arrays to store parameters"
+
+##################################################################
+# ANGULAR GRID-STEP
+##################################################################
+
+CCTK_REAL NullGrParArrR DIM=1 TYPE=ARRAY SIZE=2 DISTRIB=constant
+{
+  null_delta
+} "arrays to store parameters"
+
+##################################################################
+# ANGULAR GRID
+##################################################################
+
+CCTK_real StCrd TYPE=array dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+   stereo_q, stereo_p, stereo_pp
+} "real coordinate arrays"
+
+CCTK_complex StCmCrd TYPE=array dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts
+{
+   zeta
+} "complex stereo coords"
+
+##################################################################
+# GRID MARKING THE ACTIVE VS INACTIVE POINTS
+##################################################################
+
+CCTK_INT EG_mask TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"Evolution + Ghost points mask"
+
+##################################################################
+# GRID MARKING THE EVOLUTION POINTS
+##################################################################
+
+CCTK_INT EV_mask TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"Evolution points mask"
+
+##################################################################
+# GRID MARKING THE GUARD POINTS
+##################################################################
+
+CCTK_INT guard_mask TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"Guard points mask"
+
+##################################################################
+# GRID MARKING THE POINTS INSIDE EQUATOR
+##################################################################
+
+CCTK_INT EQ_mask TYPE=ARRAY dim=2 size=\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)),\
+(NullGrid::N_ang_pts_inside_eq+2*(NullGrid::N_ang_ev_outside_eq+NullGrid::N_ang_stencil_size)) \
+   GHOSTSIZE=NullGrid::N_ang_ghost_pts,NullGrid::N_ang_ghost_pts \
+"Inside Equator points mask"
+

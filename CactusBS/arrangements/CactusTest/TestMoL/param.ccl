@@ -1,0 +1,41 @@
+private:
+
+KEYWORD RHSexpression "expression to use for the right-hand-side of the ODE"
+{
+  "1" :: "unit rhs"
+  "t" :: "linear in time rhs"
+  "t**2" :: "quadratic in time rhs"
+  "t**3" :: "cubic in time rhs"
+  "t**4" :: "quartic in time rhs"
+  "t**5" :: "quintic in time rhs"
+  "t**6" :: "sixth order in time rhs"
+  "t**7" :: "seventh order in time rhs"
+  "t**8" :: "eight order in time rhs"
+  "t**9" :: "ninth order in time rhs"
+  "exp(t)" :: "exponential in time rhs"
+} "1"
+
+KEYWORD RHSSlowexpression "expression to use for the right-hand-side of the slow ODE"
+{
+  "1" :: "unit rhs"
+  "t" :: "linear in time rhs"
+  "t**2" :: "quadratic in time rhs"
+  "t**3" :: "cubic in time rhs"
+  "t**4" :: "quartic in time rhs"
+  "t**5" :: "quintic in time rhs"
+  "t**6" :: "sixth order in time rhs"
+  "t**7" :: "seventh order in time rhs"
+  "t**8" :: "eight order in time rhs"
+  "t**9" :: "ninth order in time rhs"
+  "exp(t)" :: "exponential in time rhs"
+} "1"
+
+# whenever we evolve a particular type we also register a SandR and constrained
+# variable of the same type
+BOOLEAN evolve_grid_function "register an evolved grid function with MoL"
+{
+} "yes"
+
+BOOLEAN evolve_grid_array "register an evolved grid array with MoL"
+{
+} "yes"

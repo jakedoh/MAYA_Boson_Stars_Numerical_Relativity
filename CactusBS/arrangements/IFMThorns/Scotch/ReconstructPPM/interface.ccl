@@ -1,0 +1,32 @@
+# Interface definition for thorn ReconstructPPM
+# $Header:$
+
+implements: ReconstructPPM
+inherits: HydroBase StaticConformal Whisky
+friend: Whisky
+
+real mppm_eigenvalues TYPE=GF tags='Prolongation="None" checkpoint="no"'
+{
+  mppm_eigenvalue_x_left, mppm_eigenvalue_x_right
+  mppm_eigenvalue_y_left, mppm_eigenvalue_y_right
+  mppm_eigenvalue_z_left, mppm_eigenvalue_z_right
+  mppm_xwind
+} "debug variable for flux eigenvalues in mppm"
+
+real ppm_unroll_diff[3] TYPE=GF tags='Prolongation="None" checkpoint="no"'
+{
+  rhoplusdiff,epsplusdiff,velxplusdiff,velyplusdiff,velzplusdiff
+  rhominusdiff,epsminusdiff,velxminusdiff,velyminusdiff,velzminusdiff
+} "difference between unrolled and default reconstruction"
+
+real ppm_unroll_diff_mhd[3] TYPE=GF tags='Prolongation="None" checkpoint="no"'
+{
+  Bxplusdiff, Byplusdiff, Bzplusdiff
+  Bxminusdiff, Byminusdiff, Bzminusdiff
+} "difference between unrolled and default reconstruction, mhd"
+
+real ppm_unroll_diff_divclean[3] TYPE=GF tags='Prolongation="None" checkpoint="no"'
+{
+  dc_psiplusdiff, dc_psiminusdiff
+} "difference between unrolled and default reconstruction, divergence cleaning"
+

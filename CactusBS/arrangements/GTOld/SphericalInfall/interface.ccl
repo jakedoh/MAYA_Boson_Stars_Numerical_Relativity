@@ -1,0 +1,17 @@
+# Interface definition for thorn SphericalInfall
+# $Header:$
+
+implements: SphericalInfall
+inherits: ADMBase HydroBase
+
+# we do all our own EOS handling (a Gamma law only)
+
+# Store Bondi solutions in grid arrays
+CCTK_REAL Bondi_Solution[bondi_num_solutions] TYPE=ARRAY DIM=1 SIZE=bondi_maxnpts DISTRIB=constant tags='checkpoint="no"'
+{
+  r_bondi,     # Schwarzschild radius
+  logr_bondi,  # log ( r_Sch )
+  rho_bondi,   
+  u_bondi,     # u_r
+  int_energy_bondi
+} "Bondi solutions storage"

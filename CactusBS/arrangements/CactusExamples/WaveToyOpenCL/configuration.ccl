@@ -1,0 +1,4 @@
+# Configuration definition for thorn WaveToyOpenCL
+
+REQUIRES OpenCL OpenCLRunTime
+REQUIRES Vectors

@@ -1,0 +1,104 @@
+# Schedule definitions for thorn Whisky_Init_Data
+
+if (CCTK_Equals(whisky_initial_data,"shocktube")) {
+  schedule Whisky_shocktube in HydroBase_Initial
+  {
+    LANG: Fortran
+  } "Shocktube initial data"
+}
+
+if (CCTK_Equals(whisky_initial_data,"MHD_shocktube")) {
+  schedule Whisky_MHDshocktube in HydroBase_Initial
+  {
+    LANG: Fortran
+  } "Magnetized Shocktube initial data"
+}
+
+if (CCTK_Equals(whisky_initial_data,"monopole")) {
+  schedule Whisky_Monopole in HydroBase_Initial
+  {
+    LANG: Fortran
+  } "Magnetic Monopole initial data"
+}
+
+if (CCTK_Equals(whisky_initial_data,"cylindricalexplosion") ) {
+  schedule Whisky_CylindricalExplosion in HydroBase_Initial
+  {
+    LANG: Fortran
+  } "Magnetized Cylindrical Explosion"
+}
+
+if (CCTK_Equals(whisky_initial_data,"magrotor") ) {
+  schedule Whisky_MagneticRotor in HydroBase_Initial
+  {
+    LANG: Fortran
+  } "Magnetized Cylindrical Explosion"
+}
+
+if (CCTK_Equals(initial_data,"con2primtest")) {
+  STORAGE:whisky_init_data_reflevel
+  schedule Whisky_Init_Data_RefinementLevel IN HydroBase_Initial BEFORE Whisky_con2primtest
+  {
+    LANG: Fortran
+  } "Calculate current refinement level"
+
+  schedule Whisky_con2primtest in HydroBase_Initial
+  {
+    LANG: Fortran
+  } "Testing the conservative to primitive solver"
+}
+
+if (CCTK_Equals(initial_data,"con2prim2con_test")) {
+  STORAGE:whisky_init_data_reflevel
+  schedule Whisky_Init_Data_RefinementLevel IN HydroBase_Initial BEFORE c2p2c
+  {
+    LANG: Fortran
+  } "Calculate current refinement level"
+
+  schedule c2p2c in HydroBase_Initial
+  {
+    LANG: Fortran
+  } "Testing conservative to primitive to conservative"
+}
+
+if (CCTK_Equals(initial_data,"reconstruction_test")) {
+  schedule Whisky_reconstruction_test in HydroBase_Initial
+  {
+    LANG: Fortran
+    STORAGE: rho[2],press[2],eps[2],vel[2]
+    STORAGE: whisky_prim_bext
+    STORAGE: whisky_scalars
+    OPTIONS: global loop-local
+  } "Testing the reconstruction"
+}
+
+if (CCTK_Equals(whisky_initial_data,"only_atmo")) {
+  schedule Whisky_Only_Atmo in HydroBase_Initial
+  {
+    LANG: Fortran
+  } "Only atmosphere as initial data"
+}
+
+if (CCTK_Equals(whisky_initial_data,"read_conformal")) {
+  schedule Whisky_ReadConformalData in HydroBase_Initial
+  {
+    LANG: Fortran
+  } "Set the missing quantities, after reading in from file initial data from conformally-flat codes (Garching)"
+}
+
+if (CCTK_Equals(whisky_initial_data,"simple_wave")) {
+  STORAGE: simple_wave_grid_functions
+  STORAGE: simple_wave_scalars
+  schedule Whisky_SimpleWave in HydroBase_Initial
+  {
+    LANG: Fortran
+  } "Set initial data from Anile Miller Motta, Phys.Fluids. 26, 1450 (1983)"
+
+  STORAGE: simple_wave_output
+  schedule Whisky_SimpleWave_Analysis AT CCTK_ANALYSIS AFTER Whisky_Entropy
+  {
+    LANG: Fortran
+  } "Compute some output variables for the Simple Wave"
+
+
+}

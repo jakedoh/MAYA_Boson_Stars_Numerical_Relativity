@@ -1,0 +1,142 @@
+
+ActiveThorns = "CoordBase SymBase Boundary NanChecker CartGrid3d Time MoL CarpetIOBasic CarpetIOScalar IOUtil Carpet CarpetLib CarpetReduce CarpetSlab CarpetIOASCII ADMBase StaticConformal SpaceMask Exact GenericFD CoordGauge LoopControl ML_BSSN ML_BSSN_Helper TMuNuBase SphericalSurface ADMMacros TimerReport NewRad"
+
+ADMBase::evolution_method         = "ML_BSSN"
+ADMBase::lapse_evolution_method   = "ML_BSSN"
+ADMBase::shift_evolution_method   = "ML_BSSN"
+ADMBase::dtlapse_evolution_method = "ML_BSSN"
+ADMBase::dtshift_evolution_method = "ML_BSSN"
+
+# We use the BBH gauge to ensure it is regression-tested.  Also, there
+# is no harmonic shift in McLachlan
+ML_BSSN::harmonicN           = 1      # 1+log
+ML_BSSN::harmonicF           = 2.0    # 1+log
+ML_BSSN::ShiftGammaCoeff     = 0.75
+ML_BSSN::betaDriver          = 1.0
+ML_BSSN::advectLapse         = 1
+ML_BSSN::advectShift         = 1
+
+ML_BSSN::minimumLapse        = 1.0e-8
+ML_BSSN::conformalMethod = 1 # 1 for W, 0 for phi
+ML_BSSN::initial_boundary_condition = "extrapolate-gammas"
+ML_BSSN::rhs_boundary_condition     = "NewRad"
+
+ML_BSSN::fdOrder             = 8
+
+#############################################################
+# Grid
+#############################################################
+
+CoordBase::domainsize                   = minmax
+
+CoordBase::boundary_size_x_lower        = 5
+CoordBase::boundary_size_y_lower        = 5
+CoordBase::boundary_size_z_lower        = 5
+CoordBase::boundary_shiftout_x_lower    = 1
+CoordBase::boundary_shiftout_y_lower    = 1
+CoordBase::boundary_shiftout_z_lower    = 1
+
+CoordBase::boundary_size_x_upper        = 5
+CoordBase::boundary_size_y_upper        = 5
+CoordBase::boundary_size_z_upper        = 5
+CoordBase::boundary_shiftout_x_upper    = 0
+CoordBase::boundary_shiftout_y_upper    = 0
+CoordBase::boundary_shiftout_z_upper    = 0
+
+CartGrid3D::type                        = "coordbase"
+CartGrid3D::domain                      = "full"
+CartGrid3D::avoid_origin                = "no"
+
+CoordBase::xmin                         = 0
+CoordBase::ymin                         = 0
+CoordBase::zmin                         = 0
+
+CoordBase::xmax                         = 1
+CoordBase::ymax                         = 1
+CoordBase::zmax                         = 1
+
+CoordBase::dx                           = 0.1
+CoordBase::dy                           = 0.1
+CoordBase::dz                           = 0.1
+
+#############################################################
+# Carpet
+#############################################################
+
+Carpet::ghost_size                      = 5
+Carpet::domain_from_coordbase           = "yes"
+Carpet::init_3_timelevels               = "no"
+Carpet::poison_new_timelevels           = yes
+
+#############################################################
+# Timers
+#############################################################
+
+TimerReport::output_all_timers_readable = no
+TimerReport::n_top_timers               = 40
+TimerReport::output_schedule_timers     = no
+
+#############################################################
+# Time integration
+#############################################################
+
+Cactus::terminate                         = "iteration"
+Cactus::cctk_itlast                       = 8
+# Use 0.5 for RK4 and 0.25 for ICN
+Time::dtfac                           = 0.25
+
+MethodOfLines::ode_method             = "RK3"
+MethodOfLines::MoL_Intermediate_Steps = 3
+
+#MethodOfLines::ode_method             = "generic"
+#MethodOfLines::generic_type             = "RK"
+#MethodOfLines::MoL_Intermediate_Steps = 1
+
+MethodOfLines::MoL_Num_Scratch_Levels = 1
+MethodOfLines::MoL_NaN_Check          = "no"
+MethodOfLines::initial_data_is_crap   = "no"
+
+#############################################################
+# Initial data
+#############################################################
+
+ADMBase::initial_data = "exact"
+ADMBase::initial_lapse = "exact"
+ADMBase::initial_shift = "exact"
+ADMBase::initial_dtlapse = "exact"
+ADMBase::initial_dtshift = "exact"
+
+Exact::exact_model = "Minkowski/shifted gauge wave"
+Exact::Minkowski_gauge_wave__what_fn = "sin"
+Exact::Minkowski_gauge_wave__amplitude = 0.1
+Exact::Minkowski_gauge_wave__omega = 1
+Exact::Minkowski_gauge_wave__lambda = 0.577350269189626
+
+Exact::rotation_euler_psi = -1.9216757376671543544
+Exact::rotation_euler_theta = 0.66214523564555227398
+Exact::rotation_euler_phi = 1.2199169159226388841
+
+Exact::exact_order = 4
+Exact::exact_eps = 1e-2 # This is large to ensure regression tests are insensitive to roundoff
+
+#############################################################
+# Output
+#############################################################
+
+IO::out_dir                   = $parfile
+IO::out_fileinfo              = "none"
+IO::parfile_write             = "no"
+CarpetIOBasic::outInfo_every        = 1
+CarpetIOBasic::outInfo_reductions   = "norm2 minimum maximum"
+CarpetIOBasic::outInfo_vars         = "ML_BSSN::phi"
+
+IOASCII::out1D_every          = 8
+IOASCII::out_precision        = 17
+IOASCII::out1D_x              = "yes"
+IOASCII::out1D_y              = "no"
+IOASCII::out1D_z              = "no"
+IOASCII::out1D_d              = "no"
+IOASCII::out1D_vars           = "ADMBase::gxx ADMBase::kxx ML_BSSN::ML_curv ML_BSSN::ML_dtlapse ML_BSSN::ML_dtshift ML_BSSN::ML_Gamma ML_BSSN::ML_lapse ML_BSSN::ML_log_confac ML_BSSN::ML_metric ML_BSSN::ML_shift ML_BSSN::ML_trace_curv ML_BSSN::ML_curvrhs ML_BSSN::ML_dtlapserhs ML_BSSN::ML_dtshiftrhs ML_BSSN::ML_Gammarhs ML_BSSN::ML_lapserhs ML_BSSN::ML_log_confacrhs ML_BSSN::ML_metricrhs ML_BSSN::ML_shiftrhs ML_BSSN::ML_trace_curvrhs"
+
+CarpetIOASCII::compact_format = yes
+CarpetIOASCII::output_ghost_points = no

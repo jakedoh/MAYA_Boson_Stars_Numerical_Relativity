@@ -1,0 +1,9 @@
+Cactus Code Thorn InterpToArray
+Thorn Author(s)     : Erik Schnetter <schnetter@cct.lsu.edu>
+Thorn Maintainer(s) : Erik Schnetter <schnetter@cct.lsu.edu>
+--------------------------------------------------------------------------
+
+Purpose of the thorn:
+
+Interpolate grid functions to grid arrays on a regular grid of
+locations, so that these can e.g. be output more easily.

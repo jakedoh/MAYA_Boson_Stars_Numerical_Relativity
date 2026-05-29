@@ -1,0 +1,5 @@
+# Configuration definition for thorn NoExcision
+
+OPTIONAL_IFACTIVE Carpet
+{
+}

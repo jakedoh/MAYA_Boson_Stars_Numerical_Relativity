@@ -1,0 +1,26 @@
+
+!DESC "Test of 1D wave equation with periodic boundaries"
+
+ActiveThorns = "CoordBase SymBase boundary ioutil iobasic ioascii pughslab pughreduce pugh time wavetoy1df77 localreduce"
+
+driver::global_nx = 101
+driver::periodic=yes
+cactus::cctk_itlast = 50
+
+wavetoy1d::sigma = 0.03
+wavetoy1d::center = 0.25
+wavetoy1d::bound = "none"
+
+time::dtfac = 1.0
+
+io::out_every =5
+
+IOBasic::outScalar_reductions = "norm1 norm2 minimum maximum norm_inf"
+iobasic::outinfo_vars = "wavetoy1df77::phi"
+iobasic::outscalar_vars = "wavetoy1df77::phi"
+ioascii::out1d_vars = "wavetoy1df77::phi"
+IO::out_dir = "wavetoy1df77"
+IO::out_fileinfo = "none"
+
+# do not use the new scheme for names of output files
+IO::new_filename_scheme = "no"

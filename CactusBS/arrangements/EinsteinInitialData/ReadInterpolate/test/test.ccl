@@ -1,0 +1,5 @@
+TEST admhydro
+{
+  NPROCS 2
+  RELTOL 1e-12
+}

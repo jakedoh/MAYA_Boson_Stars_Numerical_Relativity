@@ -1,0 +1,17 @@
+# Schedule definitions for thorn RotatingSymmetry180
+# $Header$
+
+SCHEDULE Rot180_CheckTensorTypes AT paramcheck
+{
+  LANG: C
+} "Check tensor type definitions for consistency"
+
+SCHEDULE Rot180_RegisterSymmetry IN SymmetryRegister
+{
+  LANG: C
+} "Register symmetry boundaries"
+
+SCHEDULE Rot180_ApplyBC IN BoundaryConditions
+{
+  LANG: C
+} "Apply 180 degree rotational symmetry boundary condition"

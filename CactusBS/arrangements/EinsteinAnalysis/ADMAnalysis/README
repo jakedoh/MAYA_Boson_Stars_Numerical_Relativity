@@ -1,0 +1,37 @@
+Cactus Code Thorn ADMAnalysis
+Author(s)    : Tom Goodale
+Maintainer(s): Cactus team
+Licence      : LGPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+This thorn does basic analysis of the metric and extrinsic curvature 
+tensors.
+
+It calculates
+
+  the trace of the extrinsic curvature ({\bf trK})
+
+  the determinant of the metric ({\bf detg})
+
+  the components of the metric in spherical coordinates 
+  (grr,grq,grp,gqq,gqp,gpp)
+
+  the components of the extrinsic curvature in spherical coordinates 
+  (Krr,Krq,Krp,Kqq,Kqp,Kpp)
+
+  components of the Ricci tensor
+  
+  the Ricci scalar
+
+if output is requested for them.
+
+(q refers to the theta coordinate and p to the phi coordinate.)
+
+If the parameter 'normalize_dtheta_dphi' is true, the thorn 
+projects the spherical components onto (r*dtheta, r*sin(theta)*dphi)
+instead of the default vector (dtheta,dphi).
+
+This thorn knows how to handle 'physical' and 'static conformal'
+metric types.

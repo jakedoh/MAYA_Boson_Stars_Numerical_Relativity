@@ -1,0 +1,119 @@
+# Schedule definitions for thorn ADMAnalysis
+# $Header$
+
+SCHEDULE ADMAnalysis_ParamCheck AT CCTK_PARAMCHECK
+{
+  LANG: C
+  OPTIONS: global
+} "Check that the metric_type is recognised"
+
+SCHEDULE ADMAnalysis_RegisterSymmetry AT CCTK_WRAGH
+{
+  LANG: C
+  OPTIONS: global
+} "Register symmetry of Ricci tensor and scalar"
+
+
+SCHEDULE ADMAnalysis_EvaltrK AT CCTK_ANALYSIS
+{
+  STORAGE: trace_of_K,detofg
+  LANG: C
+  TRIGGERS: trace_of_K,detofg
+  SYNC: trace_of_K,detofg
+  READS: ADMBase::metric, ADMBase::curv
+  READS: StaticConformal::psi
+  READS: StaticConformal::conformal_state
+  WRITES: trK(everywhere), detg(everywhere)
+} "Compute the trace of the extrinsic curvature and the determinant of the metric"
+
+SCHEDULE ADMAnalysis_MetricCartToSphere AT CCTK_ANALYSIS
+{
+  STORAGE: spherical_metric
+  LANG: C
+  TRIGGERS: spherical_metric
+  SYNC: spherical_metric
+  READS: grid::coordinates
+  READS: ADMBase::metric
+  WRITES: spherical_metric(everywhere)
+} "Calculate the spherical metric in r,theta(q), phi(p)"
+
+SCHEDULE ADMAnalysis_CurvCartToSphere AT CCTK_ANALYSIS
+{
+  STORAGE: spherical_curv
+  LANG: C
+  TRIGGERS: spherical_curv
+  SYNC:spherical_curv
+  READS: grid::coordinates
+  READS: ADMBase::curv
+  WRITES: spherical_curv(everywhere)
+} "Calculate the spherical ex. curvature in r, theta(q), phi(p)"
+
+if (ricci_persist)
+{
+  if (ricci_timelevels == 1)
+  {
+    STORAGE: ricci_tensor[1], ricci_scalar[1]
+  }
+  else if (ricci_timelevels == 2)
+  {
+    STORAGE: ricci_tensor[2], ricci_scalar[2]
+  }
+  else if (ricci_timelevels == 3)
+  {
+    STORAGE: ricci_tensor[3], ricci_scalar[3]
+  }
+  
+  SCHEDULE GROUP RicciGroup at CCTK_POSTINITIAL after (MoL_PostStep MoL_PostInitial)
+  {
+    STORAGE: detofg
+  } "Calculate Ricci tensor, with boundary conditions"
+  
+  SCHEDULE GROUP RicciBoundariesGroup at CCTK_POSTREGRID
+  {
+    STORAGE: detofg
+  } "Set Ricci tensor on the boundary"
+  
+  SCHEDULE GROUP RicciBoundariesGroup at CCTK_POSTRESTRICT
+  {
+  } "Set Ricci tensor on the boundary"
+  
+  SCHEDULE GROUP RicciGroup at CCTK_POST_RECOVER_VARIABLES after (MoL_PostStep MoL_PostInitial)
+  {
+    STORAGE: detofg
+  } "Calculate Ricci tensor, with boundary conditions"
+  
+  SCHEDULE GROUP RicciGroup at CCTK_EVOL after MoL_Evolution
+  {
+    STORAGE: detofg
+  } "Calculate Ricci tensor, with boundary conditions"
+}
+else
+{
+  SCHEDULE GROUP RicciGroup at CCTK_ANALYSIS
+  {
+    STORAGE: ricci_tensor[1], ricci_scalar[1], detofg
+    TRIGGERS: ricci_tensor, ricci_scalar
+  } "Calculate Ricci tensor, with boundary conditions"
+}
+
+SCHEDULE ADMAnalysis_Ricci in RicciGroup
+{
+  LANG: C
+  READS: ADMBase::metric
+  WRITES: detg(everywhere), ricci_tensor(everywhere), ricci_scalar(everywhere)
+} "Calculate Ricci tensor, with boundary conditions"
+
+schedule GROUP RicciBoundariesGroup in RicciGroup after ADMAnalysis_Ricci
+{
+} "Set Ricci tensor on the boundary"
+
+SCHEDULE ADMAnalysis_Ricci_Boundaries in RicciBoundariesGroup
+{
+  LANG: C
+  OPTIONS: level
+  SYNC: ricci_tensor, ricci_scalar
+}  "Select boundary conditions for the Ricci tensor"
+
+SCHEDULE GROUP ApplyBCs as ADMAnalysis_ApplyBCs in RicciBoundariesGroup after ADMAnalysis_Ricci
+{
+} "Apply boundary conditions to the Ricci tensor"

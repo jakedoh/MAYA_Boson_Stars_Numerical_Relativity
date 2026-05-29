@@ -1,0 +1,98 @@
+# $Header$
+
+Cactus::cctk_run_title     = "Calculate extrinsic curvature from three-metric, lapse, and shift"
+Cactus::cctk_full_warnings = yes
+Cactus::cctk_timer_output  = full
+
+Cactus::cctk_itlast = 0
+
+ActiveThorns = "PUGH PUGHInterp PUGHReduce PUGHSlab"
+driver::global_nx = 80
+driver::global_ny = 80
+driver::global_nz = 40
+
+ActiveThorns = "NaNChecker"
+
+ActiveThorns = "IOUtil"
+IO::out_dir = $parfile
+
+IO::filereader_ID_files = "
+	psi
+	gxx gxy gxz gyy gyz gzz
+	alp
+	betax betay betaz
+        gxx_prev gxy_prev gxz_prev gyy_prev gyz_prev gzz_prev
+        gxx_next gxy_next gxz_next gyy_next gyz_next gzz_next
+"
+IO::filereader_ID_vars = "
+	StaticConformal::confac
+	ADMBase::metric[cctk_iteration=101]
+	ADMBase::lapse[cctk_iteration=101]
+	ADMBase::shift[cctk_iteration=101]
+	CalcK::metric_prev
+	CalcK::metric_next
+"
+
+ActiveThorns = "IOHDF5 IOHDF5Util"
+
+ActiveThorns = "Boundary CartGrid3D CoordBase SymBase"
+CartGrid3D::type         = byspacing
+CartGrid3D::domain       = bitant
+CartGrid3D::dxyz         = 0.08
+
+ActiveThorns = "ADMBase ADMCoupling ADMMacros CoordGauge SpaceMask StaticConformal"
+
+ADMBase::metric_type = "static conformal"
+StaticConformal::conformal_storage = "factor"
+
+ActiveThorns = "IDFileADM"
+
+ADMBase::initial_data  = "read from file"
+ADMBase::initial_lapse = "read from file"
+ADMBase::initial_shift = "read from file"
+
+ActiveThorns = "Time"
+Time::dtfac = 0.25
+
+ActiveThorns = "CalcK"
+CalcK::calc_extcurv = yes
+
+ActiveThorns = "IOBasic"
+IOBasic::outInfo_every      = 1
+IOBasic::outInfo_reductions = "minimum maximum"
+IOBasic::outInfo_vars       = "
+        ADMBase::gxx
+        ADMBase::kxx
+"
+
+IOBasic::outScalar_every      = 1
+IOBasic::outScalar_reductions = "minimum maximum mean norm1 norm2 norm_inf"
+IOBasic::outScalar_style      = gnuplot
+IOBasic::outScalar_vars       = "
+	StaticConformal::confac
+        ADMBase::metric
+        ADMBase::curv
+        ADMBase::lapse
+        ADMBase::shift
+"
+
+ActiveThorns = "IOASCII"
+IOASCII::out1D_every = 1
+IOASCII::out1D_style = "gnuplot f(x)"
+IOASCII::out1D_vars  = "
+	StaticConformal::confac
+        ADMBase::metric
+        ADMBase::curv
+        ADMBase::lapse
+        ADMBase::shift
+"
+
+IOHDF5::out_every = 1
+IOHDF5::out_vars  = "
+        ADMBase::curv
+	StaticConformal::confac
+        ADMBase::metric
+        ADMBase::curv
+        ADMBase::lapse
+        ADMBase::shift
+"

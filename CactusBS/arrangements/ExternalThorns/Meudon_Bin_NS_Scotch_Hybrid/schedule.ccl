@@ -1,0 +1,14 @@
+# Schedule definitions for thorn Meudon_Bin_NS_Scotch_Hybrid
+
+if (CCTK_EQUALS (initial_data,    "Meudon_Bin_NS_Scotch_Hybrid") ||
+    CCTK_EQUALS (initial_lapse,   "Meudon_Bin_NS_Scotch_Hybrid") ||
+    CCTK_EQUALS (initial_shift,   "Meudon_Bin_NS_Scotch_Hybrid") ||
+    CCTK_EQUALS (initial_dtlapse, "Meudon_Bin_NS_Scotch_Hybrid") ||
+    CCTK_EQUALS (initial_dtshift, "Meudon_Bin_NS_Scotch_Hybrid") ||
+    CCTK_EQUALS (initial_hydro,   "Meudon_Bin_NS_Scotch_Hybrid"))
+{
+  SCHEDULE Meudon_Bin_NS_Scotch_Hybrid_initialise IN HydroBase_Initial
+  {
+    LANG: C
+  } "Set up binary neutron star initial data"
+}

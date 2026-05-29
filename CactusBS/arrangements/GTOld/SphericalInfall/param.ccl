@@ -1,0 +1,120 @@
+# Parameter definitions for thorn SphericalInfall
+# $Header:$
+
+shares: ADMBASE
+EXTENDS KEYWORD initial_data ""
+{
+   "spherical_infall" :: "Bondi infall in schwarzschild coordinates"
+   "bondi_infall_iso" :: "Bondi infall in isotropic coordinates"
+}
+EXTENDS KEYWORD initial_lapse ""
+{
+   "bondi_infall_iso" :: "Bondi infall in isotropic coordinates"
+}
+
+private:
+CCTK_REAL eos_gamma "adiabatic index for the Gamma law"
+{
+  0:* :: "any positive value"
+} 1.66666666667
+
+REAL rho_min "atmosphere value"
+{
+  0.0:* :: "anything positive will do, but it should be small"
+} 1e-6
+
+## Params for Spherical_Infall 
+CCTK_REAL initial_dens "density paramter: dens = d/{r^2[(2m/r)(1-2m/r)]^(1/2)}"
+{
+  0:* :: "this should be much less than unity"
+} 1e-3
+
+  # the following is Hawley's E=rho eps W ie the real internal energy
+CCTK_REAL initial_energy "initial internal energy: E = e/[(sqrt(2m/r) r^2)^Gamma (1-2m/r)^((Gamma+1)/4)]"
+{
+  0:* :: "this should be much less than unity"
+} 1e-6
+
+REAL epsilon "factor to smooth out the puncture"
+{
+  0.0:* :: ""
+} 1.e-16
+
+REAL rmin "only use infall solution above this"
+{
+  0.0:* :: "anything positive will do"
+} 1
+
+## Params for Bondi on Isotropic, integrating from sonic points out/in-wards
+# For Bondi solution, integrate outwards from the sonic point
+
+INT bondi_num_solutions "Number of bondi solutions to solve for (e.g. for superimposing >1 bondi solution for multiple BH systems)"
+{
+  1:20 :: "Currently hard-coded at 3. Change below arrays for more."
+} 1
+
+INT bondi_maxnpts "Number of points in solution."
+{
+  2:2500 :: "Number of points in solution. Max hard-coded."
+} 2500
+
+INT bondi_npts[20] "Number of points in solution."
+{
+  2:2500 :: "Number of points in solution. Max hard-coded."
+} 2000
+
+REAL bondi_sonicpt_radius[20] "Location of the sonic point in Schwarzschild coordinates"
+{
+  (0:* :: "Anything positive"
+} 8.0
+
+REAL bondi_central_mass[20] "Central mass of bondi solution."
+{
+  (0:* :: "Anything positive"
+} 1
+
+REAL bondi_mdot[20] "Accretion rate for the Bondi solution"
+{
+  (0:* :: "Anything positive"
+} 0.01
+
+REAL bondi_bmag[20] "Add radial magnetic field if mhd set"
+{
+  *:*  :: "Anything"
+} 0
+
+REAL bondi_bh_x0[20] "Location of BH, x"
+{ 
+  *:* :: "Anything"
+} 0 
+
+REAL bondi_bh_y0[20] "Location of BH, y"
+{
+  *:* :: "Anything"
+} 0 
+
+REAL bondi_bh_z0[20] "Location of BH, z"
+{
+  *:* :: "Anything"
+} 0 
+
+REAL bondi_rmin[20] "Minimum radius for bondi solution (Schwarzschild)"
+{
+  0:* :: "Anything"
+} 1e-15 
+
+REAL bondi_rmax[20] "Maximum radius for bondi solution (Schwarzschild)"
+{
+  *:* :: "Anything"
+} 400.
+
+BOOLEAN bondi_output_solutions "Dump bondi solutions to files for debugging"
+{
+} "no"
+
+BOOLEAN debug "Output with iterations of the Bondi solver"
+{
+} "no"
+
+shares: IO
+USES STRING out_dir

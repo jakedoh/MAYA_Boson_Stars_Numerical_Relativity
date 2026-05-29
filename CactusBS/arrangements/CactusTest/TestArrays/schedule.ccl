@@ -1,0 +1,26 @@
+# Schedule definitions for thorn Arrays
+# $Header$
+
+storage: foo1d,foo2d,foo3d,foo4d
+storage: bar_a_0d
+storage: bar_a_1d bar_b_1d bar_c_1d bar_d_1d bar_e_1d bar_f_1d
+storage: bar_a_2d bar_b_2d bar_c_2d bar_d_2d bar_e_2d bar_f_2d
+storage: bar_g_2d bar_h_2d bar_i_2d bar_j_2d bar_k_2d bar_l_2d
+storage: bar_a_3d bar_b_3d bar_c_3d bar_d_3d bar_e_3d bar_f_3d
+storage: bar_a_4d bar_b_4d bar_c_4d bar_d_4d bar_e_4d bar_f_4d
+
+schedule UseFortranArrays at CCTK_EVOL
+{
+  LANG: Fortran
+  sync: bar_a_0d
+  sync: bar_a_1d bar_b_1d bar_c_1d bar_d_1d bar_e_1d bar_f_1d
+  sync: bar_a_2d bar_b_2d bar_c_2d bar_d_2d bar_e_2d bar_f_2d
+  sync: bar_g_2d bar_h_2d bar_i_2d bar_j_2d bar_k_2d bar_l_2d
+  sync: bar_a_3d bar_b_3d bar_c_3d bar_d_3d bar_e_3d bar_f_3d
+  sync: bar_a_4d bar_b_4d bar_c_4d bar_d_4d bar_e_4d bar_f_4d
+} "Use Fortran arrays"
+
+schedule SetUpFortranArrays at CCTK_INITIAL
+{
+  LANG: Fortran
+} "Set up  Fortran arrays"

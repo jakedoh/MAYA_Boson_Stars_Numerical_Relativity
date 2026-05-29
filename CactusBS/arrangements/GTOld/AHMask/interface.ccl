@@ -1,0 +1,20 @@
+# Interface definition for thorn AHMask
+# $Header:$
+
+implements: AHMask
+
+inherits: SphericalSurface, SpaceMask
+
+USES INCLUDE: SpaceMask.h
+
+public:
+
+real ah_mask type=GF timelevels=1 tags='prolongation="none" InterpNumTimelevels=1 checkpoint="no"'
+{
+  AHmasked_weight
+} "zero inside the AH, otherwise a copy of CarpetReduce::weight"
+
+real ah_mask_buffered type=GF timelevels=1 tags='prolongation="none" InterpNumTimelevels=1 checkpoint="no"'
+{
+  AHmask_buffered
+} "zero inside the AH as well as the buffer region, otherwise a copy of CarpetReduce::weight"

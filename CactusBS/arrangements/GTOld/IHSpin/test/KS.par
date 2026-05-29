@@ -1,0 +1,69 @@
+Cactus::cctk_run_title     = "Tilted Kerr/Kerr-Schild data"
+Cactus::cctk_full_warnings = yes
+
+Cactus::cctk_itlast = 2
+
+ActiveThorns = "IOUtil"
+IO::out_dir       = $parfile
+IO::out_fileinfo  = "axis labels"
+IO::parfile_write = "no"
+
+ActiveThorns = "AEILocalInterp LocalInterp LocalReduce"
+
+ActiveThorns = "SphericalSurface CoordBase CartGrid3d"
+SphericalSurface::nsurfaces = 1
+SphericalSurface::maxntheta = 120
+SphericalSurface::maxnphi   = 40
+SphericalSurface::ntheta[0] = 120
+SphericalSurface::nphi[0]   = 40
+
+ActiveThorns = "PUGH PUGHInterp PUGHReduce PUGHSlab"
+driver::global_nsize = 49
+driver::ghost_size   =  2
+
+ActiveThorns = "NaNChecker"
+
+ActiveThorns = "Boundary CartGrid3D CoordBase SymBase SymBase"
+CartGrid3D::type         = "byspacing"
+CartGrid3D::domain       = "full"
+CartGrid3D::dxyz         = 0.125
+CartGrid3D::avoid_origin = no
+
+ActiveThorns = "ADMBase ADMCoupling ADMMacros CoordGauge SpaceMask StaticConformal TmunuBase"
+SpaceMask::use_mask = yes
+
+ActiveThorns = "Exact"
+ADMBase::initial_data           = "exact"
+ADMBase::initial_lapse          = "exact"
+ADMBase::initial_shift          = "exact"
+ADMBase::evolution_method       = "exact"
+Exact::exact_model              = "Kerr/Kerr-Schild"
+Exact::Kerr_KerrSchild__spin    = 0.9
+
+ActiveThorns = "Time"
+Time::dtfac = 0.25
+
+ActiveThorns = "ADMConstraints"
+
+ActiveThorns = "AHFinderDirect"
+AHFinderDirect::output_OpenDX_control_files    = no
+AHFinderDirect::geometry_interpolator_name     = "Lagrange polynomial interpolation"
+AHFinderDirect::geometry_interpolator_pars     = "order=4"
+AHFinderDirect::surface_interpolator_name      = "Lagrange polynomial interpolation"
+AHFinderDirect::surface_interpolator_pars      = "order=4"
+AHFinderDirect::which_surface_to_store_info[1] = 0
+
+ActiveThorns = "IHSpin"
+IHSpin::num_horizons        = 1
+IHSPin::surface_index[0]    = 0
+IHSpin::interpolator_name   = "Lagrange polynomial interpolation"
+IHSpin::interpolator_pars   = "order=4"
+IHSpin::verbose   = 2
+
+ActiveThorns = "IOBasic"
+IOBasic::outInfo_every      = 1
+IOBasic::outInfo_reductions = "norm2"
+IOBasic::outInfo_vars       = "
+        IHSpin::ihspin_spin[0]
+"
+

@@ -1,0 +1,11 @@
+Cactus Code Thorn WaveToyExtra
+Author(s)    : Cactus team
+Maintainer(s): Cactus team
+Licence      : LGPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+Additional functionality for the WaveToy example
+
+- custom boundary conditions

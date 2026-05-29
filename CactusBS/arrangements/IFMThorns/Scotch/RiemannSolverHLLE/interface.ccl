@@ -1,0 +1,10 @@
+# Interface definition for thorn RiemannSolverHLLE
+# $Header:$
+
+implements: RiemannSolverHLLE
+inherits: Whisky HydroBase
+
+# for primitive vars on bounds (needs to be fixed)
+friend: Whisky
+
+USES INCLUDE: SpaceMask.h

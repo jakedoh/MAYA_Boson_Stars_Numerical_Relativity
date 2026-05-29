@@ -1,0 +1,40 @@
+# Schedule definitions for thorn WaveToyFreeF90
+# $Header$
+
+STORAGE: scalarevolve[3]
+
+schedule WaveToyFreeF90_Startup at STARTUP
+{
+  LANG: Fortran
+} "Register banner"
+
+schedule WaveToyFreeF90_InitSymBound at BASEGRID
+{
+  LANG: Fortran
+} "Schedule symmetries"
+
+schedule WaveToyFreeF90_Evolution as WaveToy_Evolution at EVOL
+{
+  LANG: Fortran
+  SYNC: scalarevolve
+} "Evolution of 3D wave equation"
+
+schedule WaveToyFreeF90_Boundaries as WaveToy_Boundaries at EVOL AFTER WaveToy_Evolution
+{
+  LANG: Fortran
+  OPTIONS: level
+} "Boundaries of 3D wave equation"
+
+schedule GROUP ApplyBCs as WaveToyFreeF90_ApplyBCs at EVOL after WaveToy_Boundaries
+{
+} "Apply boundary conditions"
+  
+schedule WaveToyFreeF90_Boundaries as WaveToy_Boundaries at POSTRESTRICT
+{
+  LANG: Fortran
+  OPTIONS: level
+} "Boundaries of 3D wave equation"
+
+schedule GROUP ApplyBCs as WaveToyFreeF90_ApplyBCs at POSTRESTRICT after WaveToy_Boundaries
+{
+} "Apply boundary conditions"

@@ -1,0 +1,85 @@
+Description of files in this directory
+======================================
+
+$Header$
+
+This directory contains the main top-level files for thorn Exact.
+
+There are subdirectories
+include/	include files
+		(n.b. all the code for the stress-energy tensor lives here)
+metrics/	individual 4-metrics for the various models
+
+
+The files in this directory are as follows:
+
+Startup.c
+	This is scheduled at STARTUP to register our slicing.
+
+ParamCheck.c
+	This is scheduled at PARAMCHECK to do some basic consistency
+	checks on the parameters.
+
+decode_pars.F77
+	This is scheduled at INITIAL to decode/copy our parameters
+	into protected grid scalars, for the benefit of the stress-energy
+	tensor code in "include/Scalar_CalcTmunu.inc".  In particular,
+	this code decodes the keyword parameter  exact_model  into
+	the integer  decoded_exact_model  (which has one of the values
+	#defined in  include/param_defs.inc ).
+
+initialize.F77
+	This contains the subroutine Exact__initialize(), which is
+	top-level routine scheduled at INITIAL to set up an initial
+	slice.  This basically just calls Exact__Bona_Masso_data()
+	at each grid point, discarding everything it computes other
+	than the 3-metric, the extrinsic curvature, and possibly
+	the conformal factor and its spatial derivatives.
+
+gauge.F77
+	This contains code to set the lapse/shift from an exact solution
+	either on the initial slice, or at each time step of an evolution.
+	This works by calling  Exact__Bona_Masso_data()  at each grid
+	point, discarding everything it computes except the lapse and
+	the shift.
+
+Bona_Masso_data.F77
+	This contains the subroutine Exact__Bona_Masso_data(),
+	which computes the ADM variables (3-metric, extrinsic curvature,
+	lapse, shift) and some of their spatial derivatives
+	(1st derivatives of the 3-metric and the lapse,
+	2nd derivatives of the conformal factor and the shift vector)
+	by calling  Exact__metric()  and finite differencing.
+		[using a hard-coded 1.0e-6 grid spacing :( ]
+	Note that despite the name and comments referring to the
+	Bona-Masso variables, this subroutine doesn't appear to
+	actually use the Bona-Masso variables (!).
+
+boost.F77
+	This contains the subroutine Exact__metric(), which calls
+	Exact__metric_for_model() and then applies an optional
+	Lorentz boost to the resulting 4-metric and its inverse.
+
+metric.F77
+	This contains the subroutine Exact__metric_for_model(); this
+	decodes the decoded_exact_model parameter and calls the appropriate
+	Exact__<model_name>_<coords>() subroutine to compute the 4-metric
+	and its inverse at a point.  See the metrics/ subdirectory
+	for these computations for the various models.
+
+boundary.F77
+	This is the top-level routine scheduled at POSTSTEP to
+	implement exact-solution boundary conditions.
+
+blended_boundary.F77
+xyz_blended_boundary.F77
+	These files implement the blended boundary conditions described
+	in "doc/slice_evolver.tex".
+
+slice_initialize.F
+slice_evolve.F
+slice_data.F
+linear_extrap_one_bndry.F
+	These routines are scheduled at INITIAL and EVOL to allow
+	the computing of exact data on arbitrary slices.  See
+	"doc/slice_evolver.tex" for details.

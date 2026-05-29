@@ -1,0 +1,11 @@
+# Interface definition for thorn CarpetRegridTest
+
+implements: CarpetRegridTest
+inherits: grid
+
+#tags='Prolongation="ENO"'
+CCTK_REAL testscalar type=GF timelevels=3 
+{
+  phi, phi_error, phi_relerror
+} "The test scalar field"
+

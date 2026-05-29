@@ -1,0 +1,8 @@
+# Main make.code.defn file for thorn RiemannSolverROE
+# $Header:$
+
+# Source files in this directory
+SRCS = ROE_Average.F90 ROE_Eigenproblem.F90 ROE.F90 ROE_PreLoop.F90 ROE_Scalars.F90
+
+# Subdirectories containing source files
+SUBDIRS = 

@@ -1,0 +1,258 @@
+# Parameter definitions for thorn Geodesics
+
+shares: MethodOfLines
+
+USES CCTK_INT MoL_Num_ArrayEvolved_Vars
+USES CCTK_INT MoL_Max_Evolved_Array_Size
+USES CCTK_INT MoL_Num_SaveAndRestore_Vars
+USES CCTK_INT MoL_Num_ArrayConstrained_Vars
+USES CCTK_INT MoL_Num_ArraySaveAndRestore_Vars
+
+#shares: Kranc2BSSNChiMatter
+#USES CCTK_REAL chiEps
+
+restricted:
+
+#TODO: get rid of this
+CCTK_REAL geo_chieps "chieps" STEERABLE=RECOVER
+{
+  0:* :: ""
+} 1e-6
+
+CCTK_INT num_geo "How many test particles?"  
+{
+  0:* :: "for now, keep it an integer multiple of nProcs (otherwise tagging will break)"
+} 100
+
+CCTK_KEYWORD time_direction "Integrate geodesics forward/backward in time?"
+{
+  "forward"
+  "backward"
+} "forward"
+
+CCTK_REAL start_t "Do not evolve geodesics until this time" STEERABLE=RECOVER
+{ # This is to let numerical spacetimes settle down some
+  0:* :: ""
+} 0
+
+#CCTK_INT t_reflvl "reference level on which the geodesics are updated" STEERABLE=RECOVER
+#{
+#  0:9
+#} 4
+
+CCTK_REAL geo_n "Number density of particles" STEERABLE=RECOVER
+{ 
+  1:* :: ""
+} 1
+
+CCTK_INT num_bh "number of punctures (if two get centers from shifttracker)" STEERABLE=RECOVER
+{ 
+  1:2 :: ""
+} 1
+
+CCTK_KEYWORD geo_tmunu "Contribute to Tmunu?"
+{
+  "yes"
+  "no"
+} "no"
+
+CCTK_KEYWORD calc_sync "Calculate synchrotron radiation?"
+{
+  "yes" 
+  "no"
+} "no"
+
+CCTK_KEYWORD geo_inject "Inject new particles?"
+{
+  "yes"
+  "no"
+} "no"
+
+CCTK_KEYWORD geo_charge "Charge/mass ratio for geodesics"
+{
+  "e"
+  "p"
+  "eminus"
+  "zero"
+  "mixed"
+  "hadronic"
+  "leptonic"
+} "e"
+
+CCTK_KEYWORD em_output "Output E&M fields at geodesics?"
+{
+  "yes"
+  "no"
+} "no"
+
+CCTK_KEYWORD acc_output "Output acceleration of geodesics?"
+{
+  "yes"
+  "no"
+} "no"
+
+#CCTK_KEYWORD current_output "Output current (from force-free plasma) at geodesics?"
+#{
+#  "yes"
+#  "no"
+#} "no"
+
+CCTK_KEYWORD exact "Is the spacetime exact?" STEERABLE=RECOVER 
+{ # this doesnt do anything atm
+  "yes"
+  "no"
+} "no"
+
+CCTK_KEYWORD dist "initial particle distribution"
+{
+  "none"
+  "annulus"
+ "sphere"
+ "raytrace"
+ "custom"
+} "sphere"
+
+CCTK_REAL sphere_innerr "inner radius for inital spherical dist" 
+{ 
+  0:* :: ""
+} 1.0
+
+CCTK_REAL sphere_outerr "outer radius for inital spherical dist" 
+{ 
+  0:* :: ""
+} 15.0
+
+CCTK_KEYWORD pdist "inital momentum distribution"
+{
+  "zero"
+  "kepler"
+#  "mb"
+  "rand"
+  "raytrace"
+  "custom"
+} "zero"
+
+#CCTK_REAL mb_temp "temp of MB distrib"
+#{
+#  0:*
+#} 10000000000
+
+CCTK_REAL bh_rad "assumed radius of bh's, we should really get this from AHFinder or something"
+{
+  0:5 :: "[0,5] "
+} 0.5
+
+#CCTK_STRING geo_test "perform consistency tests?"
+#{
+#  "yes"
+#  "no"
+#} "no"
+
+CCTK_STRING geo_moltest "test mol is working ok?"
+{
+  "yes"
+  "no"
+} "no"
+
+CCTK_STRING geo_type "geodesic type"
+{
+  "null"
+  "time"
+} "time"
+
+#Interpolator
+CCTK_STRING interpolator_name "Which interpolator should I use"
+{
+  ".+" :: "Any nonempty string"
+} "Lagrange polynomial interpolation" #"Hermite polynomial interpolation"
+
+CCTK_STRING interpolator_pars "Parameters for the interpolator"
+{
+  ".*" :: "Any string that Util_TableSetFromString() will take"
+} "order=2" #"order=3"
+
+CCTK_STRING coord_system "What is the coord system?"
+{
+  ".*" :: "Any smart string will do"
+} "cart3d"
+
+CCTK_INT interp_num_timelevels "How many timelevels to use for interpolation?"
+{
+  -1:* :: "-1 means use the interpolator's default"
+} 1
+
+#IO
+CCTK_INT verbose "How verbose do you want it?"
+{
+  0:* :: "0 is nothing, 1 is interesting, >1 is crazy"
+} 0
+
+CCTK_INT output_every "How often to output data" STEERABLE=recover
+{
+  0:* :: "Any positive number should do (zero is never)"
+} 1
+
+CCTK_INT io_precision "How many digits to output?" STEERABLE=recover
+{
+  0:* :: "Anything you want"
+} 10
+
+#Initial particle pos/vel
+CCTK_REAL geo_x0[101] "What is the x coordinate of each particle"
+{
+  *:* :: "Anything in the grid should be ok"
+} 0.0
+
+CCTK_REAL geo_y0[101] "What is the y coordinate of each particle"
+{
+    *:* :: "Anything in the grid should be ok"
+} 0.0
+
+CCTK_REAL geo_z0[101] "What is the z coordinate of each particle"
+{
+    *:* :: "Anything in the grid should be ok"
+} 0.0
+
+CCTK_REAL geo_px0[101] "What is the x velocity of each particle" 
+{
+    *:* :: "anything works for now..."
+} 0.0
+
+CCTK_REAL geo_py0[101] "What is the y velocity of each particle" 
+{
+    *:* :: "anything works for now..."
+} 0.0
+
+CCTK_REAL geo_pz0[101] "What is the z velocity of each particle" 
+{
+    *:* :: "anything works for now..."
+} 0.0
+
+# MoL (Check Geodesics_regvars for the counts)
+
+CCTK_INT Geodesics_MaxNumEvolvedArrayVars "The maximum number of evolved variables used" ACCUMULATOR-BASE=MethodofLines::MoL_Num_ArrayEvolved_Vars
+{
+  6:7           :: "6" #7 for geo_moltest
+} 7 #6?
+
+CCTK_INT Geodesics_MaxNumSandRVars "The maximum number of save and restore variables used" ACCUMULATOR-BASE=MethodofLines::MoL_Num_SaveAndRestore_Vars
+{
+  17:22    :: "Theres 19, don't worry about it..."
+} 19
+
+CCTK_INT Geodesics_MaxNumArraySandRVars "The maximum number of save and restore variables used" ACCUMULATOR-BASE=MethodofLines::MoL_Num_ArraySaveAndRestore_Vars
+{
+  10:10    :: "Theres 10, don't worry about it..."
+} 10
+
+CCTK_INT Geodesics_MaxNumConstrainedArrayVars "The maximum number of constrained variables used" ACCUMULATOR-BASE=MethodofLines::MoL_Num_ArrayConstrained_Vars
+{
+  17:17    :: "Theres 17, don't worry about it..."
+} 17
+
+# I'm pretty sure this isn't doing anything
+CCTK_INT Geodesics_Max_Evolved_Array_Size "The maximum size of evolved grid arrays used" ACCUMULATOR-BASE=MethodOfLines::MoL_Max_Evolved_Array_Size
+{
+  1:*           :: "The size of the geodesic grid arrays"
+} 1
+

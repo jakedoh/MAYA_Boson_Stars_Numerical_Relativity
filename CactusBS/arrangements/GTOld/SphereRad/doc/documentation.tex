@@ -1,0 +1,252 @@
+% *======================================================================*
+%  Cactus Thorn template for ThornGuide documentation
+%  Author: Ian Kelley
+%  Date: Sun Jun 02, 2002
+%  $Header: /cactusdevcvs/Cactus/doc/ThornGuide/template.tex,v 1.12 2004/01/07 20:12:39 rideout Exp $
+%
+%  Thorn documentation in the latex file doc/documentation.tex
+%  will be included in ThornGuides built with the Cactus make system.
+%  The scripts employed by the make system automatically include
+%  pages about variables, parameters and scheduling parsed from the
+%  relevant thorn CCL files.
+%
+%  This template contains guidelines which help to assure that your
+%  documentation will be correctly added to ThornGuides. More
+%  information is available in the Cactus UsersGuide.
+%
+%  Guidelines:
+%   - Do not change anything before the line
+%       % START CACTUS THORNGUIDE",
+%     except for filling in the title, author, date, etc. fields.
+%        - Each of these fields should only be on ONE line.
+%        - Author names should be separated with a \\ or a comma.
+%   - You can define your own macros, but they must appear after
+%     the START CACTUS THORNGUIDE line, and must not redefine standard
+%     latex commands.
+%   - To avoid name clashes with other thorns, 'labels', 'citations',
+%     'references', and 'image' names should conform to the following
+%     convention:
+%       ARRANGEMENT_THORN_LABEL
+%     For example, an image wave.eps in the arrangement CactusWave and
+%     thorn WaveToyC should be renamed to CactusWave_WaveToyC_wave.eps
+%   - Graphics should only be included using the graphicx package.
+%     More specifically, with the "\includegraphics" command.  Do
+%     not specify any graphic file extensions in your .tex file. This
+%     will allow us to create a PDF version of the ThornGuide
+%     via pdflatex.
+%   - References should be included with the latex "\bibitem" command.
+%   - Use \begin{abstract}...\end{abstract} instead of \abstract{...}
+%   - Do not use \appendix, instead include any appendices you need as
+%     standard sections.
+%   - For the benefit of our Perl scripts, and for future extensions,
+%     please use simple latex.
+%
+% *======================================================================*
+%
+% Example of including a graphic image:
+%    \begin{figure}[ht]
+% 	\begin{center}
+%    	   \includegraphics[width=6cm]{MyArrangement_MyThorn_MyFigure}
+% 	\end{center}
+% 	\caption{Illustration of this and that}
+% 	\label{MyArrangement_MyThorn_MyLabel}
+%    \end{figure}
+%
+% Example of using a label:
+%   \label{MyArrangement_MyThorn_MyLabel}
+%
+% Example of a citation:
+%    \cite{MyArrangement_MyThorn_Author99}
+%
+% Example of including a reference
+%   \bibitem{MyArrangement_MyThorn_Author99}
+%   {J. Author, {\em The Title of the Book, Journal, or periodical}, 1 (1999),
+%   1--16. {\tt http://www.nowhere.com/}}
+%
+% *======================================================================*
+
+% If you are using CVS use this line to give version information
+% $Header: /cactusdevcvs/Cactus/doc/ThornGuide/template.tex,v 1.12 2004/01/07 20:12:39 rideout Exp $
+
+\documentclass{article}
+
+% Use the Cactus ThornGuide style file
+% (Automatically used from Cactus distribution, if you have a
+%  thorn without the Cactus Flesh download this from the Cactus
+%  homepage at www.cactuscode.org)
+\usepackage{../../../../doc/latex/cactus}
+
+\begin{document}
+
+% The author of the documentation
+\author{Roland Haas \textless roland.haas@physics.gatech.edu\textgreater}
+
+% The title of the document (not necessarily the name of the Thorn)
+\title{SphereRad}
+
+% the date your document was last changed, if your document is in CVS,
+% please use:
+%    \date{$ $Date: 2004/01/07 20:12:39 $ $}
+\date{Tue Mar 24 12:14:08 EDT 2009}
+
+\maketitle
+
+% Do not delete next line
+% START CACTUS THORNGUIDE
+
+% Add all definitions used in this documentation here
+%   \def\mydef etc
+\newcommand{\thorn}[1]{\texttt{#1}}
+
+% Add an abstract for this thorn's documentation
+\begin{abstract}
+    SphereRad is a utility thorn that can set the radius and position of
+    spherical surfaces (see thorn \thorn{SphericalSurface}) from a number of
+    sources.
+\end{abstract}
+
+% The following sections are suggestive only.
+% Remove them or add your own.
+
+\section{Introduction}
+A number of thorns operate on spherical surfaces as 
+repositories to store location and radius of a topological sphere (e.g.\
+\thorn{ShiftTracker}, \thorn{MinTracker}) while others use these surfaces as
+input (e.g.\
+\thorn{IHSpin}). This thorn serves as an interface to either add radius information
+for setter thorns that do not provide it (\thorn{MinTracker}, \thorn{ShiftTracker}) and can
+also copy data from \thorn{ShiftTracker} to the spherical surface. Finally it allows
+for specification of location and radius via parameters so that a fixed
+surface can be set up. It only support the creation of coordinate spheres i.e.\ .
+spheres of constant coordinate radius.
+
+\section{Using This Thorn}\label{sec:sphererad_usingthisthorn}
+Use the parameter \verb|surface_index| to select the target spherical surface.
+If the source is \thorn{ShiftTracker} then set the corresponding entry in
+\verb|shifttracker_index| to indicate which tracker to use, the radius of the
+surface will be taken from \verb|radius_surface|. If the source is another
+spherical surface (e.g.\ . set by \thorn{MinTracker}) then set \verb|sperical_surface| to
+\verb|true| in which case \verb|shifttracker_index| is interpreted as a
+spherical surface number, not as a tracker number. The radius is still taken
+from \verb|radius_surface|, not from the source spherical surface's
+\verb|sf_radius| values. Finally if \verb|force_position| is set, then the
+centre coordinates are taken from the parameters \verb|x_fixed\|,
+\verb|y_fixed\|, and \verb|z_fixed\| respectively.
+
+SphereRad can do a simply centre of mass calculation for surfaces for which
+\verb|center_of_mass| is \verb|true|. In this case the centre coordinate of
+the spherical surface is calculated not from any parameter but is set to the
+centre of mass of surfaces $0$ and $1$ only. To this end the parameters
+\verb|mass[0]| and \verb|mass[1]| are used for the masses of these two
+spherical surfaces, other entries in \verb|mass| are ignored. With these the
+centre of mass is calculated as
+\begin{verbatim}
+  const CCTK_REAL total_mass=mass[0]+mass[1];
+  const CCTK_REAL xcm=(xah[0]*mass[0]+xah[1]*mass[1]) /total_mass;
+  const CCTK_REAL ycm=(yah[0]*mass[0]+yah[1]*mass[1]) /total_mass;
+  const CCTK_REAL zcm=(zah[0]*mass[0]+zah[1]*mass[1]) /total_mass; .
+\end{verbatim}
+
+\subsection{Obtaining This Thorn}
+This thorns lives in the PSUThorns repository.
+
+\subsection{Basic Usage}
+For basic use, use \thorn{ShiftTracker} to track the puncture(s) and set
+\verb|shifttracker_index| to the correct values. Set \verb|radius_surface| to
+a value outside of the apparent horizon, but still far away from any other
+horizons. A good value might be of the order of the puncture mass $M_{BH}$.
+See sec.~\ref{sec:sphererad_usingthisthorn} for a more thorough description of
+the thorn.
+
+\subsection{Special Behaviour}
+\begin{itemize}
+\item ignores \verb|mass[n]| with $n \ge 2$.
+\item treats \verb|shifttracker_index| as a spherical surface index if
+    \verb|spherical_surface| is set.
+\end{itemize}
+
+\subsection{Interaction With Other Thorns}
+Can read out \thorn{ShiftTracker}'s variables to set the spherical surface. Cannot
+read out \thorn{MinTracker}s variables.
+
+\subsection{Examples}
+Taken from R1.rpar:
+\begin{verbatim}
+#############################################################
+# SphereRad
+#############################################################
+
+SphereRad::max_nsurface           = 3
+SphereRad::surface_index[0]       = 2
+SphereRad::surface_index[1]       = 3
+SphereRad::surface_index[2]       = 4
+SphereRad::shifttracker_index[0]  = 0
+SphereRad::shifttracker_index[1]  = 1
+SphereRad::force_position[2]      = "yes"
+# surface no. 2 defaults to centre at the origin
+SphereRad::radius_surface[0]      = 0.4
+SphereRad::radius_surface[1]      = 0.4
+# BH bare masses: 0.483
+SphereRad::radius_surface[2]      = 1
+SphereRad::verbose                = 0
+
+#############################################################
+# Shift tracker
+#############################################################
+
+ShiftTracker::x0[0]              = $xp
+ShiftTracker::y0[0]              = 0.0
+ShiftTracker::z0[0]              = 0.0
+#ShiftTracker::surface_index[0]   = 0
+
+ShiftTracker::x0[1]              = $xm
+ShiftTracker::y0[1]              = 0.0
+ShiftTracker::z0[1]              = 0.0
+#ShiftTracker::surface_index[1]   = 1
+
+ShiftTracker::num_trackers       = 2
+ShiftTracker::verbose            = 0
+ShiftTracker::output_every       = 1
+ShiftTracker::interpolator_name  = "Lagrange polynomial interpolation"
+ShiftTracker::interpolator_pars  = "order=4"
+ShiftTracker::beta1_var          = "Kranc2BSSNChi::beta1"
+ShiftTracker::beta2_var          = "Kranc2BSSNChi::beta2"
+ShiftTracker::beta3_var          = "Kranc2BSSNChi::beta3"
+\end{verbatim}
+
+\subsection{Support and Feedback}
+very little I'm afraid.
+
+\section{History (darcs changes)}
+\begin{verbatim}
+Wed Nov  7 15:09:37 EST 2007  herrmann@gravity.psu.edu
+  * SphereRad: handle sf_active and test for maximum number of surfaces
+
+Thu Jun 21 15:37:07 EDT 2007  herrmann@gravity.psu.edu
+  * SphereRad: more max. no. of spheres (10->100)
+
+Fri Feb 16 16:43:59 EST 2007  herrmann@gravity.psu.edu
+  * SphereRad: center of mass computation
+
+  can now define a surface tracking the center of mass.
+
+Fri Feb  2 01:02:30 EST 2007  herrmann@gravity.psu.edu
+  * SphereRad: more verbose output
+
+Wed Jan 31 16:53:34 EST 2007  herrmann@gravity.psu.edu
+  * SphereRad: thorn to set spherical surface
+
+  sets spherical surface of constant radius. used to feed IHSpin.
+\end{verbatim}
+
+\subsection{Acknowledgements}
+
+
+\begin{thebibliography}{9}
+
+\end{thebibliography}
+
+% Do not delete next line
+% END CACTUS THORNGUIDE
+
+\end{document}

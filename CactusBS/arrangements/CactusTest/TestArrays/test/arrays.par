@@ -1,0 +1,40 @@
+
+!DESC "Test parameter file for multidimensional arrays"
+
+ActiveThorns = "CartGrid3D CoordBase SymBase pughslab ioascii iobasic ioutil testarrays pugh LocalReduce"
+
+arrays::xghost1d = 2
+arrays::xsize1d  = 10
+
+arrays::xghost2d = 1
+arrays::yghost2d = 2
+arrays::xsize2d  = 10
+arrays::ysize2d  = 10
+
+arrays::xghost3d = 3
+arrays::yghost3d = 1
+arrays::zghost3d = 2
+arrays::xsize3d  = 10
+arrays::ysize3d  = 10
+arrays::zsize3d  = 10
+
+arrays::xghost4d = 3
+arrays::yghost4d = 1
+arrays::zghost4d = 2
+arrays::tghost4d = 1
+arrays::xsize4d  = 10
+arrays::ysize4d  = 10
+arrays::zsize4d  = 10
+arrays::tsize4d  = 10
+
+IO::out_dir              = "arrays"
+io::out_every           = 1
+IO::out_fileinfo        = "none"
+iobasic::outinfo_vars   = ""
+ioascii::out1d_vars     = "testarrays::foo1d testarrays::foo2d testarrays::foo3d testarrays::foo4d"
+
+# do not use the new scheme for names of output files
+IO::new_filename_scheme = "no"
+IO::parfile_write       = "no"
+
+Cactus::allow_mixeddim_gfs = "yes"

@@ -1,0 +1,8 @@
+# Interface definition for thorn TempPool
+implements: TempPool
+inherits:
+
+public:
+
+CCTK_REAL TempPoolGF1[maxntemp] type=GF timelevels=1 tags='checkpoint="no" InterpNumTimelevels=1 prolongation="none"' "Array of grid functions to be used for temporary storage, 1 time level"
+CCTK_REAL TempPoolGF3[maxntemp] type=GF timelevels=3 tags='checkpoint="no" InterpNumTimelevels=3 prolongation="none"' "Array of grid functions to be used for temporary storage, 3 time levels"

@@ -1,0 +1,340 @@
+implements: Coordinates
+inherits: grid
+
+uses include: carpet.hh
+uses include: tensortypes.h
+
+
+# Get information about the boundaries
+
+CCTK_INT FUNCTION                 \
+    SymmetryRegister              \
+        (CCTK_STRING IN sym_name)
+REQUIRES FUNCTION SymmetryRegister
+
+CCTK_INT FUNCTION                                           \
+    SymmetryRegisterGrid                                    \
+        (CCTK_POINTER IN cctkGH,                            \
+         CCTK_INT IN sym_handle,                            \
+         CCTK_INT IN ARRAY which_faces,                     \
+         CCTK_INT IN ARRAY symmetry_zone_width)
+REQUIRES FUNCTION SymmetryRegisterGrid
+
+CCTK_INT FUNCTION                                           \
+    SymmetryRegisterGridInterpolator                        \
+        (CCTK_POINTER IN cctkGH,                            \
+         CCTK_INT IN sym_handle,                            \
+         CCTK_INT CCTK_FPOINTER IN symmetry_interpolate     \
+             (CCTK_POINTER_TO_CONST IN cctkGH,              \
+              CCTK_INT IN N_dims,                           \
+              CCTK_INT IN local_interp_handle,              \
+              CCTK_INT IN param_table_handle,               \
+              CCTK_INT IN coord_system_handle,              \
+              CCTK_INT IN N_interp_points,                  \
+              CCTK_INT IN interp_coords_type,               \
+              CCTK_POINTER_TO_CONST ARRAY IN interp_coords, \
+              CCTK_INT IN N_input_arrays,                   \
+              CCTK_INT ARRAY IN input_array_indices,        \
+              CCTK_INT IN N_output_arrays,                  \
+              CCTK_INT ARRAY IN output_array_types,         \
+              CCTK_POINTER ARRAY IN output_arrays,          \
+              CCTK_INT IN faces))
+REQUIRES FUNCTION SymmetryRegisterGridInterpolator
+
+CCTK_INT FUNCTION                                           \
+    SymmetryInterpolateFaces                                \
+        (CCTK_POINTER_TO_CONST IN cctkGH,                   \
+         CCTK_INT IN N_dims,                                \
+         CCTK_INT IN local_interp_handle,                   \
+         CCTK_INT IN param_table_handle,                    \
+         CCTK_INT IN coord_system_handle,                   \
+         CCTK_INT IN N_interp_points,                       \
+         CCTK_INT IN interp_coords_type,                    \
+         CCTK_POINTER_TO_CONST ARRAY IN interp_coords,      \
+         CCTK_INT IN N_input_arrays,                        \
+         CCTK_INT ARRAY IN input_array_indices,             \
+         CCTK_INT IN N_output_arrays,                       \
+         CCTK_INT ARRAY IN output_array_types,              \
+         CCTK_POINTER ARRAY IN output_arrays,               \
+         CCTK_INT IN faces)
+REQUIRES FUNCTION SymmetryInterpolateFaces
+
+CCTK_INT FUNCTION                                           \
+    MultiPatch_SymmetryInterpolateFaces                     \
+        (CCTK_POINTER_TO_CONST IN cctkGH,                   \
+         CCTK_INT IN N_dims,                                \
+         CCTK_INT IN local_interp_handle,                   \
+         CCTK_INT IN param_table_handle,                    \
+         CCTK_INT IN coord_system_handle,                   \
+         CCTK_INT IN N_interp_points,                       \
+         CCTK_INT IN interp_coords_type,                    \
+         CCTK_POINTER_TO_CONST ARRAY IN interp_coords,      \
+         CCTK_INT IN N_input_arrays,                        \
+         CCTK_INT ARRAY IN input_array_indices,             \
+         CCTK_INT IN N_output_arrays,                       \
+         CCTK_INT ARRAY IN output_array_types,              \
+         CCTK_POINTER ARRAY IN output_arrays,               \
+         CCTK_INT IN faces)
+PROVIDES FUNCTION MultiPatch_SymmetryInterpolateFaces \
+  WITH Coordinates_SymmetryInterpolate \
+  LANGUAGE C
+
+
+CCTK_INT FUNCTION                         \
+    SymmetryTableHandleForGrid            \
+        (CCTK_POINTER_TO_CONST IN cctkGH)
+REQUIRES FUNCTION SymmetryTableHandleForGrid
+
+
+
+# Tell Carpet and CoordBase about the patch system
+
+CCTK_INT FUNCTION                     \
+    MultiPatch_GetSystemSpecification \
+        (CCTK_INT OUT maps)
+PROVIDES FUNCTION MultiPatch_GetSystemSpecification \
+    WITH Coordinates_GetSystemSpecification         \
+    LANGUAGE C
+
+CCTK_INT FUNCTION                           \
+    MultiPatch_GetBoundarySpecification     \
+        (CCTK_INT IN map,                   \
+         CCTK_INT IN size,                  \
+         CCTK_INT OUT ARRAY nboundaryzones, \
+         CCTK_INT OUT ARRAY is_internal,    \
+         CCTK_INT OUT ARRAY is_staggered,   \
+         CCTK_INT OUT ARRAY shiftout)
+PROVIDES FUNCTION MultiPatch_GetBoundarySpecification \
+    WITH Coordinates_GetBoundarySpecification         \
+    LANGUAGE C
+
+CCTK_INT FUNCTION                          \
+    MultiPatch_GetDomainSpecification      \
+        (CCTK_INT IN map,                  \
+         CCTK_INT IN size,                 \
+         CCTK_REAL OUT ARRAY physical_min, \
+         CCTK_REAL OUT ARRAY physical_max, \
+         CCTK_REAL OUT ARRAY interior_min, \
+         CCTK_REAL OUT ARRAY interior_max, \
+         CCTK_REAL OUT ARRAY exterior_min, \
+         CCTK_REAL OUT ARRAY exterior_max, \
+         CCTK_REAL OUT ARRAY spacing)
+PROVIDES FUNCTION MultiPatch_GetDomainSpecification \
+    WITH Coordinates_GetDomainSpecification         \
+    LANGUAGE C
+
+CCTK_INT FUNCTION                          \
+    MultiPatch_ConvertFromPhysicalBoundary \
+        (CCTK_INT IN map,                  \
+         CCTK_INT IN size,                 \
+         CCTK_REAL IN  ARRAY physical_min, \
+         CCTK_REAL IN  ARRAY physical_max, \
+         CCTK_REAL OUT ARRAY interior_min, \
+         CCTK_REAL OUT ARRAY interior_max, \
+         CCTK_REAL OUT ARRAY exterior_min, \
+         CCTK_REAL OUT ARRAY exterior_max, \
+         CCTK_REAL IN  ARRAY spacing)
+PROVIDES FUNCTION MultiPatch_ConvertFromPhysicalBoundary \
+    WITH Coordinates_ConvertFromPhysicalBoundary \
+    LANGUAGE C
+
+CCTK_INT FUNCTION \
+    GetBoundarySpecification (CCTK_INT IN size,                  \
+                              CCTK_INT OUT ARRAY nboundaryzones, \
+                              CCTK_INT OUT ARRAY is_internal,    \
+                              CCTK_INT OUT ARRAY is_staggered,   \
+                              CCTK_INT OUT ARRAY shiftout)
+USES FUNCTION GetBoundarySpecification
+
+
+# Give other thorns information about the current state
+
+CCTK_INT FUNCTION                         \
+    MultiPatch_GetMap                     \
+        (CCTK_POINTER_TO_CONST IN cctkGH)
+PROVIDES FUNCTION MultiPatch_GetMap \
+    WITH Coordinates_GetMap         \
+    LANGUAGE C
+
+CCTK_INT FUNCTION                         \
+    MultiPatch_GetMaps                    \
+        (CCTK_POINTER_TO_CONST IN cctkGH)
+PROVIDES FUNCTION MultiPatch_GetMaps \
+    WITH Coordinates_GetMaps         \
+    LANGUAGE C
+
+CCTK_INT FUNCTION                         \
+    MultiPatch_GetBbox                    \
+        (CCTK_POINTER_TO_CONST IN cctkGH, \
+         CCTK_INT IN size,                \
+         CCTK_INT OUT ARRAY bbox)
+PROVIDES FUNCTION MultiPatch_GetBbox \
+    WITH Coordinates_GetBbox         \
+    LANGUAGE C
+
+
+CCTK_INT FUNCTION                         \
+    MultiPatch_ProvidesThornburg04        \
+        ()
+PROVIDES FUNCTION MultiPatch_ProvidesThornburg04 \
+    WITH Coordinates_ProvidesThornburg04         \
+    LANGUAGE C
+
+
+CCTK_INT FUNCTION                         \
+    MultiPatch_GetInnerRadius        \
+        ()
+PROVIDES FUNCTION MultiPatch_GetInnerRadius \
+    WITH Coordinates_GetInnerRadius         \
+    LANGUAGE C
+
+
+CCTK_INT FUNCTION                           \
+    MultiPatch_GetSymmetrySpecification     \
+        (CCTK_INT IN map,                   \
+         CCTK_INT IN size,                  \
+         CCTK_INT OUT ARRAY type,           \
+         CCTK_INT OUT symmetry_overlap,     \
+         CCTK_INT OUT symmetry_dir)
+PROVIDES FUNCTION MultiPatch_GetSymmetrySpecification \
+    WITH Coordinates_GetSymmetrySpecification         \
+    LANGUAGE C
+
+
+# External symmetry interpolator that handle reflection and rotation
+
+CCTK_INT FUNCTION                                       \
+    CoordinatesSymmetry_Interpolate                     \
+        (CCTK_POINTER_TO_CONST IN cctkGH,               \
+         CCTK_INT IN N_dims,                            \
+         CCTK_INT IN local_interp_handle,               \
+         CCTK_INT IN param_table_handle,                \
+         CCTK_INT IN coord_system_handle,               \
+         CCTK_INT IN N_interp_points,                   \
+         CCTK_INT IN interp_coords_type,                \
+         CCTK_POINTER_TO_CONST ARRAY IN interp_coords,  \
+         CCTK_INT IN N_input_arrays,                    \
+         CCTK_INT ARRAY IN input_array_indices,         \
+         CCTK_INT IN N_output_arrays,                   \
+         CCTK_INT ARRAY IN output_array_types,          \
+         CCTK_POINTER ARRAY IN output_arrays,           \
+         CCTK_INT IN faces)
+USES FUNCTION CoordinatesSymmetry_Interpolate
+
+
+# Coordinate transformations
+
+CCTK_INT FUNCTION                              \
+    MultiPatch_LocalToGlobal                   \
+        (CCTK_POINTER_TO_CONST IN cctkGH,      \
+         CCTK_INT IN ndims,                    \
+         CCTK_INT IN npoints,                  \
+         CCTK_INT ARRAY IN patch,              \
+         CCTK_POINTER_TO_CONST IN localcoords, \
+         CCTK_POINTER IN globalcoords,         \
+         CCTK_POINTER IN dxda,                 \
+         CCTK_POINTER IN det_dxda,             \
+         CCTK_POINTER IN dadx,                 \
+         CCTK_POINTER IN ddxdada,              \
+	 CCTK_POINTER IN ddadxdx,              \
+         CCTK_POINTER IN dddxdadada)
+PROVIDES FUNCTION MultiPatch_LocalToGlobal \
+    WITH Coordinates_LocalToGlobal         \
+    LANGUAGE C
+
+CCTK_INT FUNCTION                               \
+    MultiPatch_GlobalToLocal                    \
+        (CCTK_POINTER_TO_CONST IN cctkGH,       \
+         CCTK_INT IN ndims,                     \
+         CCTK_INT IN npoints,                   \
+         CCTK_POINTER_TO_CONST IN globalcoords, \
+         CCTK_INT ARRAY OUT patch,              \
+         CCTK_POINTER IN localcoords,           \
+         CCTK_POINTER IN dadx,                  \
+         CCTK_POINTER IN ddadxdx)
+PROVIDES FUNCTION MultiPatch_GlobalToLocal \
+    WITH Coordinates_GlobalToLocal         \
+    LANGUAGE C
+
+CCTK_INT FUNCTION             \
+    MultiPatch_MapIsCartesian \
+        (CCTK_INT IN map)
+PROVIDES FUNCTION MultiPatch_MapIsCartesian \
+ WITH Coordinates_MapIsCartesian            \
+ LANGUAGE C
+
+
+
+
+# Query Carpet about current refinement level (same as Carpet::reflevel)
+
+CCTK_INT FUNCTION                         \
+    GetRefinementLevel                    \
+        (CCTK_POINTER_TO_CONST IN cctkGH)
+USES FUNCTION GetRefinementLevel
+
+
+
+# Utility functions for users to get information about the grid structure
+
+void FUNCTION Util_GetPhysicalBoundaries(CCTK_POINTER_TO_CONST IN GH, \
+                                         CCTK_INT ARRAY OUT do_bc)
+PROVIDES FUNCTION Util_GetPhysicalBoundaries \
+  WITH Coordinates_Util_GetPhysicalBoundaries \
+  LANGUAGE C
+
+CCTK_INT FUNCTION Util_GetGridRanges (CCTK_POINTER_TO_CONST IN GH, \
+                                      CCTK_INT ARRAY OUT istart,   \
+                                      CCTK_INT ARRAY OUT iend)
+PROVIDES FUNCTION Util_GetGridRanges \
+  WITH Coordinates_Util_GetGridRanges    \
+  LANGUAGE C
+
+
+
+public:
+
+# TODO:
+# Don't store the Jacobian and its derivative,
+# since only the inverses are needed
+
+int general_coordinates type=SCALAR tags='checkpoint="no"' \
+  "Compute derivatives for generalised coordinates, involving a non-trivial Jacobian"
+
+int interpolate_boundary_points type=SCALAR tags='checkpoint="no"' \
+  "Interpolate to points which are on both an inter-patch boundary and an outer boundary"
+
+int jacobian_state type=SCALAR \
+  "State of storage for jacobian"
+
+int jacobian_derivative_state type=SCALAR \
+  "State of storage for derivative of jacobian"
+
+int inverse_jacobian_state type=SCALAR \
+  "State of storage for inverse jacobian"
+
+int volume_form_state type=SCALAR \
+  "State of storage for volume form"
+
+
+real jacobian type=GF timelevels=1 tags='checkpoint="no" prolongation="none"'
+{
+  J11, J12, J13, J21, J22, J23, J31, J32, J33
+} "Jacobian J_(ik) = da^i/dx^k of the coordinate transformation (a: local, x: global)"
+
+real inverse_jacobian type=GF timelevels=1 tags='checkpoint="no" prolongation="none"'
+{
+  iJ11, iJ12, iJ13, iJ21, iJ22, iJ23, iJ31, iJ32, iJ33
+} "Jacobian J_(ik) = dx^i/da^k of the inverse coordinate transformation (a: local, x: global)"
+
+real jacobian2 type=GF timelevels=1 tags='checkpoint="no" prolongation="none"'
+{
+  dJ111, dJ112, dJ113, dJ122, dJ123, dJ133,
+  dJ211, dJ212, dJ213, dJ222, dJ223, dJ233,
+  dJ311, dJ312, dJ313, dJ322, dJ323, dJ333,
+} "Derivative of the Jacobian  d^2[local]/d[global]^2"
+
+# This must be checkpointed. The fraction of a nominal overlapping cell is computed via Monte-Carlo particles.
+# Since this is (pseudo) stochastic, we want to compute this only once!!
+real volume_form type=GF timelevels=1 tags='prolongation="none"' "Volume form d^3x = da db dc det(dx^i/da^k) * M, where M is mask of nominal cell volume"
+

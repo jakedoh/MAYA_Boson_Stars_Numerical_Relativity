@@ -1,0 +1,29 @@
+# Schedule definitions for thorn Cooler
+
+if ( keep_radiation )
+{
+	STORAGE: LostEps[1]
+	schedule Cooler_Init at CCTK_BASEGRID
+	{
+	   LANG: C
+	} "Initialize LostEps GF to zero."
+}
+
+if ( CCTK_EQUALS(cool_by,"RHS_Mode") ) 
+{ 
+	schedule Cooler_Radiate in MoL_PostRHS
+	{
+	  LANG: C
+	} "Subtract energy from system"
+
+}
+
+if ( CCTK_EQUALS(cool_by,"Operator_Splitting") )
+{
+
+	schedule Cool_Primitives in CCTK_EVOL after MoL_PseudoEvolution before SetTmunu 
+	{
+	  LANG: C
+	} "Subtract energy from the primitives, then regenerate the conservatives."
+
+}

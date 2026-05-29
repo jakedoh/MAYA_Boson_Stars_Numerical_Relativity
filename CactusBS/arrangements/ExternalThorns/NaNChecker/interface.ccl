@@ -1,0 +1,37 @@
+# Interface definition for thorn NaNChecker
+# $Header: /cactusdevcvs/CactusUtils/NaNChecker/interface.ccl,v 1.8 2008/09/22 23:50:44 schnetter Exp $
+
+implements: NaNChecker
+
+inherits: Reduce
+
+USES INCLUDE: carpet.hh
+
+INCLUDES HEADER: NaNCheck.h in NaNChecker.h
+
+
+
+CCTK_INT FUNCTION CheckVarsForNaN              \
+    (CCTK_POINTER_TO_CONST IN cctkGH,          \
+     CCTK_INT              IN report_max,      \
+     CCTK_STRING           IN vars,            \
+     CCTK_STRING           IN check_for,       \
+     CCTK_STRING           IN action_if_found)
+PROVIDES FUNCTION CheckVarsForNaN           \
+    WITH NaNChecker_CheckVarsForNaN_Wrapper \
+    LANGUAGE C
+
+CCTK_INT FUNCTION SetVarsToNaN        \
+    (CCTK_POINTER_TO_CONST IN cctkGH, \
+     CCTK_STRING           IN vars)
+PROVIDES FUNCTION SetVarsToNaN           \
+    WITH NaNChecker_SetVarsToNaN_Wrapper \
+    LANGUAGE C
+
+
+
+private:
+
+INT NaNmask TYPE=GF TAGS='Prolongation="None" checkpoint="no"' "Grid function mask for NaN locations"
+
+INT NaNsFound TYPE=SCALAR TAGS='checkpoint="no"' "Scalar variable counting the number of NaNs found"

@@ -1,0 +1,271 @@
+# Parameter definitions for thorn NullEvolve
+# $Header$
+
+shares: Time
+uses  KEYWORD timestep_method 
+
+shares: NullInterp
+uses BOOLEAN poison_test
+
+shares: NullGrid
+uses real null_rwt 
+uses real null_xin 
+uses int N_ang_pts_inside_eq
+uses int N_ang_ev_outside_eq
+uses int N_ang_stencil_size
+uses int N_ang_ghost_pts
+uses int N_radial_pts
+
+shares: cactus
+uses cctk_int cctk_itlast
+uses cctk_real cctk_initial_time
+
+restricted:
+
+BOOLEAN first_order_scheme "Should the first order (angular) scheme be used?"
+{
+} "yes"
+
+KEYWORD boundary_data "Choose boundary data type"
+{
+  "whitehole"	::"White hole boundary data"
+  "flat"	::"flat boundary data"
+  "randomJ" 	::"random number boundary data"
+} "flat"
+
+KEYWORD initial_J_data "What kind of initial data for J shall we pick?"
+{
+  "vanishing_J"		:: "vanishing J"
+  "vanishing_J_scri"	:: "vanishing J at scri"
+  "rotating_pulse"	:: "rotating pulse"
+  "compact_J"		:: "compact suport J"
+  "smooth_J" 	        :: "smoothly vanishing J"
+  "extracted_J"		:: "J as given by extraction"
+  "polynomial_J"	:: "J as third power polynomial to vanish J_xx at scri"
+  "fitted_linearized_J" :: "linearized fitted J based on some previous run"
+} "vanishing_J_scri"
+
+private:
+# Obsolete dissipation
+#BOOLEAN first_order_dissip "Should the first order agnular variables be dissipated?"
+#{
+#} "no"
+
+keyword dissip_mask_type "type of dissipation mask"
+{
+  "one"					:: "set dissipation mask to 'one' everywhere"
+  "zero at eq, one at pole"		:: "set 2B=1-(p^2+q^2)+|1-(p^2+q^2)|"
+  "zero at rD0, one at pole"		:: "set 2B=rD0-(p^2+q^2)+|rD0-(p^2+q^2)|"
+  "zero at rD0, one at eq"		:: "set 2B=min(1, (rD0-(p^2+q^2)+|rD0-(p^2+q^2)|) / (rD0-1) )"
+  "zero at rD0, one at rD1"		:: "set 2B=min(1, (rD0-(p^2+q^2)+|rD0-(p^2+q^2)|) / (rD0-rD1) )"
+} "one"
+
+cctk_real N_dissip_zero_outside_eq "determines dissipation radius rD0 = 1 + dd*N_dissip_zero_outside_eq"
+{
+  0:*	:: "non-negative"
+} 1
+
+cctk_real N_dissip_one_outside_eq "determines dissipation radius rD1 = 1 + dd*N_dissip_one_outside_eq"
+{
+  *:*	:: "any value"
+} 0
+
+cctk_real dissip_J "dissipation factor for the J equation (time-integration)"
+{
+  0.0:* :: "positive"
+} 0.0
+
+cctk_real dissip_Jx "dissipation factor for the J equation (radial marching)"
+{
+  0.0:* :: "positive"
+} 0.0
+
+cctk_real dissip_Q "dissipation factor for the Q equation (the auxiliary of U)"
+{
+  0.0:* :: "positive"
+} 0.0
+
+cctk_real dissip_W "dissipation factor for the W equation"
+{
+  0.0:* :: "positive"
+} 0.0
+
+cctk_real null_dissip "dissipation factor for the radial evolution stencil"
+{
+  0.0:1.0 :: "postive less than 1"
+} 0.05
+
+cctk_real ID_AMP "Amplitude of compact J pulse"
+{
+  0.:*:: "An y positive number"
+}.00001
+
+cctk_int ID_POWER "related to order of polynomial in compact J pulse"
+{
+  3:6:: "best to choose between 3 and 6"
+} 3
+
+cctk_int ID_l "l mode"
+{
+  2:* :: "2 or larger"
+} 2
+
+cctk_int ID_m "m mode"
+{
+  -100:100:: "-l to l"
+} 0
+
+cctk_real xmin "left boundary of CS pulse"
+{
+  .5:1:: "choose  .5 < xmin < xmax < 1  "
+} .56
+
+
+cctk_real xmax "right boundary of CS pulse"
+{
+  .5:1:: "choose  .5 < xmin < xmax < 1  "
+} .8
+
+cctk_real qsmin "inner q bdry of CS pulse"
+{
+  *:* :: "be reasonable though"
+}  -1.0
+
+cctk_real qsmax "outer q bdry of CS pulse"
+{
+  *:* :: "be reasonable though"
+}  1.0
+
+cctk_real psmin "inner p bdry of CS pulse"
+{
+  *:* :: "be reasonable though"
+}  -1.0
+
+cctk_real psmax "outer p bdry of CS pulse"
+{
+  *:* :: "be reasonable though"
+}  1.0
+
+cctk_real wrot "frequency of CS pule"
+{
+  *:* :: "be reasonable though"
+}  7.5
+
+
+
+cctk_real Jcoeff_r0r "real part of constant for fitted linearized J initial data"
+{
+  *:* :: "any value obtained from Nigel's fitting script"
+} 0
+
+cctk_real Jcoeff_r0i "imag part of constant for fitted linearized J initial data"
+{
+  *:* :: "any value obtained from Nigel's fitting script"
+} 0
+
+cctk_real Jcoeff_r1r "real part of constant for fitted linearized J initial data"
+{
+  *:* :: "any value obtained from Nigel's fitting script"
+} 0
+
+cctk_real Jcoeff_r1i "imag part of constant for fitted linearized J initial data"
+{
+  *:* :: "any value obtained from Nigel's fitting script"
+} 0
+
+cctk_real Jcoeff_r3r "real part of constant for fitted linearized J initial data"
+{
+  *:* :: "any value obtained from Nigel's fitting script"
+} 0
+
+cctk_real Jcoeff_r3i "imag part of constant for fitted linearized J initial data"
+{
+  *:* :: "any value obtained from Nigel's fitting script"
+} 0
+
+cctk_real Jcoeff_r0 "real part of constant for fitted linearized J initial data"
+{
+  *:* :: "any value obtained from Nigel's fitting script"
+} 0
+
+cctk_real Jcoeff_r1 "imag part of constant for fitted linearized J initial data"
+{
+  *:* :: "any value obtained from Nigel's fitting script"
+} 0
+
+cctk_real Jcoeff_r3 "real part of constant for fitted linearized J initial data"
+{
+  *:* :: "any value obtained from Nigel's fitting script"
+} 0
+
+
+
+
+cctk_int dissip_fudge "do we want to fudge around the inner boundary"
+{
+  0:1 :: "0 no fudging, 1 fudging"
+} 0
+
+cctk_real dissip_fudge_maxx "where in x to stop fudging"
+{
+  .5:.56 :: " "
+} .53
+
+BOOLEAN use_rsYlm "do we use real spherical harmonics for compact pulse initial data"
+{
+}"yes"
+
+####################################################################################
+## DEBUGGING
+####################################################################################
+
+restricted:
+
+CCTK_REAL Diagnostics_Coord_x "the coordinate x at which diagnostics are to be measured" STEERABLE=ALWAYS
+{
+  0:1  :: "will test only for x >= NullGrid::null_xin."
+} 0.0 
+
+BOOLEAN DEBUG_skip_evolution "Should the evolution be turned off?" 
+{
+}"no"
+
+BOOLEAN DEBUG_skip_J_update "Should the update of J be turned off?" 
+{
+}"no"
+
+BOOLEAN DEBUG_skip_NU_update "Should the update of NU be turned off?" 
+{
+}"no"
+
+BOOLEAN DEBUG_skip_CK_update "Should the update of CK be turned off?" 
+{
+}"no"
+
+BOOLEAN DEBUG_skip_B_update "Should the update of B be turned off?" 
+{
+}"no"
+
+BOOLEAN DEBUG_skip_CB_update "Should the update of CB be turned off?" 
+{
+}"no"
+
+BOOLEAN DEBUG_skip_Q_update "Should the update of Q be turned off?" 
+{
+}"no"
+
+BOOLEAN DEBUG_skip_U_update "Should the update of U be turned off?" 
+{
+}"no"
+
+BOOLEAN DEBUG_skip_W_update "Should the update of W be turned off?" 
+{
+}"no"
+
+BOOLEAN debug_verbose "should debugging messages be printed?"
+{
+} "no"
+
+BOOLEAN old_J_xderiv "should we compute the x derivative of J with the old values?"
+{
+} "no"

@@ -1,0 +1,69 @@
+ActiveThorns = "time MoL pugh pughreduce pughslab coordbase symbase cartgrid3d ioutil ioascii iobasic boundary admbase staticconformal spacemask admcoupling coordgauge admmacros whisky whisky_init_data whisky_tovsolverc nanchecker eos_base eos_ideal_fluid eos_polytrope bssn_mol admconstraints constants LocalReduce"
+
+time::dtfac = 0.375
+
+admbase::evolution_method        = "adm_bssn"
+admbase::lapse_evolution_method  = "1+log"
+admbase::shift_evolution_method  = "gamma0"
+
+adm_bssn::bound           = "radiative"
+adm_bssn::harmonic_f      = 2.0
+
+admconstraints::bound     = "static"
+
+boundary::radpower        = 2
+
+SpaceMask::use_mask = "yes"
+
+grid::type            = "byrange"
+grid::domain          = "full"
+grid::xyzmin          = -30.0
+grid::xyzmax          =  30.001
+driver::ghost_size    =   3
+driver::global_nsize  =  33
+
+cactus::cctk_itlast   =       0
+
+methodoflines::ode_method        = "icn"
+
+whisky::riemann_solver            = "Marquina"
+whisky::whisky_eos_type           = "Polytype"
+whisky::whisky_eos_table          = "2D_Polytrope"
+whisky::recon_method              = "ppm"
+whisky::whisky_stencil            = 3
+whisky::bound                     = "none"
+whisky::tvd_limiter               = "VanLeerMC2"
+whisky::rho_abs_min               = 1.e-7
+whisky::initial_atmosphere_factor = 0.999
+
+ADMBase::initial_data  = "tov"
+ADMBase::initial_lapse = "tov"
+ADMBase::initial_shift = "tov"
+
+whiskytovsolver::TOV_Num_TOVs       = 2
+whiskytovsolver::TOV_Num_Radial     = 200000
+whiskytovsolver::TOV_Combine_Method = "maximum"
+
+whiskytovsolver::TOV_Rho_Central[0] = 0.16e-3
+whiskytovsolver::TOV_Gamma[0]       = 2.0
+whiskytovsolver::TOV_K[0]           = 100.0
+whiskytovsolver::TOV_Position_x[0]  = -15.0
+
+whiskytovsolver::TOV_Rho_Central[1] = 0.32e-3
+whiskytovsolver::TOV_Gamma[1]       = 2.0
+whiskytovsolver::TOV_K[1]           = 100.0
+whiskytovsolver::TOV_Position_x[1]  = 15.0
+
+EOS_Polytrope::eos_gamma            = 2.0
+EOS_Polytrope::eos_k                = 100.0
+
+IO::out_fileinfo="none"
+IO::out_dir			= $parfile
+
+IOBasic::outScalar_every = 1
+IOBasic::outScalar_vars  = "HydroBase::rho HydroBase::press HydroBase::eps HydroBase::vel whisky::whisky_cons_scalar_var whisky::whisky_cons_vector_var admbase::lapse admbase::metric admbase::curv admconstraints::ham admconstraints::momentum"
+
+IOASCII::out1D_every     = 1
+IOASCII::out1D_vars      = "HydroBase::rho HydroBase::press HydroBase::eps HydroBase::vel whisky::whisky_cons_scalar_var whisky::whisky_cons_vector_var admbase::lapse admbase::metric admbase::curv admconstraints::ham admconstraints::momentum"
+IOASCII::out_format      = ".10e"
+

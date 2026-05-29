@@ -1,0 +1,83 @@
+Cactus Code Thorn Formaline
+Thorn Author(s)     : Erik Schnetter <schnetter@cct.lsu.edu>
+Thorn Maintainer(s) : Erik Schnetter <schnetter@cct.lsu.edu>
+--------------------------------------------------------------------------
+
+Purpose of the thorn:
+
+Send meta information about a run to a server, so that it is kept
+there forever.  The information sent is e.g. the parameter file, date,
+time, machine, and user id of the run, location of the output data,
+number of iterations, an efficiency summary, etc.
+
+Meaning and pronunciation.  Formaline (or: formalin) is a solution of
+formaldehyde (methanal) in water.  The chemical formula of
+formaldehyde is H_2CO.  Formaline is commonly used to preserve
+biological specimen.  It is pronounced "fOrmaleen".
+
+
+
+How to get a stored source tree out of a git repository:
+git checkout GIT-COMMIT-ID
+
+
+
+TODO:
+
+put unique job IDs into all output files
+        done for Carpet output
+        but not yet after restarting
+
+BSD tar: read files from file: -I filename
+tar: don't use -z; use tar and gzip
+AIX: tar is GNU tar, but uses -L instead of -T
+use GNU tar, and autodetect it properly
+
+follow symbolic links
+(maybe: respect hard links)
+
+IOUtil should not depend on anything
+(MoL should not depend on NaNChecker)
+
+use a configuration script to amend all thorns' make.code.deps files
+to create the tarballs when the thorns are compiled
+
+put arrangement name into thorn source name
+use subdirectories for arrangements
+use strings instead of chars for data
+
+announce: maybe use <array> for parameter arrays
+          maybe use <dateTime.iso8601>20100302T00:00:00</dateTime.iso8601>
+                for dates and times
+
+put the output files into the build directory instead of the scratch
+directory
+
+output grid variables
+register as output method
+implement reductions
+implement missing data types
+output only if value has changed
+
+update the source tarballs not only when the thorn library changes,
+but also when a *.ccl or make.* file changes.
+do not necessarily update them all when the bindings change.
+
+fork (or spawn a thread) before announcing, so that the simulation
+does not have to wait
+        make sure to kill the old spawn before a new is created
+
+make max_warn_level and output_info steerable
+
+register with Portal/Announce as information provider
+[Tom/Ian want to make Announce accept a table instead of XMLRPC]
+
+prevent connecting to the wrong simulation, if a simulation is
+outdated, and a new simulation uses the same hostname/port
+combination: the portal can store the job id, and if there is a new
+port id for the same hostname/port combination, deactivate the old
+link.
+
+rebuild the flesh tarball when the ThornList changes
+
+announce in the background, maybe with a larger timeout

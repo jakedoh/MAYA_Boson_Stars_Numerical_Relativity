@@ -1,0 +1,32 @@
+# Schedule definitions for thorn ReconstructTVD
+# $Header:$
+
+if(CCTK_Equals(recon_method, "tvd")) {
+
+SCHEDULE TVD_ParamCheck AT PARAMCHECK
+{
+  LANG: Fortran
+} "Check parameters"
+
+SCHEDULE TVD_Scalar_Setup IN MoL_PreStep
+{
+  LANG: Fortran
+} "Set up scalars for efficiency"
+
+if (CCTK_Equals(whisky_eos_type,"General")) {
+
+	SCHEDULE TVD_Reconstruct IN FluxTerms AS Reconstruct
+	{
+	  LANG: Fortran
+	} "Reconstruct gridfunctions at the cell boundaries"
+
+} else if (CCTK_Equals(whisky_eos_type,"Polytype")) {
+
+	SCHEDULE TVD_Polytype IN FluxTerms AS Reconstruct
+	{
+	  LANG: Fortran
+	} "Reconstruct gridfunctions at the cell boundaries"
+
+}
+
+}

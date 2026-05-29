@@ -1,0 +1,41 @@
+# Interface definition for thorn Baum
+# $Header: /numrelcvs/HerrmannCVS/Baum/interface.ccl,v 1.4 2004/08/27 09:31:41 herrmann Exp $
+
+implements: Baum
+inherits: sphericalsurface io admbase grid staticconformal TwoPuncturesMatterzypbaum
+
+INT not_happy_mass_group TYPE=SCALAR
+{
+  not_happy_mass
+} "indicator for looping if we are happy with the mass or not"
+
+REAL real_scalars TYPE=SCALAR
+{
+  m1_search,
+  m2_search,
+  m1_guess,
+  m2_guess,
+  irr_mass1,
+  irr_mass2,
+  E_bind,
+  admMass,
+  par_m_min,
+  par_m_max,
+  par_b,
+  j_sequence,
+  m1_min,m1_max,
+  m2_min,m2_max,
+  last_irr_mass1,last_irr_mass2,
+  irr_mass1_min,irr_mass2_min,
+  irr_mass1_max,irr_mass2_max,
+  last_m_plus,last_m_minus,
+  m_val_plus,m_val_minus
+} "different real scalars"
+
+
+
+INT int_scalars TYPE=SCALAR
+{
+  iterations, found, first_ever
+} "different integer scalars"
+

@@ -1,0 +1,4 @@
+# Module dependencies
+
+Recovery_Startup.F90.o:         Recovery_Scalars.F90.o
+RecoverMarti.F90.o:            	Recovery_Scalars.F90.o

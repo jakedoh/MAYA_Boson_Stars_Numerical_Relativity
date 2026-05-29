@@ -1,0 +1,18 @@
+# Schedule definitions for thorn IntegratePsi4
+# $Header:$
+#
+
+STORAGE: surface_arrays, scalars_real, scalars_int, detector_scalars, detector_ints
+
+schedule ADM_EJP_Init at CCTK_INITIAL
+{
+  LANG: C
+  OPTIONS: global
+} "initialize ADM_EJP stuff"
+
+
+schedule ADM_EJP_loop_over_detectors at ANALYSIS
+{
+  LANG: C
+  OPTIONS: global
+} "loop over detectors manually instead of using the schedule.ccl"

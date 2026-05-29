@@ -1,0 +1,18 @@
+# Schedule definitions for thorn IntegratePsi4
+# $Header:$
+#
+
+STORAGE: surface_arrays, scalars_real, scalars_int, detector_scalars
+
+schedule scalarAnalysis_Init_Integrals at CCTK_INITIAL
+{
+  LANG: C
+  OPTIONS: global
+} "initialize psi4 integral gfs"
+
+
+schedule scalarAnalysis_loop_over_detectors at ANALYSIS
+{
+  LANG: C
+  OPTIONS: global
+} "loop over detectors manually instead of using the schedule.ccl"

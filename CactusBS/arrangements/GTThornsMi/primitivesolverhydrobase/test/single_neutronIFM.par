@@ -1,0 +1,475 @@
+
+###########################################################
+##   Single Neutron Star Simulation:                     ##
+##      Mass = 1.40016 M ( M = 1 M_sun )  
+##      r_NS ~ 8.12492                                   
+##      x_NS = ( 0, 0, 0 )                         
+##      v_NS = ( 0, 0, 0 )
+##      Simulate for 3000 M (dx_Star = 0 M)
+###########################################################
+
+###############################################################################
+##
+## Grid structure:
+##      rl      Extent          dx[M]           Resolution                              Npts
+##      ===========================================================================
+##      0        155.998  2.59997  (M/0.384619  , rStar/3.125     )        60 ^3
+##      1        77.9992  1.29999  (M/0.769238  , rStar/6.25      )        60 ^3
+##      2        38.9996  0.649994        (M/1.53848   , rStar/12.5      )        60 ^3
+##      3        19.4998  0.324997        (M/3.07695   , rStar/25        )        60 ^3
+##      4        9.7499   0.162498        (M/6.15391   , rStar/50        )        60 ^3
+##
+###############################################################################
+
+
+ActiveThorns = "Kranc2BSSNChiMatter TwoPuncturesSolver PrimitiveSolver GenericFD CoordBase SymBase Boundary NanChecker CartGrid3d Time MoL CarpetIOBasic CarpetIOScalar IOUtil Carpet CarpetLib Vectors CarpetReduce CarpetInterp CarpetSlab CarpetIOASCII ADMBase  StaticConformal SphericalSurface AEILocalInterp SpaceMask Slab CarpetIOHDF5 CarpetRegrid2 CarpetTracker MinSearch TimerReport RunStats Dissipation InitBase RotatingSymmetry180 ReflectionSymmetry LoopControl GSL Nice HydroBase EOS_Base EOS_IdealFluid EOS_Polytrope TmunuBase ADMCoupling ADMMacros HTTPD Socket Formaline BowenID SystemTopology hwloc SubspaceNorms  WeylScal4 Psi4Analysis Ylm_Decomp  SphereIntegrate"
+
+#############################################################
+# Grid
+#############################################################
+
+CartGrid3D::type                        = "coordbase"
+CartGrid3D::domain                      = "full"
+CartGrid3D::avoid_origin                = "no"
+
+CoordBase::domainsize                   = minmax
+CoordBase::xmin                         = 0
+CoordBase::ymin                         = -155.998464
+CoordBase::zmin                         = 0
+CoordBase::xmax                         = 155.998464
+CoordBase::ymax                         = 155.998464
+CoordBase::zmax                         = 155.998464
+CoordBase::dx                           = 2.5999743999999997968
+CoordBase::dy                           = 2.5999743999999997968
+CoordBase::dz                           = 2.5999743999999997968
+CoordBase::boundary_size_x_lower        = 3
+CoordBase::boundary_size_y_lower        = 3
+CoordBase::boundary_size_z_lower        = 3
+CoordBase::boundary_shiftout_x_lower    = 1
+CoordBase::boundary_shiftout_y_lower    = 0
+CoordBase::boundary_shiftout_z_lower    = 1
+CoordBase::boundary_size_x_upper        = 3
+CoordBase::boundary_size_y_upper        = 3
+CoordBase::boundary_size_z_upper        = 3
+CoordBase::boundary_shiftout_x_upper    = 0
+CoordBase::boundary_shiftout_y_upper    = 0
+CoordBase::boundary_shiftout_z_upper    = 0
+
+#############################################################
+# Symmetries
+#############################################################
+
+ReflectionSymmetry::reflection_x        = "no"
+ReflectionSymmetry::reflection_y        = "no"
+ReflectionSymmetry::reflection_z        = "yes"
+ReflectionSymmetry::avoid_origin_x      = "no"
+ReflectionSymmetry::avoid_origin_y      = "no"
+ReflectionSymmetry::avoid_origin_z      = "no"
+
+RotatingSymmetry180::poison_boundaries  = "yes"
+
+
+#############################################################
+# Run statistics
+#############################################################
+
+RunStats::calc_every         = 4
+RunStats::output_mem_every   = 4
+TimerReport::out_every       = 4
+TimerReport::out_filename    = "TimerReport"
+
+#############################################################
+# CarpetRegrid2/CarpetTracker
+#############################################################
+
+CarpetRegrid2::num_centres     = 1
+CarpetRegrid2::regrid_every          = 240
+CarpetRegrid2::freeze_unaligned_levels = "yes"
+CarpetRegrid2::freeze_unaligned_parent_levels = "yes"
+Carpet::grid_coordinates_filename = "grid.asc"
+CarpetRegrid2::min_distance = 0
+CarpetRegrid2::min_fraction = 0.4
+CarpetRegrid2::verbose               = 0
+CarpetRegrid2::symmetry_rotating180   = "yes"
+
+CarpetRegrid2::num_levels_1  =  5
+CarpetTracker::surface[0] = 0
+CarpetRegrid2::position_x_1  =  0
+CarpetRegrid2::position_y_1  =  0
+CarpetRegrid2::position_z_1  =  0
+CarpetRegrid2::radius_1[0] = 155.998464
+CarpetRegrid2::radius_1[1] = 77.999232
+CarpetRegrid2::radius_1[2] = 38.999616
+CarpetRegrid2::radius_1[3] = 19.499808
+CarpetRegrid2::radius_1[4] = 9.749904
+
+
+
+#############################################################
+# SphericalSurface
+#############################################################
+
+SphericalSurface::nsurfaces  = 4
+SphericalSurface::maxntheta  = 120
+SphericalSurface::maxnphi    = 90
+
+#############################################################
+# MinSearch
+#############################################################
+
+MinSearch::x0[0]              = 0
+MinSearch::y0[0]              = 0.0
+MinSearch::z0[0]              = 0.0
+MinSearch::surface_index[0]   = 0
+MinSearch::extra_variables[0] = "HydroBase::eps"
+#MinSearch::weight_variable[0] = "CarpetReduce::weight"
+
+MinSearch::nminima            = 1
+MinSearch::var                = "HydroBase::rho"
+MinSearch::verbose            = 0
+MinSearch::track_maximum      = "yes"
+MinSearch::find_global_minimum = "yes"
+MinSearch::interpolator_name  = "Lagrange polynomial interpolation"
+MinSearch::interpolator_pars  = "order=4"
+MinSearch::find_every         = 1
+MinSearch::outfile_basename   = "MinSearch%d.asc"
+
+#############################################################
+# Carpet
+#############################################################
+
+Carpet::ghost_size                      = 3
+Carpet::domain_from_coordbase           = "yes"
+Carpet::max_refinement_levels           = 5
+Carpet::refinement_factor               = 2
+Carpet::prolongation_order_space        = 5
+Carpet::prolongation_order_time         = 2
+Carpet::use_buffer_zones                = "yes"
+Carpet::verbose                         = "no"
+Carpet::time_refinement_factors         = "[1,1,1,2,4]"
+Carpet::output_timers_every             = 4
+Carpet::poison_new_timelevels           = "yes"
+Carpet::check_for_poison                = "no"
+Carpet::poison_value                    = 113
+Carpet::print_timestats_every           = 0
+Carpet::init_fill_timelevels            = "yes"
+
+#############################################################
+# CarpetLib
+#############################################################
+
+CarpetLib::poison_new_memory            = "yes"
+CarpetLib::poison_value                 = 114
+#CarpetLib::max_allowed_memory_MB        = 1750
+CarpetLib::print_memstats_every         = 4
+
+#############################################################
+# CarpetInterp
+#############################################################
+
+CarpetInterp::tree_search               = "yes"
+CarpetInterp::check_tree_search         = "no"
+
+#############################################################
+# Time integration
+#############################################################
+
+Cactus::terminate                     = "any"
+Cactus::max_runtime                   = 2850
+Cactus::cctk_final_time               = 0
+Cactus::cctk_itlast                   = 100000
+Cactus::cctk_timer_output             = "full"
+Cactus::highlight_warning_messages    = "no"
+
+Time::dtfac                           = 0.125
+
+MethodOfLines::ode_method             = "RK4"
+MethodOfLines::MoL_NaN_Check          = "no"
+MethodOfLines::MoL_Intermediate_Steps = 4
+MethodOfLines::MoL_Num_Scratch_Levels = 1
+
+#############################################################
+# Initial data
+#############################################################
+
+ADMBase::initial_data = "twopuncturessolver"
+ADMBase::initial_lapse = "utb"
+ADMBase::initial_shift = "zero"
+ADMBase::evolution_method = "none"
+
+# Uncomment these for fast but very inaccurate initial data
+#       TwoPuncturesSolver::npoints_A = 6
+#       TwoPuncturesSolver::npoints_B = 6
+#       TwoPuncturesSolver::npoints_phi = 6
+
+TwoPuncturesSolver::par_b          =  16.24984
+TwoPuncturesSolver::move_origin_x  =  0
+
+# TwoPunctures::grid_setup_method = "evaluation"
+TwoPuncturesSolver::psi0_limit = 10
+
+TwoPuncturesSolver::keep_u_around = "yes"
+TwoPuncturesSolver::conformal_density_power = 8
+TwoPuncturesSolver::Newton_tol = 1e-6
+#TwoPuncturesSolver::bypass_solve = "yes"
+
+#############################################################
+# Initial data for Matter
+#############################################################
+
+BowenID::tov_rho_central[0] = 0.128
+BowenID::object_rx[0]  = 0
+BowenID::tov_Gamma[0] = 2
+BowenID::tov_K[0] = 100
+BowenID::object_Px[0] = 0
+BowenID::object_Jz[0] = 0
+BowenID::verbose = 1
+BowenID::compact_object[0] = "tov"
+BowenID::tov_rho_atmosphere[0] = 1.28e-11
+BowenID::rhohat_exponent = 8
+BowenID::testsuite = "yes"
+BowenID::sigma_exponent = 8.
+BowenID::zero_epsilon = 1e-3
+
+PrimitiveSolver::chiEps       = 0.0001
+PrimitiveSolver::testsuite = "yes"
+PrimitiveSolver::conformal_density_power = 8
+PrimitiveSolver::verbose = 0
+
+#############################################################
+# Matter Evolution
+#############################################################
+
+HydroBase::timelevels = 3
+HydroBase::prolongation_type = "ENO"
+HydroBase::initial_hydro = "PrimitiveSolver"
+ADMMacros::spatial_order          = 4
+
+TmunuBase::timelevels                = 3
+TmunuBase::stress_energy_storage    = "yes"
+TmunuBase::stress_energy_at_RHS     = "yes"
+#TmunuBase::disable_calcTmunu_inc    = "yes"
+
+
+HydroBase::evolution_method     = "none"
+
+#Whisky::whisky_evolve             = "yes"
+#Whisky::whisky_eos_type           = "General"
+#Whisky::whisky_eos_table          = "Ideal_Fluid"
+#Whisky::whisky_stencil            = 3
+#Whisky::bound                     = "flat"
+PrimitiveSolver::PrimitiveSolver_rho_abs_min               = 1.28e-11
+#Whisky::initial_atmosphere_factor = 0.999
+#Whisky::wk_atmosphere             = "no"  # yes might be possible since the grid moves
+#Whisky::recon_method              = "ppm"
+#Whisky::riemann_solver            = "Marquina"
+
+#RecoverMarti::puncture_trick       = "no"
+#RecoverMarti::check_zsymmetry    = "no"
+#Whisky::whisky_check_final_updates = "yes"
+#Whisky::atmosphere_is_vacuum = "no"
+#Whisky::excision_atmosphere  = "no"
+
+#Whisky::kill_isolated_cells = "no"
+#Whisky::whisky_clear_all_nans_everywhere = "yes"
+#Whisky::uiuc_pressure_limit = "yes"
+#Whisky::uiuc_press_max_fact = 10
+#Whisky::sync_primitives           = "no"
+
+# Recovery
+#RecoverMarti::impose_s2_limit     = "yes"
+#RecoverMarti::recalc_rho_after_limit = "yes"
+#RecoverMarti::warn_if_speed_above = 0.98
+PrimitiveSolver::PrimitiveSolver_atmo_tolerance = 0.0001
+#RecoverMarti::reset_pressure      = "yes"
+#RiemannSolverMarquina::speed_limiter = "yes"
+#RiemannSolverMarquina::speed_limit   = 0.999
+
+# Reconstruction
+#ReconstructPPM::ppm_detect = "yes"
+#ReconstructPPM::ppm_epsilon = 0.0
+#ReconstructPPM::ppm_omega1 = 0.52
+#ReconstructPPM::ppm_omega2 = 0.0
+#ReconstructPPM::ppm_epsilon_shock = 0.1
+#ReconstructPPM::ppm_eta1 = 5.0
+#ReconstructPPM::ppm_k0 = 1
+#ReconstructPPM::ppm_unroll = "yes"
+
+SpaceMask::use_mask                  = "yes"
+
+EOS_Polytrope::eos_k = 100
+EOS_Polytrope::eos_gamma = 2
+EOS_IdealFluid::eos_ideal_fluid_gamma = 2
+
+
+
+#############################################################
+# Evolution system
+#############################################################
+
+Kranc2BSSNChiMatter::m                        = 1
+Kranc2BSSNChiMatter::lapseAdvection           = 1
+Kranc2BSSNChiMatter::gammaDriverLambda        = 0
+Kranc2BSSNChiMatter::betaDotAlphaFactor       = 0.75
+Kranc2BSSNChiMatter::etaBeta                  = .1
+Kranc2BSSNChiMatter::chiBeta                  = 1
+Kranc2BSSNChiMatter::gammaDriverLapsePower    = 0
+Kranc2BSSNChiMatter::nasaAdvection            = 1
+Kranc2BSSNChiMatter::newNASAAdvection         = 1
+Kranc2BSSNChiMatter::betatAdvection           = 1
+Kranc2BSSNChiMatter::chiEps                   = 0.0001
+Kranc2BSSNChiMatter::verbose                  = 0
+Kranc2BSSNChiMatter::fd_order                 = "full4th"
+Kranc2BSSNChiMatter::lapse_condition          = "1 + log full4th"
+Kranc2BSSNChiMatter::shift_condition          = "NASAfull4th"
+Kranc2BSSNChiMatter::boundary_condition       = "radiative"
+Kranc2BSSNChiMatter::couple_matter            = "yes"
+Kranc2BSSNChiMatter::recalculate_constraints = "matter"
+Kranc2BSSNChiMatter::constraintsfdorder = 4
+
+# These specify that no built-in CactusBase/Boundary boundary
+# condition is to be applied. These parameters must be present or the
+# Cactus symmetry boundary condition will not be applied.
+Kranc2BSSNChiMatter::A_group_bound      = "none"
+Kranc2BSSNChiMatter::alpha_group_bound  = "none"
+Kranc2BSSNChiMatter::beta_group_bound   = "none"
+Kranc2BSSNChiMatter::betat_group_bound  = "none"
+Kranc2BSSNChiMatter::Gam_group_bound    = "none"
+Kranc2BSSNChiMatter::h_group_bound      = "none"
+Kranc2BSSNChiMatter::K_group_bound      = "none"
+Kranc2BSSNChiMatter::chi_group_bound    = "none"
+
+
+#############################################################
+# Dissipation
+#############################################################
+
+Dissipation::order                 = 5
+Dissipation::epsdis                = 0.0
+Dissipation::epsdis_for_level[0] = 0.5
+Dissipation::epsdis_for_level[1] = 0.5
+Dissipation::epsdis_for_level[2] = 0.1
+Dissipation::epsdis_for_level[3] = 0.1
+Dissipation::epsdis_for_level[4] = 0.1
+
+Dissipation::vars                  = " Kranc2BSSNChiMatter::A_group Kranc2BSSNChiMatter::alpha_group Kranc2BSSNChiMatter::beta_group Kranc2BSSNChiMatter::betat_group Kranc2BSSNChiMatter::Gam_group Kranc2BSSNChiMatter::h_group Kranc2BSSNChiMatter::K_group Kranc2BSSNChiMatter::chi_group"
+
+#############################################################
+# Check for NaNs
+#############################################################
+
+NaNChecker::check_every = 1
+NaNChecker::action_if_found = "just warn" # "just warn", "terminate"
+NaNChecker::check_vars = "TmunuBase::stress_energy_vector TmunuBase::stress_energy_tensor TmunuBase::stress_energy_scalar  HydroBase::rho HydroBase::press HydroBase::eps HydroBase::vel   Kranc2BSSNChiMatter::A_group Kranc2BSSNChiMatter::K Kranc2BSSNChiMatter::chi Kranc2BSSNChiMatter::h_group Kranc2BSSNChiMatter::beta_group Kranc2BSSNChiMatter::Gam_group Kranc2BSSNChiMatter::betat_group admbase::gxx admbase::gxy admbase::gxz admbase::gyy admbase::gyz admbase::gzz"
+NaNChecker::verbose = "all"
+NaNChecker::ignore_restricted_points = "yes"
+
+#############################################################
+# TotalRestMass
+#############################################################
+
+
+
+#############################################################
+# SubspaceNorm
+#############################################################
+
+SubspaceNorms::calc_norms_every   = 4
+SubspaceNorms::norm_as_output     = "no"
+SubspaceNorms::output_ncount      = "yes"
+SubspaceNorms::num_scalars        = 3
+SubspaceNorms::scalar_variables        = "Kranc2BSSNChiMatter::bssnham"
+SubspaceNorms::norm_exponent[0]     = 1
+SubspaceNorms::scalar_floor [0]     = "yes"
+SubspaceNorms::scalar_floor_val [0]     = 1.280128e-11
+SubspaceNorms::scalar_floor_var [0]     = "HydroBase::rho"
+SubspaceNorms::density_weighted [0]     = "no"
+SubspaceNorms::undensitize_scalar [0]   = "yes"
+SubspaceNorms::norm_exponent[1]     = 1
+SubspaceNorms::scalar_floor [1]     = "yes"
+SubspaceNorms::scalar_floor_val [1]     = 1.280128e-11
+SubspaceNorms::scalar_floor_var [1]     = "HydroBase::rho"
+SubspaceNorms::density_weighted [1]     = "yes"
+SubspaceNorms::norm_exponent[2]     = 2
+
+SubspaceNorms::num_vectors        = 1
+SubspaceNorms::vector_groups      = "Kranc2BSSNChiMatter::bssnmom_group"
+
+SubspaceNorms::num_tensors        = 0
+SubspaceNorms::tensor_groups      = ""
+
+SubspaceNorms::intvolumes         = 3
+SubspaceNorms::int_wi_rad[0]       = 16.24984
+SubspaceNorms::weight_var[0]       = "CarpetReduce::weight"
+SubspaceNorms::int_wi_rad[1]       = 32.49968
+SubspaceNorms::weight_var[1]       = "CarpetReduce::weight"
+SubspaceNorms::int_wi_rad[2]       = 48.74952
+SubspaceNorms::weight_var[2]       = "CarpetReduce::weight"
+
+
+#############################################################
+# ADM_EJP
+#############################################################
+
+#ADM_EJP::number_of_detectors   = 9
+#ADM_EJP::out_every             = 4
+#ADM_EJP::detector_radius[0]   = 24.37476
+#ADM_EJP::detector_radius[1]   = 36.3405512727273
+#ADM_EJP::detector_radius[2]   = 48.3063425454545
+#ADM_EJP::detector_radius[3]   = 60.2721338181818
+#ADM_EJP::detector_radius[4]   = 72.2379250909091
+#ADM_EJP::detector_radius[5]   = 84.2037163636364
+#ADM_EJP::detector_radius[6]   = 96.1695076363636
+#ADM_EJP::detector_radius[7]   = 108.135298909091
+#ADM_EJP::detector_radius[8]   = 120.101090181818
+#ADM_EJP::interpolator_name        = "Lagrange polynomial interpolation"
+#ADM_EJP::interpolator_pars        = "order=4"
+#ADM_EJP::ntheta                   = 120
+#ADM_EJP::nphi                     = 240
+
+
+#############################################################
+# Output
+#############################################################
+
+IO::out_dir                          = $parfile
+IO::out_fileinfo                     = "all"
+
+CarpetIOBasic::outInfo_every         = 4
+CarpetIOBasic::outInfo_vars          = "HydroBase::rho RunStats::speed Carpet::physical_time_per_hour "
+CarpetIOBasic::real_max              = 1e6
+CarpetIOBasic::int_width             = 12
+
+CarpetIOScalar::outScalar_every      = 2
+CarpetIOScalar::outScalar_reductions = "norm2 minimum maximum"
+CarpetIOScalar::outScalar_vars       = "HydroBase::eps HydroBase::rho Carpet::timing ADMBase::lapse Kranc2BSSNChiMatter::chi "
+
+CarpetIOASCII::out1D_every           = 4
+CarpetIOASCII::out1D_x               = "yes"
+CarpetIOASCII::out1D_y               = "no"
+CarpetIOASCII::out1D_z               = "yes"
+CarpetIOASCII::out1D_d               = "no"
+CarpetIOASCII::out1D_vars            = "HydroBase::rho HydroBase::press HydroBase::eps HydroBase::vel Kranc2BSSNChiMatter::chi Kranc2BSSNChiMatter::bssnham Kranc2BSSNChiMatter::bssnmom_group ADMBase::lapse TwoPuncturesSolver::puncture_u ADMBase::kxx ADMBase::kxy ADMBase::gxx ADMBase::gxy"
+CarpetIOASCII::out_precision         = 7
+
+CarpetIOHDF5::compression_level      = 0
+IO::out_single_precision             = "yes"
+CarpetIOHDF5::out2D_every            = 8
+CarpetIOHDF5::out2D_xy               = "yes"
+CarpetIOHDF5::out2D_xz               = "no"
+CarpetIOHDF5::out2D_yz               = "no"
+CarpetIOHDF5::out2d_vars             = "HydroBase::eps HydroBase::rho HydroBase::vel HydroBase::press ADMBase::lapse  TwoPuncturesSolver::puncture_u ADMBase::kxx ADMBase::kxy"
+
+CarpetIOHDF5::out_every              = 124
+CarpetIOHDF5::out_vars               = "HydroBase::rho "
+
+#############################################################
+# Checkpoint and recovery
+#############################################################
+
+
+#############################################################
+# Control
+#############################################################
+
+

@@ -1,0 +1,52 @@
+\documentclass{article}
+
+% Use the Cactus ThornGuide style file
+% (Automatically used from Cactus distribution, if you have a 
+%  thorn without the Cactus Flesh download this from the Cactus
+%  homepage at www.cactuscode.org)
+\usepackage{../../../../doc/latex/cactus}
+
+\begin{document}
+
+\title{IOHDF5Util}
+\author{Thomas Radke}
+\date{$ $Date$ $}
+
+\maketitle
+
+% Do not delete next line
+% START CACTUS THORNGUIDE
+
+\begin{abstract}
+Thorn {\bf IOHDF5Util} provides functionality to implement HDF5 I/O in Cactus.
+\end{abstract}
+
+\section{Purpose}
+Thorn {\bf IOHDF5Util} provides common routines which can be used to implement
+Cactus I/O methods for input/output of Cactus variables in the HDF5 standard
+(Hierarchical Data Format Version 5).
+
+Currently, {\bf IOHDF5Util} is inherited by the {\bf IOHDF5} and
+{\bf IOStreamHDF5} I/O thorns which share its routines to implement their own
+I/O methods doing parallel HDF5 file I/O and online HDF5 data streaming.
+%
+%
+\section{Building A Cactus Configuration with {\bf IOHDF5Util}}
+%
+The Cactus distribution does not contain the HDF5 header files and library which
+is used by thorn {\bf IOHDF5Util}. So you need to configure it as an external
+software package via:
+%
+\begin{verbatim}
+  make <configuration>-config HDF5=yes
+                             [HDF5_DIR=<path to HDF5 package>]
+\end{verbatim}
+%
+The configuration script will look in some default places for an installed
+HDF5 package. If nothing is found this way you can explicitly specify it with
+the {\tt HDF5\_DIR} configure variable.
+
+% Do not delete next line
+% END CACTUS THORNGUIDE
+
+\end{document}

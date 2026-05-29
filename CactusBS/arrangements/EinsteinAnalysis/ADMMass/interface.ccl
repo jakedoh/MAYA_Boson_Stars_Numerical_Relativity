@@ -1,0 +1,55 @@
+# Interface definition for thorn ADMMass
+# $Header$
+
+implements: ADMMass
+inherits: ADMBase ADMMacros StaticConformal SpaceMask
+
+USES INCLUDE: SpaceMask.h
+
+CCTK_INT FUNCTION GetDomainSpecification \
+  (CCTK_INT IN size, \
+   CCTK_REAL OUT ARRAY physical_min, \
+   CCTK_REAL OUT ARRAY physical_max, \
+   CCTK_REAL OUT ARRAY interior_min, \
+   CCTK_REAL OUT ARRAY interior_max, \
+   CCTK_REAL OUT ARRAY exterior_min, \
+   CCTK_REAL OUT ARRAY exterior_max, \
+   CCTK_REAL OUT ARRAY spacing)
+REQUIRES FUNCTION GetDomainSpecification
+
+CCTK_INT ADMMass_LoopCounterG type = SCALAR
+{
+  ADMMass_LoopCounter
+} "ADMMass LoopCounter"
+
+CCTK_REAL ADMMass_Masses[ADMMass_number] type = SCALAR tags='checkpoint="no"'
+{
+  ADMMass_SurfaceMass
+  ADMMass_SurfaceMass_Lapse
+  ADMMass_VolumeMass
+} "ADMMass Scalars"
+
+CCTK_REAL ADMMass_GFs_surface type = GF Timelevels = 3 tags='Prolongation="none" tensortypealias="Scalar" checkpoint="no"'
+{
+  ADMMass_SurfaceMass_GF
+} "ADMMass gridfunctions for surface integration"
+
+CCTK_REAL ADMMass_GFs_volume type = GF Timelevels = 3 tags='Prolongation="none" tensortypealias="Scalar" checkpoint="no"'
+{
+  ADMMass_VolumeMass_pot_x
+  ADMMass_VolumeMass_pot_y
+  ADMMass_VolumeMass_pot_z
+  ADMMass_VolumeMass_GF
+} "ADMMass gridfunctions for volume integration"
+
+CCTK_REAL  ADMMass_box type = scalar tags='checkpoint="no"'
+{
+ ADMMass_box_x_min
+ ADMMass_box_x_max
+ ADMMass_box_y_min
+ ADMMass_box_y_max
+ ADMMass_box_z_min
+ ADMMass_box_z_max
+} "Physical coordinates of the surface on which the integral is computed"
+
+real grid_spacing_product type=SCALAR tags='checkpoint="no"' "product of cctk_delta_space, to be computed in local mode and later used in global mode (carpet problems)"

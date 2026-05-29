@@ -1,0 +1,69 @@
+# /*@@
+#   @file      checkpoint.par
+#   @date      Thu Oct 12 2000
+#   @author    Thomas Radke
+#   @desc
+#              Wavetoy parameter file
+#              demonstrating checkpointing with IOHDF5.
+#
+#              Run this parfile in conjunction with recover.par.
+#   @enddesc
+#   @version   $Id$
+# @@*/
+
+!DESC "Checkpoint Wavetoy ID in HDF5 file format"
+
+ActiveThorns = "Time WavetoyC IDScalarWaveC LocalReduce PUGH PUGHReduce PUGHSlab CoordBase CartGrid3D Boundary SymBase IOUtil IOBasic IOASCII IOHDF5Util IOHDF5"
+
+# For the testsuite the output directory must be the basename
+# of the recovery parameter file's filename
+IO::out_dir = "test_recover"
+
+# Checkpoint initial data into a single unchunked checkpoint file
+# with basename 'WavetoyID' and place it into the current directory
+IO::checkpoint_ID      = "yes"
+IO::out_unchunked      = "yes"
+IO::out_mode           = "onefile"
+IO::checkpoint_ID_file = "WavetoyID.chkpt"
+IO::checkpoint_dir     = "."
+
+# Give some verbose output while checkpointing
+IO::verbose = "standard"
+
+# Say that the checkpoint file should be created with the IOHDF5 IO method
+IOHDF5::checkpoint  = "yes"
+
+############################################################################
+# Down from here the original parameter settings from the
+# CactusWave/WaveToyC/test/test_rad.par test suite follow
+
+time::dtfac = 0.5
+
+idscalarwave::initial_data = "gaussian"
+idscalarwave::sigma        = 2.8
+idscalarwave::radius       = 5
+
+wavetoyc::bound = "radiation"
+
+grid::type = "BySpacing"
+grid::domain = "octant"
+grid::dxyz = 0.6
+
+driver::global_nsize      = 15
+#driver::initialize_memory = "NaN"
+
+cactus::cctk_itlast = 10
+
+IOBasic::outScalar_every = 1
+IOBasic::outScalar_vars  = "wavetoy::phi"
+
+IOASCII::out1D_every = 1
+IOASCII::out1D_z     = "no"
+IOASCII::out1D_y     = "no"
+IOASCII::out1D_d     = "no"
+IOASCII::out1D_vars  = "wavetoy::phi"
+
+IO::out_fileinfo = "none"
+
+# do not use the new scheme for names of output files
+IO::new_filename_scheme = "no"

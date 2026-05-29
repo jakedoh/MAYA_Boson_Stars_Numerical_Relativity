@@ -1,0 +1,18 @@
+# Parameter definitions for thorn TestComplex
+# $Header$
+
+
+REAL power_value "power of the complex number to take" STEERABLE = ALWAYS
+{
+ 0.0: :: "Some positive value"
+} 0.5
+
+REAL real_value "power of the complex number to take" STEERABLE = ALWAYS
+{
+ *:* :: "real part"
+} 3
+
+REAL imaginary_value "power of the complex number to take" STEERABLE = ALWAYS
+{
+ *:* :: "imaginary part"
+} -2

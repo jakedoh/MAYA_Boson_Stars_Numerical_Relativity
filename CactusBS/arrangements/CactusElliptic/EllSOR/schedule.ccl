@@ -1,0 +1,7 @@
+# Schedule definitions for thorn EllSOR
+# $Header$
+
+schedule EllSOR_Register at CCTK_BASEGRID
+{
+  LANG:C
+} "Register the SOR solvers"

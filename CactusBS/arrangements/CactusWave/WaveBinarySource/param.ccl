@@ -1,0 +1,32 @@
+# Parameter definitions for thorn IDBinarySourceC
+# $Header$
+
+private:
+
+KEYWORD binary_verbose "Rotating binary source verbose"
+{
+  "yes"  :: "Info on charge location/extension on first iteration"
+  "debug":: "Info on charge location/extension on all iterations"
+  "no"   :: "no output"
+} "no"
+
+REAL binary_size "Radial extension of the binary source" STEERABLE = ALWAYS
+{
+  0.0: :: "Some positive value"
+} 0.5
+
+REAL binary_omega "Frequency of the circular binary orbit" STEERABLE = ALWAYS
+{
+ 0.0: :: "Some positive value"
+} 2.0
+
+REAL binary_charge "Charge of source" STEERABLE = ALWAYS
+{
+ : :: "No restriction"
+} 0.1
+
+REAL binary_radius "Radius of the circular binary orbit" STEERABLE = ALWAYS
+{
+ 0.0: :: "Some positive value"
+} 2.0
+

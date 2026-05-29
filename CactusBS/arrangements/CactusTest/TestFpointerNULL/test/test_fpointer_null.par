@@ -1,0 +1,14 @@
+ActiveThorns = "PUGH PUGHReduce LocalReduce PUGHSlab TestFpointerNULL IOUtil IOBasic IOASCII"
+
+Cactus::cctk_itlast = 0
+
+IO::out_dir       = $parfile
+IO::out_every     = 1
+IO::out_fileinfo  = "none"
+IO::parfile_write = "no"
+
+IOBasic::outScalar_Vars = "TestFpointerNULL::scalar TestFpointerNULL::array"
+IOBasic::out_format     = ".0f"
+
+IOASCII::out2D_vars     = "TestFpointerNULL::array"
+IOASCII::out_format     = ".0f"

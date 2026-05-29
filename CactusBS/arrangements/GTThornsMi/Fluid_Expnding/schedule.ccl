@@ -1,0 +1,20 @@
+# Schedule definitions for thorn Fluid_Wind
+
+
+
+if (CCTK_Equals(initial_hydro,"fluid_wind")) 
+{
+schedule Fluid_Wind in HydroBase_Initial
+{
+  LANG:         Fortran
+  SYNC:ADMBase::metric,ADMBase::curv,ADMBase::lapse,ADMBase::shift
+  SYNC: rho
+  SYNC: press
+  SYNC: eps
+  SYNC: vel
+  SYNC: w_lorentz
+} "Initial fluid wind as initial data"
+}
+
+
+

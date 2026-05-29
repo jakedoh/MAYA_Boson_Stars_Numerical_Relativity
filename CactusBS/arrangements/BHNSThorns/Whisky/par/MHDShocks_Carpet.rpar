@@ -1,0 +1,198 @@
+#!/usr/bin/perl -W
+
+# Sim length Details
+	my $num_iterations	= 100000000;
+	my $final_time		= 2.0;
+	my $max_time		= 24*60;
+
+# Grid Details
+	my $n_cells		= 40;
+	my $cell_width		= $final_time/$n_cells;
+
+# Evolution Details
+	my $dtfac		= 0.25;
+	my $ode_meth		= "RK2";		# {RK2, RK4, ICN, ...? }
+	my $intsteps;
+	my $scr_lvls;
+	my $gsize;
+
+		if ( $ode_meth eq "RK2" ) {
+			$intsteps = 2;
+			$scr_lvls = 0;
+			$gsize = 2;
+		}
+		if ( $ode_meth eq "RK4" ) {
+			$intsteps = 4;
+			$scr_lvls = 1;
+			$gsize = 3;
+		}
+		
+
+# Physics Details
+	my $eos_kappa		= 100;
+	my $eos_gamma		= 4./3.;
+	my $id_type		= "shocktube";
+	my $shocktube_type	= "diagshock";		# {diagshock, xshock, yshock, zshock, sphere}
+	my $riemannsolve 	= "HLL";		# {Marquina, Roe, HLLE, HLL}
+	my $reconstructmeth 	= "PPM";		# {TVD, ENO, PPM}
+	my $recovermeth		= "MHD";		# {Marti, MHD}
+
+	my $do_mhd		= "yes";		# Trigger MHD
+	my $gsl_solver_type = "Newton";			# {Newton, gNewton, HybridSJ, HybridJ, HybridS, Hybrid, dNewton, Broyden}
+	my ($MC, $hydro_evo_method);
+	my $mhd_vars;
+		# MHD-specific parameters
+		if ( $do_mhd eq "yes" )
+		{
+			$id_type = "MHD_shocktube";
+                        $hydro_evo_method = "Scotch_MHD_Bvec";
+			$MC = "";
+			$mhd_vars = "HydroBase::Bvec Whisky::whisky_bfield_var";
+			$WGFEvol = 8;
+			$WGFConst = 14;
+			$WGFSandR = 16;
+			#$recovermeth = "MHD";
+		} else {
+			$id_type = "shocktube"; # Make sure
+			$mhd_vars = "";
+                        $hydro_evo_method = "Scotch_HD";
+			$MC = "#";
+			$WGFEvol = 5;
+			$WGFConst = 16;
+			$WGFSandR = 16;
+			#$recovermeth = "Marti";
+		}
+		if ( $reconstructmeth eq "PPM" ) {
+			$gsize = 3; # Make sure
+		}
+
+	my $shock_case		= "DuezMHDB"; 		# {Simple, SOD, Blast, Custom, DuezMHD[A-H]}
+
+	# Specify custom shocks here
+	my $rho_L			= 10.0;
+	my $eps_L			= 1.99; 
+	my @vel_L			= ( 0, 0, 0 );
+	my @B_L				= ( 0, 0, 0 );
+
+	my $rho_R			= 1.0;
+	my $eps_R			= 1e-6;
+	my @vel_R			= ( 0, 0, 0 );
+	my @B_R				= ( 0, 0, 0 );
+
+# Debug
+	my $with_poison		= "yes";
+	my $vlvl		= 7;
+	my $zcheck		= "no";
+
+# Output (Default is only Hydro Prims and Cons)
+	my $Ext_vars = "$mhd_vars Whisky::whisky_prim_bext Whisky::whisky_mhd_bext Whisky::whisky_con_bext Whisky::whisky_con_mhd_bext Whisky::whisky_fluxes Whisky::whisky_mhd_fluxes";
+
+################################
+## Create parameter file here ##
+################################
+
+$lines = <<EOF;
+
+ActiveThorns = "Whisky_Init_Data CoordBase SymBase Boundary NanChecker CartGrid3d Time MoL CarpetIOBasic CarpetIOScalar IOUtil Carpet CarpetLib CarpetReduce CarpetInterp CarpetSlab CarpetRegrid CarpetIOASCII ADMBase StaticConformal SphericalSurface AEILocalInterp SpaceMask Slab TimerReport Dissipation InitBase LoopControl GSL HydroBase Whisky RiemannSolver$riemannsolve Reconstruct$reconstructmeth Recover$recovermeth TmunuBase ADMCoupling ADMMacros EOS_Base EOS_IdealFluid EOS_Polytrope"
+
+
+### Grid Setup
+Driver::ghost_size			=	$gsize
+Driver::global_nx 			= 	$n_cells
+Driver::global_ny 			= 	$n_cells
+Driver::global_nz 			= 	$n_cells
+
+Grid::type 				= 	"BySpacing"
+Grid::domain 				= 	"full"
+Grid::dxyz 				= 	$cell_width
+
+Carpet::poison_new_timelevels		=	"$with_poison"
+CarpetLib::poison_new_memory		=	"$with_poison"
+
+### Spacetime Initial Data
+ADMBase::evolution_method		=	"none"
+ADMBase::initial_shift			=	"none"
+ADMBase::metric_type			= 	"physical"
+SpaceMask::use_mask = "yes"
+
+TmunuBase::stress_energy_storage	=	"yes"
+TmunuBase::stress_energy_at_RHS		=	"yes"
+HydroBase::timelevels			=	3
+HydroBase::evolution_method             =       "$hydro_evo_method"
+$MC HydroBase::initial_Bvec			=	"zero"
+
+### Matter Initial Data
+EOS_Polytrope::eos_k			=	$eos_kappa
+EOS_Polytrope::eos_gamma		=	$eos_gamma
+EOS_IdealFluid::eos_ideal_fluid_gamma	=	$eos_gamma
+Whisky_Init_Data::whisky_initial_data	=	"$id_type"
+Whisky_Init_Data::shocktube_type	=	"$shocktube_type"
+Whisky_Init_Data::shock_case		=	"$shock_case"
+
+# Custom Left State (if $id_type==Custom) 
+Whisky_Init_Data::left_rho		=	$rho_L
+Whisky_Init_Data::left_eps		=	$eps_L
+Whisky_Init_Data::left_vel[0]		=	$vel_L[0]
+Whisky_Init_Data::left_vel[1]		=	$vel_L[1]
+Whisky_Init_Data::left_vel[2]		=	$vel_L[2]
+$MC Whisky_Init_Data::left_Bvec[0]		=	$B_L[0]
+$MC Whisky_Init_Data::left_Bvec[1]		=	$B_L[1]
+$MC Whisky_Init_Data::left_Bvec[2]		=	$B_L[2]
+
+# Custom Right State (if $id_type==Custom) 
+Whisky_Init_Data::right_rho		=	$rho_R
+Whisky_Init_Data::right_vel[0]		=	$vel_R[0]
+Whisky_Init_Data::right_vel[1]		=	$vel_R[1]
+Whisky_Init_Data::right_vel[2]		=	$vel_R[2]
+Whisky_Init_Data::right_eps		=	$eps_R
+$MC Whisky_Init_Data::right_Bvec[0]	=	$B_R[0]
+$MC Whisky_Init_Data::right_Bvec[1]	=	$B_R[1]
+$MC Whisky_Init_Data::right_Bvec[2]	=	$B_R[2]
+
+### MoL Setup 
+Time::dtfac 				= 	$dtfac
+Methodoflines::ode_method 		= 	"$ode_meth"
+Methodoflines::mol_intermediate_steps	=	$intsteps
+Methodoflines::mol_num_scratch_levels	=	$scr_lvls
+
+Cactus::terminate               	= 	"any"
+Cactus::max_runtime             	= 	$max_time
+Cactus::cctk_final_time         	= 	$final_time
+Cactus::cctk_itlast             	= 	$num_iterations
+
+
+### Matter Evolution
+Whisky::riemann_solver			=	"$riemannsolve"
+Whisky::recon_method			=	"$reconstructmeth"
+Whisky::whisky_eos_type			=	"General"
+Whisky::whisky_eos_table		=	"Ideal_Fluid"
+Whisky::whisky_stencil			=	$gsize
+Whisky::bound				=	"flat"
+Whisky::Whisky_MaxNumEvolvedVars	=	$WGFEvol
+Whisky::Whisky_MaxNumConstrainedVars	=	$WGFConst
+Whisky::Whisky_MaxNumSandRVars		=	$WGFSandR
+
+$MC RecoverMHD::solver_type		=	"$gsl_solver_type"
+$MC RecoverMHD::check_zsymmetry		=	"$zcheck"
+$MC RecoverMHD::verbose			=	"$vlvl"
+
+### Output
+CarpetLib::print_memstats_every		=	8
+
+IO::out_fileinfo="none"
+IO::out_dir 				= 	\$parfile
+
+IOBasic::outInfo_every 			= 	1
+IOBasic::outInfo_vars 			= 	"HydroBase::rho"
+
+IOASCII::out1D_every 			= 	1
+IOASCII::out1D_vars 			= 	"HydroBase::rho HydroBase::press HydroBase::eps HydroBase::vel $Ext_vars" 
+
+EOF
+
+$filename = "$0";
+$filename =~ s/\.rpar/.par/g;
+
+open(OUT,">$filename");
+print OUT "$lines";
+close(OUT);

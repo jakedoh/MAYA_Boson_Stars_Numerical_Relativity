@@ -1,0 +1,27 @@
+ActiveThorns = "Boundary CoordBase CartGrid3D SymBase Time LoopControl Carpet CarpetReduce CarpetSlab CarpetLib CarpetRegrid IOUtil CarpetIOBasic IDScalarWaveC WaveToyC IOJpeg libjpeg LocalInterp HTTPD HTTPDExtra Socket"
+
+
+Cactus::cctk_run_title = "Carpet WaveToy Demo with HTTPD and live Visualization"
+Cactus::terminate      = "never"
+
+Time::dtfac = 0.5
+
+IDScalarWave::initial_data = "gaussian"
+IDScalarWave::sigma        = 2.8
+IDScalarWave::radius       = 0.0
+
+Grid::avoid_origin = "no"
+Grid::type         = "byrange"
+Grid::dxyz         = 1
+
+Driver::global_nsize = 60
+
+# Output
+IO::out_every = 1
+IO::out_dir   = "scratch"
+
+IOBasic::outInfo_vars     = "wavetoy::phi"
+
+IOJpeg::out_vars          = "wavetoy::phi"
+IOJpeg::mode              = "remove"
+IOJpeg::refinement_factor = 10

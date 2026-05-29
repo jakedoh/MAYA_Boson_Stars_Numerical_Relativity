@@ -1,0 +1,6 @@
+# Interface definition for thorn IDScalarWaveMoLC
+# $Header$
+
+implements: idwavemol
+inherits: wavemol grid
+

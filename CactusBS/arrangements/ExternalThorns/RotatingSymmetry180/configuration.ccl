@@ -1,0 +1,4 @@
+# Configuration definition for thorn RotatingSymmetry180
+# $Header$
+
+REQUIRES THORNS: Slab

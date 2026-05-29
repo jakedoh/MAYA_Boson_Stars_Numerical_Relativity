@@ -1,0 +1,18 @@
+$Header: /numrelcvs/AEIDevelopment/MultiPatchWaveToy/util/README,v 1.1 2004/09/09 22:49:36 schnetter Exp $
+
+File: analytic 
+Author: Nils Dorband
+
+perl script that was helpful to me when comparing multipatch data with
+analytic solutions.
+
+It reads x y and z coordinates from Carpet output files (like
+x.0.xz.asc for example), calculates the analytic solution at these
+coordinates and outputs it together with the coordinates.
+
+The output has the same length as the original Carpet output files, so
+one can "paste" it together with the Carpet output files to plot
+differences or similar things with gnuplot.
+
+I am thinking about making this thing more userfriendly, but probably
+there are more important things to do.

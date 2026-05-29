@@ -1,0 +1,5 @@
+# Interface definition for thorn Seed_Magnetic_Fields_Privt
+
+IMPLEMENTS: Seed_Magnetic_Fields_Privt
+
+INHERITS: grid ADMBase HydroBase # IllinoisGRMHD

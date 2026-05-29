@@ -1,0 +1,116 @@
+# Parameter definitions for thorn NullNews
+# $Header$
+
+shares: NullGrid
+
+uses int N_ang_pts_inside_eq
+uses int N_ang_ev_outside_eq
+uses int N_ang_stencil_size
+uses int N_ang_ghost_pts
+uses int N_radial_pts
+
+uses CCTK_REAL null_rwt 
+
+shares: cactus
+uses cctk_int cctk_itlast
+
+restricted:
+
+BOOLEAN linearized_news "shall we calculate only the linearized news"
+{
+} "no"
+
+private:
+
+BOOLEAN first_order_scheme "should angular derviatives be reduced to first order?" STEERABLE=ALWAYS
+{
+} "yes"
+
+BOOLEAN filter_scri_fields "filter null code fields before constructing News" STEERABLE=ALWAYS
+{
+} "no"
+
+BOOLEAN filter_omega "filter omega and comega" STEERABLE=ALWAYS
+{
+} "no"
+
+BOOLEAN filter_news "filter news (prior to intorpolation)" STEERABLE=ALWAYS
+{
+} "no"
+
+BOOLEAN write_spherical_harmonics "Write the spherical harmonics of the News to a file?"
+{
+} "no"
+
+CCTK_INT NewsSpinWeight "What weight for the News when writing the spherical harmonics?"
+{
+  0:2 :: "Small range"
+} 2 
+
+BOOLEAN DEBUG_skip_BondiNews "should the bondi news algorithm be skipped?"
+{
+} "no"
+
+BOOLEAN debug_output "Decompose also J and omega at Scri for debugging purposes" STEERABLE=ALWAYS
+{
+} "no"
+
+BOOLEAN interp_to_constant_uBondi "Interpolate quantities at Scri to constant Bondi time" STEERABLE=ALWAYS
+{ 
+} no
+
+INT max_timelevels "maximum past timelevels to use for interpolation to uBondi (depends on how drastic uBondi differs from a constant value accross the sphere)"
+{
+   1:* :: "anything >= 1"
+} 5
+
+BOOLEAN use_linearized_omega "This switch is useful when the code is operating in the linear regime"
+{ 
+} no
+
+CCTK_REAL eps_omega "dissipation for omega"
+{
+  *:* :: ""
+} 0.0
+
+CCTK_INT news_interp_order "Order for news interpolation" # STEERABLE = ALWAYS
+{
+  1:6   :: "Choose between first, second, third, and fourth-order"
+} 3
+
+CCTK_INT Jl_deriv_order "What order shall we use for the l derivative of J at scri?"
+{
+ 1:4 :: "Choose between first, second, third and fourth"
+} 2
+
+BOOLEAN mask_Psi4 "should Psi4 be masked over used points?"
+{
+} "no"
+
+BOOLEAN mask_NewsB "should NewsB be masked over used points?"
+{
+} "no"
+
+BOOLEAN Ylm_at_Scri "This switch is introduced to check convergence for the spherical decomposition"
+{
+} "no"
+
+int l_YlmScri "l in Ylm at Scri"
+{
+   0:*  :: "positive"
+} 2
+
+int m_YlmScri "m in Ylm at Scri"
+{
+   *:*  :: "must be between -l and +l"
+} 0
+
+BOOLEAN compute_lin_strain "Compute linearized strain?"
+{
+} no
+
+BOOLEAN linearized_inertial_frame "Interpolation to inertial angular coordinates is linearized"
+{
+} no
+
+

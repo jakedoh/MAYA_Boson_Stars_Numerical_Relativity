@@ -1,0 +1,7 @@
+# News and Psi4 are very sensitive to roundoff errors, possibly because each
+# timestep actually involves a full ODE solves along a ray. The differences are
+# particularly visible between the gcc generated data and data using icc -Ofast
+# -fma on Haswell machines
+RELTOL 1e-5
+## m=0 modes are very prone to exagerated roundoff level changes
+RELTOL 5e-4 ^.*Mp00\.asc

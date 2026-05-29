@@ -1,0 +1,4 @@
+implements: functionaltoolkit
+
+USES INCLUDE: FunctionalToolkit.hh
+INCLUDE HEADER: FunctionObjects.hh IN FunctionalToolkit.hh

@@ -1,0 +1,20 @@
+# Main make.code.defn file for thorn Hydra_Init_Data
+# $Header: /Whisky/Whisky_Dev/Whisky_Init_Data/src/make.code.defn,v 1.6 2004/04/28 17:30:18 hawke Exp $
+
+# Source files in this directory
+SRCS = 	Whisky_C2P2C.F90 \
+	Whisky_Con2Prim.F90 \
+	Whisky_ReconstructTest.F90 \
+	Whisky_ShockTube.F90 \
+	Whisky_MHDShockTube.F90 \
+	Whisky_Only_Atmo.F90 \
+	Whisky_ReadConformalData.F90 \
+	Whisky_SimpleWave.F90 \
+        Whisky_MonopoleM.F90 \
+        Whisky_CylindricalExplosion.F90 \
+        Whisky_MagRotor.F90 \
+        Whisky_ID_Utils.F90
+
+# Subdirectories containing source files
+SUBDIRS = 
+

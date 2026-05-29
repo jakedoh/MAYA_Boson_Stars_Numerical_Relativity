@@ -1,0 +1,11 @@
+CVS info   : $Header$
+
+Cactus Code Thorn CalcK
+Thorn Author(s)     : Erik Schnetter <schnetter@aei.mpg.de>
+Thorn Maintainer(s) : Erik Schnetter <schnetter@aei.mpg.de>
+--------------------------------------------------------------------------
+
+Purpose of the thorn:
+
+Calculate the extrinsic curvature K_ij from several time levels of the
+three-metric gamma_ij, lapse alpha, and shift beta^i.

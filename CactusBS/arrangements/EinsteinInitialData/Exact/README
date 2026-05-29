@@ -1,0 +1,97 @@
+Cactus Code Thorn Exact
+Authors    : Carsten Gundlach initially, plus many other authors.
+Maintainer : Jonathan Thornburg <jthorn@aei.mpg.de>
+CVS info   : $Header$
+--------------------------------------------------------------------------
+
+Purpose of the thorn
+====================
+
+The initial purpose of this thorn was the comparison of numerical
+spacetimes against exact solutions.  One particular solution,
+the boost-rotation-symmetric spacetimes, was the first application.
+
+Later, the thorn developed as a reservoir for a variety of exact spacetimes,
+some of them in different coordinate systems, and even some non-Einstein
+spcetimes.  All of these exact spacetimes have been found useful for
+testing different aspect of the code.  Since mamy different people have
+contributed to this thorn by adding new exact solutions, you should expect
+many different styles of coding here.
+
+For more details see the comments in the param.ccl file, and the
+documentation in the directory doc.  For instructions on how to add
+a new model, see doc/how_to_add_a_new_model.
+
+Note that the June 2002 revisions to this thorn included renaming
+most of the parameters.  The perl script  par/convert-par.pl  will
+convert old parameter files to use the new names, renaming the old
+parameter files to ".par.bak" as backups.
+
+
+Compilation
+===========
+
+On some systems (notably the AEI Xeons using the Intel compilers) this
+thorn only compiles if you use the Cactus (perl) preprocessor, i.e. you
+need to configure with
+   gmake foo-config CPP='$${PERL} $${CCTK_HOME}/lib/sbin/cpp.pl'
+(along with any other configuration options), or put the line
+      CPP=$${PERL} $${CCTK_HOME}/lib/sbin/cpp.pl
+in your ~/.cactus/config or other Cactus options file.
+
+[Note by Erik Schnetter, 2005-05-15: The adivce above is outdated and
+incorrect.  This issue is also treated in the Cactus FAQ.  Read it for
+more information.]
+
+This thorn is mostly written in Fortran 77, with a few files in C
+and Fortran 90.  At present Fortran 90 is only used for the "arbitrary slice"
+option (see the thorn guide for details).  If this option isn't needed,
+then by changing a single line in  src/include/Exact.inc  (see the comments
+there for details) you can #ifdef-out the Fortran 90 code, allowing the
+rest of this thorn to be compiled on a system with no Fortran 90 compiler
+available.
+
+
+Copyright
+=========
+
+As noted above, this code has been hacked on by many different people,
+so its' copyright and licensing status is somewhat unclear.
+
+Here is a (incomplete) list of authors and their wishes:
+
+----------------------------------------
+
+Many of the individual metrics (you can find them by grepping in the
+   header comments in the  src/metrics/  directory) are
+   copyright (C) 2000-2003 by Dumitru "Mitica" Vulcanov <vulcan@aei.mpg.de>
+
+This code is under the same "GPL with exceptions for other thorns"
+license as the Cactus flesh; see the file CACTUS.COPYRIGHT in this
+directory for details.
+
+----------------------------------------
+
+The new code added in the June 2002 revisions to this thorn
+   is copyright (C) 2001-2002 by Jonathan Thornburg <jthorn@aei.mpg.de>
+Minkowski_conf_wave and the conformal factor code added in January 2003
+   is copyright (C) 2003 by Frank Loeffler <frank.loeffler@aei.mpg.de>
+Option to boost any non-stress-energy-tensor model
+   is copyright (C) 2003 by Jonathan Thornburg <jthorn@aei.mpg.de>
+
+This code is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This code is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this thorn (see the file COPYING in this directory);
+if not, write to the Free Software Foundation, Inc., 59 Temple
+Place, Suite 330, Boston, MA  02111-1307  USA
+
+------------------------------------------

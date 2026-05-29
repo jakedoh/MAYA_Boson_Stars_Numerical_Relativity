@@ -1,0 +1,8 @@
+# Main make.code.defn file for thorn ReconstructENO
+# $Header:$
+
+# Source files in this directory
+SRCS = ENO_ParamCheck.F90 ENO_Reconstruct.F90 ENO_Polytype.F90 ENO.F90  ENO_Scalars.F90
+
+# Subdirectories containing source files
+SUBDIRS = 

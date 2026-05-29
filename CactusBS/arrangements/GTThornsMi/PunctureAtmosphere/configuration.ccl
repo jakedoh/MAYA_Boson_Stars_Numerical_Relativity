@@ -1,0 +1,4 @@
+# Configuration definitions for thorn PunctureAtmosphere
+
+
+REQUIRES THORNS: Boundary CartGrid3D SpaceMask

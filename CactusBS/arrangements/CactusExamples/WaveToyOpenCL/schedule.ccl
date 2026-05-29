@@ -1,0 +1,27 @@
+# Schedule definitions for thorn WaveToyOpenCL
+
+STORAGE: Scalar[3]
+
+SCHEDULE WaveToyOpenCL_Init AT initial
+{
+  LANG:   C
+  TAGS:   Device=1
+  WRITES: WaveToyOpenCL::Scalar
+} "Initialise scalar wave"
+
+SCHEDULE WaveToyOpenCL_Evol AT evol
+{
+  LANG:   C
+  TAGS:   Device=1
+  #READS:  WaveToyOpenCL::Scalar
+  WRITES: WaveToyOpenCL::Scalar
+} "Evolve scalar wave"
+
+SCHEDULE WaveToyOpenCL_Boundary AT evol AFTER WaveToyOpenCL_Evol
+{
+  LANG:   C
+  TAGS:   Device=1
+  READS:  WaveToyOpenCL::Scalar
+  WRITES: WaveToyOpenCL::Scalar
+  SYNC:   Scalar
+} "Boundary conditions for scalar wave"

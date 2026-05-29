@@ -1,0 +1,59 @@
+#################################################################
+# Extract.par:   Extracts from Schwarzschild Black Hole
+#################################################################
+
+ActiveThorns = "boundary localreduce pugh pughslab pughreduce adm admbase admmacros staticconformal coordgauge ioutil iobasic localinterp CartGrid3D CoordBase SymBase time pughinterp extract idanalyticbh"
+
+IO::out_dir = "Extract"
+driver::global_nx = 30
+driver::global_ny = 30
+driver::global_nz = 30
+
+grid::domain      = "octant"
+grid::type        = "bySpacing"
+grid::dxyz  	= 0.3
+
+time::dtfac         	= 0.2  
+
+admbase::evolution_method = "ADM"
+admbase::lapse_evolution_method = "geodesic"
+admbase::metric_type = "static conformal"
+
+cactus::cctk_itlast          = 10   
+
+admbase::initial_data = "schwarzschild" 
+
+### Extraction parameters
+
+extract::interpolation_order = 2
+
+extract::num_detectors = 2
+extract::itout         = 1
+
+extract::Nt        = 150
+extract::Np        = 150
+extract::origin_x  = 0.
+extract::origin_y  = 0.
+extract::origin_z  = 0.
+
+extract::all_modes  = "no"
+extract::l_mode     = 2
+extract::m_mode     = 0 
+extract::detector1 = 5.0
+extract::detector2 = 6.0
+
+
+### Sample Output (on Origin)
+#
+#
+# Qeven_R1_20
+#
+#    0.000000000000000      5.3832644668692326E-05   0.000000000000000    
+#   5.9999999999999998E-02  5.3847884014513530E-05   0.000000000000000    
+#   0.1200000000000000      5.3893621456197952E-05   0.000000000000000    
+#
+# mass_R1
+#
+#    0.000000000000000      0.9999777739365948    
+#   5.9999999999999998E-02  0.9999698763645316    
+#   0.1200000000000000      0.9999461867852573    

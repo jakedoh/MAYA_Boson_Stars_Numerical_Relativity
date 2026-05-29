@@ -1,0 +1,61 @@
+# Parameter definitions for thorn ReflectionSymmetry
+
+BOOLEAN verbose "Produce screen output while applying boundary conditions"
+{
+} "no"
+
+
+
+BOOLEAN reflection_x "Reflection symmetry at the lower x boundary"
+{
+} "no"
+
+BOOLEAN reflection_y "Reflection symmetry at the lower y boundary"
+{
+} "no"
+
+BOOLEAN reflection_z "Reflection symmetry at the lower z boundary"
+{
+} "no"
+
+
+
+BOOLEAN reflection_upper_x "Reflection symmetry at the upper x boundary"
+{
+} "no"
+
+BOOLEAN reflection_upper_y "Reflection symmetry at the upper y boundary"
+{
+} "no"
+
+BOOLEAN reflection_upper_z "Reflection symmetry at the upper z boundary"
+{
+} "no"
+
+
+
+BOOLEAN avoid_origin_x "Stagger about the origin on the lower x boundary?"
+{
+} "yes"
+
+BOOLEAN avoid_origin_y "Stagger about the origin on the lower y boundary?"
+{
+} "yes"
+
+BOOLEAN avoid_origin_z "Stagger about the origin on the lower z boundary?"
+{
+} "yes"
+
+
+
+BOOLEAN avoid_origin_upper_x "Stagger about the origin on the upper x boundary?"
+{
+} "yes"
+
+BOOLEAN avoid_origin_upper_y "Stagger about the origin on the upper y boundary?"
+{
+} "yes"
+
+BOOLEAN avoid_origin_upper_z "Stagger about the origin on the upper z boundary?"
+{
+} "yes"

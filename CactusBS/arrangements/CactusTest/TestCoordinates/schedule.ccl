@@ -1,0 +1,19 @@
+# Schedule definitions for thorn Coordinates
+# $Header$
+
+STORAGE: cartesian, spherical
+
+schedule Coordinates_Startup at STARTUP
+{
+  LANG: Fortran
+} "Register coordinates"
+
+schedule Coordinates_Setup at BASEGRID
+{
+  LANG: Fortran
+} "Set up coordinates"
+
+schedule Coordinates_Query at EVOL
+{
+  LANG: Fortran
+} "Query coordinates"

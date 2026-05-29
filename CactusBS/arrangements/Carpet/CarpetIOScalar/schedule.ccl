@@ -1,0 +1,18 @@
+# Schedule definitions for thorn CarpetIOScalar
+
+storage: last_output_iteration last_output_time this_iteration
+
+schedule CarpetIOScalarStartup at STARTUP after IOUtil_Startup
+{
+  LANG: C
+  OPTIONS: global
+} "Startup routine"
+
+schedule CarpetIOScalarInit at INITIAL
+{
+  LANG: C
+  OPTIONS: global
+  WRITES: CarpetIOScalar::last_output_iteration
+  WRITES: CarpetIOScalar::last_output_time
+  WRITES: CarpetIOScalar::this_iteration
+} "Initialisation routine"

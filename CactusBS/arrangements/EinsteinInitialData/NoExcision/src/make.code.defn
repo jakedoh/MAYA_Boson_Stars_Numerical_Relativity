@@ -1,0 +1,8 @@
+# Main make.code.defn file for thorn NoExcision
+# $Header$
+
+# Source files in this directory
+SRCS = NoExcision_mod.F90 overwrite.F90 smooth.F90 reduce.F90 reduce.c getlevelinfo.cc copy_mask.cc cg.F90
+
+# Subdirectories containing source files
+SUBDIRS = 

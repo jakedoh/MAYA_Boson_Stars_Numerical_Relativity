@@ -1,0 +1,38 @@
+# Parameter definitions for thorn NullPsiInt
+# $Header:$
+
+shares: NullGrid
+
+uses int N_ang_pts_inside_eq
+uses int N_ang_ev_outside_eq
+uses int N_ang_stencil_size
+uses int N_ang_ghost_pts
+uses int N_radial_pts
+
+
+shares: MethodOfLines
+uses cctk_int MoL_Num_ArrayEvolved_Vars
+uses cctk_int MoL_Max_Evolved_Array_Size
+
+restricted:
+
+cctk_int  NullPsiInt_NumArrayEvolvedVars "The maximum number of evolved grid arrays used by NullPsiInt" ACCUMULATOR-BASE=MethodOfLines::MoL_Num_ArrayEvolved_Vars
+{
+  4:4          :: "Is is the real and imaginary part of the RHS (Psi) and the News obtained by integrating Psi"
+} 4
+
+cctk_int NullPsiInt_MaxEvolvedArraySize "The maximum size of evolved grid arrays used by NullPsiInt" ACCUMULATOR-BASE=MethodOfLines::MoL_Max_Evolved_Array_Size
+{
+  1:*           :: "The size of the generator grid arrays"
+} 1
+
+
+private:
+
+keyword mask_type "type of mask for error in J"
+{
+  "none"		:: "no mask"
+  "EG_mask"		:: "mask all the active points"
+  "EV_mask"		:: "mask only the evolution points"
+  "EQ_mask"		:: "mask only the equator points"
+} "none"

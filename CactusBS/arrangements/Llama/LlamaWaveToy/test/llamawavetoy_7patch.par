@@ -1,0 +1,109 @@
+
+# Based on par/Kerr-Schild_Multipole.par
+
+ActiveThorns = "InitBase"
+ActiveThorns = "LocalInterp AEILocalInterp"
+ActiveThorns = "Slab"
+ActiveThorns = "IOUtil"
+ActiveThorns = "Carpet CarpetLib CarpetInterp2 CarpetReduce LoopControl"
+ActiveThorns = "Boundary CartGrid3D CoordBase SymBase"
+ActiveThorns = "Time MoL"
+ActiveThorns = "Coordinates Interpolate2"
+ActiveThorns = "LlamaWaveToy SummationByParts GlobalDerivative"
+ActiveThorns = "CarpetIOBasic CarpetIOScalar CarpetIOASCII CarpetIOHDF5"
+
+Cactus::terminate                    = "time"
+Cactus::cctk_final_time              = 0.36
+
+################### Time Integration ###################
+Time::timestep_method                = "given"
+Time::timestep                       = 0.09
+
+MoL::ODE_Method                      = "Generic"
+MoL::Generic_Type                    = "RK"
+MoL::MoL_Intermediate_Steps          = 4
+MoL::MoL_Num_Scratch_Levels          = 3
+
+###################### Grid Setup ######################
+Carpet::domain_from_multipatch       = yes
+CartGrid3D::type                     = "multipatch"
+CartGrid3D::set_coordinate_ranges_on = "all maps"
+
+Driver::ghost_size                   = 1
+
+Coordinates::coordinate_system       = "Thornburg04"
+Coordinates::h_radial                = 0.1
+Coordinates::h_cartesian             = 0.1
+Coordinates::sphere_inner_radius     = 1.8
+Coordinates::sphere_outer_radius     = 4
+Coordinates::n_angular               = 20
+
+#################### Outer Boundary ####################
+Coordinates::outer_boundary_size     = 1
+LlamaWaveToy::outer_bound            = "radiative"
+
+################## Interpatch Boundary #################
+Coordinates::patch_boundary_size     = 2
+Coordinates::additional_overlap_size = 2
+Interpolate2::interpolator_order     = 4
+Interpolate2::continue_if_selftest_fails = no
+
+##################### Initial Data #####################
+LlamaWaveToy::metric                 = "Minkowski"
+LlamaWaveToy::initial_data           =  "multipole l=2, m=2"
+LlamaWaveToy::radius                 =  3
+LlamaWaveToy::amplitude              =  1.0
+LlamaWaveToy::width                  =  1.0
+LlamaWaveToy::compute_second_derivative_from_first_derivative = no
+LlamaWaveToy::initial_data_analytic_derivatives               = yes
+
+######## Summation By Parts Finite Differecing #########
+SummationByParts::order                          = 2
+SummationByParts::use_dissipation                = no
+SummationByParts::onesided_interpatch_boundaries = no
+SummationByParts::onesided_outer_boundaries      = yes
+SummationByParts::sbp_upwind_deriv                   = yes
+SummationByParts::sbp_1st_deriv                      = yes
+SummationByParts::sbp_2nd_deriv                      = yes
+
+######################## Output ########################
+IO::out_dir                             = $parfile
+
+IO::out_fileinfo              = "none"
+IO::parfile_write             = "no"
+
+IOASCII::out_precision        = 17
+
+# IOASCII::out3D_every          = 4
+# IOASCII::out3D_vars           = "LlamaWaveToy::u"
+
+IOASCII::out1D_every          = 4
+IOASCII::out1D_x              = yes
+IOASCII::out1D_xline_z        = 1.8
+IOASCII::out1D_y              = yes
+IOASCII::out1D_yline_z        = 1.8
+IOASCII::out1D_z              = yes
+IOASCII::out1D_d              = no
+IOASCII::out1D_vars           = "LlamaWaveToy::u"
+
+# IOASCII::out2D_every          = 4
+# IOASCII::out2D_xy             = yes
+# IOASCII::out2D_xyplane_z      = 1.8
+# IOASCII::out2D_yz             = no
+# IOASCII::out2D_xz             = no
+# IOASCII::out2D_vars           = "LlamaWaveToy::u"
+
+IOBasic::outInfo_every                  = 1
+IOBasic::outInfo_vars                   = "
+                                          LlamaWaveToy::u
+                                          "
+CarpetIOASCII::compact_format = yes
+CarpetIOASCII::output_ghost_points = no
+
+# IOHDF5::one_file_per_group = no
+
+# IOHDF5::out_every                       = 1
+# IOHDF5::out_vars                        = "
+#                                           Grid::coordinates{out_every=100000}
+#                                           LlamaWaveToy::scalar
+#                                           "

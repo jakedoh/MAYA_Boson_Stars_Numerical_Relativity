@@ -1,0 +1,240 @@
+# Parameter definitions for thorn LlamaWaveToy
+
+
+
+STRING rhsbound "Boundary condition during RHS evaluation"
+{
+  ".*" :: "any registered boundary condition"
+} "none"
+
+STRING bound "Boundary condition"
+{
+  ".*" :: "any registered boundary condition"
+} "static"
+
+STRING outer_penalty_bound "outer penalty boundary"
+{
+  "zero"     :: "set all characteristics to zero"
+  "solution" :: "use the same analytic solution as for the initial data"
+} "zero"
+
+STRING outer_bound "outer boundary"
+{
+  "zero"      :: "set all characteristics to zero"
+  "solution"  :: "use the same analytic solution as for the initial data"
+  "dirichlet" :: "set all fields to zero"
+  "radiative" :: "radiative boundary"
+  "none"      :: "no boundary condition"
+} "solution"
+
+
+
+KEYWORD metric "Global metric"
+{
+  "Minkowski"   :: "Minkowski"
+  "Kerr-Schild" :: "Kerr-Schild"
+  "Kerr" :: "Kerr Black Hole"
+} "Minkowski"
+
+REAL mass "Mass M"
+{
+  *:* :: ""
+} 1.0
+
+REAL spin "Spin a=J/M^2"
+{
+  -1:+1 :: ""
+} 0.0
+
+REAL lapse "Lapse function multiplier"
+{
+  *:* :: "must not be zero"
+} 1.0
+
+REAL shift[3] "Shift vector addition"
+{
+  *:* :: ""
+} 0.0
+
+REAL shift_omega "Rotational shift vector addition about z axis"
+{
+  *:* :: ""
+} 0.0
+
+
+
+KEYWORD initial_data "Type of initial data"
+{
+  "linear"             :: "x and y coordinates"
+  "plane"              :: "Plane wave"
+  "Gaussian"           :: "Gaussian wave packet"
+  "GaussianNonLinear"  :: "Gaussian wave packet for the non-linear RHS"
+  "GeneralMultipole"   :: "Multipole with arbitrary l and m"
+  "multipole"          :: "L=1 initial data, Gaussian in r"
+  "multipole l=1, m=0" :: "L=1 m=0 initial data, Gaussian in r, u=0"
+  "multipole l=1, m=1" :: "L=1 m=1 initial data, Gaussian in r, u=0"
+  "multipole l=1, m=-1" :: "L=1 m=-1 initial data, Gaussian in r, u=0"
+  "multipole l=2"      :: "L=2 initial data, Gaussian in r"
+  "multipole l=2, u=0" :: "L=2 initial data, Gaussian in r, u=0"
+  "multipole l=2, m=1" :: "L=2 m=1 initial data, Gaussian in r, u=0"
+  "multipole l=2, m=-1" :: "L=2 m=-1 initial data, Gaussian in r, u=0"
+  "multipole l=2, m=2" :: "L=2 m=2 initial data, Gaussian in r, u=0"
+  "multipole l=2, m=-2" :: "L=2 m=-2 initial data, Gaussian in r, u=0"
+  "multipole l=2, m=-2" :: "L=2 m=-2 initial data, Gaussian in r, u=0"
+  "multipole l=4, m=0" :: "L=4 m=0 initial data, Gaussian in r, u=0"
+  "multipole l=4, m=1" :: "L=4 m=1 initial data, Gaussian in r, u=0"
+  "multipole l=4, m=-1" :: "L=4 m=-1 initial data, Gaussian in r, u=0"
+  "multipole l=4, m=2" :: "L=4 m=-2 initial data, Gaussian in r, u=0"
+  "multipole l=4, m=-2" :: "L=4 m=-2 initial data, Gaussian in r, u=0"
+  "multipole l=4, m=3" :: "L=4 m=3 initial data, Gaussian in r, u=0"
+  "multipole l=4, m=-3" :: "L=4 m=-3 initial data, Gaussian in r, u=0"
+  "multipole l=4, m=4" :: "L=4 m=4 initial data, Gaussian in r, u=0"
+  "multipole l=4, m=-4" :: "L=4 m=-4 initial data, Gaussian in r, u=0"
+  "noise"              :: "Random noise"
+  "debug"              :: "number of current patch and grid point index"
+} "plane"
+
+BOOLEAN initial_data_analytic_derivatives "Calculate spatial derivatives of the initial data analytically?"
+{
+} "no"
+
+
+
+REAL eps "A small number"
+{
+  0:* :: ""
+} 1.0e-10
+
+
+
+REAL amplitude "Amplitude"
+{
+  *:* :: ""
+} 1.0
+
+
+
+REAL width "Width of the Gaussian"
+{
+  (0:* :: ""
+} 1.0
+
+REAL radius "Radius of the Gaussian"
+{
+  0:* :: ""
+} 0.0
+
+INT multipole_l "For GeneralMultipole initial data: degree of spherical harmonic function"
+{
+  0:* :: "A positive integer"
+} 2
+
+INT multipole_m "For GeneralMultipole initial data: order of spherical harmonic function"
+{
+  *:* :: "An integer -l<=m<=l"
+} 2
+
+INT multipole_s "For GeneralMultipole initial data: spin weight spherical harmonic function"
+{
+  *:* :: "A positive integer"
+} 0
+
+REAL wave_number[3] "Wave number"
+{
+  *:* :: ""
+} 0.0
+
+REAL space_offset[3] "Space offset"
+{
+  *:* :: ""
+} 0.0
+
+REAL time_offset "Time offset"
+{
+  *:* :: ""
+} 0.0
+
+
+
+REAL epsx "eps in x-direction of the non-linear Gaussian"
+{
+  *:* :: ""
+} 0.0
+
+REAL epsy "eps in y-direction of the non-linear Gaussian"
+{
+  *:* :: ""
+} 0.0
+
+REAL RNL "How fat the non-linear Gaussian is (r-R)"
+{
+  *:* :: ""
+} 0.0
+
+REAL ANL "Amplitude of the non-linear Gaussian"
+{
+  *:* :: ""
+} 0.0
+
+REAL deltaNL "sigma of the non-linear Gaussian"
+{
+  *:* :: ""
+} 0.0
+
+REAL muNL "Speed of the non-linear Gaussian"
+{
+  *:* :: ""
+} 0.0
+
+REAL omeNL "Omega of the non-linear Gaussian"
+{
+  *:* :: ""
+} 0.0
+
+
+
+# KEYWORD formulation "Formulation of the wave equation"
+# {
+#   "dt" :: "rho = d_t u"
+# } "dt"
+
+KEYWORD shift_interpolation_type "Setting for the interpolating vector field b^i (only used for the db formulation)"
+{
+  "shift" :: "Set b^i = beta^i (corresponds to d0 formulation)"
+  "zero"  :: "Set b^i = 0 (corresponds to dk formulation)"
+} "shift"
+
+
+
+BOOLEAN nonlinearrhs "Add a non-linear term to the RHS?"
+{
+} "no"
+
+REAL powerrhs "Exponent in the non-linear RHS term"
+{
+  3.0:13.0 :: ""
+} 5.0
+
+BOOLEAN compute_second_derivative_from_first_derivative "Take first derivative twice to compute second derivate"
+{
+} "no"
+
+SHARES: Coordinates
+
+uses keyword coordinate_system
+
+SHARES: MethodOfLines
+
+USES INT MoL_Num_Evolved_Vars
+
+PRIVATE:
+
+INT NumEvolvedVars "The number of evolved variables in this thorn" ACCUMULATOR-BASE=MethodOfLines::MoL_Num_Evolved_Vars
+{
+  5:5 :: "five"
+} 5
+
+
+BOOLEAN recalculate_rhs "Recalculate the RHSs in the ANALYSIS timebin"
+{
+} "yes"

@@ -1,0 +1,91 @@
+with(linalg):
+
+x:=array([r,q,p,u]);
+g:=matrix(4,4);
+h:=matrix(4,4);
+
+J:=array(0..4); Jb:=array(0..4); K:=array(0..4); B:=array(0..4);
+U:=array(0..4); Ub:=array(0..4); Vw:=array(0..4);
+
+g:=matrix([
+   [0,0,0,-exp(2*bns)],
+   [0,r^2*hqq,r^2*hqp,-r^2*(hqq*unsq+hqp*unsp)],
+   [0,r^2*hqp,r^2*hpp,-r^2*(hpp*unsp+hqp*unsq)],
+   [-exp(2*bns),-r^2*(hqq*unsq+hqp*unsp),-r^2*(hpp*unsp+hqp*unsq),
+	-(exp(2*bns)*vns-r^2*(hqq*unsq^2+2*hqp*unsq*unsp+hpp*unsp^2))]
+  ]);
+
+h:=inverse(g);
+df:=16/f^4;
+
+h[2,2]:=hpp/(r^2*df);
+h[3,2]:=-hqp/(r^2*df);h[2,3]:=h[3,2];
+h[3,3]:=hqq/(r^2*df);
+
+pr1:=proc(xns,X,s)
+     xns:=X[0]+(r-ro)*X[1]+u*X[4]+q*(X[3]+X[2]-s*I*fp*X[0])/fo
+	  +p*(X[3]-X[2]+s*fq*X[0])*I/fo:
+end;
+
+f:=fo+q*fq+p*fp;
+
+pr1(jns,J,2);
+pr1(jbns,Jb,-2);
+pr1(bns,B,0);
+pr1(kns,K,0);
+pr1(uns,U,1);
+pr1(ubns,Ub,-1);
+pr1(vns,Vw,0);
+
+#f:= 1+p^2+q^2;
+hqq:=2/f^2*(2*kns+(jns+jbns));
+hpp:=2/f^2*(2*kns-(jns+jbns));
+hqp:=2/f^2*I*(jbns-jns);
+unsq:=f*(uns+ubns)/4;
+unsp:=I*f*(ubns-uns)/4;
+
+dfg:=array(1..4,1..4,1..4);
+C:=array(1..4,1..4,1..4);
+Csum:=array(1..4);
+
+for a to 4 do for b to 4 do for c to 4 do
+   dfg[a,b,c]:=diff(g[a,b],x[c])
+od od od;
+
+for d to 4 do for e to 4 do for j to 4 do
+   C[d,e,j]:=(sum(h[j,k]*(dfg[d,k,e]+dfg[e,k,d]-dfg[d,e,k])/2,k=1..4))
+od od od;
+
+ro:=r;u:=0;q:=0;p:=0;
+
+for d3 to 4 do for e3 from d3 to 4 do for j3 to 4 do
+   C[d3,e3,j3]:=simplify(C[d3,e3,j3]);
+   C[e3,d3,j3]:=C[d3,e3,j3];
+   print(d3,e3,j3);
+od; od; od;
+
+`Gamma simplified`;
+
+for d4 to 4 do
+  Csum[d4]:=simplify(sum(C[d4,e4,e4],e4=1..4)):
+od;
+
+writeto(`t2.out`);
+
+for d2 to 4 do for e2 to 4 do
+  g[d2,e2]:=simplify(g[d2,e2]);
+  h[d2,e2]:=simplify(h[d2,e2]);
+  lprint(`g[`,d2,`,`,e2,`]:=`,g[d2,e2],`:`);
+  lprint(`h[`,d2,`,`,e2,`]:=`,h[d2,e2],`:`);
+od; od;
+
+for d5 to 4 do
+  lprint(`Csum[`,d5,`]:=`,Csum[d5],`:`);
+od;
+
+for d1 to 4 do for e1 to 4 do for j1 to 4 do
+   lprint(`C[`,d1,`,`,e1,`,`,j1,`]:=`,C[d1,e1,j1],`:`);
+od od od;
+
+writeto(terminal);
+FIN;

@@ -1,0 +1,15 @@
+# Schedule definitions for thorn SoundSpeed
+# $Header:$
+
+STORAGE: SoundSpeed[1]
+STORAGE: MachNum[1]
+
+schedule soundspeed_init at CCTK_INITIAL
+{
+  lang: C
+} "Initiate SoundSpeed GFs"
+
+schedule recalc_soundspeed at CCTK_ANALYSIS
+{
+  lang: C
+} "Recalculate speed of sound for Output and Analysis"

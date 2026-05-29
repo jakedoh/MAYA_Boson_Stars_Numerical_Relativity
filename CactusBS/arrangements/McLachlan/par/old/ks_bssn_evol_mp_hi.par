@@ -1,0 +1,309 @@
+ActiveThorns = "
+        Boundary
+        CartGrid3D
+        CoordBase
+        IOUtil
+        InitBase
+        MoL
+        SymBase
+	Time
+
+        Coordinates
+        Interpolate
+
+        ADMBase
+        ADMCoupling
+        ADMMacros
+        CoordGauge
+        SpaceMask
+        StaticConformal
+
+        NaNChecker
+
+        Carpet
+        CarpetIOASCII
+        CarpetIOBasic
+        CarpetIOScalar
+        CarpetInterp
+        CarpetLib
+        CarpetReduce
+	CarpetRegrid2
+        LoopControl
+
+        AEILocalInterp
+        AHFinderDirect
+	Dissipation
+        Exact
+        Formaline
+        GSL
+	SphericalSurface
+
+        Slab
+
+        GenericFD
+
+        ML_BSSN_MP_O2
+        ML_BSSN_MP_O2_Helper
+	TmunuBase
+"
+
+# output
+
+IO::out_dir = $parfile
+
+IOBasic::outInfo_every = 1
+IOBasic::outInfo_vars = "
+        ML_BSSN_MP_O2::H
+        ML_BSSN_MP_O2::trKrhs
+"
+
+IOScalar::one_file_per_group = yes
+IOScalar::outScalar_every    = 64
+IOScalar::outScalar_vars     = "
+        grid::coordinates
+        ADMBase::metric
+        ADMBase::curv
+        ADMBase::lapse
+        ADMBase::shift
+        ML_BSSN_MP_O2::ML_Ham
+        ML_BSSN_MP_O2::ML_mom
+        ML_BSSN_MP_O2::ML_cons_detg
+        ML_BSSN_MP_O2::ML_cons_Gamma
+        ML_BSSN_MP_O2::ML_cons_traceA
+        ML_BSSN_MP_O2::ML_log_confac
+        ML_BSSN_MP_O2::ML_metric
+        ML_BSSN_MP_O2::ML_trace_curv
+        ML_BSSN_MP_O2::ML_curv
+        ML_BSSN_MP_O2::ML_Gamma
+        ML_BSSN_MP_O2::ML_lapse
+        ML_BSSN_MP_O2::ML_dtlapse
+        ML_BSSN_MP_O2::ML_shift
+        ML_BSSN_MP_O2::ML_dtshift
+        ML_BSSN_MP_O2::ML_log_confacrhs
+        ML_BSSN_MP_O2::ML_metricrhs
+        ML_BSSN_MP_O2::ML_Gammarhs
+        ML_BSSN_MP_O2::ML_trace_curvrhs
+        ML_BSSN_MP_O2::ML_curvrhs
+        ML_BSSN_MP_O2::ML_curvrhs
+        ML_BSSN_MP_O2::ML_lapserhs
+        ML_BSSN_MP_O2::ML_dtlapserhs
+        ML_BSSN_MP_O2::ML_shiftrhs
+        ML_BSSN_MP_O2::ML_dtshiftrhs
+"
+
+IOASCII::one_file_per_group = yes
+IOASCII::out0D_every        = 64
+IOASCII::out0D_vars         = "
+"
+
+IOASCII::out1D_every        = 64
+IOASCII::out1D_vars         = "
+        grid::coordinates
+        ADMBase::metric
+        ADMBase::curv
+        ADMBase::lapse
+        ADMBase::shift
+        ML_BSSN_MP_O2::ML_Ham
+        ML_BSSN_MP_O2::ML_mom
+        ML_BSSN_MP_O2::ML_cons_detg
+        ML_BSSN_MP_O2::ML_cons_Gamma
+        ML_BSSN_MP_O2::ML_cons_traceA
+        ML_BSSN_MP_O2::ML_log_confac
+        ML_BSSN_MP_O2::ML_metric
+        ML_BSSN_MP_O2::ML_trace_curv
+        ML_BSSN_MP_O2::ML_curv
+        ML_BSSN_MP_O2::ML_Gamma
+        ML_BSSN_MP_O2::ML_lapse
+        ML_BSSN_MP_O2::ML_dtlapse
+        ML_BSSN_MP_O2::ML_shift
+        ML_BSSN_MP_O2::ML_dtshift
+        ML_BSSN_MP_O2::ML_log_confacrhs
+        ML_BSSN_MP_O2::ML_metricrhs
+        ML_BSSN_MP_O2::ML_Gammarhs
+        ML_BSSN_MP_O2::ML_trace_curvrhs
+        ML_BSSN_MP_O2::ML_curvrhs
+        ML_BSSN_MP_O2::ML_curvrhs
+        ML_BSSN_MP_O2::ML_lapserhs
+        ML_BSSN_MP_O2::ML_dtlapserhs
+        ML_BSSN_MP_O2::ML_shiftrhs
+        ML_BSSN_MP_O2::ML_dtshiftrhs
+"
+
+IOASCII::out2D_every        = 64
+IOASCII::out2D_vars         = "
+        grid::coordinates
+        ADMBase::metric
+        ADMBase::curv
+        ADMBase::lapse
+        ADMBase::shift
+        ML_BSSN_MP_O2::ML_Ham
+        ML_BSSN_MP_O2::ML_mom
+        ML_BSSN_MP_O2::ML_cons_detg
+        ML_BSSN_MP_O2::ML_cons_Gamma
+        ML_BSSN_MP_O2::ML_cons_traceA
+        ML_BSSN_MP_O2::ML_log_confac
+        ML_BSSN_MP_O2::ML_metric
+        ML_BSSN_MP_O2::ML_trace_curv
+        ML_BSSN_MP_O2::ML_curv
+        ML_BSSN_MP_O2::ML_Gamma
+        ML_BSSN_MP_O2::ML_lapse
+        ML_BSSN_MP_O2::ML_dtlapse
+        ML_BSSN_MP_O2::ML_shift
+        ML_BSSN_MP_O2::ML_dtshift
+        ML_BSSN_MP_O2::ML_log_confacrhs
+        ML_BSSN_MP_O2::ML_metricrhs
+        ML_BSSN_MP_O2::ML_Gammarhs
+        ML_BSSN_MP_O2::ML_trace_curvrhs
+        ML_BSSN_MP_O2::ML_curvrhs
+        ML_BSSN_MP_O2::ML_curvrhs
+        ML_BSSN_MP_O2::ML_lapserhs
+        ML_BSSN_MP_O2::ML_dtlapserhs
+        ML_BSSN_MP_O2::ML_shiftrhs
+        ML_BSSN_MP_O2::ML_dtshiftrhs
+"
+
+
+#--- driver
+
+Carpet::init_fill_timelevels = yes
+
+Cactus::cctk_itlast = 0 # 1024
+Carpet::use_buffer_zones      = yes
+Carpet::use_tapered_grids     = yes
+
+CarpetLib::print_memstats_every      = 1024
+CarpetLib::print_timestats_every     = 1024
+Carpet::output_timers_every          = 1024
+Carpet::print_timestats_every        = 1024
+
+carpet::verbose = yes
+carpet::veryverbose = no
+
+#--- Carpet prolongation order settings
+
+Carpet::prolongation_order_space                = 3 # 5
+Carpet::prolongation_order_time                 = 1
+
+
+
+# MoL time integration
+
+MoL::ODE_Method             = "RK4"
+MoL::MoL_Intermediate_Steps = 4
+MoL::MoL_Num_Scratch_Levels = 1
+
+Time::timestep_method = "given"
+Time::timestep        = 0.05
+
+#--- grid
+
+driver::ghost_size            = 2 # 3
+grid::type = "MultiPatch"
+
+Coordinates::coordinate_system          = "Thornburg04"
+Coordinates::h_cartesian                = 0.1
+Coordinates::h_radial                   = 0.1
+Coordinates::sphere_inner_radius        = 2.0
+Coordinates::sphere_outer_radius        = 5.0
+Coordinates::n_angular                  = 21
+
+Coordinates::patch_boundary_size        = 2
+Coordinates::additional_overlap_size    = 2
+Coordinates::outer_boundary_size        = 2
+
+Interpolate::interpolator_options       = "order=4"
+
+Carpet::domain_from_multipatch = yes
+
+Carpet::max_refinement_levels = 9
+CarpetRegrid2::num_centres    = 1
+CarpetRegrid2::num_levels_1   = 1 # 3
+CarpetRegrid2::radius_1[1]    = 0.1
+CarpetRegrid2::radius_1[2]    = 0.05
+
+#--- initial data
+
+ADMBase::initial_data      = "exact"
+ADMBase::initial_lapse     = "exact"
+ADMBase::initial_shift     = "exact"
+ADMBase::initial_dtlapse   = "exact"
+ADMBase::initial_dtshift   = "exact"
+
+Exact::exact_model = "Kerr/Kerr-Schild"
+Exact::Kerr_KerrSchild__mass = 1.0
+Exact::Kerr_KerrSchild__spin = 0.0
+#Exact::Kerr_KerrSchild__epsilon = 1.0e-4
+Exact::Kerr_KerrSchild__parabolic = yes
+Exact::Kerr_KerrSchild__power     = 8
+Exact::Kerr_KerrSchild__epsilon   = 1.0
+
+
+#--- ML_BSSN
+
+ADMBase::evolution_method       = "ML_BSSN_MP_O2"
+ADMBase::lapse_evolution_method = "ML_BSSN_MP_O2"
+ADMBase::shift_evolution_method = "ML_BSSN_MP_O2"
+
+ML_BSSN_MP_O2::timelevels = 2
+
+ML_BSSN_MP_O2::my_boundary_condition = "Minkowski"
+
+ML_BSSN_MP_O2::harmonicN       = 1      # 1+log
+ML_BSSN_MP_O2::harmonicF       = 2.0    # 1+log
+ML_BSSN_MP_O2::ShiftGammaCoeff = 0.75
+ML_BSSN_MP_O2::BetaDriver      = 0.5
+
+ML_BSSN_MP_O2::ML_log_confac_bound = "none"
+ML_BSSN_MP_O2::ML_metric_bound     = "none"
+ML_BSSN_MP_O2::ML_Gamma_bound      = "none"
+ML_BSSN_MP_O2::ML_trace_curv_bound = "none"
+ML_BSSN_MP_O2::ML_curv_bound       = "none"
+ML_BSSN_MP_O2::ML_lapse_bound      = "none"
+ML_BSSN_MP_O2::ML_dtlapse_bound    = "none"
+ML_BSSN_MP_O2::ML_shift_bound      = "none"
+ML_BSSN_MP_O2::ML_dtshift_bound    = "none"
+
+#--- Dissipation
+
+Dissipation::order  = 3 # 5
+Dissipation::epsdis = 0.3
+Dissipation::vars   = "
+	ML_BSSN_MP_O2::ML_Gamma
+  	ML_BSSN_MP_O2::ML_lapse
+  	ML_BSSN_MP_O2::ML_shift
+  	ML_BSSN_MP_O2::ML_log_confac
+  	ML_BSSN_MP_O2::ML_metric
+  	ML_BSSN_MP_O2::ML_trace_curv
+  	ML_BSSN_MP_O2::ML_curv
+"
+
+#--- Analysis
+
+nanchecker::check_every                         =       1
+nanchecker::check_vars                          =       "admbase::gxx"
+nanchecker::action_if_found                     =       "terminate"
+
+#--- Horizons
+
+SphericalSurface::nsurfaces = 1
+SphericalSurface::maxntheta = 39
+SphericalSurface::maxnphi   = 76
+
+SphericalSurface::ntheta      [0] = 39
+SphericalSurface::nphi        [0] = 76
+SphericalSurface::nghoststheta[0] = 2
+SphericalSurface::nghostsphi  [0] = 2
+
+AHFinderDirect::find_every = 64
+AHFinderDirect::run_at_CCTK_POST_RECOVER_VARIABLES = no
+
+AHFinderDirect::geometry_interpolator_name = "Lagrange polynomial interpolation"
+AHFinderDirect::geometry_interpolator_pars = "order=4"
+AHFinderDirect::surface_interpolator_name  = "Lagrange polynomial interpolation"
+AHFinderDirect::surface_interpolator_pars  = "order=4"
+
+AHFinderDirect::N_horizons = 1
+
+AHFinderDirect::initial_guess__coord_sphere__radius  [1] = 2.0
+AHFinderDirect::which_surface_to_store_info          [1] = 0
+AHFinderDirect::reset_horizon_after_not_finding      [1] = no

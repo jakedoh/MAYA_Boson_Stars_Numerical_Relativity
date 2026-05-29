@@ -1,0 +1,8 @@
+# configuration.ccl file for thorn NullGrid
+
+REQUIRES THORNS: Fortran
+
+PROVIDES NullGrid
+{
+ LANG
+}

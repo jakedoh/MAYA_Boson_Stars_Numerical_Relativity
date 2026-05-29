@@ -1,0 +1,249 @@
+                               PtrList
+                  A C module for a list of pointers.
+
+Embodies the idea of a list as a grocery list:  the list doesn't contain
+the groceries, it only refers to them;  if you throw the list away, you
+don't necessarily lose the produce.
+
+Typical use
+===========
+
+The items in a PtrList are referenced as pointers to void.  PtrList can be
+used directly this way, but isn't type-safe.  It is usually better to write
+a wrapper around PtrList for each type of data which needs to be listed,
+whose Item() function returns a pointer to an item of that type, etc.
+
+This can be done for simple cases with preprocessor macros, or for more
+involved cases with a separate header and source file.
+
+------------------------------- EXAMPLE ----------------------------------
+
+           ------------------- MyList.h ------------------
+typedef struct PtrList_tag MyListType;
+
+size_t          MyListType_NumberOfThings( const MyListType * );
+MyListType *    MyListType_New( void );
+...
+
+           ------------------- .c file -------------------
+
+#include "MyList.h"
+
+size_t
+MyListType_NumberOfThings( const MyListType * list ) {
+        return List_NumberOfItems( list );
+}
+
+MyListType *
+MyListType_New() {
+        return (MyListType *)List_New();
+}
+
+-------------------------------------------------------------------
+
+Life-cycle
+==========
+	1) Create with
+		PtrList_New
+		PtrList_MakeCopy
+
+	2) Manipulate, pass to functions, etc
+
+	3) Reclaim memory with
+		PtrList_Delete
+
+Efficiency
+==========
+
+One efficiency concern governed the internal structure of the module, namely
+how to deal with memory needed to deal with the pointers being added.
+
+The simplest thing would be to allocate a block of memory the size of a
+pointer for each item added.  For very simple applications making heavy
+use of a list with many items, this is prohibitive. 
+
+PtrList does not require a memory allocation per item to append an item. 
+Internally, the PtrList maintains a list of pages of pointers, each of which
+contains many pointers.  When the first item is appended to an empty PtrList,
+one of these pages is allocated and initialized, and the pointer is written
+in the page.  When a second item is appended, it is written directly into
+this existing page.  Only when that page is full is another allocated.  If an
+item is inserted into a PtrList, it is inserted into the appropriate page,
+and possibly the last item on that page needs to be moved to the next page,
+but if that page is again full, the PtrList just inserts a new empty page and
+puts the remaining item onto the new page.
+
+The only concession made in the API to this paging structure is the creator
+function ListPage_NewWithPageSize( size_t size ), which allows the user to
+set the number of elements on each page.  For example, if the maximum number
+of items in the list is known for the application, the page size can be set
+to that maximum, thus avoiding much of the internal paging mechanism.
+
+Limitations
+===========
+
+The PtrList does not (at present) put much effort into compressing pages
+from which items are removed.  So if all but one item is removed from each
+page, it will stay that way, rather than compressing the items onto fewer
+pages.  One improvment would be to make the list compress itself during a
+Remove call, whenever, say, a page is found to be less than half full.
+
+Various other improvements could be made:  the number of items in the list
+could be cached for NumberOfItems.
+
+Name convention
+===============
+
+In some applications, especially when the list items are guaranteed to be
+unique, it makes sense to refer to the pointer items by their values.  In
+other applications, it only makes sense to refer to them by their indices.  
+
+To distinguish between functions meant for the two cases, those which refer 
+to the item by index will have Item in their name, whereas the corresponding 
+funcition that refers to the item by value does not:  Remove vs RemoveItem.
+
+Namespace
+=========
+
+The header file PtrList_Namespace.h contains macros that locally transforms
+shortened PtrList function names to the full ones.   Only names following
+the inclusion of the file are affected.
+
+So long as no other function names in your source file collide with these
+shortened names in your file, you may use them to make your code easier to
+read.
+
+The main creation and deletion functions are not shortened by this file.
+
+Special functions
+=================
+
+Note:
+	Lost_GetIndexOf
+	List_Remove
+These just find the first item pointer whose value is the same as the input
+value.  Note that PtrList makes no check as to the uniqueness of pointers
+put into the list.
+
+	List_FreeItemsInListAndEmpty
+
+Is a useful utility, but it isn't really a method of a PtrList in the sense
+that in the common usage of the term 'list', a list doesn't throw away its
+items.  Also, be aware that this assumes the items are simple blocks of
+memory allocated with one of the standard C library routines ('malloc', etc).
+It just calls free on each one and removes it in the most efficient way
+(from the end of the list).
+
+Function Reference
+==================
+
+PtrList *
+List_New( void )
+
+	Creates a new empty list.
+
+PtrList *
+List_NewWithPageSize( size_t size )
+
+	Creates a new empty list, and sets the internal page size.
+
+PtrList *
+List_MakeCopy( const PtrList *other )
+
+	Creates a new list containing the same items as does the argument.
+
+void
+List_Delete( PtrList *list )
+
+	Frees the list and memory it allocates internally. DOES NOT
+	do anything to the items pointed to by list items.
+
+static void
+List_HandleAddressingError()
+
+	 To be supplied by user of list code.  Called when item accesssor
+	 is called with an index out of range.
+
+void
+List_Empty( PtrList * this )
+
+	Removes all the items on the list (does nothing to items pointed
+	to by the list items).
+
+size_t
+List_NumberOfItems( const PtrList *this )
+
+	Returns the number of items in the list.
+
+void
+List_Append( PtrList *this, void * newItem )
+
+	Puts a new item on the end of the list.
+
+void
+List_InsertItem( PtrList *this, size_t index, void * newItem )
+
+	Inserts the item at the specified index, shifting indices of existing
+	list items as necessary.  If index is greater than or equal to the
+	number of items initially in the list, the item is just appended.
+
+void *
+List_Item( const PtrList *this, size_t requestedIndex )
+
+	Returns the item of given index; returns NULL if no such index.
+	The items are indexed beginning with 0;
+
+void
+List_SetItem( PtrList *this, size_t requestedIndex, void *value )
+
+	Sets the item of given index.  Calls user-supplied addressing
+	handler if no such item exists.
+
+void
+List_CopyList( PtrList *list, const PtrList * other )
+
+	Empties this list and puts items from other list in it.
+
+void *
+List_RemoveItem( PtrList *list, size_t index )
+
+	Removes the item of given index from the list.
+	Returns a pointer to the item removed, or NULL if item not found.
+
+void
+List_Remove( PtrList *list, void * item )
+
+	Removes the first item in the list with pointer identical to 'item'.
+
+PLBOOL
+List_GetIndexOf( const PtrList *this, const void * item, size_t * index )
+
+	Returns TRUE and sets the index argument to the first item in the
+	list with pointer identical to 'item', if such an item exists;
+	otherwise returns FALSE.
+	Note: is inverse of Item(), if pointers in list are unique.
+
+void
+List_SortAccordingTo( PtrList * list, ListSortComparison comparison )
+
+	Based on the comparison of any two items provided by the comparison 
+	function argument, sorts the list.
+
+void *
+List_FirstItemSuchThat( const PtrList *list, ListCondition condition )
+
+	Takes a ListCondition function, returns the pointer value that 
+	satisfies the condition, otherwise returns NULL,
+
+PLBOOL
+List_FindFirstIndexSuchThat( const PtrList *list, ListCondition condition,
+					size_t * index )
+	Takes a ListCondition function, sets the index pointer to the index
+	of the first pointer in the list that satisfies condition.
+	Otherwise returns FALSE.
+
+void
+List_FreeItemsInListAndEmpty( PtrList * this )
+
+	Lists don't usually delete the things they refer to.
+	This function takes the list and uses it to free the listed items.

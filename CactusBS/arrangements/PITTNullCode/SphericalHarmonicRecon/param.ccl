@@ -1,0 +1,57 @@
+# Parameter definitions for thorn SphericalHarmonicRecon
+# $Header:$
+
+private:
+
+CCTK_INT order "order used in time interpolation / differentiation"
+{
+  2 :: "two or four"
+  4 :: "two or four"
+} 4
+
+CCTK_REAL r_extract "the radius of the worldtube"
+{
+  (0:* :: "positive"
+} 50.0  
+
+STRING metric_data_filename "filename for the cauchy metric data"
+{
+ ".*"	:: "the Cauchy metric data"
+} "metric_Decomp.h5"
+
+BOOLEAN time_derivative_in_file "is the time derivative of the metric in the cauchy file"
+{
+} "no"
+
+# the followign parameters shouls only be used if the
+# hdf5 was corrupted and extraction parameters
+# are not recoverable. Of course, we should actually
+# fix the extraction code so that this does not happen
+BOOLEAN override_extraction_parameters "never set this"
+{
+} no
+
+CCTK_INT override_spin "spin: never set this"
+{
+ *:* :: "anything, but you probably want 0"
+} 0
+
+CCTK_INT override_nn "number of Chabyshev coefficition: never use this"
+{
+  1:* :: "positive: must actualy match the extraction run"
+} 1
+
+CCTK_INT override_na "number of angular coefficition: never use this"
+{
+  1:* :: "positive: must actualy match the extraction run"
+} 1
+
+CCTK_REAL override_Rin "inner radius of extraction zone: ..."
+{
+  (0:* :: "positive"
+} 1
+
+CCTK_REAL override_Rout "outer radius of extraction zone: ..."
+{
+  (0:* :: "positive"
+} 1

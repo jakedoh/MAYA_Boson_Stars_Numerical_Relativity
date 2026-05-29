@@ -1,0 +1,5 @@
+# Make sure that EOS_Polytrope is compiled first
+
+ifneq (,$(findstring EUHydro/EOS_Polytrope,$(THORNS)))
+$(CCTK_LIBDIR)$(DIRSEP)libEOS_Hybrid.a : $(CCTK_LIBDIR)$(DIRSEP)libEOS_Polytrope.a
+endif

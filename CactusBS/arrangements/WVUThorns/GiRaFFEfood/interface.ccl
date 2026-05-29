@@ -1,0 +1,43 @@
+# Interface definition for thorn GiRaFFEfood
+implements: GiRaFFEFood
+
+inherits: HydroBase, ADMBase, Boundary, SpaceMask, grid, GiRaFFE, ShiftedKerrSchild # Needs mhd_st_i, vi, Ai, and Bi gridfunctions from GiRaFFE
+
+##analysis variables
+protected:
+#Implemented for ExactWald and SplitMonopole
+CCTK_REAL delAi TYPE = GF timelevels = 1
+{
+  delAx, delAy, delAz,delpsi6phi
+} "the difference between the numerical and analytical solution"
+
+CCTK_REAL delvi TYPE = GF timelevels = 1
+{
+  delvx, delvy, delvz, exactVx,exactVy,exactVz
+} "the difference between the numerical and analytical solution"
+
+CCTK_REAL B2mE2 TYPE = GF timelevels = 1 \
+"The difference between the magnetic and electric fields"
+
+#Implemented for ThreeAlfvenWaves, SplitMonopole and ExactWald
+CCTK_REAL delBi TYPE = GF timelevels = 1
+{
+  delBx, delBy, delBz, exactBx,exactBy,exactBz
+} "the difference between the numerical and analytical solution"
+
+CCTK_REAL delBi_ThreeWaves TYPE = GF timelevels = 1
+{
+  delBx_ThreeWaves, delBy_ThreeWaves, delBz_ThreeWaves, exactBx_ThreeWaves,exactBy_ThreeWaves,exactBz_ThreeWaves
+} "the difference between the numerical and analytical solution for the Three Waves test"
+
+CCTK_REAL ElectricFields TYPE = GF timelevels = 1
+{
+  Ex,Ey,Ez
+} "Electric field gridfunctions"
+
+
+
+CCTK_INT FUNCTION                         \
+    GetRefinementLevel                    \
+        (CCTK_POINTER_TO_CONST IN cctkGH)
+USES FUNCTION GetRefinementLevel

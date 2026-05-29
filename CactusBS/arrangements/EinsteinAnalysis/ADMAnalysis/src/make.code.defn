@@ -1,0 +1,8 @@
+# Main make.code.defn file for thorn ADMAnalysis
+# $Header$
+
+# Source files in this directory
+SRCS = ParamCheck.c Symmetry.c Analysis.c CartToSphere.c Ricci.c Trace.c
+
+# Subdirectories containing source files
+SUBDIRS = 

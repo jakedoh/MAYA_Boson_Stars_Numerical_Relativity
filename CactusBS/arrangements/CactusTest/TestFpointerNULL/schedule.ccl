@@ -1,0 +1,9 @@
+# Schedule definitions for thorn TestFpointerNULL
+# $Header$
+
+STORAGE: scalar_group array_group
+
+SCHEDULE TestFpointerNULL_Caller AT INITIAL
+{
+  LANG:    C
+} "Test passing a NULL pointer from a C function into Fortran routine"

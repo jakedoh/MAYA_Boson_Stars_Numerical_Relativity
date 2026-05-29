@@ -1,0 +1,25 @@
+# Schedule definitions for thorn CarpetRegrid2
+
+STORAGE: last_iteration last_map
+STORAGE: active num_levels positions radii radiixyz
+STORAGE: old_active old_positions old_num_levels old_radiixyz
+if (adaptive_refinement)
+{
+  STORAGE: level_mask
+}
+
+
+
+SCHEDULE CarpetRegrid2_ParamCheck AT paramcheck
+{
+  LANG: C
+} "Check parameters"
+
+SCHEDULE CarpetRegrid2_Initialise AT wragh
+{
+  LANG: C
+  OPTIONS: global
+  WRITES: CarpetRegrid2::radius(everywhere), radiixyz
+  WRITES: CarpetRegrid2::last_iteration(everywhere), last_map, active, num_levels
+  WRITES: CarpetRegrid2::positions(everywhere), old_positions
+} "Initialise locations of refined regions"

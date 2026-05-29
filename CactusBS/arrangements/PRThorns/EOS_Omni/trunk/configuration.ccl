@@ -1,0 +1,13 @@
+PROVIDES EOS_Omni
+{
+  SCRIPT
+  LANG
+}
+
+OPTIONAL MPI
+{
+}
+
+OPTIONAL HDF5
+{
+}

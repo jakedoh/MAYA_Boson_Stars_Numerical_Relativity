@@ -1,0 +1,11 @@
+Cactus Code Thorn SwitchGrids
+Author(s)    : Roland Haas <roland.haas@physics.gatech.edu>
+Maintainer(s): Roland Haas <roland.haas@physics.gatech.edu>
+Licence      : GPL v2+
+--------------------------------------------------------------------------
+
+1. Purpose
+
+Turns grids in RegridBoxes on or off based on some criterion.
+
+Modifies CarpetRegrid2 parameters and gridscalars for the same purpose.

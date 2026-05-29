@@ -1,0 +1,38 @@
+# Schedule definitions for thorn WaveToy1DF77
+# $Header$
+
+STORAGE: evolve1d[3],coords1d
+
+schedule WaveToy1DF77_Startup at STARTUP
+{
+  LANG: Fortran
+} "Register WaveToy1DF77 banner"
+
+schedule WaveToy1DF77_RegisterCoords at WRAGH
+{
+  LANG: Fortran
+} "Register WaveToy1DF77 coordinates"
+
+schedule WaveToy1DF77_Coord as SpatialCoordinates at BASEGRID
+{
+  LANG: Fortran
+} "Set up 1D coordinates"
+
+schedule WaveToy1DF77_Initial at INITIAL
+{
+  STORAGE: initial,dummy
+  LANG: Fortran
+} "Initial data for 1D wave equation"
+
+schedule WaveToy1DF77_Evolve at EVOL
+{
+  LANG: Fortran
+  SYNC: evolve1d
+} "Evolution of 1D wave equation"
+
+schedule WaveToy1DF77_Boundary at EVOL after WaveToy1DF77_Evolve
+{
+  LANG: Fortran
+} "Apply boundary conditions"
+
+  

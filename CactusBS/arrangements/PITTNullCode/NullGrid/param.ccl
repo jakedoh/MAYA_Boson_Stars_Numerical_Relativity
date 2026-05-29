@@ -1,0 +1,53 @@
+# Parameter definitions for thorn NullGrid
+# $Header$
+
+restricted:
+
+CCTK_INT verbose "Should this thorn be verbose or not"
+{
+   0:1  :: "0 or 1"
+} 0
+
+####################################
+### RADIAL GRID
+####################################
+
+CCTK_REAL null_xin "Innermost compactified radial point"
+{
+0.0:*::  "positive real number"
+}0.5
+
+CCTK_REAL null_rwt "Compactification Parameter"
+{
+0.0:*::  "positive real number"
+}1.0
+
+CCTK_INT N_radial_pts "radial gridsize"
+{
+  4:*:: "pos"
+}21
+
+####################################
+### ANGULAR GRID
+####################################
+
+int N_ang_pts_inside_eq "nr of points inside equator, spanning the diameter of the unit circle"
+{
+  2:*	:: "larger than one"
+} 41
+
+int N_ang_ev_outside_eq "nr of points between the equator and the evolution radius"
+{
+  1:*	:: "larger than one"
+} 5
+
+int N_ang_stencil_size "evolution stencil size"
+{
+  0:*	:: "non-negative"
+} 2
+
+int N_ang_ghost_pts "inter-proccessor ghost-points"
+{
+  0:*:: "2 or larger -- must be large enough to accomodate both the interpolation and the evolution stencils"
+} 2
+

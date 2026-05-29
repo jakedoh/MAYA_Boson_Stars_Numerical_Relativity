@@ -1,0 +1,98 @@
+# Parameter definitions for thorn SwitchGrids
+
+INT verbose "Any extra output?" STEERABLE=always
+{
+  0:0 :: "no output"
+  1:1 :: "print errors"
+  2:2 :: "print warnings when ignoring switches or surfaces"
+  *:* :: "higher is more verbose"
+  9:9 :: "for debugging purposes only"
+} 1
+
+KEYWORD regridding_thorn "which thorn to steer" STEERABLE=always
+{
+  "RegridBoxes"   :: "steer RegridBoxes parameters"
+  "CarpetRegrid2" :: "steer CarpetRegrid2 grid scalars"
+} "RegridBoxes"
+
+INT number_of_switches "how many grids to steer" STEERABLE=always
+{
+  0:6 :: "must match the sizes below"
+} 0
+
+KEYWORD switch_criterion[6] "criterion on which to turn on/off grids" STEERABLE=always
+{
+  "spherical surface" :: "distance of surface_index_a from surface_index_b"
+  "coordinate"        :: "distance of surface_index_a from given point"
+  "iteration"         :: "after a certain time"
+} "coordinate"
+
+INT switch_iteration[6] "when to switch the grid" STEERABLE=always
+{
+  (0:* :: "switch when time greater smaller than this"
+  -1:-1  :: "never switches"
+} -1
+
+REAL switch_distance[6] "distance from target when to do the switch" STEERABLE=always
+{
+  (0:* :: "switch when distance is smaller than this"
+  0:0  :: "never switches"
+} 0.0
+
+INT surface_index_a[6] "spherical surface of the first spherical surface" STEERABLE=always
+{
+ -1:-1 :: "ignore this"
+ 0:*   :: "any valid spherical surface"
+} -1
+
+INT surface_index_b[6] "spherical surface of the second spherical surface" STEERABLE=always
+{
+  -1:-1 :: "ignore this tracker"
+  0:*   :: "any valid spherical surface"
+} -1
+
+REAL coord_x[6] "x coordinate of given centre" STEERABLE=always
+{
+  *:* :: "any coordinate value"
+} 0.0
+
+REAL coord_y[6] "y coordinate of given centre" STEERABLE=always
+{
+  *:* :: "any coordinate value"
+} 0.0
+
+REAL coord_z[6] "z coordinate of given centre" STEERABLE=always
+{
+  *:* :: "any coordinate value"
+} 0.0
+
+INT centre_index[6] "which centre in RegridBoxes to change" STEERABLE=always
+{
+ -1:-1 :: "ignore"
+  0:*  :: "any existing centre (currently up to 6)"
+} -1
+
+int centre_levels[6] "how many levels to activate at the given time" STEERABLE=always 
+{
+  1:30 :: "must be lower than Carpet::max_refinement_levels"
+} 1
+
+STRING steered_parameters[6] "set these parameters when triggering the switch" STEERABLE=always
+{
+  "^$"   :: "set no parameter"
+  "^.+$" :: "thorn::parameter = value<newline>..."
+} ""
+
+STRING steered_scalars[6] "set these grid scalars when triggering the switch" STEERABLE=always
+{
+  "^$"   :: "set no scalar"
+  "^.+$" :: "thorn::variable = value<newline>..."
+} ""
+
+boolean debug_fake_motion "move spherical surface 0 from (20,20,0) with velocity (1,1.4,0)"
+{
+} "no"
+
+SHARES: SphericalSurface
+
+USES CCTK_INT nsurfaces

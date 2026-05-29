@@ -1,0 +1,18 @@
+# Schedule definitions for thorn RotatingDBHIVP
+# $Header$
+
+if (CCTK_Equals(initial_data,"rotatingdbh"))
+{ 
+  STORAGE: sph_to_car_coord, sph_to_car_psi
+
+  schedule RotatingDBHIVP_ParamCheck at PARAMCHECK
+  {
+    LANG: C
+  } "Check Parameters"
+
+  schedule RotatingDBHIVP IN ADMBase_InitialData
+  {
+    LANG: Fortran
+  } "Construct RotatingDBHIVP"
+}
+

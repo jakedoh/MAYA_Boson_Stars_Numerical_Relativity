@@ -1,0 +1,7 @@
+# Main make.code.defn file for thorn CoordinatesSymmetry
+
+# Source files in this directory
+SRCS = apply.c interpolate.c
+
+# Subdirectories containing source files
+SUBDIRS = 

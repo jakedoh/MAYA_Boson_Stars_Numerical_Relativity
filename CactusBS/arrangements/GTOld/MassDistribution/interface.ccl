@@ -1,0 +1,52 @@
+# Interface definition for thorn MassDistribution
+# $Header:$
+
+implements: MassDistribution
+inherits: GenericFD ADMBase SphericalSurface HydroBase
+
+USES INCLUDE: GenericFD.h
+USES INCLUDE: carpet.hh
+
+# we allocate three extra bins beyond number_of_bins to store the total mass,
+# mass below threshold and mass above threshold inside a volume
+CCTK_REAL MassPerSpecificEnergy[intvolumes] TYPE="array" DIMENSION=1  SIZE=number_of_bins+3 DISTRIB=CONSTANT tags='checkpoint="no"' "amount of mass in bin i divided by the bin size"
+# one more entries than number_of_bins to have an entry for both HistogramMinimum and HistogramMaximum
+CCTK_REAL HistogramLabels[intvolumes] TYPE="array" DIMENSION=1  SIZE=number_of_bins+1 DISTRIB=CONSTANT tags='checkpoint="no"' "energy corresponding to each bin"
+CCTK_REAL HistogramRange[intvolumes] TYPE="scalar" tags='checkpoint="no"'
+{
+  HistogramMinimum, HistogramMaximum
+}"minimum and maximum of range covered the histograms"
+CCTK_INT HistogramActive[intvolumes] TYPE="scalar" tags='checkpoint="no"' "process this histogram?"
+CCTK_INT HistogramValid[intvolumes] TYPE="scalar" tags='checkpoint="no"' "output this histogram?"
+
+CCTK_INT have_work_to_do TYPE="scalar" tags='checkpoint="no"' "is there any volume that still needs work?"
+
+CCTK_INT file_created[intvolumes] TYPE="scalar" tags='checkpoint="no"' "indicates whether to write header or not"
+
+# from CoordBase
+CCTK_INT FUNCTION \
+    GetBoundarySpecification (CCTK_INT IN size,                  \
+                              CCTK_INT OUT ARRAY nboundaryzones, \
+                              CCTK_INT OUT ARRAY is_internal,    \
+                              CCTK_INT OUT ARRAY is_staggered,   \
+                              CCTK_INT OUT ARRAY shiftout)
+USES FUNCTION GetBoundarySpecification
+
+# from Formaline
+# Return a pointer to an unmodifiable C string
+# which contains a unique ID for this build
+CCTK_POINTER_TO_CONST \
+FUNCTION UniqueBuildID (CCTK_POINTER_TO_CONST IN cctkGH)
+USES FUNCTION UniqueBuildID
+
+# Return a pointer to an unmodifiable C string
+# which contains a unique ID for this simulation
+CCTK_POINTER_TO_CONST \
+FUNCTION UniqueSimulationID (CCTK_POINTER_TO_CONST IN cctkGH)
+USES FUNCTION UniqueSimulationID
+
+# Return a pointer to an unmodifiable C string
+# which contains a unique ID for this run
+CCTK_POINTER_TO_CONST \
+FUNCTION UniqueRunID (CCTK_POINTER_TO_CONST IN cctkGH)
+USES FUNCTION UniqueRunID

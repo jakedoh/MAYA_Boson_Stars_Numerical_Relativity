@@ -1,0 +1,190 @@
+# File produced by Kranc
+
+implements: Kranc2BSSN
+
+inherits:   admbase Boundary GenericFD Grid
+
+
+
+USES INCLUDE: loopcontrol.h
+USES INCLUDE: Symmetry.h
+USES INCLUDE: Boundary.h
+
+CCTK_INT FUNCTION MoLRegisterEvolved(CCTK_INT IN EvolvedIndex, CCTK_INT IN RHSIndex)
+USES FUNCTION MoLRegisterEvolved
+
+SUBROUTINE Diff_coeff(CCTK_POINTER_TO_CONST IN cctkGH, CCTK_INT IN dir, CCTK_INT IN nsize, CCTK_INT OUT ARRAY imin, CCTK_INT OUT ARRAY imax, CCTK_REAL OUT ARRAY q, CCTK_INT IN table_handle)
+USES FUNCTION Diff_coeff
+
+CCTK_INT FUNCTION MultiPatch_GetMap(CCTK_POINTER_TO_CONST IN cctkGH)
+USES FUNCTION MultiPatch_GetMap
+
+CCTK_INT FUNCTION MultiPatch_GetBbox(CCTK_POINTER_TO_CONST IN cctkGH, CCTK_INT IN size, CCTK_INT OUT ARRAY bbox)
+USES FUNCTION MultiPatch_GetBbox
+
+CCTK_INT FUNCTION GetBoundarySpecification(CCTK_INT IN size, CCTK_INT OUT ARRAY nboundaryzones, CCTK_INT OUT ARRAY is_internal, CCTK_INT OUT ARRAY is_staggered, CCTK_INT OUT ARRAY shiftout)
+USES FUNCTION GetBoundarySpecification
+
+CCTK_INT FUNCTION MultiPatch_GetBoundarySpecification(CCTK_INT IN map, CCTK_INT IN size, CCTK_INT OUT ARRAY nboundaryzones, CCTK_INT OUT ARRAY is_internal, CCTK_INT OUT ARRAY is_staggered, CCTK_INT OUT ARRAY shiftout)
+USES FUNCTION MultiPatch_GetBoundarySpecification
+
+CCTK_INT FUNCTION SymmetryTableHandleForGrid(CCTK_POINTER_TO_CONST IN cctkGH)
+USES FUNCTION SymmetryTableHandleForGrid
+
+CCTK_INT FUNCTION Boundary_SelectGroupForBC(CCTK_POINTER_TO_CONST IN GH, CCTK_INT IN faces, CCTK_INT IN boundary_width, CCTK_INT IN table_handle, CCTK_STRING IN group_name, CCTK_STRING IN bc_name)
+USES FUNCTION Boundary_SelectGroupForBC
+
+CCTK_INT FUNCTION Boundary_SelectVarForBC(CCTK_POINTER_TO_CONST IN GH, CCTK_INT IN faces, CCTK_INT IN boundary_width, CCTK_INT IN table_handle, CCTK_STRING IN var_name, CCTK_STRING IN bc_name)
+USES FUNCTION Boundary_SelectVarForBC
+
+public:
+CCTK_REAL h_group type=GF timelevels=3 tags='tensortypealias="DD_sym" tensorweight=-0.66666666666666666667'
+{
+  h11,
+  h21,
+  h31,
+  h22,
+  h32,
+  h33
+} "h_group"
+
+public:
+CCTK_REAL A_group type=GF timelevels=3 tags='tensortypealias="DD_sym" tensorweight=-0.66666666666666666667'
+{
+  A11,
+  A21,
+  A31,
+  A22,
+  A32,
+  A33
+} "A_group"
+
+public:
+CCTK_REAL phi_group type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0.16666666666666666667 tensorspecial="log"'
+{
+  phi
+} "phi_group"
+
+public:
+CCTK_REAL K_group type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  K
+} "K_group"
+
+public:
+CCTK_REAL Gam_group type=GF timelevels=3 tags='tensortypealias="U" tensorweight=0.66666666666666666667 tensorspecial="gamma"'
+{
+  Gam1,
+  Gam2,
+  Gam3
+} "Gam_group"
+
+public:
+CCTK_REAL alpha_group type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  alpha
+} "alpha_group"
+
+public:
+CCTK_REAL beta_group type=GF timelevels=3 tags='tensortypealias="U" tensorweight=0'
+{
+  beta1,
+  beta2,
+  beta3
+} "beta_group"
+
+public:
+CCTK_REAL betat_group type=GF timelevels=3 tags='tensortypealias="U" tensorweight=0'
+{
+  betat1,
+  betat2,
+  betat3
+} "betat_group"
+
+public:
+CCTK_REAL scalarconstraints type=GF timelevels=3 tags=''
+{
+  bssnham,
+  bssnT,
+  bssnD
+} "scalarconstraints"
+
+public:
+CCTK_REAL bssnmom_group type=GF timelevels=3 tags='tensortypealias="D" tensorweight=0'
+{
+  bssnmom1,
+  bssnmom2,
+  bssnmom3
+} "bssnmom_group"
+
+public:
+CCTK_REAL bssnCcons_group type=GF timelevels=3 tags='tensortypealias="U" tensorweight=0'
+{
+  bssnCcons1,
+  bssnCcons2,
+  bssnCcons3
+} "bssnCcons_group"
+
+public:
+CCTK_REAL A_grouprhs type=GF timelevels=3 tags='tensortypealias="DD_sym" tensorweight=-0.66666666666666666667 Prolongation="None"'
+{
+  A11rhs,
+  A21rhs,
+  A31rhs,
+  A22rhs,
+  A32rhs,
+  A33rhs
+} "A_grouprhs"
+
+public:
+CCTK_REAL alpha_grouprhs type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0 Prolongation="None"'
+{
+  alpharhs
+} "alpha_grouprhs"
+
+public:
+CCTK_REAL beta_grouprhs type=GF timelevels=3 tags='tensortypealias="U" tensorweight=0 Prolongation="None"'
+{
+  beta1rhs,
+  beta2rhs,
+  beta3rhs
+} "beta_grouprhs"
+
+public:
+CCTK_REAL betat_grouprhs type=GF timelevels=3 tags='tensortypealias="U" tensorweight=0 Prolongation="None"'
+{
+  betat1rhs,
+  betat2rhs,
+  betat3rhs
+} "betat_grouprhs"
+
+public:
+CCTK_REAL Gam_grouprhs type=GF timelevels=3 tags='tensortypealias="U" tensorweight=0.66666666666666666667 tensorspecial="gamma" Prolongation="None"'
+{
+  Gam1rhs,
+  Gam2rhs,
+  Gam3rhs
+} "Gam_grouprhs"
+
+public:
+CCTK_REAL h_grouprhs type=GF timelevels=3 tags='tensortypealias="DD_sym" tensorweight=-0.66666666666666666667 Prolongation="None"'
+{
+  h11rhs,
+  h21rhs,
+  h31rhs,
+  h22rhs,
+  h32rhs,
+  h33rhs
+} "h_grouprhs"
+
+public:
+CCTK_REAL K_grouprhs type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0 Prolongation="None"'
+{
+  Krhs
+} "K_grouprhs"
+
+public:
+CCTK_REAL phi_grouprhs type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0.16666666666666666667 tensorspecial="log" Prolongation="None"'
+{
+  phirhs
+} "phi_grouprhs"

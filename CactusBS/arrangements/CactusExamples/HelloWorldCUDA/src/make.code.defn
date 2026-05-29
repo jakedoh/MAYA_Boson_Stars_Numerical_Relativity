@@ -1,0 +1,7 @@
+# Main make.code.defn file for thorn HelloWorldCUDA
+
+# Source files in this directory
+SRCS = HelloWorld.cu
+
+# Subdirectories containing source files
+SUBDIRS = 

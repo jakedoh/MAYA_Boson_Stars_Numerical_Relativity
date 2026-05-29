@@ -1,0 +1,16 @@
+Cactus Code Thorn IOJpeg
+Author(s)    : John Shalf
+               Gabrielle Allen
+               Tom Goodale
+               Gerd Lanfermann
+               Thomas Radke
+Maintainer(s): Cactus team
+Licence      : LGPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+This thorn does output of 2D slices from Cactus grid functions and arrays
+in jpeg image format.
+
+It registers the I/O method "IOJpeg" with the flesh.

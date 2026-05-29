@@ -1,0 +1,74 @@
+ActiveThorns = "
+        Boundary CartGrid3D CoordBase IOUtil InitBase MoL SymBase
+        ADMBase ADMCoupling ADMMacros StaticConformal
+        TmunuBase
+        NaNChecker
+        Carpet CarpetIOASCII CarpetIOBasic CarpetIOScalar CarpetLib CarpetReduce LoopControl
+        Formaline GSL
+        GenericFD
+        ML_BSSN ML_BSSN_Helper
+"
+
+
+
+Cactus::cctk_itlast = 0
+
+CoordBase::boundary_size_x_lower = 2
+CoordBase::boundary_size_y_lower = 2
+CoordBase::boundary_size_z_lower = 2
+CoordBase::boundary_size_x_upper = 2
+CoordBase::boundary_size_y_upper = 2
+CoordBase::boundary_size_z_upper = 2
+
+driver::ghost_size = 2
+
+
+
+ADMBase::initial_shift   = "zero"
+ADMBase::initial_dtlapse = "zero"
+ADMBase::initial_dtshift = "zero"
+
+ML_BSSN::my_initial_data = "Minkowski"
+
+ML_BSSN::harmonicN       = 0      # 1+log
+ML_BSSN::harmonicF       = 2.0    # 1+log
+ML_BSSN::ShiftGammaCoeff = 0.75
+ML_BSSN::BetaDriver      = 0.5
+
+
+
+IO::out_dir = $parfile
+
+IOBasic::outInfo_every = 1
+IOBasic::outInfo_vars = "
+        ML_BSSN::H
+        ML_BSSN::trKrhs
+"
+
+IOScalar::outScalar_every = 1
+IOScalar::outScalar_vars = "
+        ML_BSSN::Ham
+        ML_BSSN::mom
+        ML_BSSN::cons_detg
+        ML_BSSN::cons_Gamma
+        ML_BSSN::cons_traceA
+        ML_BSSN::ML_log_confacrhs
+        ML_BSSN::ML_metricrhs
+        ML_BSSN::ML_Gammarhs
+        ML_BSSN::ML_trace_curvrhs
+        ML_BSSN::ML_curvrhs
+"
+
+IOASCII::out1D_every = 1
+IOASCII::out1D_vars = "
+        ML_BSSN::Ham
+        ML_BSSN::mom
+        ML_BSSN::cons_detg
+        ML_BSSN::cons_Gamma
+        ML_BSSN::cons_traceA
+        ML_BSSN::ML_log_confacrhs
+        ML_BSSN::ML_metricrhs
+        ML_BSSN::ML_Gammarhs
+        ML_BSSN::ML_trace_curvrhs
+        ML_BSSN::ML_curvrhs
+"

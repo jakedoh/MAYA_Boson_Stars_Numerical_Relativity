@@ -1,0 +1,80 @@
+# Interface definition for thorn GRHydro_Analysis
+implements: GRHydro_Analysis
+inherits: Grid, TempPool, HydroBase, ADMBase, SphericalSurface
+
+real GRHydro_CylDiagnostic type=SCALAR tags='checkpoint="no"'
+{
+  hydro_Cyl_M0	 
+  hydro_Cyl_M	 
+  hydro_Cyl_MA
+  hydro_Cyl_J	 
+  hydro_Cyl_T
+  hydro_Cyl_En
+  hydro_Cyl_W	 
+  hydro_Cyl_beta
+  hydro_Cyl_M1_re
+  hydro_Cyl_M1_im
+  hydro_Cyl_M2_re
+  hydro_Cyl_M2_im
+  hydro_Cyl_M3_re
+  hydro_Cyl_M3_im
+  hydro_Cyl_M4_re
+  hydro_Cyl_M4_im
+}
+
+real GRHydro_Quadrupole type=SCALAR tags='checkpoint="no"'
+{
+  hydro_Qxx
+  hydro_Qyy
+  hydro_Qzz
+  hydro_Qxy
+  hydro_Qxz
+  hydro_Qyz
+  hydro_Mx
+  hydro_My
+  hydro_Mz
+  hydro_M0
+  hydro_Xcm  
+  hydro_Ycm  
+  hydro_Zcm  
+} "Moments of momentum density quadrupole formula"
+
+real GRHydro_DerivativeQuadrupole type=SCALAR tags='checkpoint="no"'
+{
+  hydro_dQxx
+  hydro_dQyy
+  hydro_dQzz
+  hydro_dQxy
+  hydro_dQxz
+  hydro_dQyz
+  
+} "Cordinate time Derivative of the quadrupole formula"
+
+real GRHydro_MagneticDiagnostic type=SCALAR tags='checkpoint="no"'
+{
+  magnetic_Emag    
+  magnetic_EmagPOL 
+  magnetic_EmagTOR 
+  magnetic_BtorNORM1
+  magnetic_BpolNORM1
+  magnetic_BtorM0_re   
+  magnetic_BtorM1_re
+  magnetic_BtorM1_im
+  magnetic_BtorM2_re
+  magnetic_BtorM2_im
+  magnetic_BtorM3_re
+  magnetic_BtorM3_im
+  magnetic_BtorM4_re
+  magnetic_BtorM4_im
+  magnetic_BpolM0_re   
+  magnetic_BpolM1_re
+  magnetic_BpolM1_im
+  magnetic_BpolM2_re
+  magnetic_BpolM2_im
+  magnetic_BpolM3_re
+  magnetic_BpolM3_im
+  magnetic_BpolM4_re
+  magnetic_BpolM4_im
+  magnetic_Btor
+  magnetic_Bpol
+}

@@ -1,0 +1,7 @@
+# Configuration definition for thorn TATelliptic
+
+PROVIDES TATelliptic
+{
+  SCRIPT
+  LANG
+}

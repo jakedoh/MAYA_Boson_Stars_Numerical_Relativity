@@ -1,0 +1,103 @@
+# Schedule definitions for thorn RecoverMHD
+# $Header:$
+
+schedule RecoverMHD_Startup AT WRAGH AFTER EOSBase_GeneralRegister
+{
+  LANG: C
+} "Startup Banner"
+
+###################################################
+### Debugging run.                              ###
+###################################################
+if ( test_recovery )
+{
+  schedule RecoverMHD_Test IN HydroBase_Initial
+  {
+    OPTIONS: global
+    LANG: C
+  } "Test recovery of primitives and exit"
+}
+
+###################################################
+### Basic scheduling into HydroBase_Con2Prim.   ###
+###################################################
+schedule RecoverMHD_Conservative2Primitive IN HydroBase_Con2Prim AS Con2Prim
+{
+  LANG: C
+} "Convert back to primitive variables (general)"
+
+########################################################################
+### Populate Bvec if necessary from Avec before any Con2Prim routine ###
+########################################################################
+if ( CCTK_EQUALS(initial_Bvec,"Bvec_from_Avec") )  {
+   schedule RecoverMHD_Avec2Bvec IN HydroBase_Initial 
+   {
+     SYNC: Bvec
+     SYNC: whisky_bfield_var
+     LANG: C
+   } "Populate B field from vector potential"
+}
+if ( CCTK_EQUALS(evolution_method,"Scotch_MHD_Avec") ) {
+   schedule RecoverMHD_Avec2Bvec IN HydroBase_Con2Prim BEFORE Con2Prim
+   {
+     SYNC: Bvec
+     SYNC: whisky_bfield_var
+     LANG: C
+   } "Populate B field from vector potential"
+}
+
+##############################
+### Schedule Scalars.      ###
+##############################
+if ( puncture_trick ) 
+{
+   STORAGE: puncture_utau_min, PunctureInfo
+   schedule RecoverMHD_PctInfo in HydroBase_Con2Prim BEFORE Con2Prim
+   {
+     LANG: C
+   } "Set centers of punctures for the puncture trick"
+}
+
+##############################
+### Schedule boundaries.   ###
+##############################
+schedule RecoverMHD_Conservative2PrimitiveBounds IN Whisky_Con2PrimBounds AS Conservative2Primitive
+{
+  LANG: C
+} "Compute the primitive variables on cell boundaries"
+
+if (check_zsymmetry)
+{
+  schedule RecoverMHD_Check_Symmetry in MoL_PostStep AFTER SetTmunu
+  {
+    LANG: C
+  } "check z symmetry"
+
+  schedule RecoverMHD_Check_Symmetry AT ANALYSIS
+  {
+    LANG: C
+  } "check z symmetry"
+}
+
+if ( store_recovery_fails ) {
+
+  STORAGE: failed_con2prim_mask 
+
+  schedule RecoverMHD_ResetFailMask IN CCTK_BASEGRID 
+  {
+     LANG: C
+  } "Reset con2prim failure mask"
+
+  schedule RecoverMHD_ResetFailMask IN CCTK_PRESTEP
+  {
+     LANG: C
+  } "Reset con2prim failure mask"
+
+  # Check for failures often (current abort is in place on case of this)
+  schedule RecoverMHD_CheckFailMask IN CCTK_POSTSTEP
+  {
+     LANG: C
+  } "Check con2prim failures"
+
+}
+

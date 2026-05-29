@@ -1,0 +1,79 @@
+# Parameter definitions for thorn DistortedBHIVP
+# $Header$
+
+shares: StaticConformal
+
+USES KEYWORD conformal_storage
+
+shares:admbase
+
+USES KEYWORD metric_type
+
+
+EXTENDS KEYWORD initial_lapse 
+{
+  "schwarz" :: "Set lapse to Schwarzschild"
+}
+
+EXTENDS KEYWORD initial_data 
+{
+"distortedbh" :: "Non-Aix BH + Brill Wave IVP"
+}
+
+private:
+
+REAL amp "Brill wave amplitude"
+{
+  *:* :: "No restriction"
+} 0.1
+
+REAL eta0 "Brill wave center (in eta coords)"
+{
+  *:* :: "No restriction"
+} 0.0
+
+REAL c "Azimuthal dependence of Brill wave"
+{
+  *:* :: "No restriction"
+} 0.0
+
+REAL sigma "Brill wave width (in eta)"
+{
+  *:* :: "No restriction"
+} 1.0
+
+REAL etamax "Eta value for outer edge of grid"
+{
+  *:* :: "No restriction"
+} 5.0
+
+
+INT n "sin^n theta in brill wave"
+{
+  *:* :: "No restriction"
+} 2
+
+INT neta "Eta resolution for solve"
+{
+  *:* :: "No restriction"
+} 202
+
+INT ntheta "Theta resolution for solve"
+{
+  *:* :: "No restriction"
+} 54
+
+INT nphi "Eta resolution for solve"
+{
+  *:* :: "No restriction"
+} 5
+
+INT interpolation_order "Order for interpolation" STEERABLE = ALWAYS
+{
+  1:3 :: "Choose between first, second, and third-order"
+} 1
+
+REAL tolerance "Tolerance"
+{
+ 0:* :: "Tolerance"
+} 1.e-9

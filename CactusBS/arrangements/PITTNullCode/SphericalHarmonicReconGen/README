@@ -1,0 +1,13 @@
+Cactus Code Thorn SphericalHarmonicReconGen
+Thorn Author(s)     : Christian Reisswig <reisswig@tapir.caltech.edu>
+Thorn Maintainer(s) : Christian Reisswig <reisswig@tapir.caltech.edu>
+Licence      : lGPL
+--------------------------------------------------------------------------
+
+Purpose of the thorn: 
+
+Reads in ADM metric boundary data from a file. The files must contain scalar spherical harmonic modes up to some lmax
+for the lapse, shift, and 3-metric decomposed on some finite-radius coordinate sphere S^2.
+Gnuplot compatible ASCII files are supported (this includes Cactus'/Llama's Worldtube output), as well as
+some SpEC specific ASCII files, and SpEC HDF5 output.
+

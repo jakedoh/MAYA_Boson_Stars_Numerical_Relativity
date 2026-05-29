@@ -1,0 +1,19 @@
+!DESC "Test Maximum Global Reductions, very simple and straightforward"
+                                                                                
+ActiveThorns = "PUGH PUGHReduce PUGHSlab CoordBase TestGlobalReduce LocalReduce IOUtil IOBasic IOASCII CartGrid3D"
+                                                                                
+cactus::cctk_itlast = 0
+
+IO::out_every = 1
+IO::out_dir   = "TestWeightMax"
+                                                                                
+IOBasic::outScalar_vars  = "testglobalreduce::weighted_real_max testglobalreduce::weighted_int_max"
+IOBasic::outScalar_every = 1
+                                                                                
+TestGlobalReduce::dest_proc = -1
+TestGlobalReduce::array_nx = 16
+TestGlobalReduce::array_ny = 16
+TestGlobalReduce::array_nz = 16
+                                                                                
+IO::out_fileinfo  = "none"
+IO::parfile_write = "no"

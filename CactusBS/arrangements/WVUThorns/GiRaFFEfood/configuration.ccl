@@ -1,0 +1,9 @@
+# Configuration definitions for thorn GiRaFFEfood
+REQUIRES Boundary CartGrid3D SpaceMask ShiftedKerrSchild
+
+PROVIDES GiRaFFEFood
+{
+}
+
+# Requires GSL for dilogarithm function in split monopole test.
+REQUIRES GSL

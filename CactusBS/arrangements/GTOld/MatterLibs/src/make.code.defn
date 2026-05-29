@@ -1,0 +1,8 @@
+# Main make.code.defn file for thorn MatterLibs
+# $Header:$
+
+# Source files in this directory
+SRCS = make_rho.c feed_rho.c tov.cc steffenson.c make_psi.c startup.c E_to_rho.c E_to_rho_MHD.c bondi.cc poloidalmagfield.c
+
+# Subdirectories containing source files
+SUBDIRS = 

@@ -1,0 +1,8 @@
+# Schedule definitions for thorn SphereRad
+# $Header:$
+
+schedule update_sphere_const_rad at POSTSTEP BEFORE SphericalSurface_HasBeenSet
+{
+  LANG: C
+  OPTIONS: GLOBAL
+} "update const rad surface"

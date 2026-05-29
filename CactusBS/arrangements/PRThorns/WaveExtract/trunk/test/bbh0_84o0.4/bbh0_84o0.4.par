@@ -1,0 +1,130 @@
+!DESC "head on collision of 2 black holes"
+#
+# $Id: bbh0_84o0.4.par 3 2004-06-10 15:29:15Z herrmann $
+#
+
+ActiveThorns = "symbase sphericalsurface CoordBase waveextract bam_elliptic admbase admconstraints staticconformal ellbase cartgrid3d time pugh pughreduce pughslab ioascii ioutil iobasic admcoupling admmacros admanalysis spacemask coordgauge bssn_mol mol boundary pughinterp fisheye maximal localinterp aeilocalinterp nanchecker "
+
+
+#--- initial data
+admbase::initial_data                  = "BrBr"
+admbase::metric_type                   = "static conformal"
+staticconformal::conformal_storage     = "factor+derivs+2nd derivs"
+EllBase::elliptic_verbose               = "no"
+BAM_Elliptic::brbr_verbose              = "yes"
+BAM_Elliptic::brbr_tolres2              = 1e-6
+BAM_Elliptic::brbr_maxcycles            = 100
+BAM_Elliptic::brbr_mincycles            = 10
+BAM_Elliptic::brbr_minsize              = 16
+# Schwarzschild + P + S
+BAM_Elliptic::bhm1                      = 0.5
+BAM_Elliptic::bhy1                      = 1.1515
+BAM_Elliptic::bhpx1                     = 0.0
+BAM_Elliptic::bhsx1                     = 0.0
+BAM_Elliptic::bhsz1                     = 0.0
+BAM_Elliptic::bhm2                      = 0.5
+BAM_Elliptic::bhy2                      = -1.1515
+BAM_Elliptic::bhpx2                     = 0.0
+BAM_Elliptic::bhsy2                     = 0.0
+BAM_Elliptic::bhsz2                     = 0.0
+bam_elliptic::bam_bound                 = "bamrobin"
+
+
+#--- grid
+driver::global_nx                       = 84
+driver::global_ny                       = 84
+driver::global_nz                       = 84
+time::dtfac                             = 0.4
+grid::type                              = "byspacing"
+grid::dxyz                              = 0.127944444444444
+grid::domain                            = "octant"
+pugh::ghost_size                        = 2
+cactus::cctk_itlast                     = 10
+
+
+#--- output
+IO::out_dir                             = "bbh0_84o0.4"
+IO::out_fileinfo                           = "none"
+IOBasic::outScalar_every                = 1
+IOASCII::out1D_every                    = 1
+IOBasic::outInfo_every                  = 1
+IOBasic::outScalar_vars                 =  " admanalysis::grr admbase::alp admbase::shift admconstraints::momentum admconstraints::ham "
+IOBasic::outInfo_vars                   =  " admconstraints::ham admbase::alp "
+IOASCII::out1D_vars                     =  " admanalysis::grr admbase::gyy admbase::alp admbase::shift admconstraints::momentum admconstraints::ham "
+
+
+#--- Standard ADM_BSSN evolution
+admbase::evolution_method               = "adm_bssn"
+#--- numerics
+mol::ode_method                         = "icn"
+adm_bssn::ICN_itnum                     = 3
+adm_bssn::bound                         = "radiative"
+adm_bssn::stencil_size                  = 2
+adm_bssn::advection                     = "upwind2"
+boundary::radpower                      = 2
+
+
+#--- fisheye
+fisheye::fisheye_active                 = "yes"
+fisheye::fisheye_type                   = "transition"
+fisheye::fisheye_tr_a                   = 4        #de-resolution
+fisheye::fisheye_tr_s                   = 1.2      #width
+fisheye::fisheye_tr_r0                  = 5        #center
+adm_bssn::fisheye_scale                 = 3        #de-resolution for boundary
+
+
+#--- Maximal const
+admbase::initial_lapse                  = "ssapprox"
+admbase::lapse_evolution_method         = "maximal"
+adm_bssn::forceKzero                    = "yes"
+maximal::max_every                      = 5
+maximal::max_solver                     = "bam"
+maximal::max_bound                      = "robin"
+maximal::max_robin_falloff              = 1
+maximal::max_robin_inf                  = 1.0
+maximal::maximal_thresh                 = 1e-08
+bam_elliptic::maximal_maxcycles         = 250
+bam_elliptic::bam_laplacian             = "delginv"
+bam_elliptic::maximal_verbose           = "yes"
+bam_elliptic::bam_fullV                 = "no"
+bam_elliptic::maximal_coarsetol         = 1e-10
+bam_elliptic::bam_solve_nmin            = 10
+bam_elliptic::bam_solve_nmax            = 500
+bam_elliptic::bam_solve_normmax         = 1e-10
+bam_elliptic::bam_persist               = "yes"
+
+
+#--- Standard shift
+admbase::initial_shift                 = "zero"
+admbase::shift_evolution_method        = "gamma2"
+adm_bssn::ShiftGammaCoeff               = 0.75
+adm_bssn::ShiftAlpPower                 = 1
+adm_bssn::ShiftPsiPower                 = 4
+adm_bssn::ShiftPhiPower                 = 0
+adm_bssn::BetaDriver                    = 2
+adm_bssn::BetaDriverPsi                 = 0.0
+adm_bssn::BetaDriverPhi                 = 0.0
+
+
+#--- nanchecker
+NaNChecker::check_every      =  1
+NaNChecker::check_vars       =  "admbase::lapse admbase::shift admbase::metric admbase::curv "
+NaNChecker::action_if_found  =  "terminate"
+
+
+#--- waveextract
+waveextract::out_every                 = 1
+waveextract::interpolation_operator    = "Lagrange polynomial interpolation"
+waveextract::interpolation_order       = 2
+waveextract::rsch2_computation         = "average Schwarzschild metric"
+waveextract::verbose                   = 8
+waveextract::l_mode                    = 4
+waveextract::m_mode                    = 4
+waveextract::detector_radius[0]        = 7.16488888888889
+waveextract::detector_radius[1]        = 7.67666666666667
+waveextract::detector_radius[2]        = 8.18844444444444
+waveextract::detector_radius[3]        = 8.70022222222222
+waveextract::detector_radius[4]        = 9.212
+
+
+sphericalsurface::nsurfaces = 1

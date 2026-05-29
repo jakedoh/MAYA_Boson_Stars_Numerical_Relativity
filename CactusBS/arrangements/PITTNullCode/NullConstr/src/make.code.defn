@@ -1,0 +1,9 @@
+# Main make.code.defn file for thorn NullConstr
+# $Header$
+
+# Source files in this directory
+SRCS = NullConstr_AuxConstr.F90 NullConstr_Driver.F90 NullConstr_R00.F90 NullConstr_R01.F90 \
+	NullConstr_R0A.F90 NullConstr_Util.F90
+
+# Subdirectories containing source files
+SUBDIRS = 

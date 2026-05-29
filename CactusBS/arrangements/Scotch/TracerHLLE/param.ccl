@@ -1,0 +1,14 @@
+# Parameter definitions for thorn TracerHLLE
+# $Header:$
+
+SHARES: Whisky
+
+USES CCTK_INT number_of_tracers
+USES CCTK_INT whisky_stencil
+
+Restricted:
+keyword TracerHLLE_type "Which HLLE type to use"
+{
+  "Standard"	:: "Standard HLLE solver"
+  "Tadmor"	:: "Tadmor's simplification of HLLE"
+} "Standard"

@@ -1,0 +1,4 @@
+# Schedule definitions for thorn TempPool
+
+STORAGE: TempPoolGF1[1]
+STORAGE: TempPoolGF3[3]

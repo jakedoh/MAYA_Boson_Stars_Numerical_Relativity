@@ -1,0 +1,7 @@
+# Configuration definitions for thorn WeightedReduce
+
+REQUIRES Carpet CarpetLib MPI
+OPTIONAL LoopControl
+{
+}
+

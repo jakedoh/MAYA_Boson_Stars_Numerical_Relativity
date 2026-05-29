@@ -1,0 +1,5 @@
+# Interface definition for thorn Hydro_InitExcision
+
+implements: Hydro_InitExcision
+inherits: HydroBase, Grid, SpaceMask
+

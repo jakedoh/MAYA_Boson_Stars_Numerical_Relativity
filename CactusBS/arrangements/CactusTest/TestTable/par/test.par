@@ -1,0 +1,2 @@
+# there are no parameters for this thorn -- just activate it
+ActiveThorns = "TestTable"

@@ -1,0 +1,41 @@
+# Schedule definitions for thorn TwoPunctures_KerrProca
+
+if (CCTK_Equals(initial_data, "twopunctures_KerrProca"))
+{
+  STORAGE: energy, angular_momentum, puncture_adm_mass
+
+  if (keep_u_around) {
+    STORAGE: puncture_u bare_mass
+  }
+
+  SCHEDULE TPKP_TwoPunctures_ParamCheck AT PARAMCHECK
+  {
+    LANG: C
+  } "Check parameters and thorn needs"
+
+  if (schedule_in_ADMBase_InitialData)
+  {
+      SCHEDULE GROUP TPKP_TwoPunctures_Group IN ADMBase_InitialData
+      {
+      } "TwoPunctures initial data group"
+  }
+  else
+  {
+      SCHEDULE GROUP TPKP_TwoPunctures_Group AT Initial AFTER ADMBase_InitialData BEFORE ADMBase_PostInitial AFTER HydroBase_Initial before SetTmunu before HydroBase_Prim2ConInitial
+      {
+      } "TwoPunctures initial data group"
+  }
+
+  SCHEDULE TPKP_TwoPunctures IN TPKP_TwoPunctures_Group
+  {
+    LANG: C
+    STORAGE: puncture_u bare_mass
+    # SYNC: ADMBase::metric ADMBase::curv ADMBase::lapse
+  } "Create puncture black hole initial data"
+
+  SCHEDULE TPKP_TwoPunctures_Metadata IN TPKP_TwoPunctures_Group after TPKP_TwoPunctures
+  {
+    LANG: C
+    OPTIONS: global
+  } "Output TwoPunctures metadata"
+}

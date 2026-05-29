@@ -1,0 +1,218 @@
+# Parameter definitions for thorn IOJpeg
+# $Header$
+
+#############################################################################
+### declare IOJpeg parameters
+#############################################################################
+private:
+
+########################
+# The basic parameters:
+# how often to do output
+# for which variables
+# into which output directory
+########################
+INT out_every "How often to do IOJpeg output, overrides IO::out_every" STEERABLE = ALWAYS
+{
+   1:* :: "Every so many iterations"
+   0:  :: "Disable IOJpeg output"
+  -1:  :: "Choose the default from IO::out_every"
+} -1
+
+STRING out_vars "Variables to output by IOJpeg" STEERABLE = ALWAYS
+{
+  ".+" :: "Space-separated list of fully qualified variable/group names"
+  "^$" :: "An empty string to output nothing"
+} ""
+
+STRING out_dir "Output directory for IOJpeg files, overrides IO::out_dir" STEERABLE = RECOVER
+{
+  ".+" :: "A valid directory name"
+  "^$" :: "An empty string to choose the default from IO::out_dir"
+} ""
+
+KEYWORD mode "Output mode to use" STEERABLE = ALWAYS
+{
+  "remove"   :: "Remove files from old timesteps"
+  "standard" :: "Generate a file for each out_every timesteps"
+} "standard"
+
+KEYWORD gridpoints "How to access grid points" STEERABLE = RECOVER
+{
+  "hyperslab"   :: "use locations of grid points"
+  "interpolate" :: "interpolate to arbitrary points"
+} "hyperslab"
+
+
+########################
+# Specific to jpegs
+########################
+REAL colormap_bias "Bias automatic colormap generation towards red (low) or blue (high)" STEERABLE = ALWAYS
+{
+  -1:1 :: "Could be unrestricted"
+} 0.5
+
+INT colormap_quality "JPEG quality of level" STEERABLE = ALWAYS
+{
+  0:100 :: "Percentage of full quality"
+} 75
+
+INT colormap_factor "How to scale float values to rgb color" STEERABLE = ALWAYS
+{
+  2:256 :: "Positive scaling"
+} 32
+
+KEYWORD colormap "How to set the colormap" STEERABLE = ALWAYS
+{
+  "auto"     :: "Set automatically using min/max of grid variables"
+  "auto-old" :: "Set automatically using min/max of grid variables, using the old reduction interface which is still used by Carpet"
+  "custom"   :: "Set min/max manually"
+} "custom"
+
+REAL colormap_min "minimum value to be mapped to colors" STEERABLE = ALWAYS
+{
+  *:* :: "Only for custom colormap scale"
+} -1.0
+REAL colormap_max "maximum value to be mapped to colors" STEERABLE = ALWAYS
+{
+  *:* :: "Only for custom colormap scale"
+} +1.0
+
+INT refinement_factor "Refine each 2D slice by a certain factor (using interpolation) ?" STEERABLE = ALWAYS
+{
+   1:* :: "A factor greater 0"
+} 1
+
+
+###################################################
+# Choosing what planes to output when hyperslabbing
+###################################################
+REAL out2D_yzplane_x "x-coord for 2D planes in yz" STEERABLE = RECOVER
+{
+  *:*      :: "A value between [xmin, xmax]"
+  -424242: :: "Default to IO::out_yzplane_x"
+} -424242
+REAL out2D_xzplane_y "y-coord for 2D planes in xz" STEERABLE = RECOVER
+{
+  *:*      :: "A value between [ymin, ymax]"
+  -424242: :: "Default to IO::out_xzplane_y"
+} -424242
+REAL out2D_xyplane_z "z-coord for 2D planes in xy" STEERABLE = RECOVER
+{
+  *:*      :: "A value between [zmin, zmax]"
+  -424242: :: "Default to IO::out_xyplane_z"
+} -424242
+
+INT out2D_yzplane_xi "x-index (from 0) for 2D planes in yz" STEERABLE = RECOVER
+{
+   0:* :: "An index between [0, nx)"
+  -1:  :: "Choose the default from IO::out_yzplane_xi"
+} -1
+INT out2D_xzplane_yi "y-index (from 0) for 2D planes in xz" STEERABLE = RECOVER
+{
+   0:* :: "An index between [0, ny)"
+  -1:  :: "Choose the default from IO::out_xzplane_yi"
+} -1
+INT out2D_xyplane_zi "z-index (from 0) for 2D planes in xy" STEERABLE = RECOVER
+{
+   0:* :: "An index between [0, nz)"
+  -1:  :: "Choose the default from IO::out_xyplane_zi"
+} -1
+
+
+###################################################
+# Choosing what region to output when interpolating
+###################################################
+
+STRING interpolator_name "Name of the interpolator" STEERABLE=always
+{
+  ".*" :: "must be a registered interpolator"
+} "Lagrange polynomial interpolation"
+
+STRING interpolator_options "Options for the interpolator" STEERABLE=always
+{
+  ".*" :: "must be a valid option specification"
+} "order=2"
+
+STRING interpolator_coordinates "Coordinate system" STEERABLE=always
+{
+  ".*" :: "must be a registered coordinate system"
+} "cart3d"
+
+BOOLEAN multiply_by_radius "Multiply valus by r" STEERABLE=always
+{
+} "no"
+
+
+
+REAL array2d_x0 "Origin" STEERABLE=always
+{
+  *:* :: ""
+} 0.0
+
+REAL array2d_y0 "Origin" STEERABLE=always
+{
+  *:* :: ""
+} 0.0
+
+REAL array2d_z0 "Origin" STEERABLE=always
+{
+  *:* :: ""
+} 0.0
+
+INT array2d_npoints_i "Number of grid points for the 2D grid arrays in the i direction"
+{
+  0:* :: ""
+} 10
+
+REAL array2d_dx_i "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+REAL array2d_dy_i "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+REAL array2d_dz_i "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+INT array2d_npoints_j "Number of grid points for the 2D grid arrays in the j direction"
+{
+  0:* :: ""
+} 10
+
+REAL array2d_dx_j "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+REAL array2d_dy_j "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+REAL array2d_dz_j "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+
+#############################################################################
+### import IOUtil parameters
+#############################################################################
+shares: IO
+
+USES STRING out_dir AS io_out_dir
+USES INT out_every AS io_out_every
+USES KEYWORD verbose
+USES BOOLEAN strict_io_parameter_check
+USES REAL out_yzplane_x
+USES REAL out_xzplane_y
+USES REAL out_xyplane_z
+USES INT out_yzplane_xi
+USES INT out_xzplane_yi
+USES INT out_xyplane_zi

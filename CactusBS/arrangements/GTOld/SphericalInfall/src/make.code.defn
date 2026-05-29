@@ -1,0 +1,8 @@
+# Main make.code.defn file for thorn SphericalInfall
+# $Header:$
+
+# Source files in this directory
+SRCS = sphericalinfall.c isobondi.c
+
+# Subdirectories containing source files
+SUBDIRS = 

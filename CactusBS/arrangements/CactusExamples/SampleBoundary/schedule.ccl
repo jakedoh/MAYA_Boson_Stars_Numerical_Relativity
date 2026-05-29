@@ -1,0 +1,8 @@
+# Schedule definitions for thorn SampleBoundary
+# $Header$
+
+schedule SampleBoundary_RegisterBCs at CCTK_BASEGRID
+{
+  lang: C
+} "Register boundary conditions that this thorn provides"
+

@@ -1,0 +1,301 @@
+with(linalg):
+
+x:=array([r,q,p,u]);
+g:=matrix(4,4);
+h:=matrix(4,4);
+sigmahat:=matrix(4,4);
+sigmahat1:=matrix(4,4);
+qAup:=array([0,f/2,I*f/2,0]);
+qAbarup:=array([0,f/2,-I*f/2,0]);
+UA:=array([0,unsq,unsp,0]);
+
+alias(J=J(r,q,p,u,eth,ethb));
+alias(Jb=Jb(r,q,p,u,eth,ethb));
+alias(U=U(r,q,p,u,eth,ethb));
+alias(Ub=Ub(r,q,p,u,eth,ethb));
+alias(B=B(r,q,p,u,eth,ethb));
+alias(K=K(r,q,p,u,eth,ethb));
+alias(Vw=Vw(r,q,p,u,eth,ethb));
+alias(sigrr1=sigrr1(r,q,p,u,eth,ethb));
+alias(sigru1=sigru1(r,q,p,u,eth,ethb));
+alias(siguu1=siguu1(r,q,p,u,eth,ethb));
+alias(sigu1=sigu1(r,q,p,u,eth,ethb));
+alias(sigr1=sigr1(r,q,p,u,eth,ethb));
+alias(sigu1b=sigu1b(r,q,p,u,eth,ethb));
+alias(sigr1b=sigr1b(r,q,p,u,eth,ethb));
+alias(sigJ1=sigJ1(r,q,p,u,eth,ethb));
+alias(sigJ1b=sigJ1b(r,q,p,u,eth,ethb));
+alias(sigK1=sigK1(r,q,p,u,eth,ethb));
+
+g:=matrix([
+   [0,0,0,exp(2*B)],
+   [0,hqq,hqp,-(hqq*unsq+hqp*unsp)],
+   [0,hqp,hpp,-(hpp*unsp+hqp*unsq)],
+   [exp(2*B),-(hqq*unsq+hqp*unsp),-(hpp*unsp+hqp*unsq),
+	-(exp(2*B)*Vw*r-(hqq*unsq^2+2*hqp*unsq*unsp+hpp*unsp^2))]
+  ]);
+
+h:=inverse(g);
+df:=16/f^4;
+
+h[2,2]:=hpp/(df);
+h[3,2]:=-hqp/(df);h[2,3]:=h[3,2];
+h[3,3]:=hqq/(df);
+
+pr1:=proc(X,s,Y)
+  local Z,r1:
+   r1:={diff(X,q)=(diff(X,ethb)+diff(X,eth)-s*I*2*p*X)/f,
+        diff(X,p)=(diff(X,ethb)-diff(X,eth)+s*2*q*X)*I/f}:
+   Z:=simplify(subs(r1,Y)):
+   return Z:
+end;
+
+#The following procedure is used when X is of the form eth_A,
+#so that eth_ethb always means eth_ethb and never ethb_eth
+pr1_eth:=proc(X,s,Y)
+  local Z,r1:
+   r1:={diff(X,q)=(diff(X,ethb)+diff(X,eth)-s*I*2*p*X+2*(s-1)*X)/f,
+        diff(X,p)=(diff(X,ethb)-diff(X,eth)+s*2*q*X+2*(s-1)*X)*I/f}:
+   Z:=simplify(subs(r1,Y)):
+   return Z:
+end;
+
+pr2:=proc(Y)
+  local Z:
+   Z:=pr1(J,2,Y):
+   Z:=pr1(Jb,-2,Z):
+   Z:=pr1(K,0,Z):
+   Z:=pr1(Ub,-1,Z):
+   Z:=pr1(U,1,Z):
+   Z:=pr1(B,0,Z):
+   Z:=pr1(Vw,0,Z):
+  return Z
+end;
+
+f:= 1+p^2+q^2;
+hqq:=2/f^2*(2*K+(J+Jb));
+hpp:=2/f^2*(2*K-(J+Jb));
+hqp:=2/f^2*I*(Jb-J);
+unsq:=f*(U+Ub)/4;
+unsp:=I*f*(Ub-U)/4;
+
+dfg:=array(1..4,1..4,1..4);
+C:=array(1..4,1..4,1..4);
+Csum:=array(1..4);
+
+for a to 4 do for b to 4 do for c to 4 do
+   dfg[a,b,c]:=diff(g[a,b],x[c])
+od od od;
+
+for d to 4 do for e to 4 do for j to 4 do
+   C[d,e,j]:=(sum(h[j,k]*(dfg[d,k,e]+dfg[e,k,d]-dfg[d,e,k])/2,k=1..4))
+od od od;
+
+for d3 to 4 do for e3 from d3 to 4 do for j3 to 4 do
+   C[d3,e3,j3]:=simplify(C[d3,e3,j3]);
+   C[d3,e3,j3]:=pr2(C[d3,e3,j3]);
+   C[e3,d3,j3]:=C[d3,e3,j3];
+   print(d3,e3,j3);
+od; od; od;
+
+`Gamma simplified`;
+
+C2:=array(2..3,2..3,2..3);
+for d from 2 to 3 do for e from 2 to 3 do for j from 2 to 3 do
+   C2[d,e,j]:=(sum(h[j,k]*(dfg[d,k,e]+dfg[e,k,d]-dfg[d,e,k])/2,k=2..3))
+od od od;
+for d3 from 2 to 3 do for e3 from 2 to 3 do for j3 from 2 to 3 do
+   C2[d3,e3,j3]:=simplify(C2[d3,e3,j3]);
+   C2[d3,e3,j3]:=pr2(C2[d3,e3,j3]);
+   C2[e3,d3,j3]:=C2[d3,e3,j3];
+od; od; od;
+`Gamma2D constructed`;
+
+nmu:=array([0,exp(-2*B)*unsq,exp(-2*B)*unsp,exp(-2*B)]);
+
+sigr:=0;
+for a from 2 to 3 do for b from 2 to 3 do 
+  sigr:=sigr+exp(-2*B)/2*qAup[a]*diff(g[a,b]*diff(UA[b],r),r);
+od;od;
+sigr:=simplify(sigr);
+sigrb:=0;
+for a from 2 to 3 do for b from 2 to 3 do 
+  sigrb:=sigrb+exp(-2*B)/2*qAbarup[a]*diff(g[a,b]*diff(UA[b],r),r);
+od;od;
+sigrb:=simplify(sigrb);
+
+e2HDL:=exp(-2*B)*(diff(Ub,eth)+diff(U,ethb))/2;
+rhsSigmunu:=exp(-2*B)/2*(diff(e2HDL,u)+UA[2]*diff(e2HDL,x[2])
+                       +UA[3]*diff(e2HDL,x[3]));
+rhsSigmu:=qAup[2]*diff(e2HDL,x[2])/2+qAup[3]*diff(e2HDL,x[3])/2;
+rhsSigmu:=pr1(B,0,rhsSigmu);
+rhsSigmu:=pr1(diff(U,ethb),0,rhsSigmu);
+rhsSigmu:=pr1_eth(diff(Ub,eth),0,rhsSigmu);
+rhsSigmunu:=pr1(B,0,rhsSigmunu);
+rhsSigmunu:=pr1(diff(U,ethb),0,rhsSigmunu);
+rhsSigmunu:=pr1_eth(diff(Ub,eth),0,rhsSigmunu);
+rhsSigmubar:=qAbarup[2]*diff(e2HDL,x[2])/2+qAbarup[3]*diff(e2HDL,x[3])/2;
+rhsSigmubar:=pr1(B,0,rhsSigmubar);
+rhsSigmubar:=pr1(diff(U,ethb),0,rhsSigmubar);
+rhsSigmubar:=pr1_eth(diff(Ub,eth),0,rhsSigmubar);
+
+for a1 from 2 to 3 do
+  DAe2H[a1]:=diff(exp(2*B),x[a1]);
+  DAe2H[a1]:=pr1(B,0,DAe2H[a1]);
+od;
+for a1 from 2 to 3 do for b1 from 2 to 3 do
+ DABe2H[a1,b1]:=diff(DAe2H[a1],x[b1])-DAe2H[2]*C2[a1,b1,2]
+                  -DAe2H[3]*C2[a1,b1,3];
+ DABe2H[a1,b1]:=pr1(B,0,DABe2H[a1,b1]);
+ DABe2H[a1,b1]:=pr1(diff(B,ethb),-1,DABe2H[a1,b1]);
+ DABe2H[a1,b1]:=pr1_eth(diff(B,eth),1,DABe2H[a1,b1]);
+ DABe2H[a1,b1]:=algsubs(K^2=1+J*Jb,DABe2H[a1,b1]);
+od:od:
+
+  D2e2H:=0;
+for a1 from 2 to 3 do for b1 from 2 to 3 do
+  D2e2H:=D2e2H+DABe2H[a1,b1]*h[a1,b1];
+od;od;  
+ D2e2H:=simplify(D2e2H);
+ D2e2H:=pr1(B,0,D2e2H);
+ D2e2H:=pr1(diff(B,ethb),-1,D2e2H);
+ D2e2H:=pr1_eth(diff(B,eth),1,D2e2H);
+ D2e2H:=algsubs(K^2=1+J*Jb,D2e2H);
+
+Ric2:=2*K-diff(K,eth,ethb)+(diff(J,ethb$2)+diff(Jb,eth$2))/2
+         +(diff(Jb,ethb)*diff(J,eth)-diff(J,ethb)*diff(Jb,eth))/4/K;
+
+for a1 from 2 to 3 do for b1 from 2 to 3 do
+  c[a1,b1]:=diff(g[a1,b1],r):
+od;od;
+for a1 from 2 to 3 do for b1 from 2 to 3 do
+  LieLc[a1,b1]:=diff(c[a1,b1],q)*unsq+diff(c[a1,b1],p)*unsp+
+                c[a1,2]*diff(unsq,x[b1])+c[a1,3]*diff(unsp,x[b1])
+                +c[2,b1]*diff(unsq,x[a1])+c[3,b1]*diff(unsp,x[a1]):
+  LieLc[a1,b1]:=pr1(U,1,LieLc[a1,b1]);
+  LieLc[a1,b1]:=pr1(Ub,-1,LieLc[a1,b1]);
+  LieLc[a1,b1]:=pr1(diff(J,r),2,LieLc[a1,b1]);
+  LieLc[a1,b1]:=pr1(diff(Jb,r),-2,LieLc[a1,b1]);
+  LieLc[a1,b1]:=pr1(diff(K,r),0,LieLc[a1,b1]);
+  LieLc[a1,b1]:=algsubs(K^2=1+J*Jb,LieLc[a1,b1]);
+  sigmahat[a1,b1]:= exp(-2*B)/2*(diff(c[a1,b1],u)+LieLc[a1,b1])
+          +exp(-2*B)*DABe2H[a1,b1]
+          -g[a1,b1]/4*(Ric2+3*exp(-2*B)*D2e2H);
+  sigmahat[a1,b1]:=simplify(sigmahat[a1,b1]);
+od;od;
+
+sigJ:=simplify(sum(sum(qAup[a5]*qAup[b5]*sigmahat[a5,b5]/2,
+               a5=2..3),b5=2..3));
+sigJb:=simplify(sum(sum(qAbarup[a5]*qAbarup[b5]*sigmahat[a5,b5]/2,
+               a5=2..3),b5=2..3));
+sigK:=simplify(sum(sum(qAup[a5]*qAbarup[b5]*sigmahat[a5,b5]/2,
+               a5=2..3),b5=2..3));
+
+sigru:=simplify(exp(2*B)*Ric2/4+D2e2H/4-Ub*sigr1/2-U*sigr1b/2);
+sigu:=simplify(exp(2*B)*rhsSigmu-Ub*sigJ1-U*sigK1);
+sigub:=simplify(exp(2*B)*rhsSigmubar-U*sigJ1b-Ub*sigK1);
+siguu:=simplify(exp(4*B)*rhsSigmunu-Ub*sigu-U*sigub-Ub^2*sigJ1/2-U^2*sigJ1b/2
+                -U*Ub*sigK1);
+
+mA:=array(1..4,[0,f/2*(sqrt((K+1)/2)-J/sqrt(2*(K+1))),
+                I*f/2*(sqrt((K+1)/2)+J/sqrt(2*(K+1))),0]);
+
+sigmahat1[1,1]:=sigrr1:
+sigmahat1[4,4]:=siguu1:
+sigmahat1[1,4]:=sigru1:sigmahat1[4,1]:=sigmahat1[1,4]:
+sigmahat1[2,4]:=(sigu1+sigu1b)/f:sigmahat1[4,2]:=sigmahat1[2,4]:
+sigmahat1[3,4]:=I*(-sigu1+sigu1b)/f:sigmahat1[4,3]:=sigmahat1[3,4]:
+sigmahat1[1,2]:=(sigr1+sigr1b)/f:sigmahat1[2,1]:=sigmahat1[1,2]:
+sigmahat1[1,3]:=I*(-sigr1+sigr1b)/f:sigmahat1[3,1]:=sigmahat1[1,3]:
+sigmahat1[2,2]:=2/f^2*(2*sigK1+(sigJ1+sigJ1b)):
+sigmahat1[3,3]:=2/f^2*(2*sigK1-(sigJ1+sigJ1b)):
+sigmahat1[2,3]:=2/f^2*I*(-sigJ1+sigJ1b):
+sigmahat1[3,2]:=sigmahat1[2,3]:
+
+psi4g:=simplify(sum( sum (sum (1/2*nmu[c6]*mA[a6]*mA[b6]*
+            sum(
+         simplify(-C[c6,b6,d6]*sigmahat1[a6,d6]+C[a6,b6,d6]*sigmahat1[c6,d6]),
+         d6=1..4),a6=1..4),b6=1..4),c6=1..4));
+for a from 1 to 4 do for b from 1 to 4 do for c from 1 to 4 do
+dsig[a,b,c]:=simplify(diff(sigmahat1[a,b],x[c])-diff(sigmahat1[c,b],x[a]));
+od:od:od:
+psi4d:=simplify(sum( sum (sum (nmu[c7]*mA[a7]*mA[b7]*
+         dsig[a7,b7,c7]/2,
+            a7=1..4),b7=1..4),c7=1..4));
+psi4d:=pr1(sigK1,0,psi4d);
+psi4d:=pr1(sigJ1b,-2,psi4d);
+psi4d:=pr1(sigJ1,2,psi4d);
+psi4d:=pr1(sigr1,1,psi4d);
+psi4d:=pr1(sigr1b,-1,psi4d);
+psi4d:=pr1(sigu1,1,psi4d);
+psi4d:=pr1(sigu1b,-1,psi4d);
+psi4:=simplify(psi4g+psi4d);
+psi4:=simplify(algsubs(J*Jb=K^2-1,psi4));
+
+#We want to substitute r=0 into psi4, but that does not work
+#because Maple will also subsitute this condition into the dependence
+#list of all variables. So, instead we show that substituting r=0 is
+#equivalent to substituting Vw=0, and then do that.
+t1:=simplify(subs(Vw=0,psi4));
+t2:=simplify(subs(r=0,t1-psi4));
+psi4:=simplify(subs(Vw=0,psi4));
+
+#Linearized formulas ...
+r1:={K=1,J=eps*J,Jb=eps*Jb,U=eps*U,Ub=eps*Ub,B=eps*B,Vw=eps*Vw};
+sigr2:=simplify(subs(r1,sigr)):
+sigreps0:=simplify(subs(eps=0,sigr2));
+sigreps1:=simplify(subs(eps=0,diff(sigr2,eps)));
+sigru2:=simplify(subs(r1,sigru)):
+sigrueps0:=simplify(subs(eps=0,sigru2));
+sigrueps1:=simplify(subs(eps=0,diff(sigru2,eps)));
+sigJ2:=simplify(subs(r1,sigJ)):
+sigJeps0:=simplify(subs(eps=0,sigJ2));
+sigJeps1:=simplify(subs(eps=0,diff(sigJ2,eps)));
+sigJb2:=simplify(subs(r1,sigJb)):
+sigJbeps0:=simplify(subs(eps=0,sigJb2));
+sigJbeps1:=simplify(subs(eps=0,diff(sigJb2,eps)));
+sigK2:=simplify(subs(r1,sigK)):
+sigKeps0:=simplify(subs(eps=0,sigK2));
+sigKeps1:=simplify(subs(eps=0,diff(sigK2,eps)));
+sigu2:=simplify(subs(r1,sigJ1b=sigJbeps0+eps*sigJbeps1,
+                  sigJ1=sigJeps0+eps*sigJeps1,
+                  sigK1=sigKeps0+eps*sigKeps1,sigu)):
+sigueps0:=simplify(subs(eps=0,sigu2));
+sigueps1:=simplify(subs(eps=0,diff(sigu2,eps)));
+sigub2:=simplify(subs(r1,sigJ1b=sigJbeps0+eps*sigJbeps1,
+                  sigJ1=sigJeps0+eps*sigJeps1,
+                  sigK1=sigKeps0+eps*sigKeps1,sigub)):
+sigubeps0:=simplify(subs(eps=0,sigub2));
+sigubeps1:=simplify(subs(eps=0,diff(sigub2,eps)));
+siguu2:=simplify(subs(r1,siguu)):
+siguueps0:=simplify(subs(eps=0,siguu2));
+siguueps1:=simplify(subs(eps=0,diff(siguu2,eps)));
+
+r2:={sigr1=sigreps0+eps*sigr1,
+     sigru1=sigru1eps0+eps*sigru1,
+     sigJ1=sigJeps0+eps*sigJ1,
+     sigJ1b=sigJbeps0+eps*sigJ1b,
+     sigK1=sigK1eps0+eps*sigK1,
+     sigu1=sigueps0+eps*sigu1,
+     sigu1b=sigubeps0+eps*sigu1b,
+     siguu1=siguueps0+eps*siguu1}:
+psi42:=simplify(subs(r1,r2,psi4)):
+psi4eps0:=simplify(subs(eps=0,psi42));
+psi4eps1:=simplify(subs(eps=0,diff(psi42,eps)));
+
+interface(echo=4);
+writeto(`t.out`);
+psi4eps1;
+sigueps1;
+sigJeps1;
+sigrueps0;
+sigKeps0;
+
+sigr;
+sigru;
+sigJ;
+sigK;
+sigu;
+siguu;
+psi4;
+writeto(`terminal`);

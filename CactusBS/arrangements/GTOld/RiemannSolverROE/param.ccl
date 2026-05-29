@@ -1,0 +1,14 @@
+# Parameter definitions for thorn RiemannSolverROE
+# $Header:$
+
+SHARES: Whisky
+
+USES CCTK_INT whisky_stencil
+USES KEYWORD whisky_eos_type
+USES CCTK_KEYWORD numerical_viscosity
+USES CCTK_KEYWORD left_eigenvectors
+
+EXTENDS keyword riemann_solver
+{
+  "Roe"		:: "Standard Roe solver"
+}

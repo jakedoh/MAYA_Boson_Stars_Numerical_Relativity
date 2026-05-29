@@ -1,0 +1,20 @@
+# Interface definition for thorn SampleBoundary
+# $Header$
+
+implements: LinExtrapBnd
+
+CCTK_INT FUNCTION Boundary_RegisterPhysicalBC(CCTK_POINTER_TO_CONST IN GH, \
+  CCTK_INT IN CCTK_FPOINTER function_pointer(CCTK_POINTER_TO_CONST IN GH, \
+                                             CCTK_INT IN num_vars, \
+                                             CCTK_INT ARRAY IN var_indices, \
+                                             CCTK_INT ARRAY IN faces, \
+                                             CCTK_INT ARRAY IN boundary_widths, \
+                                             CCTK_INT ARRAY IN table_handles),\
+  CCTK_STRING IN bc_name)
+USES FUNCTION Boundary_RegisterPhysicalBC
+
+
+
+CCTK_INT FUNCTION \
+    SymmetryTableHandleForGrid (CCTK_POINTER_TO_CONST IN cctkGH)
+USES FUNCTION SymmetryTableHandleForGrid

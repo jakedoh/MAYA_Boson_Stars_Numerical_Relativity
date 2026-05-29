@@ -1,0 +1,33 @@
+Cactus Code Thorn TempPool
+Author(s)    : Roberto De Pietri <roberto.depietri@unipr.it>
+             : Luca Franci <luca.franci@fis.unipr.it>
+             : Frank Löffler <knarf@cct.lsu.edu>
+Maintainer(s): Roberto De Pietri <roberto.depietri@unipr.it>
+             : Luca Franci <luca.franci@fis.unipr.it>
+             : Frank Löffler <knarf@cct.lsu.edu>
+Licence      : GPLv2 or later 
+--------------------------------------------------------------------------
+
+1. Purpose
+
+Purpose of the Thorn is to create a a Pool of temporary grid variable to be used and
+shared by various thorn to be used as scratch for doing local computation.
+The Thorns that use variables from this pool should assume no consistency.
+
+
+The name of allocatated array of grid variable is: TempPoolGF
+
+
+To use this pool of temporary variable one shoud insert in interface.ccl:
+
+> inherits: TempPool 
+
+To use this pool of temporary variable one shoud insert in interface.ccl:
+
+> shares: TempPool
+> USES CCTK_INT 
+> restricted:
+> CCTK_INT Test_maxntemp "Turns on the necessary numbers of temporary variables in TempPool" ACCUMULATOR-BASE=TempPool::maxntemp
+> {
+>   1:1 :: ""
+> } 1

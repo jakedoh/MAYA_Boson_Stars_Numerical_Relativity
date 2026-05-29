@@ -1,0 +1,16 @@
+CVS info   : $Header$
+
+Cactus Code Thorn GlobalDerivative
+Thorn Author(s)     : Christian Reisswig <reisswig@aei.mpg.de>
+Thorn Maintainer(s) : Christian Reisswig <reisswig@aei.mpg.de>
+--------------------------------------------------------------------------
+
+Purpose of the thorn:
+
+This thorn is ment to provide derivative operators in a global coordinate frame
+for variables that are defined on local grid coordinates.
+
+\hat{partial_i} = J^j_i \partial_j
+
+
+It can also apply dissipation in the same way.

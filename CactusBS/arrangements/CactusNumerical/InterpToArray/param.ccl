@@ -1,0 +1,495 @@
+# Parameter definitions for thorn InterpToArray
+
+RESTRICTED:
+
+# CCTK_InterpGridArrays parameters
+
+STRING interpolator_name "Name of the interpolator" STEERABLE=always
+{
+  ".*" :: "must be a registered interpolator"
+} "Lagrange polynomial interpolation"
+
+STRING interpolator_options "Options for the interpolator" STEERABLE=always
+{
+  ".*" :: "must be a valid option specification"
+} "order=2"
+
+STRING interpolator_coordinates "Coordinate system" STEERABLE=always
+{
+  ".*" :: "must be a registered coordinate system"
+} "cart3d"
+
+# InterpGridArrays ie. CarpetInterp2 parameters
+
+BOOLEAN use_carpetinterp2 "Use InterpGridArrays rather than CCTK_InterpGridArrays" STEERABLE=always
+{
+} "no"
+
+INT carpetinterp2_interpolator_order "Order of interpolation for CarpetInterp2" STEERABLE=always
+{
+  0:* :: "any order supported by CarpetInterp2"
+} 2
+
+
+# Common parameters
+
+INT nghosts "Number of ghost zones"
+{
+  0:* :: ""
+} 0
+
+
+
+INT nscalars "Number of grid scalars"
+{
+  0:100 :: ""
+} 0
+
+STRING scalar_vars[100] "Names of the grid functions that should be interpolated on a point" STEERABLE=always
+{
+  "^$"                                                 :: "do not interpolate"
+  "^[A-Za-z][A-Za-z0-9_]*[:][:][A-Za-z][A-Za-z0-9_]*$" :: "grid function name"
+} ""
+
+REAL scalar_x0 "Origin" STEERABLE=always
+{
+  *:* :: ""
+} 0.0
+
+REAL scalar_y0 "Origin" STEERABLE=always
+{
+  *:* :: ""
+} 0.0
+
+REAL scalar_z0 "Origin" STEERABLE=always
+{
+  *:* :: ""
+} 0.0
+
+
+
+INT narrays1d "Number of 1D grid arrays"
+{
+  0:100 :: ""
+} 0
+
+STRING array1d_vars[100] "Names of the grid functions that should be interpolated on a line" STEERABLE=always
+{
+  "^$"                                                 :: "do not interpolate"
+  "^[A-Za-z][A-Za-z0-9_]*[:][:][A-Za-z][A-Za-z0-9_]*$" :: "grid function name"
+} ""
+
+INT array1d_spacederivs[100] "Space derivative orders for each grid function"
+{
+  0:* :: ""
+} 0
+
+INT array1d_timederivs[100] "Time derivative order for each grid function"
+{
+  0:* :: ""
+} 0
+
+REAL array1d_x0 "Origin" STEERABLE=always
+{
+  *:* :: ""
+} 0.0
+
+REAL array1d_y0 "Origin" STEERABLE=always
+{
+  *:* :: ""
+} 0.0
+
+REAL array1d_z0 "Origin" STEERABLE=always
+{
+  *:* :: ""
+} 0.0
+
+INT array1d_npoints_i "Number of grid points for the 1D grid arrays in the i direction"
+{
+  0:* :: ""
+} 0
+
+REAL array1d_dx_i "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+REAL array1d_dy_i "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+REAL array1d_dz_i "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+
+
+INT narrays2d "Number of 2D grid arrays"
+{
+  0:100 :: ""
+} 0
+
+STRING array2d_vars[100] "Names of the grid functions that should be interpolated on a 2D grid" STEERABLE=always
+{
+  "^$"                                                 :: "do not interpolate"
+  "^[A-Za-z][A-Za-z0-9_]*[:][:][A-Za-z][A-Za-z0-9_]*$" :: "grid function name"
+} ""
+
+REAL array2d_x0 "Origin" STEERABLE=always
+{
+  *:* :: ""
+} 0.0
+
+REAL array2d_y0 "Origin" STEERABLE=always
+{
+  *:* :: ""
+} 0.0
+
+REAL array2d_z0 "Origin" STEERABLE=always
+{
+  *:* :: ""
+} 0.0
+
+INT array2d_npoints_i "Number of grid points for the 2D grid arrays in the i direction"
+{
+  0:* :: ""
+} 0
+
+REAL array2d_dx_i "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+REAL array2d_dy_i "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+REAL array2d_dz_i "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+INT array2d_npoints_j "Number of grid points for the 2D grid arrays in the j direction"
+{
+  0:* :: ""
+} 0
+
+REAL array2d_dx_j "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+REAL array2d_dy_j "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+REAL array2d_dz_j "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+
+
+INT narrays3d "Number of 3D grid arrays"
+{
+  0:100 :: ""
+} 0
+
+STRING array3d_vars[100] "Names of the grid functions that should be interpolated on a 3D grid" STEERABLE=always
+{
+  "^$"                                                 :: "do not interpolate"
+  "^[A-Za-z][A-Za-z0-9_]*[:][:][A-Za-z][A-Za-z0-9_]*$" :: "grid function name"
+} ""
+
+REAL array3d_x0 "Origin" STEERABLE=always
+{
+  *:* :: ""
+} 0.0
+
+REAL array3d_y0 "Origin" STEERABLE=always
+{
+  *:* :: ""
+} 0.0
+
+REAL array3d_z0 "Origin" STEERABLE=always
+{
+  *:* :: ""
+} 0.0
+
+INT array3d_npoints_i "Number of grid points for the 3D grid arrays in the i direction"
+{
+  0:* :: ""
+} 0
+
+REAL array3d_dx_i "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+REAL array3d_dy_i "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+REAL array3d_dz_i "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+INT array3d_npoints_j "Number of grid points for the 3D grid arrays in the j direction"
+{
+  0:* :: ""
+} 0
+
+REAL array3d_dx_j "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+REAL array3d_dy_j "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+REAL array3d_dz_j "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+INT array3d_npoints_k "Number of grid points for the 3D grid arrays in the k direction"
+{
+  0:* :: ""
+} 0
+
+REAL array3d_dx_k "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+REAL array3d_dy_k "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+REAL array3d_dz_k "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+
+
+INT nparrays1d "Number of 1D parallel grid arrays"
+{
+  0:100 :: ""
+} 0
+
+STRING parray1d_vars[100] "Names of the grid functions that should be interpolated on a line" STEERABLE=always
+{
+  "^$"                                                 :: "do not interpolate"
+  "^[A-Za-z][A-Za-z0-9_]*[:][:][A-Za-z][A-Za-z0-9_]*$" :: "grid function name"
+} ""
+
+INT parray1d_spacederivs[100] "Space derivative orders for each grid function"
+{
+  0:* :: ""
+} 0
+
+INT parray1d_timederivs[100] "Time derivative order for each grid function"
+{
+  0:* :: ""
+} 0
+
+REAL parray1d_x0 "Origin" STEERABLE=always
+{
+  *:* :: ""
+} 0.0
+
+REAL parray1d_y0 "Origin" STEERABLE=always
+{
+  *:* :: ""
+} 0.0
+
+REAL parray1d_z0 "Origin" STEERABLE=always
+{
+  *:* :: ""
+} 0.0
+
+INT parray1d_npoints_i "Number of grid points for the 1D grid parrays in the i direction"
+{
+  0:* :: ""
+} 0
+
+REAL parray1d_dx_i "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+REAL parray1d_dy_i "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+REAL parray1d_dz_i "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+
+
+INT nparrays2d "Number of 2D parallel grid arrays"
+{
+  0:100 :: ""
+} 0
+
+STRING parray2d_vars[100] "Names of the grid functions that should be interpolated on a 2D grid" STEERABLE=always
+{
+  "^$"                                                 :: "do not interpolate"
+  "^[A-Za-z][A-Za-z0-9_]*[:][:][A-Za-z][A-Za-z0-9_]*$" :: "grid function name"
+} ""
+
+REAL parray2d_x0 "Origin" STEERABLE=always
+{
+  *:* :: ""
+} 0.0
+
+REAL parray2d_y0 "Origin" STEERABLE=always
+{
+  *:* :: ""
+} 0.0
+
+REAL parray2d_z0 "Origin" STEERABLE=always
+{
+  *:* :: ""
+} 0.0
+
+INT parray2d_npoints_i "Number of grid points for the 2D parallel grid arrays in the i direction"
+{
+  0:* :: ""
+} 0
+
+REAL parray2d_dx_i "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+REAL parray2d_dy_i "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+REAL parray2d_dz_i "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+INT parray2d_npoints_j "Number of grid points for the 2D parallel grid arrays in the j direction"
+{
+  0:* :: ""
+} 0
+
+REAL parray2d_dx_j "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+REAL parray2d_dy_j "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+REAL parray2d_dz_j "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+
+
+INT nparrays3d "Number of 3D grid parrays"
+{
+  0:100 :: ""
+} 0
+
+STRING parray3d_vars[100] "Names of the grid functions that should be interpolated on a 3D grid" STEERABLE=always
+{
+  "^$"                                                 :: "do not interpolate"
+  "^[A-Za-z][A-Za-z0-9_]*[:][:][A-Za-z][A-Za-z0-9_]*$" :: "grid function name"
+} ""
+
+REAL parray3d_x0 "Origin" STEERABLE=always
+{
+  *:* :: ""
+} 0.0
+
+REAL parray3d_y0 "Origin" STEERABLE=always
+{
+  *:* :: ""
+} 0.0
+
+REAL parray3d_z0 "Origin" STEERABLE=always
+{
+  *:* :: ""
+} 0.0
+
+INT parray3d_npoints_i "Number of grid points for the 3D parallel grid arrays in the i direction"
+{
+  0:* :: ""
+} 0
+
+REAL parray3d_dx_i "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+REAL parray3d_dy_i "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+REAL parray3d_dz_i "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+INT parray3d_npoints_j "Number of grid points for the 3D parallel grid arrays in the j direction"
+{
+  0:* :: ""
+} 0
+
+REAL parray3d_dx_j "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+REAL parray3d_dy_j "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+REAL parray3d_dz_j "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+INT parray3d_npoints_k "Number of grid points for the 3D parallel grid arrays in the k direction"
+{
+  0:* :: ""
+} 0
+
+REAL parray3d_dx_k "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+REAL parray3d_dy_k "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0
+
+REAL parray3d_dz_k "Spacing" STEERABLE=always
+{
+  0.0:* :: ""
+} 0.0

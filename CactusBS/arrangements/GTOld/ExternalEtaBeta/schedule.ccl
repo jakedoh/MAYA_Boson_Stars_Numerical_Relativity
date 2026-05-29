@@ -1,0 +1,127 @@
+# File produced by Kranc
+
+STORAGE: exetaBeta_group[other_timelevels]
+schedule ExternalEtaBeta_Startup at STARTUP
+{
+  LANG: C
+  OPTIONS: meta
+} "create banner"
+
+schedule ExternalEtaBeta_RegisterSymmetries in SymmetryRegister
+{
+  LANG: C
+  OPTIONS: meta
+} "register symmetries"
+
+if (CCTK_EQUALS(rescale_etaBeta, "yes"))
+{
+  schedule eta_beta_rescale_etaBeta_calc at INITIAL after etaBeta_calc_etaBeta as rescale_etaBeta
+  {
+    LANG: C
+    READS: grid::r(Everywhere)
+    READS: ExternalEtaBeta::exetaBeta(Everywhere)
+    WRITES: ExternalEtaBeta::exetaBeta(Everywhere)
+  } "eta_beta_rescale_etaBeta_calc"
+}
+
+if (CCTK_EQUALS(rescale_etaBeta, "yes"))
+{
+  schedule eta_beta_rescale_etaBeta_calc in MoL_CalcRHS after etaBeta_calc_etaBeta as rescale_etaBeta
+  {
+    LANG: C
+    READS: grid::r(Everywhere)
+    READS: ExternalEtaBeta::exetaBeta(Everywhere)
+    WRITES: ExternalEtaBeta::exetaBeta(Everywhere)
+  } "eta_beta_rescale_etaBeta_calc"
+}
+
+if (CCTK_EQUALS(rescale_etaBeta, "tanh"))
+{
+  schedule eta_beta_rescale_etaBeta_tanh_calc at INITIAL after etaBeta_calc_etaBeta as rescale_tanh_etaBeta
+  {
+    LANG: C
+    READS: grid::r(Everywhere)
+    READS: ExternalEtaBeta::exetaBeta(Everywhere)
+    WRITES: ExternalEtaBeta::exetaBeta(Everywhere)
+  } "eta_beta_rescale_etaBeta_tanh_calc"
+}
+
+if (CCTK_EQUALS(rescale_etaBeta, "tanh"))
+{
+  schedule eta_beta_rescale_etaBeta_tanh_calc in MoL_CalcRHS after etaBeta_calc_etaBeta as rescale_tanh_etaBeta
+  {
+    LANG: C
+    READS: grid::r(Everywhere)
+    READS: ExternalEtaBeta::exetaBeta(Everywhere)
+    WRITES: ExternalEtaBeta::exetaBeta(Everywhere)
+  } "eta_beta_rescale_etaBeta_tanh_calc"
+}
+
+if (CCTK_EQUALS(etaBeta_form, "polynomial"))
+{
+  schedule eta_beta_calc_etaBeta_poly at INITIAL after ShiftTracker_Set_SphericalSurface as etaBeta_calc_etaBeta
+  {
+    LANG: C
+    READS: grid::x(Everywhere)
+    READS: grid::y(Everywhere)
+    READS: grid::z(Everywhere)
+    WRITES: ExternalEtaBeta::exetaBeta(Everywhere)
+  } "eta_beta_calc_etaBeta_poly"
+}
+
+if (CCTK_EQUALS(etaBeta_form, "polynomial"))
+{
+  schedule eta_beta_calc_etaBeta_poly in MoL_CalcRHS before bssn_shift as etaBeta_calc_etaBeta
+  {
+    LANG: C
+    READS: grid::x(Everywhere)
+    READS: grid::y(Everywhere)
+    READS: grid::z(Everywhere)
+    WRITES: ExternalEtaBeta::exetaBeta(Everywhere)
+  } "eta_beta_calc_etaBeta_poly"
+}
+
+if (CCTK_EQUALS(etaBeta_form, "exponential"))
+{
+  schedule eta_beta_calc_etaBeta_exp in MoL_CalcRHS before bssn_shift as etaBeta_calc_etaBeta
+  {
+    LANG: C
+    READS: grid::x(Everywhere)
+    READS: grid::y(Everywhere)
+    READS: grid::z(Everywhere)
+    WRITES: ExternalEtaBeta::exetaBeta(Everywhere)
+  } "eta_beta_calc_etaBeta_exp"
+}
+
+if (CCTK_EQUALS(etaBeta_form, "exponential"))
+{
+  schedule eta_beta_calc_etaBeta_exp at INITIAL after ShiftTracker_Set_SphericalSurface as etaBeta_calc_etaBeta
+  {
+    LANG: C
+    READS: grid::x(Everywhere)
+    READS: grid::y(Everywhere)
+    READS: grid::z(Everywhere)
+    WRITES: ExternalEtaBeta::exetaBeta(Everywhere)
+  } "eta_beta_calc_etaBeta_exp"
+}
+
+schedule ExternalEtaBeta_SelectBoundConds in MoL_PostStep
+{
+  LANG: C
+  OPTIONS: level
+} "select boundary conditions"
+
+schedule ExternalEtaBeta_CheckBoundaries at BASEGRID
+{
+  LANG: C
+  OPTIONS: meta
+} "check boundaries treatment"
+
+schedule ExternalEtaBeta_RegisterVars in MoL_Register
+{
+  LANG: C
+  OPTIONS: meta
+} "Register Variables for MoL"
+schedule group ApplyBCs as ExternalEtaBeta_ApplyBCs in MoL_PostStep after ExternalEtaBeta_SelectBoundConds
+{
+} "Apply boundary conditions controlled by thorn Boundary"

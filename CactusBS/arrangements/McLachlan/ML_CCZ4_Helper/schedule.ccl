@@ -1,0 +1,137 @@
+# ML_CCZ4_Helper
+
+if (CCTK_EQUALS(evolution_method, "ML_CCZ4")) {
+  
+  # ADMBase variables are pseudo-evolved:
+  # They are set in MoL_PostStep, can be prolongated,
+  # and need to be checkpointed
+  # TODO: Use other_timelevels instead of timelevels.
+  # TODO: Do not allocate these timelevels;
+  # instead, require the user to do so in the parameter file.
+  STORAGE: ADMBase::metric[timelevels]
+  STORAGE: ADMBase::curv[timelevels]
+  STORAGE: ADMBase::lapse[timelevels]
+  STORAGE: ADMBase::shift[timelevels]
+  STORAGE: ADMBase::dtlapse[timelevels]
+  STORAGE: ADMBase::dtshift[timelevels]
+  
+  
+  
+  SCHEDULE ML_CCZ4_RegisterSlicing AT startup
+  {
+    LANG: C
+    OPTIONS: meta
+  } "Register slicing"
+  
+  SCHEDULE ML_CCZ4_SetGroupTags AT startup BEFORE Driver_Startup
+  {
+    LANG: C
+    OPTIONS: meta
+  } "Set checkpointing and prolongation group tags"
+  
+  SCHEDULE ML_CCZ4_ParamCompat AT wragh
+  {
+    LANG: C
+    OPTIONS: meta
+  } "Handle parameter backward compatibility"
+  
+  SCHEDULE ML_CCZ4_ParamCheck AT paramcheck
+  {
+    LANG: C
+    OPTIONS: meta
+  } "Check parameters"
+  
+  SCHEDULE ML_CCZ4_RegisterConstrained IN MoL_Register
+  {
+    LANG: C
+    OPTIONS: meta
+  } "Register ADMBase variables as constrained"
+  
+  
+  
+  SCHEDULE GROUP ML_CCZ4_EvolutionAnalysis AT analysis
+  {
+    # TODO: Correct list of group names
+    TRIGGERS: ML_log_confacrhs
+    TRIGGERS: ML_metricrhs
+    TRIGGERS: ML_Gammarhs
+    TRIGGERS: ML_trace_curvrhs
+    TRIGGERS: ML_curvrhs
+    # TRIGGERS: ML_Thetarhs
+    TRIGGERS: ML_lapserhs
+    TRIGGERS: ML_dtlapserhs
+    TRIGGERS: ML_shiftrhs
+    TRIGGERS: ML_dtshiftrhs
+  } "Calculate RHS at analysis"
+  
+  # May override initial_boundary_condition for compatibility
+  if (CCTK_EQUALS(initial_boundary_condition, "extrapolate-gammas") ||
+      CCTK_EQUALS(my_initial_boundary_condition, "extrapolate-gammas"))
+  {
+    SCHEDULE ML_CCZ4_ExtrapolateGammas AT initial AFTER ML_CCZ4_InitialADMBase2Interior
+    {
+      LANG: C
+      READS: ML_CCZ4::ML_Gamma(interior)
+      WRITES: ML_CCZ4::ML_Gamma(boundary)
+      # No need to sync here -- the evolution boundary condition will sync
+    } "Extrapolate Gammas and time derivatives of lapse and shift"
+  }
+  
+  # May override rhs_boundary_condition for compatibility
+  if (CCTK_EQUALS(rhs_boundary_condition, "NewRad") ||
+      CCTK_EQUALS(my_rhs_boundary_condition, "NewRad"))
+  {
+    SCHEDULE ML_CCZ4_NewRad IN MoL_CalcRHS AFTER ML_CCZ4_EvolutionInterior
+    {
+      LANG: C
+      # No need to sync here -- the RHS variables are never synced
+      READS: ML_CCZ4::ML_Gamma(interior)
+      READS: ML_CCZ4::ML_curv(interior)
+      READS: ML_CCZ4::ML_lapse(interior)
+      READS: ML_CCZ4::ML_metric(interior)
+      READS: ML_CCZ4::ML_shift(interior)
+      READS: ML_CCZ4::phi(interior)
+      READS: ML_CCZ4::trK(interior)
+      WRITES: ML_CCZ4::ML_Gammarhs(boundary)
+      WRITES: ML_CCZ4::ML_curvrhs(boundary)
+      WRITES: ML_CCZ4::ML_lapserhs(boundary)
+      WRITES: ML_CCZ4::ML_metricrhs(boundary)
+      WRITES: ML_CCZ4::ML_shiftrhs(boundary)
+      WRITES: ML_CCZ4::phirhs(boundary)
+      WRITES: ML_CCZ4::trKrhs(boundary)
+    } "Apply NewRad boundary conditions to RHS"
+    
+    SCHEDULE ML_CCZ4_NewRad IN ML_CCZ4_EvolutionAnalysis AFTER ML_CCZ4_EvolutionAnalysisInterior
+    {
+      LANG: C
+      # No need to sync here -- the RHS variables are never synced
+      READS: ML_CCZ4::ML_Gamma(interior)
+      READS: ML_CCZ4::ML_curv(interior)
+      READS: ML_CCZ4::ML_lapse(interior)
+      READS: ML_CCZ4::ML_metric(interior)
+      READS: ML_CCZ4::ML_shift(interior)
+      READS: ML_CCZ4::phi(interior)
+      READS: ML_CCZ4::trK(interior)
+      WRITES: ML_CCZ4::ML_Gammarhs(boundary)
+      WRITES: ML_CCZ4::ML_curvrhs(boundary)
+      WRITES: ML_CCZ4::ML_lapserhs(boundary)
+      WRITES: ML_CCZ4::ML_metricrhs(boundary)
+      WRITES: ML_CCZ4::ML_shiftrhs(boundary)
+      WRITES: ML_CCZ4::phirhs(boundary)
+      WRITES: ML_CCZ4::trKrhs(boundary)
+    } "Apply NewRad boundary conditions to RHS"
+  }
+  
+  # TODO COMPATIBILITY:
+  # Do not apply boundary conditions to Everywhere ADMBase variables
+  SCHEDULE ML_CCZ4_ADMBase_SelectBCs IN MoL_PostStep AFTER ML_CCZ4_ADMBaseEverywhere AFTER ML_CCZ4_ADMBaseInterior AFTER ML_CCZ4_ADMBaseBoundaryScalar
+  {
+    LANG: C
+    OPTIONS: level
+  } "Select boundary conditions for ADMBase variables"
+  
+  SCHEDULE GROUP ApplyBCs AS ML_CCZ4_ADMBase_ApplyBCs IN MoL_PostStep AFTER ML_CCZ4_ADMBase_SelectBCs BEFORE ADMBase_SetADMVars
+  {
+  } "Apply boundary conditions to ADMBase variables"
+  
+}

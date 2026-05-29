@@ -1,0 +1,104 @@
+# Parameter definitions for thorn ReconstructPPM
+# $Header:$
+
+boolean ppm_detect "Should the PPM solver use shock detection?"
+{
+} "no"
+
+keyword ppm_flatten "Which flattening procedure should the PPM solver use?"
+{
+  "stencil_3"   :: "our flattening procedure, which requires only stencil 3 and which may work"
+  "stencil_4"   :: "original C&W flattening procedure, which requires stencil 4"
+} "stencil_3"
+
+real ppm_epsilon "Epsilon for PPM zone flattening"
+{
+  0.0:          :: "Must be positive. Default is from Colella & Woodward"
+} 0.33
+
+real ppm_omega1 "Omega1 for PPM zone flattening"
+{
+  :             :: "Anything goes. Default is from Colella & Woodward"
+} 0.75
+
+real ppm_omega2 "Omega2 for PPM zone flattening"
+{
+  :             :: "Anything goes. Default is from Colella & Woodward"
+} 10.0
+
+real ppm_omega_tracer "Omega for tracer PPM zone flattening"
+{
+  :             :: "Anything goes. Default is from Plewa & Mueller"
+} 0.50
+
+real ppm_epsilon_shock "Epsilon for PPM shock detection"
+{
+  :             :: "Anything goes. Default is from Colella & Woodward"
+} 0.01
+
+real ppm_eta1 "Eta1 for PPM shock detection"
+{
+  :             :: "Anything goes. Default is from Colella & Woodward"
+} 20.0
+
+real ppm_eta2 "Eta2 for PPM shock detection"
+{
+  :             :: "Anything goes. Default is from Colella & Woodward"
+} 0.05
+
+real ppm_k0 "K0 for PPM shock detection"
+{
+  :             :: "Anything goes. Default suggested by Colella & Woodward is: (polytropic constant)/10.0"
+} 0.2
+
+real ppm_small "A floor used by PPM shock detection"
+{
+  0.0:1.0       :: "In [0,1]"
+} 1.e-7
+
+int ppm_mppm "Use modified (enhanced) ppm scheme"
+{
+  0:1 :: "0 (off, default) or 1 (on)"
+} 0
+
+int mppm_debug_eigenvalues "write eigenvalues into debug grid variables"
+{
+  0:1 :: "0 (off, default) or 1 (on)"
+} 0
+
+boolean reconstruct_Wv "Reconstruct w_lorentz*v^i instead of v^i to ensure a physical Lorentz factor after reconstruction"
+{
+} "no"
+
+# the follwoing switch requires slightly more memory than the default (about 14 one-timelevel, one-reflevel grid functions)
+boolean ppm_unroll "unroll the reconstruction loops" STEERABLE=RECOVER
+{
+} "no"
+
+boolean test_ppm_unroll "compare unrolled reconstruction with default one" STEERABLE=RECOVER
+{
+} "no"
+
+SHARES: Whisky
+
+USES int whisky_stencil
+USES keyword whisky_eos_type
+USES keyword numerical_viscosity
+USES keyword left_eigenvectors
+USES boolean check_for_trivial_rp
+
+USES boolean evolve_tracer
+USES boolean use_min_tracer
+USES real min_tracer
+USES int number_of_tracers
+
+USES boolean clean_divergence
+
+EXTENDS keyword recon_method
+{
+  "ppm" :: "PPM reconstruction"
+}
+
+SHARES: HydroBase
+
+USES keyword evolution_method

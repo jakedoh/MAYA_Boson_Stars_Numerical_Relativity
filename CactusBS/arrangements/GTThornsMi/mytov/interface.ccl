@@ -1,0 +1,23 @@
+# Interface definition for thorn MyTov
+
+implements: MyTov
+
+inherits: ADMBase, HydroBase, Constants, Grid
+USES INCLUDE: constants.h
+
+
+
+
+public:
+
+CCTK_INT FUNCTION Set_Rho_ADM(              \
+    CCTK_POINTER_TO_CONST IN  cctkGH,       \
+    CCTK_INT              IN  size,         \
+    CCTK_REAL ARRAY       OUT source,       \
+    CCTK_REAL ARRAY       IN  x,            \
+    CCTK_REAL ARRAY       IN  y,            \
+    CCTK_REAL ARRAY       IN  z             \
+    )
+PROVIDES FUNCTION Set_Rho_ADM  \
+         WITH TOV_Set_Rho_ADM  \
+         LANGUAGE C

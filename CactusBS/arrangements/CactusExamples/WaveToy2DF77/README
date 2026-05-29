@@ -1,0 +1,24 @@
+Cactus Code Thorn WaveToy2DF77
+Author(s)    : Gabrielle Allen
+Maintainer(s): Cactus team
+Licence      : LGPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+This thorn illustrates the solution of the scalar wave equation in 2D using
+centered explicit finite differencing. Included are routines to
+NOTE: This thorn isn't working properly yet for multiple processors, it 
+      will be fixed very soon in the development version.
+
+ * Set up and register the 2D spatial coordinate system
+ * Calculate initial data
+ * Evolve using a standard explicit method
+
+The Cactus infrastructure used includes
+
+ * Boundary conditions  (CactusBase/Boundary)
+ * Timestep calculation (CactusBase/Time)
+ * Parallel driver      (CactusPUGH/PUGH)
+ * IO			(Standard IO thorns)
+

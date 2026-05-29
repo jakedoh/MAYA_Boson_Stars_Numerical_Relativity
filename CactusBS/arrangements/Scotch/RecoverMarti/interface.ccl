@@ -1,0 +1,59 @@
+# Interface definition for thorn RecoverMarti
+# $Header:$
+
+implements: PrimRecovery
+inherits: Whisky SphericalSurface StaticConformal SpaceMask HydroBase
+friend: Whisky
+
+void FUNCTION Con2PrimPoly(CCTK_INT IN handle, CCTK_REAL OUT dens, \
+                           CCTK_REAL OUT sx, CCTK_REAL OUT sy, \
+                           CCTK_REAL OUT sz, CCTK_REAL OUT tau, \
+                           CCTK_REAL OUT rho, CCTK_REAL OUT velx, \
+                           CCTK_REAL OUT vely, CCTK_REAL OUT velz, \
+                           CCTK_REAL OUT epsilon, CCTK_REAL OUT press, \
+                           CCTK_REAL OUT w_lorentz, CCTK_REAL IN uxx, \
+                           CCTK_REAL IN uxy, CCTK_REAL IN uxz, \
+                           CCTK_REAL IN uyy, CCTK_REAL IN uyz, \
+                           CCTK_REAL IN uzz, CCTK_REAL IN det, \
+                           CCTK_REAL IN x, CCTK_REAL IN y, CCTK_REAL IN z, \
+                           CCTK_REAL IN r, CCTK_REAL IN rho_min, \
+                           CCTK_INT IN whisky_reflevel, CCTK_REAL IN Whisky_CarpetWeights)
+
+PROVIDES FUNCTION Con2PrimPoly WITH Con2Prim_ptPolytype LANGUAGE Fortran
+
+# Functions provided by Whisky 
+void FUNCTION Prim2ConMHDGen(CCTK_INT IN handle, \
+                          CCTK_REAL IN gxx, CCTK_REAL IN gxy, \
+                          CCTK_REAL IN gxz, CCTK_REAL IN gyy, \
+                          CCTK_REAL IN gyz, CCTK_REAL IN gzz, \
+                          CCTK_REAL IN det, CCTK_REAL OUT dens, \
+                          CCTK_REAL OUT sx, CCTK_REAL OUT sy, \
+                          CCTK_REAL OUT sz, CCTK_REAL OUT tau, \
+                          CCTK_REAL IN rho, CCTK_REAL IN velx, \
+                          CCTK_REAL IN vely, \
+                          CCTK_REAL IN velz, CCTK_REAL IN epsilon, \
+                          CCTK_REAL OUT press, CCTK_REAL OUT w_lorentz, \
+			  CCTK_REAL OUT bnx, CCTK_REAL OUT bny, \
+			  CCTK_REAL OUT bnz, CCTK_REAL IN bvecx, \
+			  CCTK_REAL IN bvecy, CCTK_REAL IN bvecz)
+
+void FUNCTION Prim2ConMHDPoly(CCTK_INT IN handle, \
+                           CCTK_REAL IN gxx, CCTK_REAL IN gxy, \
+                           CCTK_REAL IN gxz, CCTK_REAL IN gyy, \
+                           CCTK_REAL IN gyz, CCTK_REAL IN gzz, \
+                           CCTK_REAL IN det, CCTK_REAL OUT dens, \
+                           CCTK_REAL OUT sx, CCTK_REAL OUT sy, \
+                           CCTK_REAL OUT sz, CCTK_REAL OUT tau, \
+                           CCTK_REAL IN rho, CCTK_REAL IN velx, \
+                           CCTK_REAL IN vely, \
+                           CCTK_REAL IN velz, CCTK_REAL OUT epsilon, \
+                           CCTK_REAL OUT press, CCTK_REAL OUT w_lorentz, \
+			   CCTK_REAL OUT bnx, CCTK_REAL OUT bny, \
+			   CCTK_REAL OUT bnz, CCTK_REAL IN bvecx, \
+			   CCTK_REAL IN bvecy, CCTK_REAL IN bvecz)
+
+USES FUNCTION Prim2ConMHDGen
+USES FUNCTION Prim2ConMHDPoly
+
+## Mask is >0 if original Con2Prim failed. If fallback fails, code aborts.
+CCTK_REAL failed_con2prim_mask  type = GF Timelevels = 1 tags='Prolongation="restrict" tensortype="Scalar"' "Flag where con2prim failed, Stores return of first fail."

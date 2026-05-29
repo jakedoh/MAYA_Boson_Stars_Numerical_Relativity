@@ -1,0 +1,8 @@
+# Main make.code.defn file for thorn IHSpin
+# $Header:$
+
+# Source files in this directory
+SRCS = ihspin.c
+
+# Subdirectories containing source files
+SUBDIRS = 

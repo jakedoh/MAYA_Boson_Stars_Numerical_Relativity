@@ -1,0 +1,62 @@
+# Parameter definitions for thorn Whisky_IVP
+# $Header$
+
+shares:ADMBase
+
+USES KEYWORD metric_type
+
+shares:ADMMacros
+
+USES INT spatial_order
+
+shares:Whisky
+
+USES INT whisky_stencil
+USES REAL rho_abs_min
+USES REAL rho_rel_min
+USES REAL initial_rho_abs_min
+USES REAL initial_rho_rel_min
+USES REAL initial_atmosphere_factor
+USES REAL whisky_rho_central
+
+private:
+
+BOOLEAN Solve_Whisky_IVP "Should we solve the IVP?"
+{
+} "no"
+
+BOOLEAN Whisky_IVP_Ignore_Matter "Should we ignore matter terms? (default: no)"
+{
+} "no"
+
+BOOLEAN Whisky_IVP_testdata "Should we use test data for the IVP?"
+{
+} "no"
+
+REAL Whisky_IVP_Tolerance "The tolerance for the IVP solve"
+{
+  (0.0:* :: "Strictly positive"
+} 1.e-5
+
+REAL IVP_abs_c2p_tol "Tolerance in the conversion to primitive variables"
+{
+  (0.0:* :: "Positive"
+} 1.e-10
+
+REAL IVP_rel_c2p_tol "Relative tolerance in the conversion to primitive variables"
+{
+  (0.0: :: "Positive"
+} 1.e-10
+
+INT IVP_c2p_countmin "Minimum number of Newton-Raphson iterations in the C2P routine"
+{
+  1: :: "Positive"
+} 2
+
+BOOLEAN IVP_Check_NaNs "Check for NaNs before calling BAM?"
+{
+} "no"
+
+BOOLEAN IVP_Debug_Output "Enable output for some internal variables"
+{
+} "no"

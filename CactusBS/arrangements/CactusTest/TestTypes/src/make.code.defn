@@ -1,0 +1,9 @@
+# Main make.code.defn file for thorn TestTypes
+# $Header$
+
+# Source files in this directory
+SRCS = initial.c initial.F77
+
+# Subdirectories containing source files
+SUBDIRS = 
+

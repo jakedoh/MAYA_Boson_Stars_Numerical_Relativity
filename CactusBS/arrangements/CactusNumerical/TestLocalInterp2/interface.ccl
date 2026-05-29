@@ -1,0 +1,13 @@
+# Interface definition for thorn TestLocalInterp2
+IMPLEMENTS:     TestLocalInterp2
+INHERITS:       Grid
+
+USES INCLUDE: LagrangeInterp.hh
+
+CCTK_REAL func TYPE=GF "Test trigonometric grid function"
+CCTK_REAL poly TYPE=GF "Test polynomial grid function"
+
+CCTK_INT success
+{
+    lagrange_1d, lagrange_3d, symmetry
+} "Indicate a successful test"

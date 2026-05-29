@@ -1,0 +1,23 @@
+# Parameter definitions for thorn Norms
+# $Header$
+
+
+INT max_nr_vars "maximum number of variables for which norms to compute"
+{
+  0:* :: "positive"
+} 100
+
+INT verbose "verbosity of output"
+{
+  0:9 :: "higher number means more verbose output"
+} 0
+
+STRING gridfunctions_1st "Set of grid functions to compute norms for 2nd order variables"
+{
+  ".*" :: "List of grid function names"
+} ""
+
+STRING gridfunctions_2nd "Set of grid functions to compute norms for 2nd order variables"
+{
+  ".*" :: "List of grid function names"
+} ""

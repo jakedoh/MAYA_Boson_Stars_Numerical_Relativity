@@ -1,0 +1,297 @@
+
+#############################################################
+# Parameter file for running a single puncture with matter
+#############################################################
+
+ActiveThorns = "Kranc2BSSNChiMatter TwoPuncturesMatter MatterLibs GenericFD CoordBase SymBase Boundary InitBase NanChecker CartGrid3d Time MoL TimerReport CarpetIOBasic CarpetIOScalar IOUtil Carpet CarpetLib Vectors CarpetReduce CarpetInterp CarpetSlab  CarpetIOASCII LoopControl GSL CarpetRegrid2 CarpetTracker ADMBase StaticConformal Dissipation SphericalSurface AEILocalInterp SpaceMask ReflectionSymmetry CarpetIOHDF5 HydroBase Whisky ReconstructPPM RecoverMarti RiemannSolverMarquina EOS_Base EOS_Polytrope EOS_IdealFluid TmunuBase ADMCoupling ADMMacros Synchrotron AHMask"
+
+#############################################################
+# Grid
+#############################################################
+
+CoordBase::domainsize                   = minmax
+
+CoordBase::boundary_size_x_lower        = 3
+CoordBase::boundary_size_y_lower        = 3
+CoordBase::boundary_size_z_lower        = 3
+CoordBase::boundary_shiftout_x_lower    = 1
+CoordBase::boundary_shiftout_y_lower    = 1
+CoordBase::boundary_shiftout_z_lower    = 1
+
+CoordBase::boundary_size_x_upper        = 3
+CoordBase::boundary_size_y_upper        = 3
+CoordBase::boundary_size_z_upper        = 3
+CoordBase::boundary_shiftout_x_upper    = 0
+CoordBase::boundary_shiftout_y_upper    = 0
+CoordBase::boundary_shiftout_z_upper    = 0
+
+CartGrid3D::type                        = "coordbase"
+CartGrid3D::domain                      = "full"
+CartGrid3D::avoid_origin                = "no"
+
+ReflectionSymmetry::reflection_x   = yes
+ReflectionSymmetry::reflection_y   = yes
+ReflectionSymmetry::reflection_z   = yes
+ReflectionSymmetry::avoid_origin_x = no
+ReflectionSymmetry::avoid_origin_y = no
+ReflectionSymmetry::avoid_origin_z = no
+
+CoordBase::xmin                         = 0
+CoordBase::ymin                         = 0
+CoordBase::zmin                         = 0
+CoordBase::xmax                         = 12
+CoordBase::ymax                         = 12
+CoordBase::zmax                         = 12
+CoordBase::dx                           = 0.5
+CoordBase::dy                           = 0.5
+CoordBase::dz                           = 0.5
+
+#TimerReport::out_every = 128
+
+#############################################################
+# CarpetRegrid
+#############################################################
+
+
+#############################################################
+# Mesh refinement
+#############################################################
+
+CarpetRegrid2::num_centres          = 1
+CarpetRegrid2::regrid_every               = 32
+CarpetRegrid2::freeze_unaligned_levels = "yes" 
+CarpetRegrid2::freeze_unaligned_parent_levels = "yes" 
+CarpetRegrid2::min_distance = 0
+CarpetRegrid2::min_fraction = 0.4
+CarpetRegrid2::verbose                    = 0
+CarpetRegrid2::symmetry_rotating180        = "no"
+
+CarpetRegrid2::num_levels_1  =  2
+CarpetRegrid2::position_x_1  =  0
+CarpetRegrid2::position_y_1  =  0
+CarpetRegrid2::position_z_1  =  0
+
+# 320, 160, 95, 70, 50, 6.875 (dx_max = 10)
+# For 1 processor, (6.875, 0.3125 for CoordBase) 
+CarpetRegrid2::radius_1[1]  =  8
+
+#############################################################
+# Mesh refinement
+#############################################################
+
+Carpet::ghost_size                      = 3
+Carpet::domain_from_coordbase           = "yes"
+Carpet::max_refinement_levels           = 2
+Carpet::refinement_factor               = 2
+Carpet::prolongation_order_space        = 5
+Carpet::prolongation_order_time         = 2
+#Carpet::time_refinement_factors	= "[1,2,4,8]"
+Carpet::init_fill_timelevels = "yes"
+Carpet::use_buffer_zones = "yes"
+Carpet::verbose = "no"
+Carpet::enable_all_storage		= "yes"
+
+Carpet::poison_new_timelevels = "yes"
+CarpetLib::poison_new_memory = "yes"
+
+#############################################################
+# CarpetLib
+#############################################################
+
+CarpetLib::max_allowed_memory_MB        = 1750
+
+#############################################################
+# Time integration
+#############################################################
+
+Cactus::terminate = "any"
+Cactus::max_runtime = 1410
+Cactus::cctk_final_time = 600
+Cactus::cctk_itlast = 2
+
+Time::dtfac                           = 0.5
+
+MethodOfLines::ode_method             = "RK4"
+MethodOfLines::MoL_NaN_Check          = "no"
+MethodOfLines::MoL_Intermediate_Steps = 4
+MethodOfLines::MoL_Num_Scratch_Levels = 1
+
+#############################################################
+# Initial data
+#############################################################
+
+ADMBase::initial_data = "twopuncturesmatter"
+ADMBase::initial_lapse = "utb"
+ADMBase::initial_shift = "zero"
+
+TwoPuncturesMatter::par_b	    = 1.00
+TwoPuncturesMatter::move_origin_x   = 1.00
+TwoPuncturesMatter::par_m_plus	    = 0
+TwoPuncturesMatter::par_m_minus	    = 0
+TwoPuncturesMatter::epsilon	    = 1e-3
+
+TwoPuncturesMatter::hydro_field	    = "yes"
+TwoPuncturesMatter::zero_velocity   = "yes"
+TwoPuncturesMatter::psi0_limit	    = 10
+TwoPuncturesMatter::combination_method = "maximum"
+
+MatterLibs::num_clouds		    = 1
+MatterLibs::rho_profile		    = "TOV"
+MatterLibs::matterlibs_eos_type	    = "Polytype"
+MatterLibs::cloud_rho[0]	    = 1.28e-3
+
+EOS_Polytrope::eos_gamma	    = 2
+EOS_Polytrope::eos_k		    = 100
+
+EOS_IdealFluid::eos_ideal_fluid_gamma = 2
+
+TmunuBase::timelevels		    = 3
+TmunuBase::stress_energy_storage    = "yes"
+TmunuBase::stress_energy_at_RHS     = "yes"
+
+#############################################################
+# Whisky Evolution
+#############################################################
+
+HydroBase::evolution_method       = "Scotch_HD"
+HydroBase::timelevels 		  = 3
+HydroBase::prolongation_type = "ENO"
+SpaceMask::use_mask 		  = "yes"
+
+Whisky::whisky_eos_type           = "General"
+Whisky::whisky_eos_table          = "Ideal_Fluid"
+Whisky::whisky_stencil            = 3
+Whisky::bound                     = "none"
+Whisky::rho_abs_min               = 1.e-8
+Whisky::initial_atmosphere_factor = 0.999
+Whisky::sanity_check_speed	  = "yes"
+
+Whisky::riemann_solver            = "Marquina"
+RiemannSolverMarquina::speed_limiter = "yes"
+RiemannSolverMarquina::speed_limit = 0.999
+
+RecoverMarti::atmo_tolerance = 0.0001
+
+# Reconstruction
+Whisky::recon_method		  = "ppm"
+ReconstructPPM::ppm_detect 	  = "no"
+ReconstructPPM::ppm_epsilon 	  = 0.0
+ReconstructPPM::ppm_omega1 	  = 0.52
+ReconstructPPM::ppm_omega2 	  = 0.0
+ReconstructPPM::ppm_epsilon_shock = 0.1
+ReconstructPPM::ppm_eta1 	  = 5.0 
+ReconstructPPM::ppm_k0 	 	  = 0.2
+
+#############################################################
+# Spacetime Evolution
+#############################################################
+
+Kranc2BSSNChiMatter::couple_matter = "yes"
+
+# The number of points needed in each direction to calculate using
+# derivatives.  
+GenericFD::stencil_width 	= 3
+Kranc2BSSNChiMatter::m 		= 1
+Kranc2BSSNChiMatter::etaBeta 	= 1
+Kranc2BSSNChiMatter::chiBeta 	= 1
+Kranc2BSSNChiMatter::gammaDriverLapsePower = 0
+Kranc2BSSNChiMatter::NASAAdvection = 0
+
+# This implies 4th order accurate lop-sided advection derivatives, and
+# 5th order accurate Kreiss-Oliger dissipation
+Kranc2BSSNChiMatter::fd_order = "full4th"
+Kranc2BSSNChiMatter::chiEps = 1.0e-5
+
+# This lowers the order of accuracy, but some dissipation might be required
+Dissipation::order                 = 5
+Dissipation::epsdis                = 0.0
+Dissipation::epsdis_for_level[0]         = 0.5
+Dissipation::epsdis_for_level[1]         = 0.5
+Dissipation::epsdis_for_level[2]         = 0.5
+Dissipation::epsdis_for_level[3]         = 0.1
+Dissipation::epsdis_for_level[4]         = 0.1
+Dissipation::epsdis_for_level[5]         = 0.1
+Dissipation::epsdis_for_level[6]         = 0.1
+Dissipation::epsdis_for_level[7]         = 0.1
+
+Dissipation::vars = "Kranc2BSSNChiMatter::A_group Kranc2BSSNChiMatter::alpha_group Kranc2BSSNChiMatter::beta_group Kranc2BSSNChiMatter::betat_group Kranc2BSSNChiMatter::Gam_group Kranc2BSSNChiMatter::h_group Kranc2BSSNChiMatter::K_group Kranc2BSSNChiMatter::chi_group"
+
+
+#############################################################
+# Lapse and shift
+#############################################################
+
+Kranc2BSSNChiMatter::lapse_condition = "1 + log full4th"
+Kranc2BSSNChiMatter::shift_condition = "NASAfull4th"
+
+#############################################################
+# Boundary conditions
+#############################################################
+
+# These specify that no standard CACTUS boundary condition is to be
+# applied. These parameters must be present or the Cactus symmetry
+# boundary condition will not be applied. The outgoing radiative
+# boundary condition provided by Kranc2BSSN is always applied.
+Kranc2BSSNChiMatter::A_group_bound   = "none"
+Kranc2BSSNChiMatter::alpha_group_bound = "none"
+Kranc2BSSNChiMatter::beta_group_bound = "none"
+Kranc2BSSNChiMatter::betat_group_bound = "none"
+Kranc2BSSNChiMatter::Gam_group_bound = "none"
+Kranc2BSSNChiMatter::h_group_bound = "none"
+Kranc2BSSNChiMatter::K_group_bound = "none"
+Kranc2BSSNChiMatter::chi_group_bound = "none"
+
+#############################################################
+# Check for NaNs 
+#############################################################
+
+#NaNChecker::check_every = 1
+#NaNChecker::action_if_found = "terminate" # "just warn", "abort"
+#NaNChecker::check_vars = "TmunuBase::stress_energy_vector TmunuBase::stress_energy_tensor TmunuBase::stress_energy_scalar HydroBase::rho HydroBase::press HydroBase::eps HydroBase::vel Whisky::whisky_cons_scalar_var Whisky::whisky_cons_vector_var"
+#NaNChecker::verbose = "all"
+
+#############################################################
+# AHMask 
+#############################################################
+
+AHMask::use_space_mask = "no"
+
+#############################################################
+# Synchrotron
+#############################################################
+
+Synchrotron::debug                  = "yes"
+Synchrotron::verbose                = "yes"
+Synchrotron::grid_symmetries	    = "xyz"
+
+Synchrotron::calc_syn_every         = 2
+Synchrotron::temperature_fac        = 1
+Synchrotron::eos_gamma              = 1.6666666666666667
+Synchrotron::assume_ideal	    = "yes"
+
+Synchrotron::intsynchro             = "yes"
+Synchrotron::intvolumes		    = 3
+Synchrotron::int_wi_rad[0]          = 2
+Synchrotron::int_wi_rad[1]          = 5
+Synchrotron::int_wi_rad[2]          = 10
+
+Synchrotron::num_obs_angles = 2
+Synchrotron::obs_angles[1] = 0.785398163397448
+
+#############################################################
+# Output
+#############################################################
+
+IO::out_dir                   = $parfile
+IO::out_fileinfo              = "all"
+
+CarpetIOBasic::outInfo_every        = 2
+CarpetIOBasic::outInfo_vars         = "Synchrotron::SynchroScalars"
+
+CarpetIOASCII::out1d_every = 2
+CarpetIOASCII::out1d_x = "yes"
+CarpetIOASCII::out1d_y = "no"
+CarpetIOASCII::out1d_z = "no"
+CarpetIOASCII::out1d_d = "no"
+CarpetIOASCII::out1d_vars = "Synchrotron::Synchro_Group"
+

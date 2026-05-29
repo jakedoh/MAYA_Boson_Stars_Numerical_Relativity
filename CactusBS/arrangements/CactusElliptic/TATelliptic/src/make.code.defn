@@ -1,0 +1,8 @@
+# Main make.code.defn file for thorn TATelliptic
+
+# Source files in this directory
+SRCS = TATelliptic.c TATmonitor.c
+
+# Subdirectories containing source files
+SUBDIRS = 
+

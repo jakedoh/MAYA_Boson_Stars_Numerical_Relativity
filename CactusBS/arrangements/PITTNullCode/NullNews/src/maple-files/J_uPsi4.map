@@ -1,0 +1,30 @@
+tt:=0;
+for a7 from 2 to 3 do for b7 from 2 to 3 do for c7 from 2 to 3 do
+tt:=tt+
+qAup[a7]*qAup[b7]*( g[c7,a7]*diff(UA[c7],x[b7])
+                  + g[c7,b7]*diff(UA[c7],x[a7])
++sum(g[c7,a7]*UA[d7]*C2[b7,d7,c7]+g[c7,b7]*UA[d7]*C2[a7,d7,c7],d7=2..3)
+                 ):
+od:od:od:
+tt:=simplify(tt);
+tt:=pr1(Ub,-1,tt):tt:=pr1(U,1,tt);
+tt:=algsubs(K^2=1+J*Jb,tt);
+eq:=tt+2*diff(J,u)-J*(diff(U,ethb)+diff(Ub,eth))=0;
+Ju:=solve(eq,diff(J,u));
+
+ttb:=0;
+for a7 from 2 to 3 do for b7 from 2 to 3 do for c7 from 2 to 3 do
+ttb:=ttb+
+qAbarup[a7]*qAbarup[b7]*( g[c7,a7]*diff(UA[c7],x[b7])
+                  + g[c7,b7]*diff(UA[c7],x[a7])
++sum(g[c7,a7]*UA[d7]*C2[b7,d7,c7]+g[c7,b7]*UA[d7]*C2[a7,d7,c7],d7=2..3)
+                 ):
+od:od:od:
+ttb:=simplify(ttb);
+ttb:=pr1(Ub,-1,ttb):ttb:=pr1(U,1,ttb);
+ttb:=algsubs(K^2=1+J*Jb,ttb);
+eq:=ttb+2*diff(Jb,u)-Jb*(diff(U,ethb)+diff(Ub,eth))=0;
+Jbu:=solve(eq,diff(Jb,u));
+
+psi4Ju:=simplify(subs(diff(K,u)=(diff(J,u)*Jb+diff(Jb,u)*J)/2/K,psi4));
+psi4Ju:=simplify(subs(diff(J,u)=Ju,diff(Jb,u)=Jbu,psi4));

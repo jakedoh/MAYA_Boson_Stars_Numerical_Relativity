@@ -1,0 +1,10 @@
+CVS info   : $Header: /numrelcvs/HerrmannCVS/Ylm_Decomp/README,v 1.1.1.1 2003/11/19 15:35:40 herrmann Exp $
+
+Cactus Code Thorn Ylm_Decomp
+Thorn Author(s)     : Frank Herrmann <herrmann@aei.mpg.de>
+Thorn Maintainer(s) : Frank Herrmann <herrmann@aei.mpg.de>
+--------------------------------------------------------------------------
+
+Purpose of the thorn:
+
+decompose var into Ylm modes.

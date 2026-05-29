@@ -1,0 +1,8 @@
+# Main make.code.defn file for thorn Hydro_Analysis
+
+# Source files in this directory
+SRCS = Hydro_Analysis.c GRHydro_Separation.F90 CoreCentroid.c Hydro_Analysis_Masses.F90
+
+# Subdirectories containing source files
+SUBDIRS = 
+

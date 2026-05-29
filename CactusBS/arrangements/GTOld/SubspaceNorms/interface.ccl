@@ -1,0 +1,39 @@
+# Interface definition for thorn SubspaceNorms
+# $Header:$
+
+implements: SubspaceNorms 
+inherits: GenericFD ADMBase SphericalSurface
+
+USES INCLUDE: GenericFD.h
+USES INCLUDE: carpet.hh
+USES INCLUDE: Symmetry.h
+
+CCTK_INT SymmetryFactor TYPE=scalar tags='checkpoint="no"' "Contains info concerning how many symmetries" 
+
+PUBLIC:
+# Storage for norms #
+CCTK_REAL ScalarNorms[intvolumes*num_scalars] TYPE=scalar tags='checkpoint="no"' "Norms of scalars"
+CCTK_REAL VectorNorms[intvolumes*num_vectors] TYPE=scalar tags='checkpoint="no"' "Norms of vectors (spatial)"
+CCTK_REAL TensorNorms[intvolumes*num_tensors] TYPE=scalar tags='checkpoint="no"' "Norms of tensors (spatial)"
+CCTK_REAL NormCounter[intvolumes*(num_scalars+num_vectors+num_tensors)] TYPE=scalar tags='checkpoint="no"' "Counter"
+
+PRIVATE:
+# Storage for variable information #
+CCTK_INT varinfo_scalars[num_scalars] TYPE=scalar tags='checkpoint="no"' "Variable indicies of scalars"
+CCTK_INT groupinfo_vectors[num_vectors] TYPE=scalar tags='checkpoint="no"' "Group indicies of vectors (spatial)"
+CCTK_INT groupinfo_tensors[num_tensors] TYPE=scalar tags='checkpoint="no"' "Group indicies of tensors (spatial)"
+
+CCTK_INT FUNCTION \
+    GetBoundarySpecification (CCTK_INT IN size,                  \
+                              CCTK_INT OUT ARRAY nboundaryzones, \
+                              CCTK_INT OUT ARRAY is_internal,    \
+                              CCTK_INT OUT ARRAY is_staggered,   \
+                              CCTK_INT OUT ARRAY shiftout)
+USES FUNCTION GetBoundarySpecification
+
+CCTK_INT FUNCTION                         \
+    GetSymmetryBoundaries                 \
+        (CCTK_POINTER_TO_CONST IN cctkGH, \
+         CCTK_INT IN size,                \
+         CCTK_INT OUT ARRAY symbnd)
+USES FUNCTION GetSymmetryBoundaries

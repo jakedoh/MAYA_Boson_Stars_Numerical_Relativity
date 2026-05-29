@@ -1,0 +1,6 @@
+# Configuration definitions for thorn ShiftedKerrSchild
+REQUIRES Boundary CartGrid3D GiRaFFE
+
+PROVIDES ShiftedKerrSchild
+{
+}

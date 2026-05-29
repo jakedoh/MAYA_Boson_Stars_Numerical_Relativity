@@ -1,0 +1,29 @@
+implements: RunStats
+
+REAL cputime TYPE=SCALAR
+{
+  cputime_used
+} "Number of CPU hours used by this simulation"
+
+REAL timing_stats TYPE=SCALAR
+{
+  speed
+} "Run timing statistics"
+
+# NOTE: this will break if any of these values exceeds 2GB. Unfortuantely
+#       Carpet does not support INT8 by default one has to manually add
+#       -DCARPET_INT8 -DCARPET_INT -DCARPET_REAL -DCARPET_COMPLEX to CXXFLAGS
+INT memory_stats TYPE=SCALAR
+{
+  maxrss, majflt, arena, ordblks, hblks, hblkhd, uordblks, fordblks, keepcost
+} "Run memory statistics"
+
+INT memory_stats_mb TYPE=SCALAR
+{
+  maxrss_mb, majflt_mb, arena_mb, ordblks_mb, hblks_mb, hblkhd_mb, uordblks_mb, fordblks_mb, keepcost_mb
+} "Run memory statistics in MB"
+
+INT memory_stats_kb TYPE=SCALAR
+{
+  maxrss_kb, majflt_kb, arena_kb, ordblks_kb, hblks_kb, hblkhd_kb, uordblks_kb, fordblks_kb, keepcost_kb
+} "Run memory statistics in KB"

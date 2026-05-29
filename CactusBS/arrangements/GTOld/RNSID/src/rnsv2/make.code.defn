@@ -1,0 +1,7 @@
+# Main make.code.defn file for thorn RNSID
+
+# Source files in this directory
+SRCS = nrutil.c equil_util.c equil.c
+
+# Subdirectories containing source files
+SUBDIRS = 

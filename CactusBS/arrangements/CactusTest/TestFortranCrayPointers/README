@@ -1,0 +1,9 @@
+Cactus Code Thorn TestFortranCrayPointers
+Author(s)    : Erik Schnetter <eschnetter@perimeterinstitute.ca>
+Maintainer(s): Erik Schnetter <eschnetter@perimeterinstitute.ca>
+Licence      : LGPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+Test Fortran Cray pointers.

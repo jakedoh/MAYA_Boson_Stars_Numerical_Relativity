@@ -1,0 +1,77 @@
+#------------------------------------------------------------------------------
+#
+# Parameter file for evolutions of colliding black holes (Brill Lindquist)
+#
+# For use with Cactus 4.0 (Beta 4)
+#
+# For help on running Cactus, either run the Cactus exectuable with the 
+#   command line option -help, or consult the documentation at
+#   www.cactuscode.org
+#
+# Max Planck Institute for Gravitational Physics, Potsdam, Germany, 1999
+#
+#------------------------------------------------------------------------------
+
+!DESC "Evolution of Colliding Black Holes: Demo"
+
+
+# These thorns must be compiled
+
+ActiveThorns = "Boundary LocalReduce ADM CartGrid3D CoordBase SymBase ADMBase StaticConformal CoordGauge ADMAnalysis ADMMacros IDanalyticBH IOBasic IOUtil IOASCII PsiKadelia Pugh pughreduce pughslab Time"
+ 
+#------------------------------------------------------------------------------
+
+# Number of grid points in each direction (must be around 100 or larger)
+ 
+driver::global_nsize       = 100
+
+# How many iterations 
+
+cactus::cctk_final_time    = 30.0
+
+# What output and how often
+
+IOBasic::outInfo_vars      = "admbase::alp"
+IOBasic::outInfo_every     = 10
+IOASCII::out1D_vars        = "admbase::alp admanalysis::grr psikadelia::psi0re"
+IOASCII::out1D_every       = 10
+
+
+#------------------------------------------------------------------------------
+# 
+# Evolution and initial data
+#
+#------------------------------------------------------------------------------
+
+
+IO::out_dir                 = "BrillLindDemo-Iso"
+
+grid::domain               = "full"
+grid::type                 = "byrange"
+grid::xyzmin               = -15.0
+grid::xyzmax               =  15.0
+
+cactus::cctk_initial_time  = 0.
+
+time::dtfac                = 0.25 
+ 
+admbase::metric_type      = "static conformal"
+admbase::evolution_method = "ADM"
+admbase::lapse_evolution_method = "1+log"
+admbase::initial_data     = "bl_bh"  
+
+idanalyticbh::bl_nbh       =  2
+idanalyticbh::bl_x0_1      =  0.0
+idanalyticbh::bl_y0_1      =  0.0
+idanalyticbh::bl_z0_1      =  1.2
+idanalyticbh::bl_M_1       =  1.0
+idanalyticbh::bl_x0_2      =  0.0
+idanalyticbh::bl_y0_2      =  0.0
+idanalyticbh::bl_z0_2      = -1.2
+idanalyticbh::bl_M_2       =  1.5
+
+adm::harmonic_f            = 2.0
+adm::bound                 = "radiative"      
+adm::method                = "stagleap"
+
+

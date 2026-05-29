@@ -1,0 +1,19 @@
+# Schedule definitions for thorn Norms
+# $Header$
+
+STORAGE: varinfo nrdecvar_gr bgvals_group
+
+
+
+schedule Norms_Setup_Vars at WRAGH
+{
+  LANG: C
+  OPTIONS: global
+} "check norm_type and setup the vars info"
+
+schedule Norms_Compute_Norms at ANALYSIS
+{
+  LANG: C
+  STORAGE: diff_term_group norm_group
+  TRIGGERS: norm_group
+} "compute the norm"

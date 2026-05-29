@@ -1,0 +1,175 @@
+ActiveThorns	=	" bam_elliptic admbase admconstraints staticconformal ellbase cartgrid3d time pugh pughreduce pughslab ioascii ioutil iobasic admcoupling admmacros admanalysis spacemask coordgauge adm_bssn boundary pughinterp fisheye maximal httpd httpdextra socket nanchecker ahfinder ioahfinderhdf5 iohdf5util iohdf5 "
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# Scalar and 1D output
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+IOBasic::outScalar_vars	=	" admanalysis::grr admbase::alp admbase::betax admbase::betay admbase::betaz adm_bssn::adm_bs_gyy adm_bssn::adm_bs_k adm_bssn::adm_bs_gx adm_bssn::adm_bs_phi admconstraints::momx admconstraints::ham "
+
+IOBasic::outInfo_vars	=	" admconstraints::ham admbase::alp "
+
+IOASCII::out1D_vars	=	" admanalysis::grr admbase::gyy admbase::alp admbase::betax admbase::betay admbase::betaz adm_bssn::adm_bs_gyy adm_bssn::adm_bs_k adm_bssn::adm_bs_gx adm_bssn::adm_bs_phi admconstraints::momx admconstraints::ham "
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# Output directories
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+IO::out_dir="/nfs/origin/data2/diener/BBH0_test/Misner_2.2_80_3D"
+IO::checkpoint_dir="/nfs/origin/data2/diener/BBH0_test/Misner_2.2_80_3D"
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# Misner 2.2 initial data
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+admbase::initial_data                  = "misner"
+admbase::metric_type                   = "static conformal"
+staticconformal::conformal_storage     = "factor+derivs+2nd derivs"
+bam_elliptic::misner_mu                = 2.2
+bam_elliptic::bam_bound = "bamrobin"
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# Setting up the grid
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+driver::global_nx                       = 84
+driver::global_ny                       = 84
+driver::global_nz                       = 84
+
+time::dtfac                             = 0.25
+
+grid::type                              = "byspacing"
+
+grid::dxyz                              = 0.11515 
+grid::domain                            = "octant"
+
+pugh::ghost_size                        = 2
+
+cactus::cctk_itlast                     = 2450
+
+IOBasic::outScalar_every                = 1
+IOASCII::out1D_every                    = 35 #1M
+IOBasic::outInfo_every                  = 1
+
+IO::recover                             = "no"
+
+IO::verbose                             = "full"
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# ADM_BSSN evolution
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+admbase::evolution_method              = "adm_bssn"
+
+adm_bssn::method                        = "icn"
+adm_bssn::ICN_itnum                     = 3
+adm_bssn::bound                         = "radiative"
+adm_bssn::stencil_size                  = 2
+adm_bssn::advection                     = "upwind2"
+boundary::radpower                      = 2
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# Fisheye
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+fisheye::fisheye_active                 = "yes"
+fisheye::fisheye_type                   = "transition"
+
+fisheye::fisheye_tr_a                   = 3  #de-resolution
+fisheye::fisheye_tr_s                   = 1.2  #width
+fisheye::fisheye_tr_r0                  = 5  #center
+
+adm_bssn::fisheye_scale                 = 3  #de-resolution for boundary
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# Maximal slicing
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+admbase::initial_lapse                  = "ssapprox"
+admbase::lapse_evolution_method         = "maximal"
+adm_bssn::forceKzero                    = "yes"
+maximal::max_every                      = 5
+maximal::max_solver                     = "bam"
+maximal::max_bound                      = "robin"
+maximal::max_robin_falloff              = 1
+maximal::max_robin_inf                  = 1.0
+maximal::maximal_thresh                 = 1e-08
+bam_elliptic::maximal_maxcycles         = 250
+bam_elliptic::bam_laplacian             = "delginv"
+bam_elliptic::maximal_verbose           = "yes"
+bam_elliptic::bam_fullV                 = "no"
+bam_elliptic::maximal_coarsetol         = 1e-10
+bam_elliptic::bam_solve_nmin            = 10
+bam_elliptic::bam_solve_nmax            = 500
+bam_elliptic::bam_solve_normmax         = 1e-10
+bam_elliptic::bam_persist               = "yes"
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# Gamma2 shift
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+admbase::initial_shift                 = "zero"
+admbase::shift_evolution_method        = "gamma2"
+
+adm_bssn::ShiftGammaCoeff               = 0.75
+adm_bssn::ShiftAlpPower                 = 1
+adm_bssn::ShiftPsiPower                 = 4
+adm_bssn::ShiftPhiPower			= 0
+
+adm_bssn::BetaDriver                    = 2.8
+adm_bssn::BetaDriverPsi			= 0.0
+adm_bssn::BetaDriverPhi			= 0.0
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# HTTPD
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+httpd::port = 5555
+
+httpd::provide_pages = "yes"
+httpd::use_pthreads="yes"
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# NanChecker
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+NaNChecker::check_every 	=	2
+NaNChecker::check_vars	 	=	"admbase::lapse admbase::shift admbase::metric admbase::curv adm_bssn::adm_bssn_phi adm_bssn::adm_bssn_metric adm_bssn::adm_bssn_curv adm_bssn::adm_bssn_gamma adm_bssn::adm_bssn_k"
+NaNChecker::action_if_found	=	"abort"
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# Apparent horizon finding
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ahfinder::ahf_active                    = "yes"
+ahfinder::ahf_flow                      = "yes"
+
+ahfinder::ahf_findevery                 = 35  #1M
+ahfinder::ahf_guessold                  = "yes"
+
+ahfinder::ahf_2Doutput                  = "yes"
+ahfinder::ahf_gaussout                  = "yes"
+
+ahfinder::ahf_lmax                      = 8
+ahfinder::ahf_ntheta                    = 50       # as low as 50
+ahfinder::ahf_nphi                      = 50       # as low as 50
+ahfinder::ahf_phi                       = "yes"     # "no" = axisymmetry
+
+ahfinder::ahf_find3                     = "no"      # look just for 1 ah
+
+ahfinder::ahf_xc                        = 0.0       #default
+ahfinder::ahf_yc                        = 0.0       #default
+ahfinder::ahf_zc                        = 0.0       #default
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# Hyperslabbed HDF5 output for metric, lapse, shift and conformal factor
+# into single files with all the timesteps
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+IOHDF5::out_dir                      = "/scratch/diener/EH_DATA/Misner_2.2_80_3D"
+IOHDF5::out_every                    = 1
+IOHDF5::out_vars                     = "admbase::metric[direction={1 0 0 0 1 0 0 0 1} extent={35 35 35}] admbase::lapse[direction={1 0 0 0 1 0 0 0 1} extent={35 35 35}] admbase::shift[direction={1 0 0 0 1 0 0 0 1} extent={35 35 35}] staticconformal::psi[direction={1 0 0 0 1 0 0 0 1} extent={35 35 35}]"
+IO::out_timesteps_per_file              = -1
+IO::out_mode                            = "onefile"
+IO::out_unchunked                       = "yes"
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

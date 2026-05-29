@@ -1,0 +1,95 @@
+shares: SphericalSurface
+USES CCTK_INT nsurfaces
+
+private:
+
+CCTK_REAL x0[5] "Initial x of minimum"
+{
+  *:* :: "Anywhere"
+} 0.0
+
+CCTK_REAL y0[5] "Initial y of minimum"
+{
+  *:* :: "Anywhere"
+} 0.0
+
+CCTK_REAL z0[5] "Initial z of minimum"
+{
+  *:* :: "Anywhere"
+} 0.0
+
+CCTK_INT surface_index[5] "The index of the SphericalSurface into which we write the tracker values"
+{
+    -1:* :: "whatever"
+} -1
+
+CCTK_INT reflection[5] "This tracker is a reflection of another one, so don't interpolate"
+{
+    -1:* :: "whatever"
+} -1
+
+CCTK_REAL dist_cutoff "Amount min is allowed to move between calls" STEERABLE=always
+{
+  *:* :: "Anywhere"
+} 1.0
+
+CCTK_REAL newton_gamma "gamma parameter in Newton's method" STEERABLE=always
+{
+  *:* :: "Anywhere"
+} 1.0
+
+CCTK_REAL newton_tolerance "tolerance in Newton's method" STEERABLE=always
+{
+  *:* :: "Anywhere"
+} 1e-15
+
+CCTK_INT nminima "Number of minima"
+{
+  0:6 :: "Hard-coded limit of 6"
+} 0
+
+CCTK_INT find_every "Find the minima every so many iterations" STEERABLE=always
+{
+  0:* :: "Any positive integer"
+} 1
+
+CCTK_REAL find_every_distance "Find the minima when they have moved by approximately this distance" STEERABLE=always
+{
+  *:* :: "Any distance"
+} -1
+
+CCTK_INT output_every "Output the minima every so many iterations" STEERABLE=always
+{
+  -1:* :: "Any positive integer, or -1 to default to find_every"
+} -1
+
+
+CCTK_STRING var "Which variable to search for the minima" STEERABLE=always
+{
+  ".*" :: "Any Cactus variable"
+} ""
+
+# Any interpolator should be ok.  Only thought about AEILocalInterp though
+CCTK_STRING interpolator_name "Which interpolator should I use"  STEERABLE=always
+{
+  ".+" :: "Any nonempty string"
+} "Hermite polynomial interpolation"
+
+CCTK_STRING interpolator_pars "Parameters for the interpolator" STEERABLE=always
+{
+  ".*" :: "Any string that Util_TableSetFromString() will take"
+} "order=3"
+
+CCTK_STRING coord_system "What is the coord system?" STEERABLE=always
+{
+  ".*" :: "Any smart string will do"
+} "cart3d"
+
+CCTK_INT verbose "How verbose do you want it?" STEERABLE=always
+{
+  0:* :: "0 is nothing, 1 is interesting, >1 is crazy"
+} 0
+
+CCTK_BOOLEAN extrapolate_guess "Extrapolate the last point to use for the initial guess"
+{
+} "no"

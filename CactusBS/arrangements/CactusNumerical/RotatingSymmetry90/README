@@ -1,0 +1,22 @@
+Cactus Code Thorn RotatingSymmetry90
+Author(s)    : Erik Schnetter <schnetter@cct.lsu.edu>
+Maintainer(s): Erik Schnetter <schnetter@cct.lsu.edu>
+Licence      : GPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+Provide a 90 degree rotational symmetry boundary condition.  This is
+the kind of symmetry that exists e.g. in a single black hole evolution
+when the black hole has spin.  The same setup also admits an
+additional bitant symmetry.
+
+Currently the symmetry is fixed to be located at the lower x and y
+boundaries, so that there is a rotation about the z axis.
+
+The coordinate thorn does not know about this symmetry.  You will have
+to set up the domain such that you have an upper quadrant in the x and
+y directions.
+
+This symmetry boundary condition can be mixed with arbitrary symmetry
+conditions in the z direction, e.g. bitant or periodicity.

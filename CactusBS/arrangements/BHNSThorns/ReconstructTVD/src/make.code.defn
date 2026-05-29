@@ -1,0 +1,8 @@
+# Main make.code.defn file for thorn ReconstructTVD
+# $Header:$
+
+# Source files in this directory
+SRCS = TVD_ParamCheck.F90 TVD_Reconstruct.F90 TVD_Polytype.F90 TVD.F90 SlopeLimiter.F90 TVD_Scalars.F90 TVD_PreLoop.F90
+
+# Subdirectories containing source files
+SUBDIRS = 

@@ -1,0 +1,6 @@
+# Interface definition for thorn ReconstructTVD
+# $Header:$
+
+implements: ReconstructTVD
+inherits: Whisky HydroBase StaticConformal PrimRecovery
+friend: Whisky

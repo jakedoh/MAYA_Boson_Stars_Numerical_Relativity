@@ -1,0 +1,41 @@
+# $Header$
+#
+# /*@@
+#   @file      SampleIO.par
+#   @date      Tue 14 May 2002
+#   @author    Thomas Radke
+#   @desc
+#              Wavetoy parameter file demonstrating output with SampleIO
+#   @enddesc
+#   @version   $Header$
+# @@*/          
+
+!DESC "Orbiting binary sources ... example of SampleIO"
+
+ActiveThorns = "HTTPD HTTPDExtra Socket CartGrid3D CoordBase SymBase Boundary Time WavetoyC IDScalarWaveC WaveBinarySource PUGH PUGHSlab PUGHReduce IOUtil SampleIO"
+
+
+Cactus::cctk_run_title = "WaveToy/SampleIO Example"
+Cactus::terminate      = "never"
+
+Time::dtfac = 0.25
+
+IDScalarWave::initial_data = "none"
+
+WaveBinarySource::binary_omega  = 26 
+WaveBinarySource::binary_charge = 0.0001
+WaveBinarySource::binary_radius = 0.25
+WaveBinarySource::binary_size   = 0.1
+
+WaveToy::bound = "radiation"
+ 
+Grid::type   = "ByRange"
+Grid::domain = "full"
+Grid::xyzmin = -1
+Grid::xyzmax = 1
+
+Driver::global_nsize = 70
+
+# say when to do output and for which variables
+SampleIO::out_every = 1
+SampleIO::out_vars  = "wavetoy::phi"

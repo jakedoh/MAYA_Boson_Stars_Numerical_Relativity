@@ -1,0 +1,113 @@
+# Parameter definitions for thorn Arrays
+# $Header$
+
+private:
+
+# 4D Arrays
+
+INT xghost4d "Ghostzone size in x direction for 4d arrays"
+{
+  0:* :: ""
+} 1
+
+INT yghost4d "Ghostzone size in y direction for 4d arrays"
+{
+  0:* :: ""
+} 1
+
+INT zghost4d "Ghostzone size in z direction for 4d arrays"
+{
+  0:* :: ""
+} 1
+
+INT tghost4d "Ghostzone size in t direction for 4d arrays"
+{
+  0:* :: ""
+} 1
+
+INT xsize4d "Size of 4d array in x direction"
+{
+  0:* :: ""
+} 2
+
+INT ysize4d "Size of 4d array in y direction"
+{
+  0:* :: ""
+} 3
+
+INT zsize4d "Size of 4d array in z direction"
+{
+  0:* :: ""
+} 2
+
+INT tsize4d "Size of 4d array in t direction"
+{
+  0:* :: ""
+} 2
+
+# 3D Arrays
+
+INT xghost3d "Ghostzone size in x direction for 3d arrays"
+{
+  0:* :: ""
+} 1
+
+INT yghost3d "Ghostzone size in y direction for 3d arrays"
+{
+  0:* :: ""
+} 1
+
+INT zghost3d "Ghostzone size in z direction for 3d arrays"
+{
+  0:* :: ""
+} 1
+
+INT xsize3d "Size of 3d array in x direction"
+{
+  0:* :: ""
+} 2
+
+INT ysize3d "Size of 3d array in y direction"
+{
+  0:* :: ""
+} 3
+
+INT zsize3d "Size of 3d array in z direction"
+{
+  0:* :: ""
+} 2
+
+# 2D Arrays
+
+INT xghost2d "Ghostzone size in x direction for 2d arrays"
+{
+  0:* :: ""
+} 1
+
+INT yghost2d "Ghostzone size in y direction for 2d arrays"
+{
+  0:* :: ""
+} 1
+
+INT xsize2d "Size of 2d array in x direction"
+{
+  0:* :: ""
+} 2
+
+INT ysize2d "Size of 2d array in y direction"
+{
+  0:* :: ""
+} 3
+
+# 1D Arrays
+
+INT xghost1d "Ghostzone size in x direction for 1d arrays"
+{
+  0:* :: ""
+} 1
+
+INT xsize1d "Size of 1d array in x direction"
+{
+  0:* :: ""
+} 2
+

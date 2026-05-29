@@ -1,0 +1,8 @@
+# Schedule definitions for thorn httpd_utils
+# $Header$
+
+SCHEDULE HTTPUTILS_Startup AT startup AFTER HTTP_Startup BEFORE IOUtil_Startup
+{
+  LANG: C
+  OPTIONS: GLOBAL
+} "Utils for httpd startup"

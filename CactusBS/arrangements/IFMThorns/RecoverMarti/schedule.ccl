@@ -1,0 +1,83 @@
+# Schedule definitions for thorn RecoverMarti
+# $Header:$
+
+###################################################
+### Basic scheduling into HydroBase_Con2Prim.   ###
+###################################################
+if (CCTK_Equals(whisky_eos_type,"General")) {
+
+  schedule Conservative2Primitive IN HydroBase_Con2Prim AS Con2Prim
+  {
+    LANG: Fortran
+  } "Convert back to primitive variables (general)"
+
+} else if (CCTK_Equals(whisky_eos_type,"Polytype")) {
+
+  schedule Conservative2PrimitivePolytype IN HydroBase_Con2Prim AS Con2Prim
+  {
+    LANG: Fortran
+  } "Convert back to primitive variables (polytype)"
+
+}
+
+##############################
+### Schedule Scalars.      ###
+##############################
+schedule RecoverMarti_setCenterVars in HydroBase_Con2Prim BEFORE Con2Prim
+{
+  LANG: Fortran
+} "Set centers of punctures for the puncture trick"
+
+##############################
+### Schedule boundaries.   ###
+##############################
+if (CCTK_Equals(whisky_eos_type,"General")) {
+
+  schedule Conservative2PrimitiveBounds IN Whisky_Con2PrimBounds AS Conservative2Primitive
+  {
+    LANG: Fortran
+  } "Compute the primitive variables on cell boundaries (general)"
+
+} else if (CCTK_Equals(whisky_eos_type,"Polytype")) {
+
+  schedule Con2PrimBoundsPolytype IN Whisky_Con2PrimBounds AS Conservative2Primitive
+  {
+    LANG: Fortran
+  } "Compute the primitive variables on cell boundaries (polytype)"
+
+}
+
+if (check_zsymmetry)
+{
+  schedule check_symmetry in MoL_PostStep AFTER SetTmunu
+  {
+    LANG: FORTRAN
+  } "check z symmetry"
+
+  schedule check_symmetry AT ANALYSIS
+  {
+    LANG: FORTRAN
+  } "check z symmetry"
+}
+
+if ( store_recovery_fails ) {
+
+  STORAGE: failed_con2prim_mask 
+
+  schedule RecoverMarti_ResetFailMask IN CCTK_BASEGRID 
+  {
+     LANG: Fortran
+  } "Reset con2prim failure mask"
+
+  schedule RecoverMarti_ResetFailMask IN CCTK_PRESTEP
+  {
+     LANG: Fortran
+  } "Reset con2prim failure mask"
+
+  # Check for failures often (current abort is in place on case of this)
+  schedule RecoverMarti_CheckFailMask IN CCTK_POSTSTEP
+  {
+     LANG: Fortran
+  } "Check con2prim failures"
+
+}

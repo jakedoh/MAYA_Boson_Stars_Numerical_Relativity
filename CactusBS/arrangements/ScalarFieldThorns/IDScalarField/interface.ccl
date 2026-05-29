@@ -1,0 +1,11 @@
+# Interface definition for thorn IDScalarField
+implements: IDScalarField
+inherits: Grid
+
+#######################################################
+### Brans Dicke field as in Damour&Farese           ###
+### PRL_70_2220, Sotani&Kokkotas PRD_70_084026      ###
+#######################################################
+void FUNCTION calcInitialScalarFields(CCTK_REAL IN x, CCTK_REAL IN y, CCTK_REAL IN z, CCTK_REAL OUT scalarphi, CCTK_REAL ARRAY OUT grad_scalarphi, CCTK_REAL OUT scalarpi, CCTK_REAL OUT VV) 
+PROVIDES FUNCTION calcInitialScalarFields WITH idscalarfield_calcInitialScalarFields LANGUAGE C
+

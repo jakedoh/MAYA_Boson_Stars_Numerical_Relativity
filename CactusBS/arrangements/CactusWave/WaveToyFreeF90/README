@@ -1,0 +1,11 @@
+Cactus Code Thorn WaveToyFreeF90
+Author(s)    : Tom Goodale
+               Erik Schnetter
+Maintainer(s): Cactus team
+Licence      : LGPL
+--------------------------------------------------------------------------
+
+1. Purpose
+
+This thorn solves the linear wave equation, using free form (as
+opposed to fixed form) Fortran 90.

@@ -1,0 +1,7 @@
+Cactus Code Thorn TATelliptic
+Authors    : Erik Schnetter <schnetter@uni-tuebingen.de>
+--------------------------------------------------------------------------
+
+Purpose of the thorn:
+
+This is a generic interface to nonlinear elliptic solvers.

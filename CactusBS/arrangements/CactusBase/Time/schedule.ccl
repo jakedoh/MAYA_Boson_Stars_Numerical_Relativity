@@ -1,0 +1,62 @@
+# Schedule definitions for thorn Time
+
+STORAGE: speedvars, couranttemps
+
+schedule Time_Initialise at CCTK_BASEGRID before Time_Simple
+{
+  LANG: C
+  OPTIONS: global
+    WRITES: Time::speedvars
+    WRITES: Time::courant_dt(everywhere)
+} "Initialise Time variables"
+
+if (CCTK_Equals (timestep_method, "courant_static"))
+{
+  schedule Time_Simple at CCTK_BASEGRID as TemporalSpacings after SpatialSpacings
+  {
+    LANG: C
+    OPTIONS: singlemap
+  } "Set timestep based on Courant condition (courant_static)"
+}
+else if (CCTK_Equals (timestep_method, "courant_speed"))
+{
+  schedule Time_Courant at CCTK_BASEGRID as TemporalSpacings after SpatialSpacings
+  {
+    LANG: C
+    OPTIONS: singlemap
+    READS: Time::speedvars
+    WRITES: Time::courant_dt(everywhere)
+  } "Set timestep based on Courant condition (courant_speed)"
+
+   schedule Time_Courant at CCTK_POSTSTEP as TemporalSpacings after SpatialSpacings
+  {
+    LANG: C
+    OPTIONS: singlemap
+    READS: Time::speedvars
+    WRITES: Time::courant_dt(everywhere)
+  } "Reset timestep each iteration"
+}
+else if (CCTK_Equals (timestep_method, "courant_time"))
+{
+  schedule Time_Simple at CCTK_BASEGRID as TemporalSpacings after SpatialSpacings
+  {
+    LANG: C
+    OPTIONS: singlemap
+  } "Set timestep based on Courant condition (courant_time)"
+
+   schedule Time_Courant at CCTK_POSTSTEP as TemporalSpacings after SpatialSpacings
+  {
+    LANG: C
+    OPTIONS: singlemap
+    READS: Time::speedvars
+    WRITES: Time::courant_dt(everywhere)
+  } "Reset timestep each iteration"
+}
+else if (CCTK_Equals (timestep_method, "given"))
+{
+  schedule Time_Given at CCTK_BASEGRID as TemporalSpacings after SpatialSpacings
+  {
+    LANG: C
+    OPTIONS: singlemap
+  } "Set fixed timestep"
+}

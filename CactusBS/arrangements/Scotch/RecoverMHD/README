@@ -1,0 +1,11 @@
+CVS info   : $Header:$
+
+Cactus Code Thorn RecoverMHD
+Thorn Author(s)     : Tanja Bode <tbode@gravity.psu.edu>
+Thorn Maintainer(s) : Tanja Bode <tbode@gravity.psu.edu>
+--------------------------------------------------------------------------
+
+Purpose of the thorn:
+
+Provide a simplified recovery of the primitives from the Whisky conservatives
+assuming idealized MHD as described by Duez et al. in astro-ph/0503420v2.

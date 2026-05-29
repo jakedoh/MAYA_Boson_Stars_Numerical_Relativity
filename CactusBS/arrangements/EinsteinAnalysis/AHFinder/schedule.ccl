@@ -1,0 +1,75 @@
+# Schedule definitions for thorn AHFinder
+#c/*@@
+#c  @date    July 1999
+#c  @author   Lars Nerger
+#c  @@*/
+
+
+schedule AHFinder_SetSym at CCTK_WRAGH
+{
+  LANG: Fortran
+  OPTIONS: global
+} "Set symmetries for AHFinder grid functions"
+
+schedule AHFinder_Startup at CCTK_STARTUP
+{
+  LANG: C
+  OPTIONS: global
+} "Register AHFinder as an IO Method"
+
+schedule AHFinder_ParamCheck at PARAMCHECK
+{
+  LANG: Fortran
+  OPTIONS: global
+} "Check for physical or conformal metric"
+
+schedule AHFinder_InitOutput at CCTK_INITIAL
+{
+  LANG: Fortran
+} "Create output files, write headers"
+
+if (ahf_active)
+{
+  STORAGE: hole1_bounds,hole2_bounds,hole3_bounds,ahf_centroid
+  STORAGE: out_scalars
+  STORAGE: ahfinder_gaussian
+  if (ahf_lmax > 0)
+  {
+    STORAGE: out_1d_legen, out_2d_legen
+  }
+
+  if (ahf_persists)
+  {
+    STORAGE: ahfindergrid,ahfinderexp,ahfgradient,ahfinder_gauss,find3grid
+    STORAGE: ahfmask
+
+    schedule ahfinder before driftcorrect at CCTK_ANALYSIS
+    {
+     LANG: Fortran
+     STORAGE: triggergroup
+     TRIGGERS: triggergroup
+    } "Call apparent horizon finder with persisting grid functions"
+  }
+  else if (CCTK_Equals (ahf_mask,"off"))
+  {
+    schedule ahfinder before driftcorrect at CCTK_ANALYSIS
+    {
+     LANG: Fortran
+     STORAGE: ahfindergrid,ahfinderexp,ahfgradient,ahfinder_gauss,find3grid
+     STORAGE: ahfmask, triggergroup
+     TRIGGERS:triggergroup
+    } "Call apparent horizon finder"
+  }
+  else
+  {
+    STORAGE: ahfmask
+    STORAGE: hole1_bounds,hole2_bounds,hole3_bounds
+
+    schedule ahfinder before driftcorrect at CCTK_ANALYSIS
+    {
+     LANG: Fortran
+     STORAGE: ahfindergrid,ahfinderexp,ahfgradient,ahfinder_gauss,find3grid, triggergroup
+     TRIGGERS: triggergroup
+    } "Call apparent horizon finder with persisting mask"
+  }
+}

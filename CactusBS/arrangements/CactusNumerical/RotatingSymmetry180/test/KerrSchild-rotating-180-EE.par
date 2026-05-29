@@ -1,0 +1,221 @@
+Cactus::cctk_run_title = "Kerr-Schild with a 180 degree rotational symmetry"
+
+Cactus::cctk_full_warnings         = yes
+Cactus::highlight_warning_messages = no
+
+Cactus::cctk_itlast = 3
+
+
+
+ActiveThorns = "IOUtil"
+
+IO::out_dir             = $parfile
+IO::out_fileinfo = "none"
+IO::parfile_write       = no
+IO::out_group_separator = "-"
+
+
+
+ActiveThorns = "Fortran"
+
+ActiveThorns = "GenericFD"
+
+ActiveThorns = "LoopControl"
+
+ActiveThorns = "Slab"
+
+
+
+ActiveThorns = "InitBase"
+
+
+
+ActiveThorns = "Carpet CarpetLib CarpetReduce CarpetSlab"
+
+Carpet::verbose           = no
+Carpet::veryverbose       = no
+Carpet::schedule_barriers = no
+Carpet::storage_verbose   = no
+CarpetLib::output_bboxes  = no
+
+Carpet::domain_from_coordbase = yes
+
+Carpet::prolongation_order_time = 2
+
+driver::ghost_size = 3
+
+Carpet::init_fill_timelevels = yes
+
+Carpet::poison_new_timelevels = yes
+CarpetLib::poison_new_memory  = yes
+
+
+
+ActiveThorns = "NaNChecker"
+
+
+
+ActiveThorns = "Boundary CartGrid3D CoordBase ReflectionSymmetry RotatingSymmetry180 SymBase"
+
+CoordBase::domainsize = "minmax"
+
+CoordBase::xmin =  0.00
+CoordBase::ymin = -4.00
+CoordBase::zmin =  0.00
+CoordBase::xmax = +4.00
+CoordBase::ymax = +4.00
+CoordBase::zmax = +4.00
+CoordBase::dx   =  0.25
+CoordBase::dy   =  0.25
+CoordBase::dz   =  0.25
+
+CoordBase::boundary_size_x_lower     = 3
+CoordBase::boundary_size_y_lower     = 3
+CoordBase::boundary_size_z_lower     = 3
+CoordBase::boundary_size_x_upper     = 3
+CoordBase::boundary_size_y_upper     = 3
+CoordBase::boundary_size_z_upper     = 3
+
+CoordBase::boundary_shiftout_x_lower = 1
+CoordBase::boundary_shiftout_z_lower = 1
+
+CartGrid3D::type = "coordbase"
+
+ReflectionSymmetry::reflection_z   = yes
+ReflectionSymmetry::avoid_origin_z = no
+
+
+
+ActiveThorns = "SphericalSurface"
+
+
+
+ActiveThorns = "MoL Time"
+
+MoL::ODE_Method             = "RK4"
+MoL::MoL_Intermediate_Steps = 4
+MoL::MoL_Num_Scratch_Levels = 1
+
+Time::dtfac = 0.40
+
+
+
+ActiveThorns = "ADMBase ADMMacros CoordGauge SpaceMask StaticConformal TmunuBase"
+
+ActiveThorns = "KerrSchild GenericFD"
+
+ADMBase::initial_data  = "KerrSchild"
+ADMBase::initial_lapse = "KerrSchild"
+ADMBase::initial_dtlapse = "KerrSchild"
+ADMBase::initial_shift = "KerrSchild"
+ADMBase::initial_dtshift = "KerrSchild"
+KerrSchild::M = 1.0
+KerrSchild::a = 0.8
+
+ActiveThorns = "NoExcision SphericalSurface LoopControl"
+
+NoExcision::num_regions = 1
+NoExcision::radius[0]   = 0.8
+NoExcision::Minkowski_scale[0] = 2.2 # value found at r=1.0
+NoExcision::reduce_rhs[0] = yes
+
+
+ActiveThorns = "ML_BSSN ML_BSSN_Helper NewRad"
+
+ADMBase::evolution_method         = "ML_BSSN"
+ML_BSSN::fdOrder      = 4
+ML_BSSN::my_initial_boundary_condition = "extrapolate-gammas"
+ML_BSSN::my_rhs_boundary_condition     = "NewRad"
+Boundary::radpower                     = 2
+# These are necessary
+ML_BSSN::ML_log_confac_bound = "none"
+ML_BSSN::ML_metric_bound     = "none"
+ML_BSSN::ML_Gamma_bound      = "none"
+ML_BSSN::ML_trace_curv_bound = "none"
+ML_BSSN::ML_curv_bound       = "none"
+ML_BSSN::ML_lapse_bound      = "none"
+ML_BSSN::ML_dtlapse_bound    = "none"
+ML_BSSN::ML_shift_bound      = "none"
+ML_BSSN::ML_dtshift_bound    = "none"
+
+ADMBase::lapse_evolution_method   = "ML_BSSN"
+ADMBase::dtlapse_evolution_method = "ML_BSSN"
+ML_BSSN::harmonicN           = 1   # 1+log
+ML_BSSN::harmonicF           = 2.0
+ML_BSSN::AlphaDriver         = 1
+ML_BSSN::LapseAdvectionCoeff = 0
+
+ADMBase::shift_evolution_method   = "ML_BSSN"
+ADMBase::dtshift_evolution_method = "ML_BSSN"
+ML_BSSN::BetaDriver          = 1.0
+ML_BSSN::ShiftGammaCoeff = 0.0
+
+ML_BSSN::MinimumLapse        = 1.0e-8
+
+ML_BSSN::apply_dissipation   = "always"
+ML_BSSN::EpsDiss = 0.2
+
+ActiveThorns = "ML_ADMConstraints"
+
+
+
+ActiveThorns = "CarpetIOBasic"
+
+IOBasic::outInfo_every      = 1
+IOBasic::outInfo_reductions = "norm2"
+IOBasic::outInfo_vars       = "
+        ML_ADMConstraints::H
+        ML_ADMConstraints::M1
+"
+
+
+
+ActiveThorns = "CarpetIOScalar"
+
+IOScalar::one_file_per_group = yes
+
+IOScalar::outScalar_every = 1
+IOScalar::outScalar_reductions = "
+        average
+        inorm1
+        norm1
+        count
+        inorm2
+        norm2
+        iaverage
+        maximum
+        norm_inf
+        icount
+        minimum
+"
+IOScalar::outScalar_vars  = "
+        ADMBase::metric
+        ADMBase::curv
+        ADMBase::lapse
+        ADMBase::shift
+        ADMBase::dtlapse
+        ADMBase::dtshift
+        ML_ADMConstraints::ML_Ham
+        ML_ADMConstraints::ML_mom
+"
+
+
+
+ActiveThorns = "CarpetIOASCII"
+
+IOASCII::one_file_per_group = yes
+
+IOASCII::output_symmetry_points = yes
+IOASCII::out3D_ghosts           = no
+
+IOASCII::out1D_every = 1
+IOASCII::out1D_vars  = "
+        ADMBase::metric
+        ADMBase::curv
+        ADMBase::lapse
+        ADMBase::shift
+        ADMBase::dtlapse
+        ADMBase::dtshift
+        ML_ADMConstraints::ML_Ham
+        ML_ADMConstraints::ML_mom
+"

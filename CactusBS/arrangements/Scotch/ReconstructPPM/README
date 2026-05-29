@@ -1,0 +1,10 @@
+CVS info   : $Header:$
+
+Cactus Code Thorn ReconstructPPM
+Thorn Author(s)     : Tanja Bode <tbode@gravity.psu.edu>
+Thorn Maintainer(s) : Tanja Bode <tbode@gravity.psu.edu>
+--------------------------------------------------------------------------
+
+Purpose of the thorn:
+
+Reconstruct the hydro variables at the cell boundaries using the PPM method.

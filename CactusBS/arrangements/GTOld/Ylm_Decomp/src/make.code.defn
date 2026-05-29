@@ -1,0 +1,13 @@
+# Main make.code.defn file for thorn Ylm_Decomp
+# $Header: /numrelcvs/HerrmannCVS/Ylm_Decomp/src/make.code.defn,v 1.7 2004/02/11 14:42:04 herrmann Exp $
+
+# Source files in this directory
+SRCS =  Setup_Vars.c ylm_isnan.c \
+        Setup_Sphere.F90 \
+        Init.F90 Setup_Detectors.F90 Ylm_Constants.F90 \
+        Integrate_Sphere.F90 IO.c Project_Sphere.F90 loop_over_detectors.F90 \
+	ParamCheck.c
+
+# Subdirectories containing source files
+SUBDIRS = 
+

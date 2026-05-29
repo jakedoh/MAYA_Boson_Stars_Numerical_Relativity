@@ -1,0 +1,4 @@
+# Main make.configuration.defn file for thorn Meudon_Bin_NS
+
+# Define this thorn's utilities
+ALL_UTILS += coal init_bin

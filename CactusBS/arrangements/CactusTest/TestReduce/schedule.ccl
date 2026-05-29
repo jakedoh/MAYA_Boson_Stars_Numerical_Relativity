@@ -1,0 +1,37 @@
+# Schedule definitions for thorn TestReduce
+# $Header$
+
+STORAGE: testreduce_3gfs
+STORAGE: testreduce_2gfs
+STORAGE: testreduce_1gfs
+STORAGE: testreduce_3igfs
+STORAGE: testreduce_2igfs
+STORAGE: testreduce_1igfs
+STORAGE: testreduce_scalars
+STORAGE: testreduce_iscalars
+
+schedule TestReduce_Initial at CCTK_INITIAL
+{
+  LANG: C
+} "Initialise variables"
+
+schedule TestReduceC_Maximum at CCTK_POSTINITIAL
+{
+  LANG: C
+} "Test out maximum reductions from C"
+
+schedule TestReduceF_Maximum at CCTK_POSTINITIAL
+{
+  LANG: Fortran
+} "Test out maximum reductions from Fortran"
+
+schedule TestReduceC_Sum at CCTK_POSTINITIAL
+{
+  LANG: C
+} "Test out sum reductions from C"
+
+schedule TestReduceF_Sum at CCTK_POSTINITIAL
+{
+  LANG: Fortran
+} "Test out sum reductions from Fortran"
+

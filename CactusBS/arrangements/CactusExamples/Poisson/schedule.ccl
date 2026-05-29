@@ -1,0 +1,33 @@
+# Schedule definitions for thorn Poisson
+
+STORAGE: potential residual
+
+SCHEDULE Poisson_prepare AT initial
+{
+  LANG: C
+  WRITES: Poisson::phi(Everywhere)
+} "Set up initial guess for initial data"
+
+SCHEDULE Poisson_solve AT postinitial
+{
+  LANG: C
+  WRITES: Poisson::res(Interior)
+  READS: Poisson::phi(Everywhere)
+  READS: Grid::coordinates(Interior)
+  # OPTIONS: global
+} "Calculate uniform charge initial data"
+
+SCHEDULE GROUP Poisson_boundaries
+{
+} "Apply boundary conditions to initial data"
+
+SCHEDULE Poisson_boundaries_select IN Poisson_boundaries
+{
+  LANG: C
+  OPTIONS: level
+  SYNC: potential
+} "Select boundary conditions for initial data"
+
+SCHEDULE GROUP ApplyBCs AS Poisson_boundaries_apply IN Poisson_boundaries AFTER Poisson_boundaries_select
+{
+} "Apply boundary conditions to initial data"

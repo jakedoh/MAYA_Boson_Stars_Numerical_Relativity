@@ -1,0 +1,47 @@
+##############################################################################
+#
+# brilldata.par
+#
+# Simple Brill wave data of the Holz et.al. type
+#
+##############################################################################
+
+ActiveThorns = "time LocalReduce boundary iobasic ellbase ellsor idbrilldata pugh pughreduce pughslab ADMBase staticconformal CartGrid3D CoordBase SymBase ioutil ioascii"
+
+# General
+
+driver::global_nx 				= 32     
+driver::global_ny 				= 32     
+driver::global_nz 				= 32     
+
+grid::type 					= "byspacing"
+grid::dxyz 					= 0.2
+grid::domain 					= "octant" 
+
+cactus::cctk_itlast 				= 0
+
+# Brill wave initial data
+
+ADMBase::initial_data 				= "brilldata"
+ADMBase::metric_type				= "physical"
+
+# Brill wave parameters
+
+idbrilldata::q_function				= "gundlach"
+idbrilldata::gundlach_a				= 1.0
+
+# Elliptic solver.
+
+idbrilldata::solver	 			= "sor"
+idbrilldata::thresh				= 0.001
+
+idbrilldata::sor_maxit				= 1000
+
+# Output.
+
+IO::out_every = 1
+IO::out_dir = "brilldata"
+
+IOASCII::out1D_vars = "ADMBase::gxx ADMBase::gyy ADMBase::gzz ADMBase::gxy ADMBase::gxz ADMBase::gyz idbrilldata::brillpsi"
+
+IOBasic::outScalar_vars = "ADMBase::gxx ADMBase::gyy ADMBase::gzz ADMBase::gxy ADMBase::gxz ADMBase::gyz idbrilldata::brillpsi"

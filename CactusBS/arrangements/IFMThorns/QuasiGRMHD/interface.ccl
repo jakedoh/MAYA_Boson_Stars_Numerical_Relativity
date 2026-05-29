@@ -1,0 +1,63 @@
+# Interface definition for thorn QuasiGRMHD
+implements: QuasiGRMHD
+inherits: ADMBase Whisky EMevoPlasmaChi
+friend: HydroBase 
+
+void FUNCTION Prim2ConGen(CCTK_INT IN handle, \
+                          CCTK_REAL IN gxx, CCTK_REAL IN gxy, \
+                          CCTK_REAL IN gxz, CCTK_REAL IN gyy, \
+                          CCTK_REAL IN gyz, CCTK_REAL IN gzz, \
+                          CCTK_REAL IN det, CCTK_REAL OUT dens, \
+                          CCTK_REAL OUT sx, CCTK_REAL OUT sy, \
+                          CCTK_REAL OUT sz, CCTK_REAL OUT tau, \
+                          CCTK_REAL IN rho, CCTK_REAL IN velx, \
+                          CCTK_REAL IN vely, \
+                          CCTK_REAL IN velz, CCTK_REAL IN epsilon, \
+                          CCTK_REAL OUT press, CCTK_REAL OUT w_lorentz)
+
+void FUNCTION Prim2ConPoly(CCTK_INT IN handle, \
+                           CCTK_REAL IN gxx, CCTK_REAL IN gxy, \
+                           CCTK_REAL IN gxz, CCTK_REAL IN gyy, \
+                           CCTK_REAL IN gyz, CCTK_REAL IN gzz, \
+                           CCTK_REAL IN det, CCTK_REAL OUT dens, \
+                           CCTK_REAL OUT sx, CCTK_REAL OUT sy, \
+                           CCTK_REAL OUT sz, CCTK_REAL OUT tau, \
+                           CCTK_REAL IN rho, CCTK_REAL IN velx, \
+                           CCTK_REAL IN vely, \
+                           CCTK_REAL IN velz, CCTK_REAL OUT epsilon, \
+                           CCTK_REAL OUT press, CCTK_REAL OUT w_lorentz)
+
+void FUNCTION Prim2ConMHDGen(CCTK_INT IN handle, \
+                          CCTK_REAL IN gxx, CCTK_REAL IN gxy, \
+                          CCTK_REAL IN gxz, CCTK_REAL IN gyy, \
+                          CCTK_REAL IN gyz, CCTK_REAL IN gzz, \
+                          CCTK_REAL IN det, CCTK_REAL OUT dens, \
+                          CCTK_REAL OUT sx, CCTK_REAL OUT sy, \
+                          CCTK_REAL OUT sz, CCTK_REAL OUT tau, \
+                          CCTK_REAL IN rho, CCTK_REAL IN velx, \
+                          CCTK_REAL IN vely, \
+                          CCTK_REAL IN velz, CCTK_REAL IN epsilon, \
+                          CCTK_REAL OUT press, CCTK_REAL OUT w_lorentz, \
+			  CCTK_REAL OUT bnx, CCTK_REAL OUT bny, \
+			  CCTK_REAL OUT bnz, CCTK_REAL IN bvecx, \
+			  CCTK_REAL IN bvecy, CCTK_REAL IN bvecz)
+
+void FUNCTION Prim2ConMHDPoly(CCTK_INT IN handle, \
+                           CCTK_REAL IN gxx, CCTK_REAL IN gxy, \
+                           CCTK_REAL IN gxz, CCTK_REAL IN gyy, \
+                           CCTK_REAL IN gyz, CCTK_REAL IN gzz, \
+                           CCTK_REAL IN det, CCTK_REAL OUT dens, \
+                           CCTK_REAL OUT sx, CCTK_REAL OUT sy, \
+                           CCTK_REAL OUT sz, CCTK_REAL OUT tau, \
+                           CCTK_REAL IN rho, CCTK_REAL IN velx, \
+                           CCTK_REAL IN vely, \
+                           CCTK_REAL IN velz, CCTK_REAL OUT epsilon, \
+                           CCTK_REAL OUT press, CCTK_REAL OUT w_lorentz, \
+			   CCTK_REAL OUT bnx, CCTK_REAL OUT bny, \
+			   CCTK_REAL OUT bnz, CCTK_REAL IN bvecx, \
+			   CCTK_REAL IN bvecy, CCTK_REAL IN bvecz)
+
+USES FUNCTION Prim2ConPoly
+USES FUNCTION Prim2ConGen
+USES FUNCTION Prim2ConMHDGen
+USES FUNCTION Prim2ConMHDPoly

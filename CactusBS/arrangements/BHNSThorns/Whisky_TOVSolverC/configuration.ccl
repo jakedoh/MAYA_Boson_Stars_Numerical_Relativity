@@ -1,0 +1,4 @@
+# Configuration definition for thorn Whisky
+
+REQUIRES THORNS: EOS_Base Boundary CartGrid3D SpaceMask
+

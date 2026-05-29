@@ -1,0 +1,28 @@
+Cactus Code Thorn Seed_Magnetic_Fields
+Author(s)    : Zachariah B. Etienne
+Note         : This thorn is designed to seed magnetic 
+               fields into initial data. Generally, these
+               magnetic fields are sufficiently weak that
+               there is no significant dynamical impact
+               initially.
+Maintainer(s): Zachariah B. Etienne
+License      : FreeBSD License, AKA "2-Clause BSD License"
+----------------------------------------------------------
+
+1. Purpose
+
+Seed magnetic fields into an initial matter configuration.
+Currently seeding into TOV stars is supported, according
+to the poloidal magnetic field prescription:
+A_x = -y*A_b*pow(MAX(P-P_cut,0.0),n_s)
+A_y =  x*A_b*pow(MAX(P-P_cut,0.0),n_s)
+A_z = 0
+Phi = 0
+
+as specified in Appendix B of the IllinoisGRMHD code
+announcement paper:
+http://arxiv.org/pdf/1501.07276.pdf
+
+Note that we must be careful if A_i's are staggered. In this
+case, the pressure must be interpolated to the staggered
+point, and the values of x and y must also be shifted.

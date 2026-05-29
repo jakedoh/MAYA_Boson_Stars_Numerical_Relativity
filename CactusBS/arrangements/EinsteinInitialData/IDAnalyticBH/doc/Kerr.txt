@@ -1,0 +1,48 @@
+This document shows that the denominator of the definition of shift_phi
+in the code (p2*Sigma) is equal to the denominator of equation (11) in
+Phys. Rev., D54, 1403­1416
+
+Lines starting with '>' are commands for sagemath, line starting with
+>> are sagemath output, everything else is comments.
+
+
+Variable definition:
+> Sigma,a,r,m,R,Delta,st2,ct2=var('Sigma,a,r,m,R,Delta,st2,ct2')
+
+This is p2*Sigma from the code, st2 being sin^2(theta) = rho^2/R^2:
+
+> code_denom=(a^2+r^2)*Sigma+2*m*a^2*r*st2
+
+Now substitute Sigma, with ct2 being cos^2(theta) = z^2/R^2:
+
+> code_denom=code_denom.substitute(Sigma=r^2+a^2*ct2)
+
+and use that st2+ct2=1:
+
+> code_denom=code_denom.substitute(ct2=1-st2)
+
+Now look at the denominator in the paper:
+
+> paper_denom=(r^2+a^2)^2-a^2*st2*Delta
+
+Substitute Delta:
+
+> paper_denom=paper_denom.substitute(Delta=r^2-2*m*r+a^2)
+
+And look at the difference between code_denom and paper_denom:
+
+> (code_denom-paper_denom).expand()
+>> 0
+
+qed
+
+And here is the notebook as textblock:
+
+sage: Sigma,a,r,m,R,Delta,st2,ct2=var('Sigma,a,r,m,R,Delta,st2,ct2')
+sage: code_denom=(a^2+r^2)*Sigma+2*m*a^2*r*st2
+sage: code_denom=code_denom.substitute(Sigma=r^2+a^2*ct2)
+sage: code_denom=code_denom.substitute(ct2=1-st2)
+sage: paper_denom=(r^2+a^2)^2-a^2*st2*Delta
+sage: paper_denom=paper_denom.substitute(Delta=r^2-2*m*r+a^2)
+sage: (code_denom-paper_denom).expand()
+0

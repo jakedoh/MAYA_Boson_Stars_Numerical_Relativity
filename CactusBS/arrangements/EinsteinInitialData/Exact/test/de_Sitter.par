@@ -1,0 +1,73 @@
+# Initial data and short evolution (ADM) for DeSitter spacetime
+# Author: Mitica Vulcanov <vulcan@aei.mpg.de>
+# $Header$
+
+# Required thorns
+ActiveThorns = "CartGrid3D CoordBase SymBase Boundary Time MoL PUGH PUGHReduce PUGHSlab   IOAscii IOUtil IOBasic LocalReduce  TmunuBase  ADMBase ADMMacros ml_ADMConstraints StaticConformal CoordGauge SpaceMask  ReflectionSymmetry Exact"
+
+# Grid
+driver::global_nx = 12
+driver::global_ny = 12
+driver::global_nz = 12
+grid::type    = "byrange"
+grid::domain  = "full"
+
+grid::xmin = -0.25
+grid::xmax = 1.125
+grid::ymin = -1.57
+grid::ymax = 7.065
+grid::zmin = -1.57
+grid::zmax = 7.065
+
+driver::ghost_size_x = 2
+driver::ghost_size_y = 2
+driver::ghost_size_z = 2
+
+CoordBase::boundary_size_x_lower = pugh::ghost_size_x
+CoordBase::boundary_size_y_lower = pugh::ghost_size_y
+CoordBase::boundary_size_z_lower = pugh::ghost_size_z
+CoordBase::boundary_size_x_upper = pugh::ghost_size_x
+CoordBase::boundary_size_y_upper = pugh::ghost_size_y
+CoordBase::boundary_size_z_upper = pugh::ghost_size_z
+
+ReflectionSymmetry::reflection_x = yes
+ReflectionSymmetry::reflection_y = yes
+ReflectionSymmetry::reflection_z = yes
+
+MoL::ODE_Method = "Euler"
+MoL::MoL_Intermediate_Steps = 1
+TmunuBase::stress_energy_storage = yes
+TmunuBase::stress_energy_at_RHS  = yes
+
+cactus::cctk_initial_time = 1
+cactus::cctk_itlast       = 3
+time::dtfac = 0.25
+
+# Initial data
+ADMBase::initial_data  = "exact"
+ADMBase::initial_shift = "exact"
+Exact::exact_model = "de Sitter"
+Exact::de_Sitter__scale   = 1
+
+# Gauge
+ADMBase::lapse_evolution_method = "exact"
+ADMBase::shift_evolution_method = "exact"
+
+# Evolution
+ADMBase::evolution_method = "exact"
+
+# Output
+IO::out_dir = "de_Sitter"
+IO::out_fileinfo = "none"
+IO::parfile_write = "no"
+
+IOBasic::outInfo_every = 1
+IOBasic::outInfo_vars  = "ml_admconstraints::ml_ham"
+
+IOBasic::outScalar_every =  1 
+IOBasic::outScalar_vars  = "admbase::gxx admbase::gyy admbase::gzz ml_admconstraints::ml_ham admbase::lapse"
+
+IOASCII::out1D_every =  1
+IOASCII::out1D_vars  = "admbase::gxx admbase::gyy admbase::gzz ml_admconstraints::ml_ham admbase::lapse"
+
+

@@ -1,0 +1,12 @@
+# Main make.code.deps file for thorn WaveExtract
+#
+# $Id: make.code.deps,v 1.1.1.1 2004/06/10 15:08:38 herrmann Exp $
+
+Init.F90.o:                       WavExtrConstants.F90.o
+Setup_Detectors.F90.o:            WavExtrConstants.F90.o
+ProjectSphere.F90.o:              WavExtrConstants.F90.o
+Schwarzschild_Mass_Radius.F90.o:  WavExtrConstants.F90.o
+SetupSphere.F90.o:                WavExtrConstants.F90.o
+MoncriefQ.F90.o:                  WavExtrConstants.F90.o
+SetupSphere.F90.o:                WavExtrConstants.F90.o
+

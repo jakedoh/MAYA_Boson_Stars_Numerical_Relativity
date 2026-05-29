@@ -1,0 +1,21 @@
+# Schedule definitions for thorn GlobalDerivative
+# $Header$
+
+
+SCHEDULE GlobalDeriv_ParamCheck AT PARAMCHECK
+{
+  LANG: C
+  OPTIONS: GLOBAL
+} "Check parameters"
+
+
+if (use_dissipation == 1)
+{
+  SCHEDULE GlobalDeriv_Dissipation IN MoL_PostRHS
+  {
+     LANG: C
+     OPTIONS: LOCAL
+  } "Apply global dissipation to registered variables"
+}
+
+

@@ -1,0 +1,8 @@
+# Main make.code.defn file for thorn TestGlobalReduce
+# $Header$
+
+# Source files in this directory
+SRCS = Initial.c TestGlobalReduce.c
+
+# Subdirectories containing source files
+SUBDIRS = 

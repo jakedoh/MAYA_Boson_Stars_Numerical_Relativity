@@ -1,0 +1,27 @@
+Kranc version used to generate thorn
+Repository location: /home/tanja/CactusTrees/Maya_devel/repos/./Kranc
+
+Branches:
+  Maya_dev
+* Maya_newdev
+  master
+
+Top Commits:
+
+commit 957651cf37e99441e5bb55f2d0e2563467f7ded1
+Author: Tanja Bode <tanja.bode@tat.uni-tuebingen.de>
+Date:   Wed Aug 27 17:16:13 2014 +0200
+
+    Allow DeclarationIncludes
+
+commit 5e7c7b83bc21bb3f9a982614a291502dd86f4ff9
+Author: Barry Wardell <barry.wardell@gmail.com>
+Date:   Sat Sep 13 09:17:22 2014 -0500
+
+    Work around bug in Mathematica 10
+
+commit fe5407e997e02056bd72ccffa785b1fb172d70da
+Author: Barry Wardell <barry.wardell@gmail.com>
+Date:   Sat Sep 13 09:16:56 2014 -0500
+
+    Rename Parse to ParsePEG for compatibility with Mathematica 10

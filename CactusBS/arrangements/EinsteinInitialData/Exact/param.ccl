@@ -1,0 +1,1001 @@
+# parameter definitions for thorn Exact
+# $Header$
+
+shares: admbase
+
+################################################################################
+##### keyword parameters from other thorns #####################################
+################################################################################
+
+USES KEYWORD metric_type
+
+EXTENDS KEYWORD initial_data 
+{
+  "exact" :: "Initial data from exact solution"
+  "slice" :: "Initial data from exact solution on arbitrary slice"
+}
+
+EXTENDS KEYWORD lapse_evolution_method
+{
+  "exact" :: "Use lapse from exact solution"
+}
+EXTENDS KEYWORD shift_evolution_method
+{
+  "exact" :: "Use shift from exact solution"
+}
+
+EXTENDS KEYWORD dtlapse_evolution_method
+{
+  "exact" :: "Use lapse from exact solution"
+}
+EXTENDS KEYWORD dtshift_evolution_method
+{
+  "exact" :: "Use shift from exact solution"
+}
+
+EXTENDS KEYWORD initial_lapse
+{
+  "exact" :: "Initial lapse from exact solution"
+}
+EXTENDS KEYWORD initial_shift
+{
+  "exact" :: "Initial shift from exact solution"
+}
+EXTENDS KEYWORD initial_dtlapse
+{
+  "exact" :: "Initial dtlapse from exact solution"
+}
+EXTENDS KEYWORD initial_dtshift
+{
+  "exact" :: "Initial dtshift from exact solution"
+}
+
+EXTENDS KEYWORD evolution_method
+{
+  "exact" :: "Fake an evolution by setting exact data at every timestep"
+  "slice" :: "Evolve arbitrary slice and extract Cauchy data"
+}
+
+shares: StaticConformal
+
+USES KEYWORD conformal_storage
+
+################################################################################
+##### parameters for the blended boundary conditions ###########################
+################################################################################
+
+private:
+
+BOOLEAN exblend_Ks "Blend the K variables with the exact solution?"
+{
+} "yes"
+
+BOOLEAN exblend_gs "Blend the g variables with the exact solution?"
+{
+} "yes"
+
+BOOLEAN exblend_gauge "Blend the lapse and shift with the exact solution?"
+{
+} "yes"
+
+REAL exblend_rout "Outer boundary of blending region"
+{
+*:* :: "Positive means radial value, negative means use outer bound of grid"
+} -1.0
+
+REAL exblend_width "Width of blending zone"
+{
+*:* :: "Positive means width in radius, negative means width = exbeldn_width*dx"
+} -3.0
+
+################################################################################
+##### parameters for slice initialize ##########################################
+################################################################################
+
+private:
+
+REAL slice_Gauss_ampl "Amplitude of Gauss slice in exact"
+{
+0.0:* :: "Positive please"
+} 0.0
+
+REAL slice_Gauss_width "Width of Gauss slice in exact"
+{
+0.0:* :: "Positive please"
+} 1.0
+
+# this parameter is used directly in our schedule.ccl file
+KEYWORD overwrite_boundary "Overwrite g and K on the boundary"
+{
+  "no"    :: "Do nothing"
+  "exact" :: "Use boundary data from an exact solution on a trivial slice"
+} "no"
+
+################################################################################
+##### parameters for calculating the extrinsic curvature #######################
+################################################################################
+
+private:
+
+INT exact_order "finite differencing order"
+{
+2 :: "2"
+4 :: "4"
+} 2
+
+REAL exact_eps "finite differencing stencil size (in terms of the grid spacing)"
+{
+(0.0:* :: "Positive please"
+} 1.0e-6
+
+################################################################################
+##### parameters for boosting any non-stress-energy-tensor model ###############
+################################################################################
+
+private:
+
+REAL boost_vx "x component of boost velocity"
+{
+*:* :: "any real number"
+} 0.0
+REAL boost_vy "y component of boost velocity"
+{
+*:* :: "any real number"
+} 0.0
+REAL boost_vz "z component of boost velocity"
+{
+*:* :: "any real number"
+} 0.0
+
+################################################################################
+##### parameters for adding to the shift of any model ##########################
+################################################################################
+
+private:
+
+REAL shift_add_x "x component of added shift"
+{
+*:* :: "any real number"
+} 0.0
+REAL shift_add_y "y component of added shift"
+{
+*:* :: "any real number"
+} 0.0
+REAL shift_add_z "z component of added shift"
+{
+*:* :: "any real number"
+} 0.0
+
+################################################################################
+##### parameters for rotating any model ########################################
+################################################################################
+
+private:
+
+REAL rotation_euler_phi "Euler angle phi (first rotation, about z axis) (irrelevant for axisymmetric models)"
+{
+*:* :: "any real number"
+} 0.0
+REAL rotation_euler_theta "Euler angle theta (second rotation, about x axis)"
+{
+*:* :: "any real number"
+} 0.0
+REAL rotation_euler_psi "Euler angle psi (third rotation, about z axis)"
+{
+*:* :: "any real number"
+} 0.0
+
+################################################################################
+##### general comments #########################################################
+################################################################################
+
+#
+# All remaining parameters *should* be visible only to this thorn
+# and its friends.  In particular, the stress-energy tensor code in
+# src/include/Scalar_CalcTmunu.inc needs to look at various parameters to
+# see what to do... and (via the magic of #include and the Cactus
+# USES INCLUDE SOURCE mechanism) this code is effectively part of
+# various evolution thorns.
+#
+# Alas, Cactus doesn't (yet) provide any way for a (this) thorn to "push"
+# parameters into friends without the friends having to know where the
+# pushed parameters came from... and we don't want the evolution thorns
+# themselves to have to know our name and those of all the other thorns
+# which provide pieces of the stress-energy tensor.
+#
+# Instead, we use a kludge: we copy all the relevant parameters
+# (exact_model and all those for models which have stress-energy tensor
+# computations) into restricted grid scalars.  These _are_ "pushed" into
+# friends... and because friendship is transitive, it suffices for us to
+# be friends of ADMCoupling.
+#
+# Since grid scalars can't be varying-length character strings, we also
+# have to decode keyword parameters into integers in this process.  The
+# values for those integers are given by #define constants in
+# src/include/param_defs.inc .
+#
+
+################################################################################
+
+#
+# ***** naming conventions *****
+#
+# A "model" refers to the combination of a spacetime and a coordinate
+# system; we use the model name "spacetime/coordinates" in cases where
+# we have the same spacetime in different coordinate systems.
+#
+# We use "spacetime+Lambda" to describe a with-cosmological-constant
+# variant of a given spacetime.
+#
+# All the parameters for individual models have names which begin
+# with the model name (with any '/' or '-' characters converted to '_'),
+# followed by '__'.  The description comment for each parameter begins
+# with the model name followed by ':'.  For example:
+#
+#	REAL Schwarzschild_EF__mass "Schwarzschild/EF: BH mass"
+#	{
+#	*:* :: "any real number"
+#	} 1.0
+#
+
+################################################################################
+##### exact_model ##############################################################
+################################################################################
+
+restricted:
+
+#
+# see the file  doc/how_to_add_a_new_model  for instructions on adding
+# a new model
+#
+KEYWORD exact_model "The exact solution/coordinates used in thorn exact"
+{
+#
+# Minkowski spacetime
+#
+"Minkowski"                    :: "Minkowski spacetime"
+"Minkowski/shift"              :: "Minkowski spacetime with time-dependent shift vector"
+"Minkowski/funny"              :: "Minkowski spacetime in non-trivial spatial coordinates"
+"Minkowski/gauge wave"         :: "Minkowski spacetime in gauge-wave coordinates"
+"Minkowski/shifted gauge wave" :: "Minkowski spacetime in shifted gauge-wave coordinates"
+"Minkowski/conf wave"          :: "Minkowski spacetime with 'waves' in conformal factor"
+#
+# black hole spacetimes
+#
+"Schwarzschild/EF"           :: "Schwarzschild spacetime in Eddington-Finkelstein coordinates"
+"Schwarzschild/PG"           :: "Schwarzschild spacetime in Painleve-Gullstrand coordinates"
+"Schwarzschild/BL"           :: "Schwarzschild spacetime in Brill-Lindquist coordinates"
+"Schwarzschild/Novikov"      :: "Schwarzschild spacetime in Novikov coordinates"
+"Schwarzschild-Lemaitre"     :: "Schwarzschild metric in Schwarzschild coordinates, with cosmological constant"
+"Kerr/Boyer-Lindquist"       :: "Kerr spacetime in Boyer-Lindquist coordinates"
+"Kerr/Kerr-Schild"           :: "Kerr spacetime in Kerr-Schild coordinates"
+"Kerr/Kerr-Schild/spherical" :: "Kerr spacetime in distorted Kerr-Schild coordinates such that the horizon is a coordinate sphere"
+"multi-BH"                   :: "Majumdar-Papapetrou or Kastor-Traschen maximally charged multi BH solutions"
+"Alvi"                       :: "Alvi post-Newtonian 2BH spacetime (not fully implemented yet)"
+"Thorne-fakebinary"          :: "Thorne's fake-binary spacetime (non-Einstein)"
+#
+# cosmological spacetimes
+#
+"Lemaitre"              :: "Lemaitre-type spacetime"
+##"Robertson-Walker"      :: "Robertson-Walker spacetime"
+"de Sitter"             :: "de Sitter spacetime (R-W cosmology, near t=0, p=0)"
+"de Sitter+Lambda"      :: "de Sitter spacetime with cosmological constant"
+"anti-de Sitter+Lambda" :: "anti-de Sitter spacetime with cosmological constant"
+"Bianchi I"             :: "approximate Bianchi type I spacetime"
+"Goedel"                :: "Goedel spacetime"
+"Bertotti"              :: "Bertotti spacetime"
+"Kasner-like"           :: "Kasner-like spacetime"
+"Kasner-axisymmetric"   :: "axisymmetric Kasner spacetime"
+"Kasner-generalized"    :: "generalized Kasner spacetime"
+"Gowdy-wave"	        :: "Gowdy spacetime with polarized wave on a torus"
+"Milne"                 :: "Milne spacetime for pre-big-bang cosmology"
+#
+# miscelaneous spacetimes
+#
+"boost-rotation symmetric" :: "boost-rotation symmetric spacetime"
+"bowl"                     :: "bowl (bag-of-gold) spacetime (non-Einstein)"
+"constant density star"    :: "constant density (Schwarzschild) star"
+} "Minkowski"
+
+################################################################################
+##### Minkowski spacetime ######################################################
+################################################################################
+
+#
+# parameters for Minkowski spacetime (trivial txyz coordinates)
+#
+
+# there are no parameters
+
+################################################################################
+
+#
+# parameters for Minkowski spacetime with time-dependent shift vector
+#
+
+REAL Minkowski_shift__amplitude "Minkowski/shift: amplitude of Gaussian"
+{
+(-1:1) :: "any real number < 1 in absolute value"
+} 0.5
+
+REAL Minkowski_shift__sigma "Minkowski/shift: width of Gaussian"
+{
+(0.0:* :: "any real number > 0"
+} 1.0
+
+################################################################################
+
+#
+# parameters for Minkowski spacetime with non-trivial spatial coordinates
+#
+
+# FIXME: can this also be negative, i.e. range (-1,1)?
+REAL Minkowski_funny__amplitude "Minkowski/funny: amplitude of Gaussian"
+{
+0.0:1.0) :: "any real number in the range [0,1)"
+} 0.5
+
+REAL Minkowski_funny__sigma "Minkowski/funny: width of Gaussian"
+{
+(0.0: :: "any real number > 0"
+} 1.0
+
+################################################################################
+
+#
+# parameters for Minkowski spacetime in gauge-wave coordinates
+#
+
+KEYWORD Minkowski_gauge_wave__what_fn \
+  "Minkowski/gauge wave: what function to use"
+{
+"sin"      :: "1-a*sin(x)"
+"expsin"   :: "exp(a*sin(x)*cos(t))"
+"Gaussian" :: "1-a*exp(-x**2)"
+} "sin"
+ 
+REAL Minkowski_gauge_wave__amplitude \
+  "Minkowski/gauge wave: amplitude of the wave"
+{
+*:* :: "any real number"
+} 0.5
+  
+REAL Minkowski_gauge_wave__omega \
+  "Minkowski/gauge wave: angular frequency of the wave in time"
+{
+*:* :: "any real number"
+} 1.0
+    
+BOOLEAN Minkowski_gauge_wave__diagonal \
+  "Minkowski/gauge wave: should the wave run diagonally across the grid?"
+{
+} "no"
+   
+REAL Minkowski_gauge_wave__lambda \
+  "Minkowski/gauge wave: wavelength of waves"
+{
+*:* :: "any real number"
+} 0.5    
+
+REAL Minkowski_gauge_wave__phase \
+  "Minkowski/gauge wave: phase shift of wave"
+{
+*:* :: "any real number"
+} 0.0
+
+################################################################################
+
+#
+# parameters for Minkowski spacetime in gauge-wave coordinates
+#
+
+REAL Minkowski_conf_wave__amplitude \
+  "Minkowski/conf wave: amplitude of the variation of the conformal factor"
+{
+  0:* :: "any positive real number"
+} 0.5
+
+REAL Minkowski_conf_wave__wavelength \
+  "Minkowski/conf wave: wave length in cactus units"
+{
+  0:* :: "any positive real number"
+} 1.0
+
+INT Minkowski_conf_wave__direction \
+  "Minkowski/conf wave: direction of 'wave' 0,1,2 : x,y,z"
+{
+  0:2 :: "0, 1 or 2 for x, y or z"
+} 0
+
+################################################################################
+##### black hole spacetimes ####################################################
+################################################################################
+
+#
+# parameters for Schwarzschild metric in Eddington-Finkelstein coordinates
+#
+
+REAL Schwarzschild_EF__mass "Schwarzschild/EF: BH mass"
+{
+*:* :: "any real number"
+} 1.0
+
+REAL Schwarzschild_EF__epsilon "Schwarzschild/EF: numerical fudge"
+{
+0.0:* :: "any real number >= 0.0"
+} 1.e-16
+
+################################################################################
+
+#
+# parameters for Schwarzschild metric in Painleve-Gustrand coordinates
+#
+
+REAL Schwarzschild_PG__mass "Schwarzschild/PG: BH mass"
+{
+(0.0:* :: "any real number > 0.0"
+} 1.0
+
+REAL Schwarzschild_PG__epsilon "Schwarzschild/PG: numerical fudge"
+{
+0.0:* ::  "any real number >= 0.0"
+} 1.e-16
+
+################################################################################
+
+#
+# parameters for Schwarzschild metric in Brill-Lindquist coordinates
+#
+
+REAL Schwarzschild_BL__mass "Schwarzschild/BL: BH mass"
+{
+(0.0:* :: "any real number > 0.0"
+} 1.0
+
+REAL Schwarzschild_BL__epsilon "Schwarzschild/BL: numerical fudge"
+{
+0.0:* :: "any real number >= 0.0"
+} 1.e-16
+
+################################################################################
+
+# parameters for Schwarzschild metric in Novikov coordinates
+
+REAL Schwarzschild_Novikov__mass "Schwarzschild/Novikov: BH mass"
+{
+(0.0:* :: "any real number > 0.0"
+} 1.0
+
+REAL Schwarzschild_Novikov__epsilon "Schwarzschild/Novikov: numerical fudge"
+{
+0.0:* :: "any real number >= 0.0"
+} 1.e-16
+
+################################################################################
+
+# parameters for Schwarzschild-Lemaitre metric
+# (Schwarzschild black hole with cosmological constant)
+
+REAL Schwarzschild_Lemaitre__Lambda "Schwarzschild-Lemaitre: cosmological constant"
+{
+*:* :: "any real number"
+} 1.0
+
+REAL Schwarzschild_Lemaitre__mass "Schwarzschild-Lemaitre: BH mass"
+{
+(0.0:* :: "any real number > 0"
+} 1.0
+
+################################################################################
+
+# parameters for Kerr metric in Boyer-Lindquist coordinates
+
+REAL Kerr_BoyerLindquist__spin \
+  "Kerr/Boyer-Lindquist: dimensionless spin parameter a = J/m^2"
+{
+-1.0:1.0 :: "dimensionless spin parameter a = J/m^2 for Kerr black hole"
+} 0.6
+
+REAL Kerr_BoyerLindquist__mass "Kerr/Boyer-Lindquist: BH mass"
+{
+(0.0:* :: "any real number > 0"
+} 1.0
+
+################################################################################
+
+#
+# parameters for Kerr metric in Kerr-Schild coordinates
+#
+
+# the black hole is boosted in the z direction with this velocity,
+# i.e., the black hole is located at x=0, y=0, and z=vt
+REAL Kerr_KerrSchild__boost_v "Kerr/Kerr-Schild: boost velocity of black hole in z direction"
+{
+(-1:1) :: "any real number with absolute value < 1"
+} 0.0
+
+REAL Kerr_KerrSchild__epsilon "Kerr/Kerr-Schild: numerical fudge"
+{
+0.0:* :: "any real number >= 0.0"
+} 1.e-16
+
+INT Kerr_KerrSchild__power "Kerr/Kerr-Schild: power (exponent) of numerical fudge"
+{
+1:* :: ""
+} 4
+
+BOOLEAN Kerr_KerrSchild__parabolic "Kerr/Kerr-Schild: use a parabolic singularity-avoiding term"
+{
+} "no"
+
+REAL Kerr_KerrSchild__mass "Kerr/Kerr-Schild: BH mass"
+{
+(0.0:* :: "any real number > 0"
+} 1.0
+
+REAL Kerr_KerrSchild__spin \
+  "Kerr/Kerr-Schild: dimensionless spin parameter a = J/m^2"
+{
+-1.0:1.0 :: "dimensionless spin parameter a = J/m^2 for Kerr black hole"
+} 0.6
+
+REAL Kerr_KerrSchild__x \
+  "Kerr/Kerr-Schild: x-coordinate of black hole"
+{
+(*:*) :: ""
+} 0.0
+
+REAL Kerr_KerrSchild__y \
+  "Kerr/Kerr-Schild: y-coordinate of black hole"
+{
+(*:*) :: ""
+} 0.0
+
+REAL Kerr_KerrSchild__z \
+  "Kerr/Kerr-Schild: z-coordinate of black hole"
+{
+(*:*) :: ""
+} 0.0
+
+REAL Kerr_KerrSchild__t \
+  "Kerr/Kerr-Schild: time offset of black hole"
+{
+(*:*) :: ""
+} 0.0
+
+################################################################################
+
+#
+# parameters for Majumdar-Papapetrou or Kastor-Traschen
+# maximally-charged multiple black hole solution
+#
+
+INT multi_BH__nBH "multi-BH: number of black holes 0-4"
+{
+0:4 :: "any integer in the range [0,4]"
+} 0
+
+REAL multi_BH__Hubble "multi-BH: Hubble constant = +/- sqrt{Lambda/3}"
+{
+*:* :: "any real number"
+} 0.0
+
+# black hole #1
+REAL multi_BH__mass1 "multi-BH: mass of black hole number 1"
+{
+0.0: :: "any real number >= 0"
+} 0.0
+REAL multi_BH__x1 "multi-BH: x coord of black hole number 1"
+{
+*:* :: "any real number"
+} 0.0
+REAL multi_BH__y1 "multi-BH: y coord of black hole number 1"
+{
+*:* :: "any real number"
+} 0.0
+REAL multi_BH__z1 "multi-BH: z coord of black hole number 1"
+{
+*:* :: "any real number"
+} 0.0
+
+# black hole #2
+REAL multi_BH__mass2 "multi-BH: mass of black hole number 2"
+{
+0.0: :: "any real number >= 0"
+} 0.0
+REAL multi_BH__x2 "multi-BH: x coord of black hole number 2"
+{
+*:* :: "any real number"
+} 0.0
+REAL multi_BH__y2 "multi-BH: y coord of black hole number 2"
+{
+*:* :: "any real number"
+} 0.0
+REAL multi_BH__z2 "multi-BH: z coord of black hole number 2"
+{
+*:* :: "any real number"
+} 0.0
+
+# black hole #3
+REAL multi_BH__mass3 "multi-BH: mass of black hole number 3"
+{
+0.0: :: "any real number >= 0"
+} 0.0
+REAL multi_BH__x3 "multi-BH: x coord of black hole number 3"
+{
+*:* :: "any real number"
+} 0.0
+REAL multi_BH__y3 "multi-BH: y coord of black hole number 3"
+{
+*:* :: "any real number"
+} 0.0
+REAL multi_BH__z3 "multi-BH: z coord of black hole number 3"
+{
+*:* :: "any real number"
+} 0.0
+
+# black hole #4
+REAL multi_BH__mass4 "multi-BH: mass of black hole number 4"
+{
+0.0:* :: "any real number >= 0"
+} 0.0
+REAL multi_BH__x4 "multi-BH: x coord of black hole number 4"
+{
+*:* :: "any real number"
+} 0.0
+REAL multi_BH__y4 "multi-BH: y coord of black hole number 4"
+{
+*:* :: "any real number"
+} 0.0
+REAL multi_BH__z4 "multi-BH: z coord of black hole number 4"
+{
+*:* :: "any real number"
+} 0.0
+
+################################################################################
+
+#
+# parameters for Alvi spacetime
+#
+
+REAL Alvi__mass1 "Alvi: mass of BH number 1"
+{
+0.0:* :: "any real number >= 0"
+} 1.0
+
+REAL Alvi__mass2 "Alvi: mass of BH number 2"
+{
+0.0:* :: "any real number >= 0"
+} 1.0
+
+REAL Alvi__separation "Alvi: spatial separation of the black holes"
+{
+0.0:* :: "must be greater than m1+m2 + 2 sqrt(m1 m2)"
+} 20.0
+
+################################################################################
+
+#
+# parameters for Thorne's fake binary solution
+#
+
+KEYWORD Thorne_fakebinary__atype "Thorne-fakebinary: binary type"
+{
+  "constant"   :: ""
+  "quadrupole" :: ""
+} "constant"
+
+BOOLEAN Thorne_fakebinary__retarded "Thorne-fakebinary: use retarded time?"
+{
+} "no"
+
+# FIXME: can this really be exactly 0.0?
+REAL Thorne_fakebinary__epsilon "Thorne-fakebinary: numerical fudge"
+{
+0.0:* :: "any real number >= 0.0"
+} 1.e-16
+
+REAL Thorne_fakebinary__separation "Thorne-fakebinary: initial separation"
+{
+(0.0:* :: "any real number > 0"
+} 5.0
+
+REAL Thorne_fakebinary__Omega0 "Thorne-fakebinary: initial angular frequency"
+{
+(0.0:* :: "any real number > 0"
+} 1.0
+
+REAL Thorne_fakebinary__mass "Thorne-fakebinary: mass"
+{
+(0.0:* :: "any real number > 0"
+} 1.0
+
+# FIXME: can this really be exactly 0.0?
+REAL Thorne_fakebinary__smoothing \
+  "Thorne-fakebinary: smoothing for Newtonian potential"
+{
+0.0:* :: "any real number >= 0"
+} 0.0
+
+################################################################################
+##### cosmological spacetimes ##################################################
+################################################################################
+
+#
+# parameters for Lemaitre-type spacetime
+#
+
+REAL Lemaitre__kappa "Lemaitre: multiplicative factor in equation of state"
+{
+*:* :: "any real number"
+} -0.5
+
+REAL Lemaitre__Lambda "Lemaitre: cosmological constant"
+{
+*:* :: "any real number"
+} 1.0
+
+REAL Lemaitre__epsilon0 "Lemaitre: density of the universe at time t=0"
+{
+0.0:* :: "any real number >= 0"
+} 1.0
+
+REAL Lemaitre__R0 "Lemaitre: scale factor (radius) of the universe at time t=0"
+{
+(0.0:* :: "any positive real number"
+} 1.0
+
+################################################################################
+##
+###
+### parameters for Robertson-Walker spacetime
+###
+##
+##REAL Robertson_Walker__R0 \
+##  "Robertson-Walker: scale factor (radius) of the universe at time t=0"
+##{
+##(0.0:* :: "any positive real number"
+##} 0.1
+##
+##REAL Robertson_Walker__rho "Robertson-Walker: density parameter"
+##{
+##0.0:* :: "any real number >= 0"
+##} 0.1
+##
+##INT Robertson_Walker__k "Robertson-Walker: geometry type parameter"
+##{
+##-1:1:1 :: "one of the values -1, 0, 1"
+##} 0
+##
+### true ==> include pressure terms (radiation-dominated universe)
+### false ==> don't include pressure terms (matter-dominated universe)
+##BOOLEAN Robertson_Walker__pressure \
+##  "Robertson-Walker: are pressure terms included?"
+##{
+##} "true"
+##
+################################################################################
+
+#
+# parameters for de Sitter spacetime
+#
+
+REAL de_Sitter__scale "de Sitter: multiplicative scale factor"
+{
+(0.0:* :: "any positive real number"
+} 0.1
+
+################################################################################
+
+#
+# parameters for de Sitter spacetime with cosmological constant
+#
+
+REAL de_Sitter_Lambda__scale "de Sitter+Lambda: multiplicative scale factor"
+{
+(0.0:* :: "any positive real number"
+} 0.1
+
+################################################################################
+
+#
+# parameters for anti-de Sitter spacetime with cosmological constant
+#
+
+REAL anti_de_Sitter_Lambda__scale \
+  "anti-de Sitter+Lambda: multiplicative scale factor"
+{
+(0.0:* :: "any positive real number"
+} 0.1
+
+################################################################################
+
+#
+# parameters for Bianchi type I cosmology
+#
+
+REAL Bianchi_I__scale "Bianchi I: multiplicative scale factor"
+{
+(0.0:* :: "any positive real number"
+} 0.1
+
+################################################################################
+
+#
+# parameters for Goedel spacetime
+#
+
+REAL Goedel__scale "Goedel: multiplicative scale factor"
+{
+(0.0:* :: "any positive real number"
+} 0.1
+
+################################################################################
+
+#
+# parameters for Bertotti spacetime
+#
+
+REAL Bertotti__Lambda "Bertotti: cosmological constant"
+{
+*:* :: "any real number"
+} -1.0
+
+################################################################################
+
+#
+# parameters for Kasner-like spacetime
+#
+
+# FIXME: can we somehow use the expression 2.0/3.0 for the default value?
+REAL Kasner_like__q "Kasner-like: q parameter"
+{
+*:* :: "any real number"
+} 0.66666666666666666666
+
+################################################################################
+
+#
+# parameters for axisymmetric Kasner spacetime
+#
+
+# there are no parameters
+
+################################################################################
+
+#
+# parameters for generalized Kasner spacetime
+#
+
+REAL Kasner_generalized__p1 "Kasner-generalized: x exponent parameter"
+{
+-1.0:1.0 :: "any real number in the range [-1,1]"
+} 0.1
+
+REAL Kasner_generalized__p2 "Kasner-generalized: y exponent parameter"
+{
+-1.0:1.0 :: "any real number in the range [-1,1]"
+} 0.1
+
+################################################################################
+
+#
+# parameters for Gowdy polarized wave spacetime
+#
+
+REAL Gowdy_wave__amplitude "Gowdy-wave: amplitude parameter"
+{
+*:* :: "any real number"
+} 0.0
+
+################################################################################
+
+#
+# parameters for Milne spacetime
+#
+
+# there are no parameters
+
+################################################################################
+##### miscellaneous spacetimes #################################################
+################################################################################
+
+#
+# parameters for boost-rotation symmetricmetric spacetime
+#
+
+REAL boost_rotation_symmetric__scale "boost-rotation symmetric: length scale"
+{
+0.0:* :: "Positive please"
+} 1.0
+
+REAL boost_rotation_symmetric__amp \
+  "boost-rotation symmetric: dimensionless amplitude"
+{
+0.0:* :: "Positive please"
+} 0.1
+
+REAL boost_rotation_symmetric__min_d \
+  "boost-rotation symmetric: dimensionless safety distance"
+{
+(0.0:* :: "any positive real number"
+} 0.01
+
+################################################################################
+
+#
+# parameters for bowl (bag-of-gold) spacetime (non-Einstein)
+#
+
+KEYWORD bowl__shape "bowl: what shape of bowl should we use?"
+{
+  "Gaussian" :: "Gaussian bowl"
+  "Fermi"    :: "Fermi-function bowl"
+} "Gaussian"
+
+BOOLEAN bowl__evolve "bowl: are we evolving the metric?"
+{
+} "false"
+
+# FIXME: can this really be arbitrarily large?
+# FIXME: can this be negative?
+REAL bowl__strength "bowl: deformation strength"
+{
+0.0:* :: "any real number >= 0"
+} 0.5
+
+REAL bowl__center "bowl: deformation center"
+{
+(0.0:* :: "any positive real number"
+} 2.5
+
+# n.b. for bowl__shape = "Gaussian", this parameter is actually
+#      sqrt(2) times the standard deviation of the Gaussian
+REAL bowl__sigma "bowl: width of deformation"
+{
+(0.0:* :: "any positive real number"
+} 1.0
+
+REAL bowl__x_scale "bowl: scale for x coordinate"
+{
+(0.0:* :: "any positive real number"
+} 1.0
+
+REAL bowl__y_scale "bowl: scale for y coordinate"
+{
+(0.0:* :: "any positive real number"
+} 1.0
+
+REAL bowl__z_scale "bowl: scale for z coordinate"
+{
+(0.0:* :: "any positive real number"
+} 1.0
+
+REAL bowl__t0 "bowl: center of Fermi step in time"
+{
+*:* :: "any real number"
+} 1.0
+
+REAL bowl__sigma_t "bowl: width of Fermi step in time"
+{
+(0.0:* :: "any positive real number"
+} 1.0
+
+################################################################################
+
+#
+# parameters for constant density (Schwarzschild) star
+#
+
+REAL constant_density_star__mass "constant density star: mass of star"
+{
+(0.0:* :: "any positive real number"
+} 1.0
+
+# FIXME: is this default value ok? (does it give a star or a BH?)
+REAL constant_density_star__radius "constant density star: radius of star"
+{
+(0.0:* :: "any positive real number"
+} 1.0
+
+################################################################################

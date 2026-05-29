@@ -1,0 +1,9 @@
+Description of files in this directory
+======================================
+
+$Header$
+
+This directory is an archive of old files from this thorn, which are
+no longer used.  By keeping them here instead of or in addition to the
+CVS 'attic' we make them readily accessible; in particular it's easy
+to use 'ls' to see what's here, grep this directory, etc etc.

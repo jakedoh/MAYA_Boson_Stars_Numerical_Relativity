@@ -1,0 +1,20 @@
+# Interface definition for thorn TestTypes
+# $Header$
+
+IMPLEMENTS: TestTypes
+
+CCTK_INT vint
+CCTK_INT1 vint1
+CCTK_INT2 vint2
+CCTK_INT4 vint4
+CCTK_INT8 vint8
+
+CCTK_REAL vreal
+CCTK_REAL4 vreal4
+CCTK_REAL8 vreal8
+#CCTK_REAL16 vreal16
+
+CCTK_COMPLEX vcomplex
+CCTK_COMPLEX8 vcomplex8
+CCTK_COMPLEX16 vcomplex16
+#CCTK_COMPLEX32 vcomplex32

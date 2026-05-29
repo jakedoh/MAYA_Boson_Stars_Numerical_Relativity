@@ -1,0 +1,117 @@
+# Parameter definitions for thorn NullSHRExtract
+# $Header:$
+
+shares: NullGrid
+uses int N_ang_pts_inside_eq
+uses int N_ang_ev_outside_eq
+uses int N_ang_stencil_size
+uses int N_ang_ghost_pts
+uses int N_radial_pts
+uses real null_rwt
+uses real null_xin
+
+shares: cactus
+uses cctk_int cctk_itlast
+
+shares: NullEvolve
+uses BOOLEAN first_order_scheme
+
+extends KEYWORD boundary_data
+{
+ "SHRE" ::"boundary data provided by spherical harmonics recomposition on the worldtube"
+}
+
+restricted:
+
+CCTK_REAL cr "radius of the worltube"
+{
+  (0.0:*::  "strictly positive real number"
+}0.5
+
+CCTK_REAL mass "mass parameter"
+{
+  (0.0:*::  "strictly positive real number"
+}0.1
+
+int l_max "l_max in Ylm"
+{
+   0:*	:: "positive"
+} 2
+
+CCTK_REAL MinimumDistanceTo2Bp1 "minimum distance from the extraction world-tube to the B+1 point"
+{
+  0:*  :: "positive. Should be O(1)"
+} 0.0
+
+private:
+
+boolean debug_switch_on "Should the debug be turned on?" 
+{
+}"no"
+
+boolean ana_metric "Should the Schwarzchild analytic metric be used?" 
+{
+}"no"
+
+keyword WT_metric "Metric on the Worldtube to be used"
+{
+ "Full"		:: "Full nonlinear metric extraction on the worldtube"
+ "SchIEF"	:: "Schwarzchild metric in IEF coordinates"
+} "Full"
+
+keyword SchIEF_time "Should the analytic metric be static or sin(omega t)"
+{
+ "static"	:: "Static solution, no time dependence"
+ "sine_t"	:: "Sine dependence in time"
+ "vibe_t"	:: "A sine/cosine vibe in time on the x direction"
+}"static"
+
+CCTK_REAL fcoef "Coefficient of the time dependence for Schwazchild time metric"
+{
+ *:*    :: "anything"
+}0.0
+
+CCTK_REAL Afact "Factor in front of the sine time dependence for Schwazchild time metric"
+{
+ *:*    :: "anything"
+}0.0
+
+CCTK_REAL elld_min_coef "definition of elld_min = elld_min_coef * dt**elld_min_pow"
+{
+  0:*   :: "larger than zero"
+} 0.01
+
+CCTK_INT elld_min_pow "definition of elld_min = elld_min_coef * dt**elld_min_pow"
+{
+  0:*   :: "larger than zero"
+} 2
+
+BOOLEAN halt_on_negative_elld "Should the code quit if the denominator of the null vector changes sign?"
+{
+} "no"
+
+CCTK_REAL rl_min_coef "definition of rl_min = rl_min_coef * dt**rl_min_pow"
+{
+  0:*   :: "larger than zero"
+} 0.01
+
+CCTK_INT rl_min_pow "definition of rl_min = rl_min_coef * dt**rl_min_pow"
+{
+  0:*   :: "larger than zero"
+} 2
+
+BOOLEAN halt_on_negative_rl "Should the code quit if r_{lambda} goes negative?"
+{
+} "no"
+
+BOOLEAN WT_spherical_harmonics "Output the spherical harmonics of the Worldtube to a file?" STEERABLE=ALWAYS
+{
+} "no"
+
+BOOLEAN WT_spherical_harmonics_on_nullgrid "Output the spherical harmonics on the nullgrid just off the Worldtube to a file?" STEERABLE=ALWAYS
+{
+} "no"
+
+
+
+

@@ -1,0 +1,5 @@
+# Interface definition for thorn Meudon_Mag_NS_Scotch
+
+IMPLEMENTS: ID_Mag_NS_Scotch
+
+INHERITS: grid ADMBase HydroBase Whisky 

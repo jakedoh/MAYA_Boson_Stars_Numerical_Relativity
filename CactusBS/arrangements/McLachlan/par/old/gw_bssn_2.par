@@ -1,0 +1,206 @@
+ActiveThorns = "
+        Boundary
+        CartGrid3D
+        CoordBase
+        IOUtil
+        InitBase
+        MoL
+        SymBase
+        Time
+
+        ADMAnalysis
+        ADMBase
+        ADMConstraints
+        ADMCoupling
+        ADMMacros
+        CoordGauge
+        SpaceMask
+        StaticConformal
+
+        NaNChecker
+
+        Carpet
+        CarpetIOASCII
+        CarpetIOBasic
+        CarpetIOScalar
+        CarpetLib
+        CarpetReduce
+        LoopControl
+
+        Periodic
+
+        Dissipation
+        Exact
+        Formaline
+        GSL
+        SphericalSurface
+        TmunuBase
+
+        Slab
+
+        GenericFD
+
+        ML_BSSN
+"
+
+
+
+Cactus::cctk_itlast = 200
+
+grid::type = "CoordBase"
+
+CoordBase::domainsize = "minmax"
+
+CoordBase::xmax = 1.0
+CoordBase::ymax = 0.0
+CoordBase::zmax = 0.0
+CoordBase::dx   = 0.01
+CoordBase::dy   = 0.01
+CoordBase::dz   = 0.01
+
+CoordBase::boundary_shiftout_x_lower = 1
+CoordBase::boundary_shiftout_y_lower = 1
+CoordBase::boundary_shiftout_z_lower = 1
+CoordBase::boundary_shiftout_x_upper = 0
+CoordBase::boundary_shiftout_y_upper = 1
+CoordBase::boundary_shiftout_z_upper = 1
+
+CoordBase::boundary_size_x_lower = 2
+CoordBase::boundary_size_y_lower = 2
+CoordBase::boundary_size_z_lower = 2
+CoordBase::boundary_size_x_upper = 2
+CoordBase::boundary_size_y_upper = 2
+CoordBase::boundary_size_z_upper = 2
+
+Periodic::periodic = yes
+
+Carpet::domain_from_coordbase = yes
+driver::ghost_size            = 2
+Carpet::use_buffer_zones      = yes
+
+
+
+ADMBase::initial_data    = "exact"
+ADMBase::initial_lapse   = "exact"
+ADMBase::initial_shift   = "exact"
+ADMBase::initial_dtlapse = "exact"
+ADMBase::initial_dtshift = "exact"
+
+Exact::exact_model                     = "Minkowski/gauge wave"
+Exact::Minkowski_gauge_wave__what_fn   = "expsin"
+Exact::Minkowski_gauge_wave__amplitude = 0.01
+
+ML_BSSN::ML_log_confac_bound = "none"
+ML_BSSN::ML_metric_bound     = "none"
+ML_BSSN::ML_Gamma_bound      = "none"
+ML_BSSN::ML_trace_curv_bound = "none"
+ML_BSSN::ML_curv_bound       = "none"
+ML_BSSN::ML_lapse_bound      = "none"
+ML_BSSN::ML_dtlapse_bound    = "none"
+ML_BSSN::ML_shift_bound      = "none"
+ML_BSSN::ML_dtshift_bound    = "none"
+
+ADMMacros::spatial_order = 4
+
+
+
+Time::dtfac = 0.5
+
+MoL::ODE_Method             = "RK4"
+MoL::MoL_Intermediate_Steps = 4
+MoL::MoL_Num_Scratch_Levels = 1
+
+Dissipation::epsdis = 0.25
+Dissipation::vars = "
+        ML_BSSN::ML_log_confac
+        ML_BSSN::ML_metric
+        ML_BSSN::ML_trace_curv
+        ML_BSSN::ML_curv
+        ML_BSSN::ML_Gamma
+        ML_BSSN::ML_lapse
+        ML_BSSN::ML_dtlapse
+        ML_BSSN::ML_shift
+        ML_BSSN::ML_dtshift
+"
+
+
+
+IO::out_dir = $parfile
+
+IOBasic::outInfo_every = 1
+IOBasic::outInfo_vars = "
+        ML_BSSN::H
+        ML_BSSN::trKrhs
+"
+
+IOScalar::one_file_per_group = yes
+IOScalar::outScalar_every    = 1
+IOScalar::outScalar_vars     = "
+        ADMBase::metric
+        ADMBase::curv
+        ADMBase::lapse
+        ADMBase::shift
+        ADMAnalysis::trace_of_K
+        ADMAnalysis::ricci_scalar
+        ADMConstraints::Hamiltonian
+        ADMConstraints::momentum
+        ML_BSSN::ML_log_confac
+        ML_BSSN::ML_metric
+        ML_BSSN::ML_trace_curv
+        ML_BSSN::ML_curv
+        ML_BSSN::ML_Gamma
+        ML_BSSN::ML_lapse
+        ML_BSSN::ML_dtlapse
+        ML_BSSN::ML_shift
+        ML_BSSN::ML_dtshift
+        ML_BSSN::Ham
+        ML_BSSN::mom
+        ML_BSSN::cons_detg
+        ML_BSSN::cons_Gamma
+        ML_BSSN::cons_traceA
+        ML_BSSN::ML_log_confacrhs
+        ML_BSSN::ML_metricrhs
+        ML_BSSN::ML_Gammarhs
+        ML_BSSN::ML_trace_curvrhs
+        ML_BSSN::ML_curvrhs
+        ML_BSSN::ML_lapserhs
+        ML_BSSN::ML_dtlapserhs
+        ML_BSSN::ML_shiftrhs
+        ML_BSSN::ML_dtshiftrhs
+"
+
+IOASCII::one_file_per_group = yes
+IOASCII::out1D_every        = 1
+IOASCII::out1D_vars         = "
+        ADMBase::metric
+        ADMBase::curv
+        ADMBase::lapse
+        ADMBase::shift
+        ADMAnalysis::trace_of_K
+        ADMAnalysis::ricci_scalar
+        ADMConstraints::Hamiltonian
+        ADMConstraints::momentum
+        ML_BSSN::ML_log_confac
+        ML_BSSN::ML_metric
+        ML_BSSN::ML_trace_curv
+        ML_BSSN::ML_curv
+        ML_BSSN::ML_Gamma
+        ML_BSSN::ML_lapse
+        ML_BSSN::ML_dtlapse
+        ML_BSSN::ML_shift
+        ML_BSSN::ML_dtshift
+        ML_BSSN::Ham
+        ML_BSSN::mom
+        ML_BSSN::cons_detg
+        ML_BSSN::cons_Gamma
+        ML_BSSN::cons_traceA
+        ML_BSSN::ML_log_confacrhs
+        ML_BSSN::ML_metricrhs
+        ML_BSSN::ML_Gammarhs
+        ML_BSSN::ML_trace_curvrhs
+        ML_BSSN::ML_curvrhs
+        ML_BSSN::ML_lapserhs
+        ML_BSSN::ML_dtlapserhs
+        ML_BSSN::ML_shiftrhs
+        ML_BSSN::ML_dtshiftrhs
+"

@@ -1,0 +1,4 @@
+# Configuration definition for thorn WaveToyF77
+# $Header$
+
+REQUIRES CartGrid3D

@@ -1,0 +1,7 @@
+# Schedule definitions for thorn EOS_RealisticPP
+
+schedule EOS_RealisticPP_Startup AT startup
+{
+  LANG: Fortran
+} "Setup the RealisticPP EOS"
+

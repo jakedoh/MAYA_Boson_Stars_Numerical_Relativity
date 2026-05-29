@@ -1,0 +1,37 @@
+# Schedule definitions for thorn IOHDF5
+# $Header$
+
+########################################################################
+### register startup/termination routines
+########################################################################
+schedule IOHDF5_Startup at STARTUP after IOHDF5Util_Startup
+{
+  LANG:C
+} "IOHDF5 startup routine"
+
+
+########################################################################
+### register checkpointing routines
+########################################################################
+schedule IOHDF5_InitialDataCheckpoint at CPINITIAL
+{
+  LANG:C
+} "Initial data checkpoint routine"
+
+schedule IOHDF5_EvolutionCheckpoint at CHECKPOINT
+{
+  LANG:C
+} "Evolution data checkpoint routine"
+
+schedule IOHDF5_TerminationCheckpoint at TERMINATE before IOHDF5Util_Terminate
+{
+  LANG:C
+} "Termination checkpoint routine"
+
+if (! CCTK_Equals (recover, "no") && *recover_file)
+{
+  schedule IOHDF5_RecoverParameters at RECOVER_PARAMETERS
+  {
+    LANG:C
+  } "Parameter recovery routine"
+}

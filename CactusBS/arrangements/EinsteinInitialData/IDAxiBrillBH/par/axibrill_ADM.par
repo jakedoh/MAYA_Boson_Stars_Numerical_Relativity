@@ -1,0 +1,50 @@
+######################################################################
+# Geodesically sliced black hole + brill wave, ADM, Staggered leapfrog
+######################################################################
+
+ActiveThorns = "coordbase LocalReduce symbase Boundary Time ADMconstraints PUGH PUGHSlab PUGHReduce PUGHInterp CartGrid3D ADMBase admmacros coordgauge staticconformal ADMCoupling SpaceMask ADM ADMAnalysis IDAxiBrillBH IOASCII IOUtil IOBasic LocalInterp"
+
+
+# GENERAL
+ADMBase::evolution_method = "ADM"
+ADMBase::metric_type = "static conformal"
+
+driver::global_nx =  22
+driver::global_ny =  22
+driver::global_nz =  22
+
+grid::type = "byspacing"
+grid::dxyz = 0.2
+#grid::domain = "octant"
+
+time::dtfac = 0.25   
+
+cactus::cctk_initial_time  =     0.
+cactus::cctk_itlast        =     20
+
+adm::method = "stagleap"
+adm::bound  = "flat"
+
+
+# MODEL
+ADMBase::initial_data = "axibrillbh"
+idaxibrillbh::amp = 0.5
+idaxibrillbh::eta0 = 0.0
+idaxibrillbh::sigma = 1.0
+idaxibrillbh::etamax = 6.0
+idaxibrillbh::n = 2
+idaxibrillbh::ne = 302
+idaxibrillbh::nq = 54
+
+
+# GAUGE
+ADMBase::lapse_evolution_method = "geodesic"
+
+
+# OUTPUT
+IO::out_dir = "IDAxiBrillBH"
+
+IOBasic::outInfo_every = 1
+IOASCII::out1d_every   = 1
+IOBasic::outInfo_vars = "admbase::gxx"
+IOASCII::out1d_vars = "admbase::gxx admbase::kxx admconstraints::ham admanalysis::grr admbase::alp"

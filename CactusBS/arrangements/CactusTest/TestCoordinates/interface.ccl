@@ -1,0 +1,18 @@
+# Interface definition for thorn Coordinates
+# $Header$
+
+implements: testgrid
+
+private:
+
+cctk_real cartesian dim=3 type=GF
+{
+  x,y,z
+} "Cartesian coordinates"
+
+cctk_real spherical dim=3 type=GF
+{
+  r
+} "Spherical polar coordinates"
+
+

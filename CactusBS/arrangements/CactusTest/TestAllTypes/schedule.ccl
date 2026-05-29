@@ -1,0 +1,21 @@
+# Schedule definitions for thorn TestAllTypes
+# $Header$
+
+STORAGE: vint vint1 vint2 vint4 vint8 vint16
+STORAGE: vreal vreal4 vreal8 vreal16
+STORAGE: vcomplex vcomplex8 vcomplex16 vcomplex32
+
+SCHEDULE TestAllTypes_C AT initial
+{
+  LANG: C
+} "Test types in C"
+
+SCHEDULE TestAllTypes_CXX AT initial
+{
+  LANG: C
+} "Test types in C++"
+
+SCHEDULE TestAllTypes_Fortran AT initial
+{
+  LANG: Fortran
+} "Test types in Fortran"
