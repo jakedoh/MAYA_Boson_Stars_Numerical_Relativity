@@ -43,8 +43,6 @@ USES CCTK_INT assume_stress_energy_state
 shares: MethodOfLines
 
 USES CCTK_INT MoL_Num_Evolved_Vars
-USES CCTK_INT MoL_Num_Constrained_Vars
-USES CCTK_INT MoL_Num_SaveAndRestore_Vars
 USES CCTK_INT MoL_Num_ArrayEvolved_Vars
 
 restricted:
@@ -168,6 +166,30 @@ CCTK_REAL ShiftB "Gauge Parameter, Mueller shift: muellerBottom ~ (1-chi^(ShiftA
 } 2
 
 restricted:
+CCTK_REAL betaXasymp "asymptotic value of betax" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL betaYasymp "asymptotic value of betay" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL betaZasymp "asymptotic value of betaz" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_REAL alphasymp "asymptotic value of alpha" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
 CCTK_REAL chiEps "Minimum chi allowed in most denominators." STEERABLE=ALWAYS
 {
   *:* :: ""
@@ -289,17 +311,6 @@ CCTK_KEYWORD couple_matter "Triggers matter terms in evolving the spacetime" STE
   "yes" :: ""
   "no" :: ""
 } "yes"
-
-restricted:
-CCTK_INT Kranc2BSSNChiMatter_MaxNumConstrainedVars "Number of constrained variables used by this thorn" ACCUMULATOR-BASE=MethodofLines::MoL_Num_Constrained_Vars
-{
-  16:16 :: "Number of constrained variables used by this thorn"
-} 16
-
-CCTK_INT Kranc2BSSNChiMatter_MaxNumSaveAndRestoreVars "Number of save and restore variables used by this thorn" ACCUMULATOR-BASE=MethodofLines::MoL_Num_SaveAndRestore_Vars
-{
-  10:10 :: "Number of save and restore variables used by this thorn"
-} 10
 
 restricted:
 CCTK_INT Kranc2BSSNChiMatter_MaxNumEvolvedVars "Number of evolved variables used by this thorn" ACCUMULATOR-BASE=MethodofLines::MoL_Num_Evolved_Vars STEERABLE=RECOVER
@@ -464,7 +475,13 @@ CCTK_INT bssnchimatter_project_constraints_psu_boundary_calc_every "bssnchimatte
 } 1
 
 restricted:
-CCTK_INT bssnchimatter_boundary_calc_every "bssnchimatter_boundary_calc_every" STEERABLE=ALWAYS
+CCTK_INT bssnchimatter_radiativeboundary_calc_every "bssnchimatter_radiativeboundary_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT bssnchimatter_radiativeFLRWboundary_calc_every "bssnchimatter_radiativeFLRWboundary_calc_every" STEERABLE=ALWAYS
 {
   *:* :: ""
 } 1
@@ -818,7 +835,13 @@ CCTK_INT bssnchimatter_project_constraints_psu_boundary_calc_offset "bssnchimatt
 } 0
 
 restricted:
-CCTK_INT bssnchimatter_boundary_calc_offset "bssnchimatter_boundary_calc_offset" STEERABLE=ALWAYS
+CCTK_INT bssnchimatter_radiativeboundary_calc_offset "bssnchimatter_radiativeboundary_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT bssnchimatter_radiativeFLRWboundary_calc_offset "bssnchimatter_radiativeFLRWboundary_calc_offset" STEERABLE=ALWAYS
 {
   *:* :: ""
 } 0

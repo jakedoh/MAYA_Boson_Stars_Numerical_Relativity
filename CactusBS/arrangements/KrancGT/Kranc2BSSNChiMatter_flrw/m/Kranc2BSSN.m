@@ -62,7 +62,7 @@ PDN = PDstandardNth;
 (* Register all the tensors that will be used with TensorTools *)
 Map[DefineTensor, 
 {
-  h, hInv, phi, chi, A, K, alpha, Gam, beta, betat, R, Rphi, gamma, bssnmom,  bssnCcons,
+  h, b, hInv, phi, chi, A, K, alpha, Gam, beta, betat, R, Rphi, gamma, bssnmom,  bssnCcons,
   g, k, AInv, DDphi, Dphi, B, DDalpha, divA, gInv,
   gPhys, kPhys, n, dir,
   rho, S, Si, Sij, Tj
@@ -218,7 +218,19 @@ realParameters =
    Steerable -> Always},
   {Name -> ShiftB, 
    Description -> "Gauge Parameter, Mueller shift: muellerBottom ~ (1-chi^(ShiftA/2))^ShiftB",
-   Default -> 2, Steerable -> Always}
+   Default -> 2, Steerable -> Always},
+  {Name -> betaXasymp,
+   Description -> "asymptotic value of betax",
+   Default -> 0, Steerable -> Always},
+  {Name -> betaYasymp,
+   Description -> "asymptotic value of betay",
+   Default -> 0, Steerable -> Always},
+  {Name -> betaZasymp,
+   Description -> "asymptotic value of betaz",
+   Default -> 0, Steerable -> Always},
+  {Name -> alphasymp,
+   Description -> "asymptotic value of alpha",
+   Default -> 1, Steerable -> Always}
 };
 
 intParameters =
@@ -1013,19 +1025,22 @@ boundaryParam =
   Steerable -> Recover
 };
 
-boundaryCalc =
+boundaryCalcRadiative =
 {
-  Name -> fnPrefix <> "_boundary",
+  Name -> fnPrefix <> "_radiativeboundary",
   Schedule -> {"in MoL_RHSBoundaries as bssn_boundary"},
   ConditionalOnKeyword -> {"boundary_condition", "radiative"},
   Where -> Boundary,
-  Shorthands -> {n1,n2,n3,dir[ui],pi},
+  Shorthands -> {b1,b2,b3,n1,n2,n3,dir[ui],pi},
   Equations ->
   {
     pi -> 3.14159265358979323846,
     n1 -> -x/r, 
     n2 -> -y/r,
     n3 -> -z/r,
+    b1 -> betaXasymp,
+    b2 -> betaYasymp,
+    b3 -> betaZasymp,
 
     dir[ui] -> Sign[n[ui]],
 
@@ -1037,15 +1052,15 @@ boundaryCalc =
 
     dot[h[li,lj]] -> -(h[li,lj] - Euc[li,lj]) / r + n[uk] PDonesided2nd[h[li,lj], lk],
     dot[A[li,lj]] -> -(A[li,lj]) / r + n[uk] PDonesided2nd[A[li,lj], lk],
-    dot[K] -> -(K) / r + n[uk] PDonesided2nd[K, lk] + 0.217080376 / r,
+    dot[K] -> -(K) / r + n[uk] PDonesided2nd[K, lk],
     dot[Gam[ui]] -> 0, (* This is conventional *)
 
     If[phiMethod,
       dot[phi] -> -(phi) / r + n[uk] PDonesided2nd[phi, lk],
       dot[chi] -> -(chi - 1) / r + n[uk] PDonesided2nd[chi, lk]],
       
-    dot[alpha] -> -(alpha - 1) / r + n[uk] PDonesided2nd[alpha, lk], 
-    dot[beta[ui]] -> -(beta[ui] - 0) / r + n[uk] PDonesided2nd[beta[ui], lk], 
+    dot[alpha] -> -(alpha - alphasymp) / r + n[uk] PDonesided2nd[alpha, lk], 
+    dot[beta[ui]] -> -(beta[ui] - b[ui]) / r + n[uk] PDonesided2nd[beta[ui], lk], 
     dot[betat[ui]] -> -(betat[ui] - 0) / r + n[uk] PDonesided2nd[betat[ui], lk],
 
     (* clear constraints in the boundary region to get rid of poison *)
@@ -1055,9 +1070,9 @@ boundaryCalc =
   }
 };
 
-boundaryCalc =
+boundaryCalcRadiativeFLRW =
 {
-  Name -> fnPrefix <> "_boundary",
+  Name -> fnPrefix <> "_radiativeFLRWboundary",
   Schedule -> {"in MoL_RHSBoundaries as bssn_boundary"},
   ConditionalOnKeyword -> {"boundary_condition", "radiativeflrw"},
   Where -> Boundary,
@@ -1318,7 +1333,8 @@ calculationsVacuum =
 
   psuProjectConstraintsCalc,
   psuBoundaryProjectConstraintsCalc,
-  boundaryCalc,
+  boundaryCalcRadiative,
+  boundaryCalcRadiativeFLRW,
   onePlusLogLapseCalc,
   onePlusLogLapseFull4thCalc,
   onePlusLogLapse2ndCentredCalc,

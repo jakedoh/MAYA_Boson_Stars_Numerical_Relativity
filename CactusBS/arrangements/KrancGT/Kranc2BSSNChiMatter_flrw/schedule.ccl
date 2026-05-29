@@ -754,9 +754,9 @@ if (CCTK_EQUALS(algebraic_constraint_projection, "psuboundary"))
   } "bssnchimatter_project_constraints_psu_boundary"
 }
 
-if (CCTK_EQUALS(boundary_condition, "radiativeflrw"))
+if (CCTK_EQUALS(boundary_condition, "radiative"))
 {
-  schedule bssnchimatter_boundary in MoL_RHSBoundaries as bssn_boundary
+  schedule bssnchimatter_radiativeboundary in MoL_RHSBoundaries as bssn_boundary
   {
     LANG: C
     READS: grid::x(Everywhere)
@@ -814,7 +814,70 @@ if (CCTK_EQUALS(boundary_condition, "radiativeflrw"))
     WRITES: Kranc2BSSNChiMatter::h32rhs(Boundary)
     WRITES: Kranc2BSSNChiMatter::h33rhs(Boundary)
     WRITES: Kranc2BSSNChiMatter::Krhs(Boundary)
-  } "bssnchimatter_boundary"
+  } "bssnchimatter_radiativeboundary"
+}
+
+if (CCTK_EQUALS(boundary_condition, "radiativeflrw"))
+{
+  schedule bssnchimatter_radiativeFLRWboundary in MoL_RHSBoundaries as bssn_boundary
+  {
+    LANG: C
+    READS: grid::x(Everywhere)
+    READS: grid::y(Everywhere)
+    READS: grid::z(Everywhere)
+    READS: grid::r(Everywhere)
+    READS: Kranc2BSSNChiMatter::A11(Everywhere)
+    READS: Kranc2BSSNChiMatter::A21(Everywhere)
+    READS: Kranc2BSSNChiMatter::A31(Everywhere)
+    READS: Kranc2BSSNChiMatter::A22(Everywhere)
+    READS: Kranc2BSSNChiMatter::A32(Everywhere)
+    READS: Kranc2BSSNChiMatter::A33(Everywhere)
+    READS: Kranc2BSSNChiMatter::alpha(Everywhere)
+    READS: Kranc2BSSNChiMatter::beta1(Everywhere)
+    READS: Kranc2BSSNChiMatter::beta2(Everywhere)
+    READS: Kranc2BSSNChiMatter::beta3(Everywhere)
+    READS: Kranc2BSSNChiMatter::betat1(Everywhere)
+    READS: Kranc2BSSNChiMatter::betat2(Everywhere)
+    READS: Kranc2BSSNChiMatter::betat3(Everywhere)
+    READS: Kranc2BSSNChiMatter::chi(Everywhere)
+    READS: Kranc2BSSNChiMatter::h11(Everywhere)
+    READS: Kranc2BSSNChiMatter::h21(Everywhere)
+    READS: Kranc2BSSNChiMatter::h31(Everywhere)
+    READS: Kranc2BSSNChiMatter::h22(Everywhere)
+    READS: Kranc2BSSNChiMatter::h32(Everywhere)
+    READS: Kranc2BSSNChiMatter::h33(Everywhere)
+    READS: Kranc2BSSNChiMatter::K(Everywhere)
+    WRITES: Kranc2BSSNChiMatter::A11rhs(Boundary)
+    WRITES: Kranc2BSSNChiMatter::A21rhs(Boundary)
+    WRITES: Kranc2BSSNChiMatter::A22rhs(Boundary)
+    WRITES: Kranc2BSSNChiMatter::A31rhs(Boundary)
+    WRITES: Kranc2BSSNChiMatter::A32rhs(Boundary)
+    WRITES: Kranc2BSSNChiMatter::A33rhs(Boundary)
+    WRITES: Kranc2BSSNChiMatter::alpharhs(Boundary)
+    WRITES: Kranc2BSSNChiMatter::beta1rhs(Boundary)
+    WRITES: Kranc2BSSNChiMatter::beta2rhs(Boundary)
+    WRITES: Kranc2BSSNChiMatter::beta3rhs(Boundary)
+    WRITES: Kranc2BSSNChiMatter::betat1rhs(Boundary)
+    WRITES: Kranc2BSSNChiMatter::betat2rhs(Boundary)
+    WRITES: Kranc2BSSNChiMatter::betat3rhs(Boundary)
+    WRITES: Kranc2BSSNChiMatter::bssnD(Boundary)
+    WRITES: Kranc2BSSNChiMatter::bssnham(Boundary)
+    WRITES: Kranc2BSSNChiMatter::bssnmom1(Boundary)
+    WRITES: Kranc2BSSNChiMatter::bssnmom2(Boundary)
+    WRITES: Kranc2BSSNChiMatter::bssnmom3(Boundary)
+    WRITES: Kranc2BSSNChiMatter::bssnT(Boundary)
+    WRITES: Kranc2BSSNChiMatter::chirhs(Boundary)
+    WRITES: Kranc2BSSNChiMatter::Gam1rhs(Boundary)
+    WRITES: Kranc2BSSNChiMatter::Gam2rhs(Boundary)
+    WRITES: Kranc2BSSNChiMatter::Gam3rhs(Boundary)
+    WRITES: Kranc2BSSNChiMatter::h11rhs(Boundary)
+    WRITES: Kranc2BSSNChiMatter::h21rhs(Boundary)
+    WRITES: Kranc2BSSNChiMatter::h22rhs(Boundary)
+    WRITES: Kranc2BSSNChiMatter::h31rhs(Boundary)
+    WRITES: Kranc2BSSNChiMatter::h32rhs(Boundary)
+    WRITES: Kranc2BSSNChiMatter::h33rhs(Boundary)
+    WRITES: Kranc2BSSNChiMatter::Krhs(Boundary)
+  } "bssnchimatter_radiativeFLRWboundary"
 }
 
 if (CCTK_EQUALS(lapse_condition, "1 + log"))
