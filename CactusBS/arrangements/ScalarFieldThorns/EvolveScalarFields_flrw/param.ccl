@@ -176,6 +176,7 @@ CCTK_KEYWORD potential_type "potential_type"
   "doublewell" :: ""
   "phiFourth" :: ""
   "inflation" :: ""
+  "linear" :: ""
 } "doublewell"
 
 private:
@@ -288,6 +289,18 @@ CCTK_INT EvolveScalarFields_EvolveScalarField_6th_potential_inflation_calc_every
 } 1
 
 restricted:
+CCTK_INT EvolveScalarFields_EvolveScalarField_full4th_potential_linear_calc_every "EvolveScalarFields_EvolveScalarField_full4th_potential_linear_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT EvolveScalarFields_EvolveScalarField_6th_potential_linear_calc_every "EvolveScalarFields_EvolveScalarField_6th_potential_linear_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
 CCTK_INT EvolveScalarFields_ScalarFieldTmunu_none_full4th_calc_every "EvolveScalarFields_ScalarFieldTmunu_none_full4th_calc_every" STEERABLE=ALWAYS
 {
   *:* :: ""
@@ -360,6 +373,18 @@ CCTK_INT EvolveScalarFields_ScalarFieldTmunu_inflation_6th_calc_every "EvolveSca
 } 1
 
 restricted:
+CCTK_INT EvolveScalarFields_ScalarFieldTmunu_linear_full4th_calc_every "EvolveScalarFields_ScalarFieldTmunu_linear_full4th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT EvolveScalarFields_ScalarFieldTmunu_linear_6th_calc_every "EvolveScalarFields_ScalarFieldTmunu_linear_6th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
 CCTK_INT EvolveScalarFields_ScalarFieldrho_none_full4th_calc_every "EvolveScalarFields_ScalarFieldrho_none_full4th_calc_every" STEERABLE=ALWAYS
 {
   *:* :: ""
@@ -427,6 +452,102 @@ CCTK_INT EvolveScalarFields_ScalarFieldrho_inflation_full4th_calc_every "EvolveS
 
 restricted:
 CCTK_INT EvolveScalarFields_ScalarFieldrho_inflation_6th_calc_every "EvolveScalarFields_ScalarFieldrho_inflation_6th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT EvolveScalarFields_ScalarFieldrho_linear_full4th_calc_every "EvolveScalarFields_ScalarFieldrho_linear_full4th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT EvolveScalarFields_ScalarFieldrho_linear_6th_calc_every "EvolveScalarFields_ScalarFieldrho_linear_6th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT EvolveScalarFields_ScalarFieldAmplitude_none_full4th_calc_every "EvolveScalarFields_ScalarFieldAmplitude_none_full4th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT EvolveScalarFields_ScalarFieldAmplitude_none_6th_calc_every "EvolveScalarFields_ScalarFieldAmplitude_none_6th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT EvolveScalarFields_ScalarFieldAmplitude_onlymass_full4th_calc_every "EvolveScalarFields_ScalarFieldAmplitude_onlymass_full4th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT EvolveScalarFields_ScalarFieldAmplitude_onlymass_6th_calc_every "EvolveScalarFields_ScalarFieldAmplitude_onlymass_6th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT EvolveScalarFields_ScalarFieldAmplitude_axion_full4th_calc_every "EvolveScalarFields_ScalarFieldAmplitude_axion_full4th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT EvolveScalarFields_ScalarFieldAmplitude_axion_6th_calc_every "EvolveScalarFields_ScalarFieldAmplitude_axion_6th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT EvolveScalarFields_ScalarFieldAmplitude_doublewell_full4th_calc_every "EvolveScalarFields_ScalarFieldAmplitude_doublewell_full4th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT EvolveScalarFields_ScalarFieldAmplitude_doublewell_6th_calc_every "EvolveScalarFields_ScalarFieldAmplitude_doublewell_6th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT EvolveScalarFields_ScalarFieldAmplitude_phiFourth_full4th_calc_every "EvolveScalarFields_ScalarFieldAmplitude_phiFourth_full4th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT EvolveScalarFields_ScalarFieldAmplitude_phiFourth_6th_calc_every "EvolveScalarFields_ScalarFieldAmplitude_phiFourth_6th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT EvolveScalarFields_ScalarFieldAmplitude_inflation_full4th_calc_every "EvolveScalarFields_ScalarFieldAmplitude_inflation_full4th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT EvolveScalarFields_ScalarFieldAmplitude_inflation_6th_calc_every "EvolveScalarFields_ScalarFieldAmplitude_inflation_6th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT EvolveScalarFields_ScalarFieldAmplitude_linear_full4th_calc_every "EvolveScalarFields_ScalarFieldAmplitude_linear_full4th_calc_every" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 1
+
+restricted:
+CCTK_INT EvolveScalarFields_ScalarFieldAmplitude_linear_6th_calc_every "EvolveScalarFields_ScalarFieldAmplitude_linear_6th_calc_every" STEERABLE=ALWAYS
 {
   *:* :: ""
 } 1
@@ -522,6 +643,18 @@ CCTK_INT EvolveScalarFields_EvolveScalarField_6th_potential_inflation_calc_offse
 } 0
 
 restricted:
+CCTK_INT EvolveScalarFields_EvolveScalarField_full4th_potential_linear_calc_offset "EvolveScalarFields_EvolveScalarField_full4th_potential_linear_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT EvolveScalarFields_EvolveScalarField_6th_potential_linear_calc_offset "EvolveScalarFields_EvolveScalarField_6th_potential_linear_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
 CCTK_INT EvolveScalarFields_ScalarFieldTmunu_none_full4th_calc_offset "EvolveScalarFields_ScalarFieldTmunu_none_full4th_calc_offset" STEERABLE=ALWAYS
 {
   *:* :: ""
@@ -594,6 +727,18 @@ CCTK_INT EvolveScalarFields_ScalarFieldTmunu_inflation_6th_calc_offset "EvolveSc
 } 0
 
 restricted:
+CCTK_INT EvolveScalarFields_ScalarFieldTmunu_linear_full4th_calc_offset "EvolveScalarFields_ScalarFieldTmunu_linear_full4th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT EvolveScalarFields_ScalarFieldTmunu_linear_6th_calc_offset "EvolveScalarFields_ScalarFieldTmunu_linear_6th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
 CCTK_INT EvolveScalarFields_ScalarFieldrho_none_full4th_calc_offset "EvolveScalarFields_ScalarFieldrho_none_full4th_calc_offset" STEERABLE=ALWAYS
 {
   *:* :: ""
@@ -661,6 +806,102 @@ CCTK_INT EvolveScalarFields_ScalarFieldrho_inflation_full4th_calc_offset "Evolve
 
 restricted:
 CCTK_INT EvolveScalarFields_ScalarFieldrho_inflation_6th_calc_offset "EvolveScalarFields_ScalarFieldrho_inflation_6th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT EvolveScalarFields_ScalarFieldrho_linear_full4th_calc_offset "EvolveScalarFields_ScalarFieldrho_linear_full4th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT EvolveScalarFields_ScalarFieldrho_linear_6th_calc_offset "EvolveScalarFields_ScalarFieldrho_linear_6th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT EvolveScalarFields_ScalarFieldAmplitude_none_full4th_calc_offset "EvolveScalarFields_ScalarFieldAmplitude_none_full4th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT EvolveScalarFields_ScalarFieldAmplitude_none_6th_calc_offset "EvolveScalarFields_ScalarFieldAmplitude_none_6th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT EvolveScalarFields_ScalarFieldAmplitude_onlymass_full4th_calc_offset "EvolveScalarFields_ScalarFieldAmplitude_onlymass_full4th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT EvolveScalarFields_ScalarFieldAmplitude_onlymass_6th_calc_offset "EvolveScalarFields_ScalarFieldAmplitude_onlymass_6th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT EvolveScalarFields_ScalarFieldAmplitude_axion_full4th_calc_offset "EvolveScalarFields_ScalarFieldAmplitude_axion_full4th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT EvolveScalarFields_ScalarFieldAmplitude_axion_6th_calc_offset "EvolveScalarFields_ScalarFieldAmplitude_axion_6th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT EvolveScalarFields_ScalarFieldAmplitude_doublewell_full4th_calc_offset "EvolveScalarFields_ScalarFieldAmplitude_doublewell_full4th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT EvolveScalarFields_ScalarFieldAmplitude_doublewell_6th_calc_offset "EvolveScalarFields_ScalarFieldAmplitude_doublewell_6th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT EvolveScalarFields_ScalarFieldAmplitude_phiFourth_full4th_calc_offset "EvolveScalarFields_ScalarFieldAmplitude_phiFourth_full4th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT EvolveScalarFields_ScalarFieldAmplitude_phiFourth_6th_calc_offset "EvolveScalarFields_ScalarFieldAmplitude_phiFourth_6th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT EvolveScalarFields_ScalarFieldAmplitude_inflation_full4th_calc_offset "EvolveScalarFields_ScalarFieldAmplitude_inflation_full4th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT EvolveScalarFields_ScalarFieldAmplitude_inflation_6th_calc_offset "EvolveScalarFields_ScalarFieldAmplitude_inflation_6th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT EvolveScalarFields_ScalarFieldAmplitude_linear_full4th_calc_offset "EvolveScalarFields_ScalarFieldAmplitude_linear_full4th_calc_offset" STEERABLE=ALWAYS
+{
+  *:* :: ""
+} 0
+
+restricted:
+CCTK_INT EvolveScalarFields_ScalarFieldAmplitude_linear_6th_calc_offset "EvolveScalarFields_ScalarFieldAmplitude_linear_6th_calc_offset" STEERABLE=ALWAYS
 {
   *:* :: ""
 } 0

@@ -17,40 +17,25 @@
 
 namespace EvolveScalarFields {
 
-extern "C" void EvolveScalarFields_boundaryRadiative_SelectBCs(CCTK_ARGUMENTS)
+extern "C" void EvolveScalarFields_ScalarFieldAmplitude_none_6th_SelectBCs(CCTK_ARGUMENTS)
 {
-  #ifdef DECLARE_CCTK_ARGUMENTS_EvolveScalarFields_boundaryRadiative_SelectBCs
-  DECLARE_CCTK_ARGUMENTS_CHECKED(EvolveScalarFields_boundaryRadiative_SelectBCs);
+  #ifdef DECLARE_CCTK_ARGUMENTS_EvolveScalarFields_ScalarFieldAmplitude_none_6th_SelectBCs
+  DECLARE_CCTK_ARGUMENTS_CHECKED(EvolveScalarFields_ScalarFieldAmplitude_none_6th_SelectBCs);
   #else
   DECLARE_CCTK_ARGUMENTS;
   #endif
   DECLARE_CCTK_PARAMETERS;
   
-  if (cctk_iteration % EvolveScalarFields_boundaryRadiative_calc_every != EvolveScalarFields_boundaryRadiative_calc_offset)
+  if (cctk_iteration % EvolveScalarFields_ScalarFieldAmplitude_none_6th_calc_every != EvolveScalarFields_ScalarFieldAmplitude_none_6th_calc_offset)
     return;
   CCTK_INT ierr CCTK_ATTRIBUTE_UNUSED = 0;
-  ierr = KrancBdy_SelectGroupForBC(cctkGH, CCTK_ALL_FACES, GetBoundaryWidth(cctkGH), -1 /* no table */, "EvolveScalarFields::phia_grouprhs","flat");
-  if (ierr < 0)
-    CCTK_WARN(CCTK_WARN_ALERT, "Failed to register flat BC for EvolveScalarFields::phia_grouprhs.");
   ierr = KrancBdy_SelectGroupForBC(cctkGH, CCTK_ALL_FACES, GetBoundaryWidth(cctkGH), -1 /* no table */, "EvolveScalarFields::phiamp_group","flat");
   if (ierr < 0)
     CCTK_WARN(CCTK_WARN_ALERT, "Failed to register flat BC for EvolveScalarFields::phiamp_group.");
-  ierr = KrancBdy_SelectGroupForBC(cctkGH, CCTK_ALL_FACES, GetBoundaryWidth(cctkGH), -1 /* no table */, "EvolveScalarFields::phib_grouprhs","flat");
-  if (ierr < 0)
-    CCTK_WARN(CCTK_WARN_ALERT, "Failed to register flat BC for EvolveScalarFields::phib_grouprhs.");
-  ierr = KrancBdy_SelectGroupForBC(cctkGH, CCTK_ALL_FACES, GetBoundaryWidth(cctkGH), -1 /* no table */, "EvolveScalarFields::pia_grouprhs","flat");
-  if (ierr < 0)
-    CCTK_WARN(CCTK_WARN_ALERT, "Failed to register flat BC for EvolveScalarFields::pia_grouprhs.");
-  ierr = KrancBdy_SelectGroupForBC(cctkGH, CCTK_ALL_FACES, GetBoundaryWidth(cctkGH), -1 /* no table */, "EvolveScalarFields::pib_grouprhs","flat");
-  if (ierr < 0)
-    CCTK_WARN(CCTK_WARN_ALERT, "Failed to register flat BC for EvolveScalarFields::pib_grouprhs.");
-  ierr = KrancBdy_SelectGroupForBC(cctkGH, CCTK_ALL_FACES, GetBoundaryWidth(cctkGH), -1 /* no table */, "EvolveScalarFields::rhoE_group","flat");
-  if (ierr < 0)
-    CCTK_WARN(CCTK_WARN_ALERT, "Failed to register flat BC for EvolveScalarFields::rhoE_group.");
   return;
 }
 
-static void EvolveScalarFields_boundaryRadiative_Body(const cGH* restrict const cctkGH, const int dir, const int face, const CCTK_REAL normal[3], const CCTK_REAL tangentA[3], const CCTK_REAL tangentB[3], const int imin[3], const int imax[3], const int n_subblock_gfs, CCTK_REAL* restrict const subblock_gfs[])
+static void EvolveScalarFields_ScalarFieldAmplitude_none_6th_Body(const cGH* restrict const cctkGH, const int dir, const int face, const CCTK_REAL normal[3], const CCTK_REAL tangentA[3], const CCTK_REAL tangentB[3], const int imin[3], const int imax[3], const int n_subblock_gfs, CCTK_REAL* restrict const subblock_gfs[])
 {
   DECLARE_CCTK_ARGUMENTS;
   DECLARE_CCTK_PARAMETERS;
@@ -145,7 +130,7 @@ static void EvolveScalarFields_boundaryRadiative_Body(const cGH* restrict const 
   const int imax1=imax[1];
   const int imax2=imax[2];
   #pragma omp parallel
-  CCTK_LOOP3(EvolveScalarFields_boundaryRadiative,
+  CCTK_LOOP3(EvolveScalarFields_ScalarFieldAmplitude_none_6th,
     i,j,k, imin0,imin1,imin2, imax0,imax1,imax2,
     cctk_ash[0],cctk_ash[1],cctk_ash[2])
   {
@@ -154,61 +139,21 @@ static void EvolveScalarFields_boundaryRadiative_Body(const cGH* restrict const 
     
     CCTK_REAL phiaL CCTK_ATTRIBUTE_UNUSED = phia[index];
     CCTK_REAL phibL CCTK_ATTRIBUTE_UNUSED = phib[index];
-    CCTK_REAL piaL CCTK_ATTRIBUTE_UNUSED = pia[index];
-    CCTK_REAL pibL CCTK_ATTRIBUTE_UNUSED = pib[index];
-    CCTK_REAL rL CCTK_ATTRIBUTE_UNUSED = r[index];
-    CCTK_REAL xL CCTK_ATTRIBUTE_UNUSED = x[index];
-    CCTK_REAL yL CCTK_ATTRIBUTE_UNUSED = y[index];
-    CCTK_REAL zL CCTK_ATTRIBUTE_UNUSED = z[index];
     
     /* Include user supplied include files */
     /* Precompute derivatives */
     /* Calculate temporaries and grid functions */
-    CCTK_REAL n1 CCTK_ATTRIBUTE_UNUSED = -(xL*pow(rL,-1));
-    
-    CCTK_REAL n2 CCTK_ATTRIBUTE_UNUSED = -(yL*pow(rL,-1));
-    
-    CCTK_REAL n3 CCTK_ATTRIBUTE_UNUSED = -(zL*pow(rL,-1));
-    
-    ptrdiff_t dir1 CCTK_ATTRIBUTE_UNUSED = isgn(n1);
-    
-    ptrdiff_t dir2 CCTK_ATTRIBUTE_UNUSED = isgn(n2);
-    
-    ptrdiff_t dir3 CCTK_ATTRIBUTE_UNUSED = isgn(n3);
-    
-    CCTK_REAL piarhsL CCTK_ATTRIBUTE_UNUSED = 
-      PDonesided2nd1(&pia[index])*n1 + PDonesided2nd2(&pia[index])*n2 + 
-      PDonesided2nd3(&pia[index])*n3 + (-piaL + piaBG)*pow(rL,-1);
-    
-    CCTK_REAL phiarhsL CCTK_ATTRIBUTE_UNUSED = 
-      PDonesided2nd1(&phia[index])*n1 + PDonesided2nd2(&phia[index])*n2 + 
-      PDonesided2nd3(&phia[index])*n3 + (-phiaL + phiaBG)*pow(rL,-1);
-    
-    CCTK_REAL pibrhsL CCTK_ATTRIBUTE_UNUSED = 
-      PDonesided2nd1(&pib[index])*n1 + PDonesided2nd2(&pib[index])*n2 + 
-      PDonesided2nd3(&pib[index])*n3 + (-pibL + pibBG)*pow(rL,-1);
-    
-    CCTK_REAL phibrhsL CCTK_ATTRIBUTE_UNUSED = 
-      PDonesided2nd1(&phib[index])*n1 + PDonesided2nd2(&phib[index])*n2 + 
-      PDonesided2nd3(&phib[index])*n3 + (-phibL + phibBG)*pow(rL,-1);
-    
-    CCTK_REAL rhoEL CCTK_ATTRIBUTE_UNUSED = 0;
-    
-    CCTK_REAL phiampL CCTK_ATTRIBUTE_UNUSED = 0;
+    CCTK_REAL phiampL CCTK_ATTRIBUTE_UNUSED = pow(pow(phiaL,2) + 
+      pow(phibL,2),0.5);
     /* Copy local copies back to grid functions */
     phiamp[index] = phiampL;
-    phiarhs[index] = phiarhsL;
-    phibrhs[index] = phibrhsL;
-    piarhs[index] = piarhsL;
-    pibrhs[index] = pibrhsL;
-    rhoE[index] = rhoEL;
   }
-  CCTK_ENDLOOP3(EvolveScalarFields_boundaryRadiative);
+  CCTK_ENDLOOP3(EvolveScalarFields_ScalarFieldAmplitude_none_6th);
 }
-extern "C" void EvolveScalarFields_boundaryRadiative(CCTK_ARGUMENTS)
+extern "C" void EvolveScalarFields_ScalarFieldAmplitude_none_6th(CCTK_ARGUMENTS)
 {
-  #ifdef DECLARE_CCTK_ARGUMENTS_EvolveScalarFields_boundaryRadiative
-  DECLARE_CCTK_ARGUMENTS_CHECKED(EvolveScalarFields_boundaryRadiative);
+  #ifdef DECLARE_CCTK_ARGUMENTS_EvolveScalarFields_ScalarFieldAmplitude_none_6th
+  DECLARE_CCTK_ARGUMENTS_CHECKED(EvolveScalarFields_ScalarFieldAmplitude_none_6th);
   #else
   DECLARE_CCTK_ARGUMENTS;
   #endif
@@ -216,33 +161,24 @@ extern "C" void EvolveScalarFields_boundaryRadiative(CCTK_ARGUMENTS)
   
   if (verbose > 1)
   {
-    CCTK_VInfo(CCTK_THORNSTRING,"Entering EvolveScalarFields_boundaryRadiative_Body");
+    CCTK_VInfo(CCTK_THORNSTRING,"Entering EvolveScalarFields_ScalarFieldAmplitude_none_6th_Body");
   }
-  if (cctk_iteration % EvolveScalarFields_boundaryRadiative_calc_every != EvolveScalarFields_boundaryRadiative_calc_offset)
+  if (cctk_iteration % EvolveScalarFields_ScalarFieldAmplitude_none_6th_calc_every != EvolveScalarFields_ScalarFieldAmplitude_none_6th_calc_offset)
   {
     return;
   }
   
   const char* const groups[] = {
-    "grid::coordinates",
     "EvolveScalarFields::phia_group",
-    "EvolveScalarFields::phia_grouprhs",
     "EvolveScalarFields::phiamp_group",
-    "EvolveScalarFields::phib_group",
-    "EvolveScalarFields::phib_grouprhs",
-    "EvolveScalarFields::pia_group",
-    "EvolveScalarFields::pia_grouprhs",
-    "EvolveScalarFields::pib_group",
-    "EvolveScalarFields::pib_grouprhs",
-    "EvolveScalarFields::rhoE_group"};
-  AssertGroupStorage(cctkGH, "EvolveScalarFields_boundaryRadiative", 11, groups);
+    "EvolveScalarFields::phib_group"};
+  AssertGroupStorage(cctkGH, "EvolveScalarFields_ScalarFieldAmplitude_none_6th", 3, groups);
   
-  EnsureStencilFits(cctkGH, "EvolveScalarFields_boundaryRadiative", 2, 2, 2);
   
-  LoopOverBoundary(cctkGH, EvolveScalarFields_boundaryRadiative_Body);
+  LoopOverInterior(cctkGH, EvolveScalarFields_ScalarFieldAmplitude_none_6th_Body);
   if (verbose > 1)
   {
-    CCTK_VInfo(CCTK_THORNSTRING,"Leaving EvolveScalarFields_boundaryRadiative_Body");
+    CCTK_VInfo(CCTK_THORNSTRING,"Leaving EvolveScalarFields_ScalarFieldAmplitude_none_6th_Body");
   }
 }
 

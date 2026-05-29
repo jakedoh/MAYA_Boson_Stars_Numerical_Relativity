@@ -16,6 +16,8 @@ STORAGE: SFTtt_group[timelevels]
 
 STORAGE: rhoE_group[timelevels]
 
+STORAGE: phiamp_group[timelevels]
+
 STORAGE: phia_grouprhs[rhs_timelevels]
 
 STORAGE: phib_grouprhs[rhs_timelevels]
@@ -39,6 +41,7 @@ schedule EvolveScalarFields_init_gfs at BaseGrid
 {
   LANG: C
   WRITES: EvolveScalarFields::phia(Everywhere)
+  WRITES: EvolveScalarFields::phiamp(Everywhere)
   WRITES: EvolveScalarFields::phib(Everywhere)
   WRITES: EvolveScalarFields::pia(Everywhere)
   WRITES: EvolveScalarFields::pib(Everywhere)
@@ -464,6 +467,76 @@ if (CCTK_EQUALS(potential_type, "inflation"))
       WRITES: EvolveScalarFields::piarhs(Interior)
       WRITES: EvolveScalarFields::pibrhs(Interior)
     } "EvolveScalarFields_EvolveScalarField_6th_potential_inflation"
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "linear"))
+{
+  if (CCTK_EQUALS(fd_order, "full4th"))
+  {
+    schedule EvolveScalarFields_EvolveScalarField_full4th_potential_linear in MoL_CalcRHS as EvolveScalarField
+    {
+      LANG: C
+      READS: admbase::kxx(Everywhere)
+      READS: admbase::kxy(Everywhere)
+      READS: admbase::kxz(Everywhere)
+      READS: admbase::kyy(Everywhere)
+      READS: admbase::kyz(Everywhere)
+      READS: admbase::kzz(Everywhere)
+      READS: admbase::alp(Everywhere)
+      READS: admbase::gxx(Everywhere)
+      READS: admbase::gxy(Everywhere)
+      READS: admbase::gxz(Everywhere)
+      READS: admbase::gyy(Everywhere)
+      READS: admbase::gyz(Everywhere)
+      READS: admbase::gzz(Everywhere)
+      READS: admbase::betax(Everywhere)
+      READS: admbase::betay(Everywhere)
+      READS: admbase::betaz(Everywhere)
+      READS: EvolveScalarFields::phia(Everywhere)
+      READS: EvolveScalarFields::phib(Everywhere)
+      READS: EvolveScalarFields::pia(Everywhere)
+      READS: EvolveScalarFields::pib(Everywhere)
+      WRITES: EvolveScalarFields::phiarhs(Interior)
+      WRITES: EvolveScalarFields::phibrhs(Interior)
+      WRITES: EvolveScalarFields::piarhs(Interior)
+      WRITES: EvolveScalarFields::pibrhs(Interior)
+    } "EvolveScalarFields_EvolveScalarField_full4th_potential_linear"
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "linear"))
+{
+  if (CCTK_EQUALS(fd_order, "6th"))
+  {
+    schedule EvolveScalarFields_EvolveScalarField_6th_potential_linear in MoL_CalcRHS as EvolveScalarField
+    {
+      LANG: C
+      READS: admbase::kxx(Everywhere)
+      READS: admbase::kxy(Everywhere)
+      READS: admbase::kxz(Everywhere)
+      READS: admbase::kyy(Everywhere)
+      READS: admbase::kyz(Everywhere)
+      READS: admbase::kzz(Everywhere)
+      READS: admbase::alp(Everywhere)
+      READS: admbase::gxx(Everywhere)
+      READS: admbase::gxy(Everywhere)
+      READS: admbase::gxz(Everywhere)
+      READS: admbase::gyy(Everywhere)
+      READS: admbase::gyz(Everywhere)
+      READS: admbase::gzz(Everywhere)
+      READS: admbase::betax(Everywhere)
+      READS: admbase::betay(Everywhere)
+      READS: admbase::betaz(Everywhere)
+      READS: EvolveScalarFields::phia(Everywhere)
+      READS: EvolveScalarFields::phib(Everywhere)
+      READS: EvolveScalarFields::pia(Everywhere)
+      READS: EvolveScalarFields::pib(Everywhere)
+      WRITES: EvolveScalarFields::phiarhs(Interior)
+      WRITES: EvolveScalarFields::phibrhs(Interior)
+      WRITES: EvolveScalarFields::piarhs(Interior)
+      WRITES: EvolveScalarFields::pibrhs(Interior)
+    } "EvolveScalarFields_EvolveScalarField_6th_potential_linear"
   }
 }
 
@@ -1185,6 +1258,126 @@ if (CCTK_EQUALS(potential_type, "inflation"))
         WRITES: TmunuBase::eTzz(Interior)
         WRITES: EvolveScalarFields::SFTtt(Interior)
       } "EvolveScalarFields_ScalarFieldTmunu_inflation_6th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "linear"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "full4th"))
+    {
+      schedule EvolveScalarFields_ScalarFieldTmunu_linear_full4th in AddToTmunu as ScalarFieldTmunu after Whisky_SetTmunu
+      {
+        LANG: C
+        SYNC: SFTtt_group
+        SYNC: TmunuBase::stress_energy_scalar
+        SYNC: TmunuBase::stress_energy_tensor
+        SYNC: TmunuBase::stress_energy_vector
+        READS: TmunuBase::stress_energy_state
+        READS: admbase::alp(Everywhere)
+        READS: admbase::gxx(Everywhere)
+        READS: admbase::gxy(Everywhere)
+        READS: admbase::gxz(Everywhere)
+        READS: admbase::gyy(Everywhere)
+        READS: admbase::gyz(Everywhere)
+        READS: admbase::gzz(Everywhere)
+        READS: admbase::betax(Everywhere)
+        READS: admbase::betay(Everywhere)
+        READS: admbase::betaz(Everywhere)
+        READS: TmunuBase::eTtt(Everywhere)
+        READS: TmunuBase::eTxx(Everywhere)
+        READS: TmunuBase::eTxy(Everywhere)
+        READS: TmunuBase::eTxz(Everywhere)
+        READS: TmunuBase::eTyy(Everywhere)
+        READS: TmunuBase::eTyz(Everywhere)
+        READS: TmunuBase::eTzz(Everywhere)
+        READS: TmunuBase::eTtx(Everywhere)
+        READS: TmunuBase::eTty(Everywhere)
+        READS: TmunuBase::eTtz(Everywhere)
+        READS: EvolveScalarFields::phia(Everywhere)
+        READS: EvolveScalarFields::phib(Everywhere)
+        READS: EvolveScalarFields::pia(Everywhere)
+        READS: EvolveScalarFields::pib(Everywhere)
+        READS: EvolveScalarFields::gLocal11(Everywhere)
+        READS: EvolveScalarFields::gLocal21(Everywhere)
+        READS: EvolveScalarFields::gLocal31(Everywhere)
+        READS: EvolveScalarFields::gLocal22(Everywhere)
+        READS: EvolveScalarFields::gLocal32(Everywhere)
+        READS: EvolveScalarFields::gLocal33(Everywhere)
+        WRITES: TmunuBase::eTtt(Interior)
+        WRITES: TmunuBase::eTtx(Interior)
+        WRITES: TmunuBase::eTty(Interior)
+        WRITES: TmunuBase::eTtz(Interior)
+        WRITES: TmunuBase::eTxx(Interior)
+        WRITES: TmunuBase::eTxy(Interior)
+        WRITES: TmunuBase::eTxz(Interior)
+        WRITES: TmunuBase::eTyy(Interior)
+        WRITES: TmunuBase::eTyz(Interior)
+        WRITES: TmunuBase::eTzz(Interior)
+        WRITES: EvolveScalarFields::SFTtt(Interior)
+      } "EvolveScalarFields_ScalarFieldTmunu_linear_full4th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "linear"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "6th"))
+    {
+      schedule EvolveScalarFields_ScalarFieldTmunu_linear_6th in AddToTmunu as ScalarFieldTmunu after Whisky_SetTmunu
+      {
+        LANG: C
+        SYNC: SFTtt_group
+        SYNC: TmunuBase::stress_energy_scalar
+        SYNC: TmunuBase::stress_energy_tensor
+        SYNC: TmunuBase::stress_energy_vector
+        READS: TmunuBase::stress_energy_state
+        READS: admbase::alp(Everywhere)
+        READS: admbase::gxx(Everywhere)
+        READS: admbase::gxy(Everywhere)
+        READS: admbase::gxz(Everywhere)
+        READS: admbase::gyy(Everywhere)
+        READS: admbase::gyz(Everywhere)
+        READS: admbase::gzz(Everywhere)
+        READS: admbase::betax(Everywhere)
+        READS: admbase::betay(Everywhere)
+        READS: admbase::betaz(Everywhere)
+        READS: TmunuBase::eTtt(Everywhere)
+        READS: TmunuBase::eTxx(Everywhere)
+        READS: TmunuBase::eTxy(Everywhere)
+        READS: TmunuBase::eTxz(Everywhere)
+        READS: TmunuBase::eTyy(Everywhere)
+        READS: TmunuBase::eTyz(Everywhere)
+        READS: TmunuBase::eTzz(Everywhere)
+        READS: TmunuBase::eTtx(Everywhere)
+        READS: TmunuBase::eTty(Everywhere)
+        READS: TmunuBase::eTtz(Everywhere)
+        READS: EvolveScalarFields::phia(Everywhere)
+        READS: EvolveScalarFields::phib(Everywhere)
+        READS: EvolveScalarFields::pia(Everywhere)
+        READS: EvolveScalarFields::pib(Everywhere)
+        READS: EvolveScalarFields::gLocal11(Everywhere)
+        READS: EvolveScalarFields::gLocal21(Everywhere)
+        READS: EvolveScalarFields::gLocal31(Everywhere)
+        READS: EvolveScalarFields::gLocal22(Everywhere)
+        READS: EvolveScalarFields::gLocal32(Everywhere)
+        READS: EvolveScalarFields::gLocal33(Everywhere)
+        WRITES: TmunuBase::eTtt(Interior)
+        WRITES: TmunuBase::eTtx(Interior)
+        WRITES: TmunuBase::eTty(Interior)
+        WRITES: TmunuBase::eTtz(Interior)
+        WRITES: TmunuBase::eTxx(Interior)
+        WRITES: TmunuBase::eTxy(Interior)
+        WRITES: TmunuBase::eTxz(Interior)
+        WRITES: TmunuBase::eTyy(Interior)
+        WRITES: TmunuBase::eTyz(Interior)
+        WRITES: TmunuBase::eTzz(Interior)
+        WRITES: EvolveScalarFields::SFTtt(Interior)
+      } "EvolveScalarFields_ScalarFieldTmunu_linear_6th"
     }
   }
 }
@@ -2127,6 +2320,974 @@ if (CCTK_EQUALS(potential_type, "inflation"))
   }
 }
 
+if (CCTK_EQUALS(potential_type, "linear"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "full4th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldrho_linear_full4th_group in MoL_PseudoEvolution after ADMBase_SetADMVars
+      {
+      } "EvolveScalarFields_ScalarFieldrho_linear_full4th"
+    }
+  }
+}
+
+schedule EvolveScalarFields_ScalarFieldrho_linear_full4th in EvolveScalarFields_ScalarFieldrho_linear_full4th_group
+{
+  LANG: C
+  READS: admbase::alp(Everywhere)
+  READS: admbase::gxx(Everywhere)
+  READS: admbase::gxy(Everywhere)
+  READS: admbase::gxz(Everywhere)
+  READS: admbase::gyy(Everywhere)
+  READS: admbase::gyz(Everywhere)
+  READS: admbase::gzz(Everywhere)
+  READS: admbase::betax(Everywhere)
+  READS: admbase::betay(Everywhere)
+  READS: admbase::betaz(Everywhere)
+  READS: EvolveScalarFields::phia(Everywhere)
+  READS: EvolveScalarFields::phib(Everywhere)
+  READS: EvolveScalarFields::pia(Everywhere)
+  READS: EvolveScalarFields::pib(Everywhere)
+  READS: EvolveScalarFields::gLocal11(Everywhere)
+  READS: EvolveScalarFields::gLocal21(Everywhere)
+  READS: EvolveScalarFields::gLocal31(Everywhere)
+  READS: EvolveScalarFields::gLocal22(Everywhere)
+  READS: EvolveScalarFields::gLocal32(Everywhere)
+  READS: EvolveScalarFields::gLocal33(Everywhere)
+  WRITES: EvolveScalarFields::rhoE(Interior)
+  WRITES: EvolveScalarFields::SFTtt(Interior)
+} "EvolveScalarFields_ScalarFieldrho_linear_full4th"
+
+schedule EvolveScalarFields_ScalarFieldrho_linear_full4th_SelectBCs in EvolveScalarFields_ScalarFieldrho_linear_full4th_bc_group
+{
+  LANG: C
+  OPTIONS: level
+  SYNC: rhoE_group
+  SYNC: SFTtt_group
+} "EvolveScalarFields_ScalarFieldrho_linear_full4th_SelectBCs"
+
+schedule group ApplyBCs as EvolveScalarFields_ScalarFieldrho_linear_full4th_ApplyBCs in EvolveScalarFields_ScalarFieldrho_linear_full4th_bc_group after EvolveScalarFields_ScalarFieldrho_linear_full4th_SelectBCs
+{
+} "Apply BCs for groups set in EvolveScalarFields_ScalarFieldrho_linear_full4th"
+
+if (CCTK_EQUALS(potential_type, "linear"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "full4th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldrho_linear_full4th_bc_group in EvolveScalarFields_ScalarFieldrho_linear_full4th_group after EvolveScalarFields_ScalarFieldrho_linear_full4th
+      {
+      } "EvolveScalarFields_ScalarFieldrho_linear_full4th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "linear"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "full4th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldrho_linear_full4th_bc_group in MoL_PseudoEvolutionBoundaries after MoL_PostStep
+      {
+      } "EvolveScalarFields_ScalarFieldrho_linear_full4th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "linear"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "6th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldrho_linear_6th_group in MoL_PseudoEvolution after ADMBase_SetADMVars
+      {
+      } "EvolveScalarFields_ScalarFieldrho_linear_6th"
+    }
+  }
+}
+
+schedule EvolveScalarFields_ScalarFieldrho_linear_6th in EvolveScalarFields_ScalarFieldrho_linear_6th_group
+{
+  LANG: C
+  READS: admbase::alp(Everywhere)
+  READS: admbase::gxx(Everywhere)
+  READS: admbase::gxy(Everywhere)
+  READS: admbase::gxz(Everywhere)
+  READS: admbase::gyy(Everywhere)
+  READS: admbase::gyz(Everywhere)
+  READS: admbase::gzz(Everywhere)
+  READS: admbase::betax(Everywhere)
+  READS: admbase::betay(Everywhere)
+  READS: admbase::betaz(Everywhere)
+  READS: EvolveScalarFields::phia(Everywhere)
+  READS: EvolveScalarFields::phib(Everywhere)
+  READS: EvolveScalarFields::pia(Everywhere)
+  READS: EvolveScalarFields::pib(Everywhere)
+  READS: EvolveScalarFields::gLocal11(Everywhere)
+  READS: EvolveScalarFields::gLocal21(Everywhere)
+  READS: EvolveScalarFields::gLocal31(Everywhere)
+  READS: EvolveScalarFields::gLocal22(Everywhere)
+  READS: EvolveScalarFields::gLocal32(Everywhere)
+  READS: EvolveScalarFields::gLocal33(Everywhere)
+  WRITES: EvolveScalarFields::rhoE(Interior)
+  WRITES: EvolveScalarFields::SFTtt(Interior)
+} "EvolveScalarFields_ScalarFieldrho_linear_6th"
+
+schedule EvolveScalarFields_ScalarFieldrho_linear_6th_SelectBCs in EvolveScalarFields_ScalarFieldrho_linear_6th_bc_group
+{
+  LANG: C
+  OPTIONS: level
+  SYNC: rhoE_group
+  SYNC: SFTtt_group
+} "EvolveScalarFields_ScalarFieldrho_linear_6th_SelectBCs"
+
+schedule group ApplyBCs as EvolveScalarFields_ScalarFieldrho_linear_6th_ApplyBCs in EvolveScalarFields_ScalarFieldrho_linear_6th_bc_group after EvolveScalarFields_ScalarFieldrho_linear_6th_SelectBCs
+{
+} "Apply BCs for groups set in EvolveScalarFields_ScalarFieldrho_linear_6th"
+
+if (CCTK_EQUALS(potential_type, "linear"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "6th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldrho_linear_6th_bc_group in EvolveScalarFields_ScalarFieldrho_linear_6th_group after EvolveScalarFields_ScalarFieldrho_linear_6th
+      {
+      } "EvolveScalarFields_ScalarFieldrho_linear_6th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "linear"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "6th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldrho_linear_6th_bc_group in MoL_PseudoEvolutionBoundaries after MoL_PostStep
+      {
+      } "EvolveScalarFields_ScalarFieldrho_linear_6th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "none"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "full4th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_none_full4th_group in MoL_PseudoEvolution after ADMBase_SetADMVars
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_none_full4th"
+    }
+  }
+}
+
+schedule EvolveScalarFields_ScalarFieldAmplitude_none_full4th in EvolveScalarFields_ScalarFieldAmplitude_none_full4th_group
+{
+  LANG: C
+  READS: EvolveScalarFields::phia(Everywhere)
+  READS: EvolveScalarFields::phib(Everywhere)
+  WRITES: EvolveScalarFields::phiamp(Interior)
+} "EvolveScalarFields_ScalarFieldAmplitude_none_full4th"
+
+schedule EvolveScalarFields_ScalarFieldAmplitude_none_full4th_SelectBCs in EvolveScalarFields_ScalarFieldAmplitude_none_full4th_bc_group
+{
+  LANG: C
+  OPTIONS: level
+  SYNC: phiamp_group
+} "EvolveScalarFields_ScalarFieldAmplitude_none_full4th_SelectBCs"
+
+schedule group ApplyBCs as EvolveScalarFields_ScalarFieldAmplitude_none_full4th_ApplyBCs in EvolveScalarFields_ScalarFieldAmplitude_none_full4th_bc_group after EvolveScalarFields_ScalarFieldAmplitude_none_full4th_SelectBCs
+{
+} "Apply BCs for groups set in EvolveScalarFields_ScalarFieldAmplitude_none_full4th"
+
+if (CCTK_EQUALS(potential_type, "none"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "full4th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_none_full4th_bc_group in EvolveScalarFields_ScalarFieldAmplitude_none_full4th_group after EvolveScalarFields_ScalarFieldAmplitude_none_full4th
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_none_full4th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "none"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "full4th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_none_full4th_bc_group in MoL_PseudoEvolutionBoundaries after MoL_PostStep
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_none_full4th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "none"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "6th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_none_6th_group in MoL_PseudoEvolution after ADMBase_SetADMVars
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_none_6th"
+    }
+  }
+}
+
+schedule EvolveScalarFields_ScalarFieldAmplitude_none_6th in EvolveScalarFields_ScalarFieldAmplitude_none_6th_group
+{
+  LANG: C
+  READS: EvolveScalarFields::phia(Everywhere)
+  READS: EvolveScalarFields::phib(Everywhere)
+  WRITES: EvolveScalarFields::phiamp(Interior)
+} "EvolveScalarFields_ScalarFieldAmplitude_none_6th"
+
+schedule EvolveScalarFields_ScalarFieldAmplitude_none_6th_SelectBCs in EvolveScalarFields_ScalarFieldAmplitude_none_6th_bc_group
+{
+  LANG: C
+  OPTIONS: level
+  SYNC: phiamp_group
+} "EvolveScalarFields_ScalarFieldAmplitude_none_6th_SelectBCs"
+
+schedule group ApplyBCs as EvolveScalarFields_ScalarFieldAmplitude_none_6th_ApplyBCs in EvolveScalarFields_ScalarFieldAmplitude_none_6th_bc_group after EvolveScalarFields_ScalarFieldAmplitude_none_6th_SelectBCs
+{
+} "Apply BCs for groups set in EvolveScalarFields_ScalarFieldAmplitude_none_6th"
+
+if (CCTK_EQUALS(potential_type, "none"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "6th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_none_6th_bc_group in EvolveScalarFields_ScalarFieldAmplitude_none_6th_group after EvolveScalarFields_ScalarFieldAmplitude_none_6th
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_none_6th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "none"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "6th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_none_6th_bc_group in MoL_PseudoEvolutionBoundaries after MoL_PostStep
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_none_6th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "onlymass"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "full4th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_onlymass_full4th_group in MoL_PseudoEvolution after ADMBase_SetADMVars
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_onlymass_full4th"
+    }
+  }
+}
+
+schedule EvolveScalarFields_ScalarFieldAmplitude_onlymass_full4th in EvolveScalarFields_ScalarFieldAmplitude_onlymass_full4th_group
+{
+  LANG: C
+  READS: EvolveScalarFields::phia(Everywhere)
+  READS: EvolveScalarFields::phib(Everywhere)
+  WRITES: EvolveScalarFields::phiamp(Interior)
+} "EvolveScalarFields_ScalarFieldAmplitude_onlymass_full4th"
+
+schedule EvolveScalarFields_ScalarFieldAmplitude_onlymass_full4th_SelectBCs in EvolveScalarFields_ScalarFieldAmplitude_onlymass_full4th_bc_group
+{
+  LANG: C
+  OPTIONS: level
+  SYNC: phiamp_group
+} "EvolveScalarFields_ScalarFieldAmplitude_onlymass_full4th_SelectBCs"
+
+schedule group ApplyBCs as EvolveScalarFields_ScalarFieldAmplitude_onlymass_full4th_ApplyBCs in EvolveScalarFields_ScalarFieldAmplitude_onlymass_full4th_bc_group after EvolveScalarFields_ScalarFieldAmplitude_onlymass_full4th_SelectBCs
+{
+} "Apply BCs for groups set in EvolveScalarFields_ScalarFieldAmplitude_onlymass_full4th"
+
+if (CCTK_EQUALS(potential_type, "onlymass"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "full4th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_onlymass_full4th_bc_group in EvolveScalarFields_ScalarFieldAmplitude_onlymass_full4th_group after EvolveScalarFields_ScalarFieldAmplitude_onlymass_full4th
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_onlymass_full4th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "onlymass"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "full4th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_onlymass_full4th_bc_group in MoL_PseudoEvolutionBoundaries after MoL_PostStep
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_onlymass_full4th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "onlymass"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "6th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_onlymass_6th_group in MoL_PseudoEvolution after ADMBase_SetADMVars
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_onlymass_6th"
+    }
+  }
+}
+
+schedule EvolveScalarFields_ScalarFieldAmplitude_onlymass_6th in EvolveScalarFields_ScalarFieldAmplitude_onlymass_6th_group
+{
+  LANG: C
+  READS: EvolveScalarFields::phia(Everywhere)
+  READS: EvolveScalarFields::phib(Everywhere)
+  WRITES: EvolveScalarFields::phiamp(Interior)
+} "EvolveScalarFields_ScalarFieldAmplitude_onlymass_6th"
+
+schedule EvolveScalarFields_ScalarFieldAmplitude_onlymass_6th_SelectBCs in EvolveScalarFields_ScalarFieldAmplitude_onlymass_6th_bc_group
+{
+  LANG: C
+  OPTIONS: level
+  SYNC: phiamp_group
+} "EvolveScalarFields_ScalarFieldAmplitude_onlymass_6th_SelectBCs"
+
+schedule group ApplyBCs as EvolveScalarFields_ScalarFieldAmplitude_onlymass_6th_ApplyBCs in EvolveScalarFields_ScalarFieldAmplitude_onlymass_6th_bc_group after EvolveScalarFields_ScalarFieldAmplitude_onlymass_6th_SelectBCs
+{
+} "Apply BCs for groups set in EvolveScalarFields_ScalarFieldAmplitude_onlymass_6th"
+
+if (CCTK_EQUALS(potential_type, "onlymass"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "6th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_onlymass_6th_bc_group in EvolveScalarFields_ScalarFieldAmplitude_onlymass_6th_group after EvolveScalarFields_ScalarFieldAmplitude_onlymass_6th
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_onlymass_6th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "onlymass"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "6th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_onlymass_6th_bc_group in MoL_PseudoEvolutionBoundaries after MoL_PostStep
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_onlymass_6th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "axion"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "full4th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_axion_full4th_group in MoL_PseudoEvolution after ADMBase_SetADMVars
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_axion_full4th"
+    }
+  }
+}
+
+schedule EvolveScalarFields_ScalarFieldAmplitude_axion_full4th in EvolveScalarFields_ScalarFieldAmplitude_axion_full4th_group
+{
+  LANG: C
+  READS: EvolveScalarFields::phia(Everywhere)
+  READS: EvolveScalarFields::phib(Everywhere)
+  WRITES: EvolveScalarFields::phiamp(Interior)
+} "EvolveScalarFields_ScalarFieldAmplitude_axion_full4th"
+
+schedule EvolveScalarFields_ScalarFieldAmplitude_axion_full4th_SelectBCs in EvolveScalarFields_ScalarFieldAmplitude_axion_full4th_bc_group
+{
+  LANG: C
+  OPTIONS: level
+  SYNC: phiamp_group
+} "EvolveScalarFields_ScalarFieldAmplitude_axion_full4th_SelectBCs"
+
+schedule group ApplyBCs as EvolveScalarFields_ScalarFieldAmplitude_axion_full4th_ApplyBCs in EvolveScalarFields_ScalarFieldAmplitude_axion_full4th_bc_group after EvolveScalarFields_ScalarFieldAmplitude_axion_full4th_SelectBCs
+{
+} "Apply BCs for groups set in EvolveScalarFields_ScalarFieldAmplitude_axion_full4th"
+
+if (CCTK_EQUALS(potential_type, "axion"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "full4th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_axion_full4th_bc_group in EvolveScalarFields_ScalarFieldAmplitude_axion_full4th_group after EvolveScalarFields_ScalarFieldAmplitude_axion_full4th
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_axion_full4th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "axion"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "full4th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_axion_full4th_bc_group in MoL_PseudoEvolutionBoundaries after MoL_PostStep
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_axion_full4th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "axion"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "6th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_axion_6th_group in MoL_PseudoEvolution after ADMBase_SetADMVars
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_axion_6th"
+    }
+  }
+}
+
+schedule EvolveScalarFields_ScalarFieldAmplitude_axion_6th in EvolveScalarFields_ScalarFieldAmplitude_axion_6th_group
+{
+  LANG: C
+  READS: EvolveScalarFields::phia(Everywhere)
+  READS: EvolveScalarFields::phib(Everywhere)
+  WRITES: EvolveScalarFields::phiamp(Interior)
+} "EvolveScalarFields_ScalarFieldAmplitude_axion_6th"
+
+schedule EvolveScalarFields_ScalarFieldAmplitude_axion_6th_SelectBCs in EvolveScalarFields_ScalarFieldAmplitude_axion_6th_bc_group
+{
+  LANG: C
+  OPTIONS: level
+  SYNC: phiamp_group
+} "EvolveScalarFields_ScalarFieldAmplitude_axion_6th_SelectBCs"
+
+schedule group ApplyBCs as EvolveScalarFields_ScalarFieldAmplitude_axion_6th_ApplyBCs in EvolveScalarFields_ScalarFieldAmplitude_axion_6th_bc_group after EvolveScalarFields_ScalarFieldAmplitude_axion_6th_SelectBCs
+{
+} "Apply BCs for groups set in EvolveScalarFields_ScalarFieldAmplitude_axion_6th"
+
+if (CCTK_EQUALS(potential_type, "axion"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "6th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_axion_6th_bc_group in EvolveScalarFields_ScalarFieldAmplitude_axion_6th_group after EvolveScalarFields_ScalarFieldAmplitude_axion_6th
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_axion_6th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "axion"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "6th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_axion_6th_bc_group in MoL_PseudoEvolutionBoundaries after MoL_PostStep
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_axion_6th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "doublewell"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "full4th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_doublewell_full4th_group in MoL_PseudoEvolution after ADMBase_SetADMVars
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_doublewell_full4th"
+    }
+  }
+}
+
+schedule EvolveScalarFields_ScalarFieldAmplitude_doublewell_full4th in EvolveScalarFields_ScalarFieldAmplitude_doublewell_full4th_group
+{
+  LANG: C
+  READS: EvolveScalarFields::phia(Everywhere)
+  READS: EvolveScalarFields::phib(Everywhere)
+  WRITES: EvolveScalarFields::phiamp(Interior)
+} "EvolveScalarFields_ScalarFieldAmplitude_doublewell_full4th"
+
+schedule EvolveScalarFields_ScalarFieldAmplitude_doublewell_full4th_SelectBCs in EvolveScalarFields_ScalarFieldAmplitude_doublewell_full4th_bc_group
+{
+  LANG: C
+  OPTIONS: level
+  SYNC: phiamp_group
+} "EvolveScalarFields_ScalarFieldAmplitude_doublewell_full4th_SelectBCs"
+
+schedule group ApplyBCs as EvolveScalarFields_ScalarFieldAmplitude_doublewell_full4th_ApplyBCs in EvolveScalarFields_ScalarFieldAmplitude_doublewell_full4th_bc_group after EvolveScalarFields_ScalarFieldAmplitude_doublewell_full4th_SelectBCs
+{
+} "Apply BCs for groups set in EvolveScalarFields_ScalarFieldAmplitude_doublewell_full4th"
+
+if (CCTK_EQUALS(potential_type, "doublewell"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "full4th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_doublewell_full4th_bc_group in EvolveScalarFields_ScalarFieldAmplitude_doublewell_full4th_group after EvolveScalarFields_ScalarFieldAmplitude_doublewell_full4th
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_doublewell_full4th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "doublewell"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "full4th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_doublewell_full4th_bc_group in MoL_PseudoEvolutionBoundaries after MoL_PostStep
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_doublewell_full4th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "doublewell"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "6th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_doublewell_6th_group in MoL_PseudoEvolution after ADMBase_SetADMVars
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_doublewell_6th"
+    }
+  }
+}
+
+schedule EvolveScalarFields_ScalarFieldAmplitude_doublewell_6th in EvolveScalarFields_ScalarFieldAmplitude_doublewell_6th_group
+{
+  LANG: C
+  READS: EvolveScalarFields::phia(Everywhere)
+  READS: EvolveScalarFields::phib(Everywhere)
+  WRITES: EvolveScalarFields::phiamp(Interior)
+} "EvolveScalarFields_ScalarFieldAmplitude_doublewell_6th"
+
+schedule EvolveScalarFields_ScalarFieldAmplitude_doublewell_6th_SelectBCs in EvolveScalarFields_ScalarFieldAmplitude_doublewell_6th_bc_group
+{
+  LANG: C
+  OPTIONS: level
+  SYNC: phiamp_group
+} "EvolveScalarFields_ScalarFieldAmplitude_doublewell_6th_SelectBCs"
+
+schedule group ApplyBCs as EvolveScalarFields_ScalarFieldAmplitude_doublewell_6th_ApplyBCs in EvolveScalarFields_ScalarFieldAmplitude_doublewell_6th_bc_group after EvolveScalarFields_ScalarFieldAmplitude_doublewell_6th_SelectBCs
+{
+} "Apply BCs for groups set in EvolveScalarFields_ScalarFieldAmplitude_doublewell_6th"
+
+if (CCTK_EQUALS(potential_type, "doublewell"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "6th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_doublewell_6th_bc_group in EvolveScalarFields_ScalarFieldAmplitude_doublewell_6th_group after EvolveScalarFields_ScalarFieldAmplitude_doublewell_6th
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_doublewell_6th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "doublewell"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "6th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_doublewell_6th_bc_group in MoL_PseudoEvolutionBoundaries after MoL_PostStep
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_doublewell_6th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "phiFourth"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "full4th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_phiFourth_full4th_group in MoL_PseudoEvolution after ADMBase_SetADMVars
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_phiFourth_full4th"
+    }
+  }
+}
+
+schedule EvolveScalarFields_ScalarFieldAmplitude_phiFourth_full4th in EvolveScalarFields_ScalarFieldAmplitude_phiFourth_full4th_group
+{
+  LANG: C
+  READS: EvolveScalarFields::phia(Everywhere)
+  READS: EvolveScalarFields::phib(Everywhere)
+  WRITES: EvolveScalarFields::phiamp(Interior)
+} "EvolveScalarFields_ScalarFieldAmplitude_phiFourth_full4th"
+
+schedule EvolveScalarFields_ScalarFieldAmplitude_phiFourth_full4th_SelectBCs in EvolveScalarFields_ScalarFieldAmplitude_phiFourth_full4th_bc_group
+{
+  LANG: C
+  OPTIONS: level
+  SYNC: phiamp_group
+} "EvolveScalarFields_ScalarFieldAmplitude_phiFourth_full4th_SelectBCs"
+
+schedule group ApplyBCs as EvolveScalarFields_ScalarFieldAmplitude_phiFourth_full4th_ApplyBCs in EvolveScalarFields_ScalarFieldAmplitude_phiFourth_full4th_bc_group after EvolveScalarFields_ScalarFieldAmplitude_phiFourth_full4th_SelectBCs
+{
+} "Apply BCs for groups set in EvolveScalarFields_ScalarFieldAmplitude_phiFourth_full4th"
+
+if (CCTK_EQUALS(potential_type, "phiFourth"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "full4th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_phiFourth_full4th_bc_group in EvolveScalarFields_ScalarFieldAmplitude_phiFourth_full4th_group after EvolveScalarFields_ScalarFieldAmplitude_phiFourth_full4th
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_phiFourth_full4th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "phiFourth"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "full4th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_phiFourth_full4th_bc_group in MoL_PseudoEvolutionBoundaries after MoL_PostStep
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_phiFourth_full4th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "phiFourth"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "6th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_phiFourth_6th_group in MoL_PseudoEvolution after ADMBase_SetADMVars
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_phiFourth_6th"
+    }
+  }
+}
+
+schedule EvolveScalarFields_ScalarFieldAmplitude_phiFourth_6th in EvolveScalarFields_ScalarFieldAmplitude_phiFourth_6th_group
+{
+  LANG: C
+  READS: EvolveScalarFields::phia(Everywhere)
+  READS: EvolveScalarFields::phib(Everywhere)
+  WRITES: EvolveScalarFields::phiamp(Interior)
+} "EvolveScalarFields_ScalarFieldAmplitude_phiFourth_6th"
+
+schedule EvolveScalarFields_ScalarFieldAmplitude_phiFourth_6th_SelectBCs in EvolveScalarFields_ScalarFieldAmplitude_phiFourth_6th_bc_group
+{
+  LANG: C
+  OPTIONS: level
+  SYNC: phiamp_group
+} "EvolveScalarFields_ScalarFieldAmplitude_phiFourth_6th_SelectBCs"
+
+schedule group ApplyBCs as EvolveScalarFields_ScalarFieldAmplitude_phiFourth_6th_ApplyBCs in EvolveScalarFields_ScalarFieldAmplitude_phiFourth_6th_bc_group after EvolveScalarFields_ScalarFieldAmplitude_phiFourth_6th_SelectBCs
+{
+} "Apply BCs for groups set in EvolveScalarFields_ScalarFieldAmplitude_phiFourth_6th"
+
+if (CCTK_EQUALS(potential_type, "phiFourth"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "6th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_phiFourth_6th_bc_group in EvolveScalarFields_ScalarFieldAmplitude_phiFourth_6th_group after EvolveScalarFields_ScalarFieldAmplitude_phiFourth_6th
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_phiFourth_6th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "phiFourth"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "6th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_phiFourth_6th_bc_group in MoL_PseudoEvolutionBoundaries after MoL_PostStep
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_phiFourth_6th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "inflation"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "full4th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_inflation_full4th_group in MoL_PseudoEvolution after ADMBase_SetADMVars
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_inflation_full4th"
+    }
+  }
+}
+
+schedule EvolveScalarFields_ScalarFieldAmplitude_inflation_full4th in EvolveScalarFields_ScalarFieldAmplitude_inflation_full4th_group
+{
+  LANG: C
+  READS: EvolveScalarFields::phia(Everywhere)
+  READS: EvolveScalarFields::phib(Everywhere)
+  WRITES: EvolveScalarFields::phiamp(Interior)
+} "EvolveScalarFields_ScalarFieldAmplitude_inflation_full4th"
+
+schedule EvolveScalarFields_ScalarFieldAmplitude_inflation_full4th_SelectBCs in EvolveScalarFields_ScalarFieldAmplitude_inflation_full4th_bc_group
+{
+  LANG: C
+  OPTIONS: level
+  SYNC: phiamp_group
+} "EvolveScalarFields_ScalarFieldAmplitude_inflation_full4th_SelectBCs"
+
+schedule group ApplyBCs as EvolveScalarFields_ScalarFieldAmplitude_inflation_full4th_ApplyBCs in EvolveScalarFields_ScalarFieldAmplitude_inflation_full4th_bc_group after EvolveScalarFields_ScalarFieldAmplitude_inflation_full4th_SelectBCs
+{
+} "Apply BCs for groups set in EvolveScalarFields_ScalarFieldAmplitude_inflation_full4th"
+
+if (CCTK_EQUALS(potential_type, "inflation"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "full4th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_inflation_full4th_bc_group in EvolveScalarFields_ScalarFieldAmplitude_inflation_full4th_group after EvolveScalarFields_ScalarFieldAmplitude_inflation_full4th
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_inflation_full4th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "inflation"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "full4th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_inflation_full4th_bc_group in MoL_PseudoEvolutionBoundaries after MoL_PostStep
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_inflation_full4th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "inflation"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "6th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_inflation_6th_group in MoL_PseudoEvolution after ADMBase_SetADMVars
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_inflation_6th"
+    }
+  }
+}
+
+schedule EvolveScalarFields_ScalarFieldAmplitude_inflation_6th in EvolveScalarFields_ScalarFieldAmplitude_inflation_6th_group
+{
+  LANG: C
+  READS: EvolveScalarFields::phia(Everywhere)
+  READS: EvolveScalarFields::phib(Everywhere)
+  WRITES: EvolveScalarFields::phiamp(Interior)
+} "EvolveScalarFields_ScalarFieldAmplitude_inflation_6th"
+
+schedule EvolveScalarFields_ScalarFieldAmplitude_inflation_6th_SelectBCs in EvolveScalarFields_ScalarFieldAmplitude_inflation_6th_bc_group
+{
+  LANG: C
+  OPTIONS: level
+  SYNC: phiamp_group
+} "EvolveScalarFields_ScalarFieldAmplitude_inflation_6th_SelectBCs"
+
+schedule group ApplyBCs as EvolveScalarFields_ScalarFieldAmplitude_inflation_6th_ApplyBCs in EvolveScalarFields_ScalarFieldAmplitude_inflation_6th_bc_group after EvolveScalarFields_ScalarFieldAmplitude_inflation_6th_SelectBCs
+{
+} "Apply BCs for groups set in EvolveScalarFields_ScalarFieldAmplitude_inflation_6th"
+
+if (CCTK_EQUALS(potential_type, "inflation"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "6th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_inflation_6th_bc_group in EvolveScalarFields_ScalarFieldAmplitude_inflation_6th_group after EvolveScalarFields_ScalarFieldAmplitude_inflation_6th
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_inflation_6th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "inflation"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "6th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_inflation_6th_bc_group in MoL_PseudoEvolutionBoundaries after MoL_PostStep
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_inflation_6th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "linear"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "full4th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_linear_full4th_group in MoL_PseudoEvolution after ADMBase_SetADMVars
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_linear_full4th"
+    }
+  }
+}
+
+schedule EvolveScalarFields_ScalarFieldAmplitude_linear_full4th in EvolveScalarFields_ScalarFieldAmplitude_linear_full4th_group
+{
+  LANG: C
+  READS: EvolveScalarFields::phia(Everywhere)
+  READS: EvolveScalarFields::phib(Everywhere)
+  WRITES: EvolveScalarFields::phiamp(Interior)
+} "EvolveScalarFields_ScalarFieldAmplitude_linear_full4th"
+
+schedule EvolveScalarFields_ScalarFieldAmplitude_linear_full4th_SelectBCs in EvolveScalarFields_ScalarFieldAmplitude_linear_full4th_bc_group
+{
+  LANG: C
+  OPTIONS: level
+  SYNC: phiamp_group
+} "EvolveScalarFields_ScalarFieldAmplitude_linear_full4th_SelectBCs"
+
+schedule group ApplyBCs as EvolveScalarFields_ScalarFieldAmplitude_linear_full4th_ApplyBCs in EvolveScalarFields_ScalarFieldAmplitude_linear_full4th_bc_group after EvolveScalarFields_ScalarFieldAmplitude_linear_full4th_SelectBCs
+{
+} "Apply BCs for groups set in EvolveScalarFields_ScalarFieldAmplitude_linear_full4th"
+
+if (CCTK_EQUALS(potential_type, "linear"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "full4th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_linear_full4th_bc_group in EvolveScalarFields_ScalarFieldAmplitude_linear_full4th_group after EvolveScalarFields_ScalarFieldAmplitude_linear_full4th
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_linear_full4th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "linear"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "full4th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_linear_full4th_bc_group in MoL_PseudoEvolutionBoundaries after MoL_PostStep
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_linear_full4th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "linear"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "6th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_linear_6th_group in MoL_PseudoEvolution after ADMBase_SetADMVars
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_linear_6th"
+    }
+  }
+}
+
+schedule EvolveScalarFields_ScalarFieldAmplitude_linear_6th in EvolveScalarFields_ScalarFieldAmplitude_linear_6th_group
+{
+  LANG: C
+  READS: EvolveScalarFields::phia(Everywhere)
+  READS: EvolveScalarFields::phib(Everywhere)
+  WRITES: EvolveScalarFields::phiamp(Interior)
+} "EvolveScalarFields_ScalarFieldAmplitude_linear_6th"
+
+schedule EvolveScalarFields_ScalarFieldAmplitude_linear_6th_SelectBCs in EvolveScalarFields_ScalarFieldAmplitude_linear_6th_bc_group
+{
+  LANG: C
+  OPTIONS: level
+  SYNC: phiamp_group
+} "EvolveScalarFields_ScalarFieldAmplitude_linear_6th_SelectBCs"
+
+schedule group ApplyBCs as EvolveScalarFields_ScalarFieldAmplitude_linear_6th_ApplyBCs in EvolveScalarFields_ScalarFieldAmplitude_linear_6th_bc_group after EvolveScalarFields_ScalarFieldAmplitude_linear_6th_SelectBCs
+{
+} "Apply BCs for groups set in EvolveScalarFields_ScalarFieldAmplitude_linear_6th"
+
+if (CCTK_EQUALS(potential_type, "linear"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "6th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_linear_6th_bc_group in EvolveScalarFields_ScalarFieldAmplitude_linear_6th_group after EvolveScalarFields_ScalarFieldAmplitude_linear_6th
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_linear_6th"
+    }
+  }
+}
+
+if (CCTK_EQUALS(potential_type, "linear"))
+{
+  if (CCTK_EQUALS(couple_scalar_field_to_gravity, "yes"))
+  {
+    if (CCTK_EQUALS(fd_order, "6th"))
+    {
+      schedule group EvolveScalarFields_ScalarFieldAmplitude_linear_6th_bc_group in MoL_PseudoEvolutionBoundaries after MoL_PostStep
+      {
+      } "EvolveScalarFields_ScalarFieldAmplitude_linear_6th"
+    }
+  }
+}
+
 if (CCTK_EQUALS(boundary_condition, "radiative"))
 {
   schedule EvolveScalarFields_boundaryRadiative in MoL_RHSBoundaries as ScalarFieldBoundaries
@@ -2140,6 +3301,7 @@ if (CCTK_EQUALS(boundary_condition, "radiative"))
     READS: EvolveScalarFields::phib(Everywhere)
     READS: EvolveScalarFields::pia(Everywhere)
     READS: EvolveScalarFields::pib(Everywhere)
+    WRITES: EvolveScalarFields::phiamp(Boundary)
     WRITES: EvolveScalarFields::phiarhs(Boundary)
     WRITES: EvolveScalarFields::phibrhs(Boundary)
     WRITES: EvolveScalarFields::piarhs(Boundary)
@@ -2161,6 +3323,7 @@ if (CCTK_EQUALS(boundary_condition, "phi_of_t"))
     READS: EvolveScalarFields::phib(Everywhere)
     READS: EvolveScalarFields::pia(Everywhere)
     READS: EvolveScalarFields::pib(Everywhere)
+    WRITES: EvolveScalarFields::phiamp(Boundary)
     WRITES: EvolveScalarFields::phiarhs(Boundary)
     WRITES: EvolveScalarFields::phibrhs(Boundary)
     WRITES: EvolveScalarFields::piarhs(Boundary)

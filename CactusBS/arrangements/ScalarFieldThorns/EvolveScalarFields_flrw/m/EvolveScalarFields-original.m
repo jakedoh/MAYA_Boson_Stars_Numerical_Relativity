@@ -58,7 +58,7 @@ Map[DefineTensor,
   g, gInv, gLocal, gLocalInv, 
   kcurv, kLocal, KtraceLocal, ktrace,
   Gam3, Gam0ij, Gamkij, (*define the variables of metric and Connections*)
-  Tmn, rhoE, TmnLocal, ttrace,
+  Tmn, rhoE, phiamp, TmnLocal, ttrace,
   pia, phia, pib, phib, SFSi, dtphia, dtphib, (*vpotential,*)(*define the variables of scalar fields*)
   (*ginvphiaa, ginvphiab, ginvphibb, gvphiaa, gvphiab, gvphibb, Gamaaa, Gamaab, Gamabb, (*define the curverd target space of the scalar fields*)*)
   SFTtt, SFTtj, SFTij
@@ -99,7 +99,7 @@ admGroups =
    {"admbase::lapse", {alp}},
    {"admbase::shift", {betax,betay,betaz}}};
 
-evaluatedGroups = Map[CreateGroupFromTensor,{gLocal[li,lj], ttrace, SFTtt, rhoE}];
+evaluatedGroups = Map[CreateGroupFromTensor,{gLocal[li,lj], ttrace, SFTtt, rhoE, phiamp}];
 evaluatedGroups = Map[AddGroupExtra[#, Timelevels -> 3] &, evaluatedGroups];
 
 stressenergyGroups =
@@ -199,7 +199,8 @@ initGFsCalc =
     pia       -> 0,
     phib      -> 0,
     pib       -> 0,
-    rhoE       -> 0
+    rhoE       -> 0,
+    phiamp     -> 0
     (*vpotential-> 0*)
   }
 };
@@ -217,6 +218,7 @@ Vonlymass[phia_, phib_]:= 1/2*controlmasspositiveornegative*phiamass^2*phia^2 + 
 Vdoublewell[phia_, phib_]:= 1/2 phiamass^2 phia^2 + 1/2 phibmass^2 phib^2 +  gcouple/2 phia^2 phib^2  + lambdaphian/4 (phia^2-phiav^2)^2 + lambdaphibn/4 (phib^2-phibv^2)^2; 
 VphiFourthall[phia_, phib_]:= 1/2 phiamass^2 phia^2 + 1/2 phibmass^2 phib^2+ lambdaphia/4 phia^4 + lambdaphib/4 phib^4 + gcouple/2 phia^2 phib^2 + lambdaphian/4 (phia^2-phiav^2)^2  + lambdaphibn/4 (phib^2-phibv^2)^2; 
 Vphiinflation[phia_, phib_]:= Vi0 + lambdaphia/4 (phia^2-phi00^2)^2  + lambdaphibn/4 (phib^2-phibv^2)^2; 
+Vphilinear[phia_, phib_] := Vi0 + lambdaphia (phia) + lambdaphibn (phib); 
 
 Vprimea[V_,x_,y_]:= D[V[x, y], x];
 Vprimeb[V_,x_,y_]:= D[V[x, y], y];
@@ -224,7 +226,7 @@ potentialParam =
 {
   Name -> "potential_type",
   Default -> "doublewell",
-  AllowedValues -> {"none","onlymass","axion","doublewell","phiFourth", "inflation"}
+  AllowedValues -> {"none","onlymass","axion","doublewell","phiFourth", "inflation", "linear"}
 };
 
 
@@ -376,6 +378,22 @@ ScalarFieldrhoCalc[fdOrder_,PD_, PDadvect_, potential_, V_] :=
   }
 };
 
+ScalarFieldAmplitudeCalc[fdOrder_,PD_, PDadvect_, potential_, V_] :=
+{
+  Name -> fnPrefix <> "_ScalarFieldAmplitude_" <> potential <> "_" <> fdOrder,
+  Schedule -> Automatic,
+  After -> "ADMBase_SetADMVars",
+  (*Schedule -> {"in AddToTmunu as ScalarFieldTmunu after Whisky_SetTmunu"},*)
+  Where -> Interior,
+  ConditionalOnKeywords -> {{"fd_order", fdOrder},{"couple_scalar_field_to_gravity","yes"},{"potential_type",potential}},
+  Shorthands -> shorthands,
+  Equations ->
+  {
+     
+      phiamp -> (phia^2 + phib^2)^(1/2)
+
+  }
+};
 
 (**************************************************************************************)
 (* Boundary conditions *)
@@ -416,8 +434,9 @@ boundaryCalc =
     dot[pib]  -> -(pib - pibBG)/r + n[uk] PDonesided2nd[pib,lk],
     dot[phib] -> -(phib-phibBG)/r + n[uk] PDonesided2nd[phib,lk],
 
-    (* clear rho in boundaries to get rid of poison *)
-    rhoE -> 0
+    (* clear rho and scalar field amplitude in boundaries to get rid of poison *)
+    rhoE -> 0,
+    phiamp -> 0
 
   }
 };
@@ -450,8 +469,9 @@ boundaryPhiOfTCalc =
     dot[pib]  -> -(pib - pibBG  )/r + n[uk] PDonesided2nd[pib,lk],
     dot[phib] -> -(phib- pibBG*t)/r + n[uk] PDonesided2nd[phib,lk],
 
-    (* clear rho in boundaries to get rid of poison *)
-    rhoE -> 0
+    (* clear rho and scalar field amplitude in boundaries to get rid of poison *)
+    rhoE -> 0,
+    phiamp -> 0
 
   }
 };
@@ -477,12 +497,15 @@ calculations =
   evolveScalarField["6th", PDstandard6th, PDlopsided6th,"phiFourth",VphiFourthall],
   evolveScalarField["full4th", PDstandard4th, PDlopsided4th,"inflation",Vphiinflation],
   evolveScalarField["6th", PDstandard6th, PDlopsided6th,"inflation",Vphiinflation],
+  evolveScalarField["full4th", PDstandard4th, PDlopsided4th,"linear",Vphilinear],
+  evolveScalarField["6th", PDstandard6th, PDlopsided6th,"linear",Vphilinear],
   
 (*  AddPotentialToRHS["none",Vnone],
   AddPotentialToRHS["onlymass",Vonlymass],
   AddPotentialToRHS["phiFourth",VphiFourthall],
   AddPotentialToRHS["doublewell",Vdoublewell],
-  AddPotentialToRHS["inflation",Vphiinflation],*)
+  AddPotentialToRHS["inflation",Vphiinflation],
+  AddPotentialToRHS["linear",Vphilinear],*)
 
   ScalarFieldTmunuCalc["full4th", PDstandard4th,PDlopsided4th,"none",Vnone],
   ScalarFieldTmunuCalc["6th", PDstandard6th,PDlopsided6th,"none",Vnone],
@@ -496,6 +519,8 @@ calculations =
   ScalarFieldTmunuCalc["6th", PDstandard6th,PDlopsided6th,"phiFourth",VphiFourthall],
   ScalarFieldTmunuCalc["full4th", PDstandard4th,PDlopsided4th,"inflation",Vphiinflation],
   ScalarFieldTmunuCalc["6th", PDstandard6th,PDlopsided6th,"inflation",Vphiinflation],
+  ScalarFieldTmunuCalc["full4th", PDstandard4th,PDlopsided4th,"linear",Vphilinear],
+  ScalarFieldTmunuCalc["6th", PDstandard6th,PDlopsided6th,"linear",Vphilinear],
 
 
   ScalarFieldrhoCalc["full4th", PDstandard4th,PDlopsided4th,"none",Vnone],
@@ -510,7 +535,24 @@ calculations =
   ScalarFieldrhoCalc["6th", PDstandard6th,PDlopsided6th,"phiFourth",VphiFourthall],
   ScalarFieldrhoCalc["full4th", PDstandard4th,PDlopsided4th,"inflation",Vphiinflation],
   ScalarFieldrhoCalc["6th", PDstandard6th,PDlopsided6th,"inflation",Vphiinflation],
-  
+  ScalarFieldrhoCalc["full4th", PDstandard4th,PDlopsided4th,"linear",Vphilinear],
+  ScalarFieldrhoCalc["6th", PDstandard6th,PDlopsided6th,"linear",Vphilinear],  
+
+  ScalarFieldAmplitudeCalc["full4th", PDstandard4th,PDlopsided4th,"none",Vnone],
+  ScalarFieldAmplitudeCalc["6th", PDstandard6th,PDlopsided6th,"none",Vnone],
+  ScalarFieldAmplitudeCalc["full4th", PDstandard4th,PDlopsided4th,"onlymass",Vonlymass],
+  ScalarFieldAmplitudeCalc["6th", PDstandard6th,PDlopsided6th,"onlymass",Vonlymass],
+  ScalarFieldAmplitudeCalc["full4th", PDstandard4th,PDlopsided4th,"axion",Vaxion],
+  ScalarFieldAmplitudeCalc["6th", PDstandard6th,PDlopsided6th,"axion",Vaxion],
+  ScalarFieldAmplitudeCalc["full4th", PDstandard4th,PDlopsided4th,"doublewell",Vdoublewell],
+  ScalarFieldAmplitudeCalc["6th", PDstandard6th,PDlopsided6th,"doublewell",Vdoublewell],
+  ScalarFieldAmplitudeCalc["full4th", PDstandard4th,PDlopsided4th,"phiFourth",VphiFourthall],
+  ScalarFieldAmplitudeCalc["6th", PDstandard6th,PDlopsided6th,"phiFourth",VphiFourthall],
+  ScalarFieldAmplitudeCalc["full4th", PDstandard4th,PDlopsided4th,"inflation",Vphiinflation],
+  ScalarFieldAmplitudeCalc["6th", PDstandard6th,PDlopsided6th,"inflation",Vphiinflation],
+  ScalarFieldAmplitudeCalc["full4th", PDstandard4th,PDlopsided4th,"linear",Vphilinear],
+  ScalarFieldAmplitudeCalc["6th", PDstandard6th,PDlopsided6th,"linear",Vphilinear],
+
   boundaryCalc,
   boundaryPhiOfTCalc
 };

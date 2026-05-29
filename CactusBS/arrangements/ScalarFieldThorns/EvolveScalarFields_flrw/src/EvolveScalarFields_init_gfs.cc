@@ -133,8 +133,11 @@ static void EvolveScalarFields_init_gfs_Body(const cGH* restrict const cctkGH, c
     CCTK_REAL pibL CCTK_ATTRIBUTE_UNUSED = 0;
     
     CCTK_REAL rhoEL CCTK_ATTRIBUTE_UNUSED = 0;
+    
+    CCTK_REAL phiampL CCTK_ATTRIBUTE_UNUSED = 0;
     /* Copy local copies back to grid functions */
     phia[index] = phiaL;
+    phiamp[index] = phiampL;
     phib[index] = phibL;
     pia[index] = piaL;
     pib[index] = pibL;
@@ -162,11 +165,12 @@ extern "C" void EvolveScalarFields_init_gfs(CCTK_ARGUMENTS)
   
   const char* const groups[] = {
     "EvolveScalarFields::phia_group",
+    "EvolveScalarFields::phiamp_group",
     "EvolveScalarFields::phib_group",
     "EvolveScalarFields::pia_group",
     "EvolveScalarFields::pib_group",
     "EvolveScalarFields::rhoE_group"};
-  AssertGroupStorage(cctkGH, "EvolveScalarFields_init_gfs", 5, groups);
+  AssertGroupStorage(cctkGH, "EvolveScalarFields_init_gfs", 6, groups);
   
   
   LoopOverEverything(cctkGH, EvolveScalarFields_init_gfs_Body);

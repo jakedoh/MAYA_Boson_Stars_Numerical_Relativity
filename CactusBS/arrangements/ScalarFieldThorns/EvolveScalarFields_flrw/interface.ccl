@@ -97,6 +97,12 @@ CCTK_REAL rhoE_group type=GF timelevels=3 tags='tensortypealias="Scalar" tensorw
 } "rhoE_group"
 
 public:
+CCTK_REAL phiamp_group type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0'
+{
+  phiamp
+} "phiamp_group"
+
+public:
 CCTK_REAL phia_grouprhs type=GF timelevels=3 tags='tensortypealias="Scalar" tensorweight=0 Prolongation="None"'
 {
   phiarhs

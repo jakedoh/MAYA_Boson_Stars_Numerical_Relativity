@@ -83,4 +83,9 @@ extern "C" void EvolveScalarFields_RegisterSymmetries(CCTK_ARGUMENTS)
   sym[2] = 1;
   SetCartSymVN(cctkGH, sym, "EvolveScalarFields::rhoE");
   
+  sym[0] = 1;
+  sym[1] = 1;
+  sym[2] = 1;
+  SetCartSymVN(cctkGH, sym, "EvolveScalarFields::phiamp");
+  
 }

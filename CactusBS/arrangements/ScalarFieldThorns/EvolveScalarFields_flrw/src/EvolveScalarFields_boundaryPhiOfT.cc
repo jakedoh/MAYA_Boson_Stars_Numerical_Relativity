@@ -32,6 +32,9 @@ extern "C" void EvolveScalarFields_boundaryPhiOfT_SelectBCs(CCTK_ARGUMENTS)
   ierr = KrancBdy_SelectGroupForBC(cctkGH, CCTK_ALL_FACES, GetBoundaryWidth(cctkGH), -1 /* no table */, "EvolveScalarFields::phia_grouprhs","flat");
   if (ierr < 0)
     CCTK_WARN(CCTK_WARN_ALERT, "Failed to register flat BC for EvolveScalarFields::phia_grouprhs.");
+  ierr = KrancBdy_SelectGroupForBC(cctkGH, CCTK_ALL_FACES, GetBoundaryWidth(cctkGH), -1 /* no table */, "EvolveScalarFields::phiamp_group","flat");
+  if (ierr < 0)
+    CCTK_WARN(CCTK_WARN_ALERT, "Failed to register flat BC for EvolveScalarFields::phiamp_group.");
   ierr = KrancBdy_SelectGroupForBC(cctkGH, CCTK_ALL_FACES, GetBoundaryWidth(cctkGH), -1 /* no table */, "EvolveScalarFields::phib_grouprhs","flat");
   if (ierr < 0)
     CCTK_WARN(CCTK_WARN_ALERT, "Failed to register flat BC for EvolveScalarFields::phib_grouprhs.");
@@ -190,7 +193,10 @@ static void EvolveScalarFields_boundaryPhiOfT_Body(const cGH* restrict const cct
       PDonesided2nd3(&phib[index])*n3 + (-phibL + pibBG*t)*pow(rL,-1);
     
     CCTK_REAL rhoEL CCTK_ATTRIBUTE_UNUSED = 0;
+    
+    CCTK_REAL phiampL CCTK_ATTRIBUTE_UNUSED = 0;
     /* Copy local copies back to grid functions */
+    phiamp[index] = phiampL;
     phiarhs[index] = phiarhsL;
     phibrhs[index] = phibrhsL;
     piarhs[index] = piarhsL;
@@ -221,6 +227,7 @@ extern "C" void EvolveScalarFields_boundaryPhiOfT(CCTK_ARGUMENTS)
     "grid::coordinates",
     "EvolveScalarFields::phia_group",
     "EvolveScalarFields::phia_grouprhs",
+    "EvolveScalarFields::phiamp_group",
     "EvolveScalarFields::phib_group",
     "EvolveScalarFields::phib_grouprhs",
     "EvolveScalarFields::pia_group",
@@ -228,7 +235,7 @@ extern "C" void EvolveScalarFields_boundaryPhiOfT(CCTK_ARGUMENTS)
     "EvolveScalarFields::pib_group",
     "EvolveScalarFields::pib_grouprhs",
     "EvolveScalarFields::rhoE_group"};
-  AssertGroupStorage(cctkGH, "EvolveScalarFields_boundaryPhiOfT", 10, groups);
+  AssertGroupStorage(cctkGH, "EvolveScalarFields_boundaryPhiOfT", 11, groups);
   
   EnsureStencilFits(cctkGH, "EvolveScalarFields_boundaryPhiOfT", 2, 2, 2);
   
