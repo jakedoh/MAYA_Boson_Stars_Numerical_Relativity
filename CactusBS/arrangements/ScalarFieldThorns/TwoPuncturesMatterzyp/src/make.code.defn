@@ -1,8 +1,0 @@
-# Main make.code.defn file for thorn TwoPunctures
-# $Header: /numrelcvs/HerrmannCVS/TwoPunctures/src/make.code.defn,v 1.1 2004/08/04 13:15:02 herrmann Exp $
-
-# Source files in this directory
-SRCS = CoordTransf.c Equations.c FuncAndJacobian.c Newton.c TwoPunctures.c TP_utilities.c Teukolsky.c
-
-# Subdirectories containing source files
-SUBDIRS = 

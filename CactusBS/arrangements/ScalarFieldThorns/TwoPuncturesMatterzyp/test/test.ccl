@@ -1,9 +1,0 @@
-ABSTOL 1.e-9
-RELTOL 1.e-9
-
-TEST twopunctures
-{
-  NPROCS 1
-  ABSTOL 1.e-2
-  RELTOL 1.e-2
-}
