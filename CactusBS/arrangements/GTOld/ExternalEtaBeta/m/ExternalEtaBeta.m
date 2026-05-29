@@ -88,6 +88,9 @@ admGroups =
    {"admbase::shift", {betax,betay,betaz}}};
 
 declaredGroups = Map[CreateGroupFromTensor, {exetaBeta}];
+
+declaredGroups = Map[AddGroupExtra[#, Timelevels -> 3] &, declaredGroups];
+
 declaredGroupNames = Map[First, declaredGroups];
 
 groups = Join[declaredGroups, admGroups];

@@ -135,7 +135,11 @@ static void eta_beta_rescale_etaBeta_tanh_calc_Body(const cGH* restrict const cc
 }
 extern "C" void eta_beta_rescale_etaBeta_tanh_calc(CCTK_ARGUMENTS)
 {
+  #ifdef DECLARE_CCTK_ARGUMENTS_eta_beta_rescale_etaBeta_tanh_calc
+  DECLARE_CCTK_ARGUMENTS_CHECKED(eta_beta_rescale_etaBeta_tanh_calc);
+  #else
   DECLARE_CCTK_ARGUMENTS;
+  #endif
   DECLARE_CCTK_PARAMETERS;
   
   if (verbose > 1)

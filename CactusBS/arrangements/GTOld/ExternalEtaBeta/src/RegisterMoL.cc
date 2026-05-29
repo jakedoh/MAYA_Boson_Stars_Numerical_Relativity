@@ -6,7 +6,11 @@
 
 extern "C" void ExternalEtaBeta_RegisterVars(CCTK_ARGUMENTS)
 {
+  #ifdef DECLARE_CCTK_ARGUMENTS_ExternalEtaBeta_RegisterVars
+  DECLARE_CCTK_ARGUMENTS_CHECKED(ExternalEtaBeta_RegisterVars);
+  #else
   DECLARE_CCTK_ARGUMENTS;
+  #endif
   DECLARE_CCTK_PARAMETERS;
   
   CCTK_INT ierr CCTK_ATTRIBUTE_UNUSED = 0;

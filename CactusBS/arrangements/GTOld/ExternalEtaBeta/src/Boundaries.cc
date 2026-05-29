@@ -6,6 +6,7 @@
 #include "cctk_Faces.h"
 #include "util_Table.h"
 #include "Symmetry.h"
+#include "Kranc.hh"
 
 
 /* the boundary treatment is split into 3 steps:    */
@@ -19,7 +20,11 @@
 
 extern "C" void ExternalEtaBeta_CheckBoundaries(CCTK_ARGUMENTS)
 {
+#ifdef DECLARE_CCTK_ARGUMENTS_ExternalEtaBeta_CheckBoundaries
+  DECLARE_CCTK_ARGUMENTS_CHECKED(ExternalEtaBeta_CheckBoundaries);
+#else
   DECLARE_CCTK_ARGUMENTS;
+#endif
   DECLARE_CCTK_PARAMETERS;
   
   return;
@@ -27,7 +32,11 @@ extern "C" void ExternalEtaBeta_CheckBoundaries(CCTK_ARGUMENTS)
 
 extern "C" void ExternalEtaBeta_SelectBoundConds(CCTK_ARGUMENTS)
 {
+#ifdef DECLARE_CCTK_ARGUMENTS_ExternalEtaBeta_SelectBoundConds
+  DECLARE_CCTK_ARGUMENTS_CHECKED(ExternalEtaBeta_SelectBoundConds);
+#else
   DECLARE_CCTK_ARGUMENTS;
+#endif
   DECLARE_CCTK_PARAMETERS;
   
   CCTK_INT ierr CCTK_ATTRIBUTE_UNUSED = 0;

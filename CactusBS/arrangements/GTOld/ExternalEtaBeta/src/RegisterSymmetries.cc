@@ -7,7 +7,11 @@
 
 extern "C" void ExternalEtaBeta_RegisterSymmetries(CCTK_ARGUMENTS)
 {
+  #ifdef DECLARE_CCTK_ARGUMENTS_ExternalEtaBeta_RegisterSymmetries
+  DECLARE_CCTK_ARGUMENTS_CHECKED(ExternalEtaBeta_RegisterSymmetries);
+  #else
   DECLARE_CCTK_ARGUMENTS;
+  #endif
   DECLARE_CCTK_PARAMETERS;
   
   /* array holding symmetry definitions */

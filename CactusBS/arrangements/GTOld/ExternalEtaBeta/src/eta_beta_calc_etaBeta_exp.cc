@@ -164,7 +164,11 @@ static void eta_beta_calc_etaBeta_exp_Body(const cGH* restrict const cctkGH, con
 }
 extern "C" void eta_beta_calc_etaBeta_exp(CCTK_ARGUMENTS)
 {
+  #ifdef DECLARE_CCTK_ARGUMENTS_eta_beta_calc_etaBeta_exp
+  DECLARE_CCTK_ARGUMENTS_CHECKED(eta_beta_calc_etaBeta_exp);
+  #else
   DECLARE_CCTK_ARGUMENTS;
+  #endif
   DECLARE_CCTK_PARAMETERS;
   
   if (verbose > 1)

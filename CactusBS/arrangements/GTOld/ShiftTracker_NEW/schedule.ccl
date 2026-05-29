@@ -1,0 +1,93 @@
+# Schedule defs for thorn ShiftTracker
+
+STORAGE: shift_track[1]
+STORAGE: shift_track_vel[1]
+STORAGE: shift_track_acc[1]
+
+schedule ShiftTracker_Init at CCTK_INITIAL
+{
+  LANG: C
+} "Setup initial values for tracker locations"
+
+if(output_every != 0)
+{
+  schedule ShiftTracker_Header at CCTK_INITIAL after ShiftTracker_Init
+  {
+    LANG: C
+  } "Output the header to the output files"
+}
+
+schedule ShiftTracker_Set_SphericalSurface at CCTK_INITIAL after ShiftTracker_Init
+{
+    LANG: C
+} "Update the sphericalsurface information"
+
+schedule ShiftTracker_Interp at CCTK_EVOL after MoL_Evolution as ShiftTracker_Interp1
+{
+  LANG: C
+  OPTIONS: GLOBAL
+} "Register interpolation (tricky stuff)"
+
+if (CCTK_EQUALS(offset_shift, "yes"))
+{
+   schedule ShiftTracker_Offset at CCTK_EVOL after ShiftTracker_Interp1
+   {
+      LANG:C
+      READS: Kranc2BSSNChiMatter::beta1(Interior)
+      READS: Kranc2BSSNChiMatter::beta2(Interior)
+      READS: Kranc2BSSNChiMatter::beta3(Interior)
+      WRITES: Kranc2BSSNChiMatter::beta1(Interior)
+      WRITES: Kranc2BSSNChiMatter::beta2(Interior)
+      WRITES: Kranc2BSSNChiMatter::beta3(Interior)
+   }"Subtract beta at puncture from beta at every point"
+
+   schedule ShiftTracker_Interp at CCTK_EVOL after ShiftTracker_Offset as ShiftTracker_Interp2
+   {
+      LANG: C
+      OPTIONS: GLOBAL
+   } "Register interpolation (tricky stuff)"
+}
+
+if (CCTK_EQUALS(offset_shift, "yes"))
+{
+   schedule ShiftTracker_CalcRHS at CCTK_EVOL after ShiftTracker_Interp2
+   {
+      LANG: C
+      OPTIONS: GLOBAL
+   } "Register RHS calculations (trivial stuff)"
+}
+
+if (CCTK_EQUALS(offset_shift, "no"))
+{
+   schedule ShiftTracker_CalcRHS at CCTK_EVOL after ShiftTracker_Interp1
+   {
+      LANG: C
+      OPTIONS: GLOBAL
+   } "Register RHS calculations (trivial stuff)"
+}
+
+schedule ShiftTracker_UpdateLHS at CCTK_EVOL after ShiftTracker_CalcRHS
+{
+  LANG: C
+  OPTIONS: GLOBAL
+} "Register LHS update calculation"
+
+if(output_every != 0)
+{
+  schedule ShiftTracker_Output at CCTK_INITIAL after ShiftTracker_Header
+  {
+    LANG: C
+    OPTIONS: GLOBAL
+  } "Output to files"
+
+  schedule ShiftTracker_Output at CCTK_EVOL after ShiftTracker_UpdateLHS
+  {
+    LANG: C
+    OPTIONS: GLOBAL
+  } "Output to files"
+}
+
+schedule ShiftTracker_Set_SphericalSurface at CCTK_EVOL after ShiftTracker_Output
+{
+    LANG: C
+} "Update the sphericalsurface information"

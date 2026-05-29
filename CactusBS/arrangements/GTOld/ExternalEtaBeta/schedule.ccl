@@ -1,6 +1,6 @@
 # File produced by Kranc
 
-STORAGE: exetaBeta_group[other_timelevels]
+STORAGE: exetaBeta_group[timelevels]
 schedule ExternalEtaBeta_Startup at STARTUP
 {
   LANG: C

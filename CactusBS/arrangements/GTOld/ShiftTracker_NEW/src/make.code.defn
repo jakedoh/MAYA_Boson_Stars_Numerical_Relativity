@@ -1,0 +1,3 @@
+SRCS = ShiftTracker.cc ShiftTrackerOffset.cc ShiftTrackerInit.cc ShiftTrackerIO.cc ShiftTrackerInterpolate.cc ShiftTrackerSphericalSurface.cc
+
+SUBDIRS =
